@@ -19,11 +19,37 @@ class Home extends BaseController
         $masterCourseModel = new MasterCourseModel();
         $data['ministry'] = $masterStructureModel->getMinistry();
         $data['course']=$masterCourseModel->getCourse();
-        return view('report_home', $data);
+        return view('header_view')
+        .view('report_home', $data)
+        .view('footer_view');
 
 
     }
 
+    public function action()
+	{
+		if($this->request->getVar('action'))
+		{
+			$action = $this->request->getVar('action');
+
+			if($action == 'get_dept')
+			{
+				$deptModel = new MasterStructureModel();
+
+				$deptdata = $deptModel->getDepartment($this->request->getVar('ministry'));
+
+				echo json_encode($deptdata);
+			}
+
+			if($action == 'get_org')
+			{
+				$orgModel = new MasterStructureModel();
+				$orgdata = $orgModel->getOrganisation($this->request->getVar('dept'));
+
+				echo json_encode($orgdata);
+			}
+		}
+	}
     public function getDepartment() {
 
         $masterStructureModel = new MasterStructureModel();
@@ -50,9 +76,25 @@ class Home extends BaseController
         echo json_encode($data);
     }
 
-    public function getReport() {
+    public function getCourseReport() {
         $request = service('request');
-        $courseReportType = $this->input->post('courseReportType');
+        $courseReportType =$request->getPost('courseReportType');
+        $course=$request->getPost('course');
+       if($courseReportType == 'courseEnrolmentReport') {
+        $data['result'] =$this->getCourseWiseEnrolmentReport($course);
+        $data['reportTitle']='User Enrolment Report for Course - "'.$this->getCourseName($course).'"';
+        $data['fileName']=$course.'_EnrolmentReport';
+        return view('header_view')
+        .view('report_result',$data)
+        .view('footer_view');
+       }
+
+       $response = array();
+    }
+
+    public function getMDOReport() {
+        $request = service('request');
+        $courseReportType = $request->getPost('courseReportType');
         echo $courseReportType;
        $postData = $request->getPost();
        
@@ -61,63 +103,20 @@ class Home extends BaseController
 
        $response = array();
     }
-    public function getCourseWiseEnrolmentReport() {
-        $request = service('request');
-       $postData = $request->getPost();
-       $dtpostData = $postData['data'];
-       $response = array();
-
-       ## Read value
-       $draw = $dtpostData['draw'];
-       $start = $dtpostData['start'];
-       $rowperpage = $dtpostData['length']; // Rows display per page
-       $columnIndex = $dtpostData['order'][0]['column']; // Column index
-       $columnName = $dtpostData['columns'][$columnIndex]['data']; // Column name
-       $columnSortOrder = $dtpostData['order'][0]['dir']; // asc or desc
-       $searchValue = $dtpostData['search']['value']; // Search value
-
-       ## Total number of records without filtering
-       $userEnrolment = new UserEnrolmentCourse();
-       $totalRecords = $userEnrolment->select('user_id')
-                     ->countAllResults();
-
-       ## Total number of records with filtering
-       $totalRecordwithFilter = $userEnrolment->select('course_id')
-            ->orLike('course_id', $searchValue)
-            ->countAllResults();
-
-       ## Fetch records
-       $records = $userEnrolment->select('*')
-            ->orLike('course_id', $searchValue)
-            ->orderBy($columnName,$columnSortOrder)
-            ->findAll($rowperpage, $start);
-
-       $data = array();
-
-       foreach($records as $record ){
-
-          $data[] = array( 
-             "course_id"=>$record['course_id'],
-             "name"=>$record['name'],
-             "email_id"=>$record['email_id'],
-             "designation"=>$record['designation'],
-             "org_name"=>$record['org_name'],
-             "status"=>$record['status'],
-             "completion_percentage"=>$record['completion_percentage'],
-             "completed_on"=>$record['completed_on']
-          ); 
-       }
-     
-       ## Response
-       $response = array(
-        "draw" => intval($draw),
-        "iTotalRecords" => $totalRecords,
-        "iTotalDisplayRecords" => $totalRecordwithFilter,
-        "aaData" => $data,
-        "token" => csrf_hash() // New token hash
-       );
-
-       return $this->response->setJSON($response);
+    public function getCourseWiseEnrolmentReport($course) {
+        $enrolment = new UserEnrolmentCourse();
+        
+				$enrolmentData = $enrolment->getCourseWiseEnrolmentReport($course);
+				return $enrolmentData;
+                
    }
+   public function getCourseName($course_id) {
+    $course = new MasterCourseModel();
+    
+            $course_name = $course->getCourseName($course_id);
+           return $course_name;
+            
+            
+}
     
 }

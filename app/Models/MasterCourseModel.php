@@ -18,6 +18,10 @@ class MasterCourseModel extends Model
        return $query->getResult();
     }
 
+    public function getCourseName($course_id) {
+        $result = $this->db->query('select  course_name from master_course where course_id = \''.$course_id.'\'')->getRow()->course_name;
+       return $result;
+    }
     
 
 }

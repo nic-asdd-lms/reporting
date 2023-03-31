@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Welcome to CodeIgniter 4!</title>
+    <title>iGOT Reports</title>
     <meta name="description" content="The small framework with powerful features">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" type="image/png" href="/favicon.ico">
@@ -16,6 +16,9 @@
     <!-- Datatable JS -->
     <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <!-- STYLES -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
     <style {csp-style-nonce}>
     * {
@@ -274,8 +277,8 @@
 
     .submitbutton {
         width: 100%;
-        padding: 20px;
-        margin: 20px;
+        padding: 10px;
+        margin: 15px;
     }
     </style>
 </head>
@@ -283,52 +286,25 @@
 <body>
 
     <!-- HEADER: MENU + HEROE SECTION -->
-    <header>
-
-        <div class="menu">
-            <ul>
-                <li class="logo">
-                    <h1>iGOT Reporting</h1>
-                </li>
-                <li class="menu-toggle">
-                    <button onclick="toggleMenu();">&#9776;</button>
-                </li>
-                <li class="menu-item hidden"><a href="#">Home</a></li>
-                <li class="menu-item hidden"><a href="https://codeigniter4.github.io/userguide/"
-                        target="_blank">Dashboard</a>
-                </li>
-                <li class="menu-item hidden"><a href="https://forum.codeigniter.com/" target="_blank">Logout</a></li>
-
-            </ul>
-        </div>
-
-        <!-- <div class="heroe">
-
-        <h1>Welcome to CodeIgniter <?= CodeIgniter\CodeIgniter::CI_VERSION ?></h1>
-
-        <h2>The small framework with powerful features</h2>
-
-    </div> -->
-
-    </header>
+   
 
     <!-- CONTENT -->
 
     <section>
 
 
-            
+
         <div id="body">
             <div class="tab">
                 <button class="tablinks" onclick="openTab(event, 'MDO-wise')" id="defaultOpen">MDO-wise Reports</button>
                 <button class="tablinks" onclick="openTab(event, 'Course-wise')">Course/Program-wise Reports</button>
 
             </div>
-            
+
             <div id="MDO-wise" class="tabcontent">
                 <h3>Report type:</h3>
                 <div>
-                    <input type="radio" id="mdoUserList" name="mdoReportType" value="mdoUserList">
+                    <input type="radio" id="mdoUserList" class="form-check-input" name="mdoReportType" value="mdoUserList">
                     <label for="mdoUserList">MDO-wise user list</label>
                 </div>
                 <div>
@@ -387,6 +363,10 @@
 
 
                 </div>
+                <div class="col-xs-3 container submitbutton">
+                    <button class="btn btn-primary " type="submit" name="Submit" value="Submit"
+                        onclick="getMDOReport(event,'courseReportType','course')"> Submit</button>
+                </div>
 
 
 
@@ -396,75 +376,76 @@
             <div id="Course-wise" class="tabcontent">
                 <h3>Report type:</h3>
 
-                <form class="form-horizontal login_form" action="/getReport" method="post">
-           
-                <div>
-                    <input type="radio" id="courseEnrolmentReport" name="courseReportType"
-                        value="courseEnrolmentReport">
-                    <label for="mdoUserList">Course-wise enrolment report</label>
+                <form class="form-horizontal login_form" action="/getCourseReport" method="post">
 
-                </div>
-                <div>
-                    <input type="radio" id="courseEnrolmentCount" name="courseReportType" value="courseEnrolmentCount">
-                    <label for="mdoUserList">Course-wise enrolment and completion count</label>
+                    <div>
+                        <input type="radio" id="courseEnrolmentReport" name="courseReportType"
+                            value="courseEnrolmentReport">
+                        <label for="mdoUserList">Course-wise enrolment report</label>
 
-                </div>
-                <div>
-                    <input type="radio" id="programEnrolmentReport" name="courseReportType"
-                        value="programEnrolmentReport">
-                    <label for="mdoUserList">Program-wise enrolment report</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="courseEnrolmentCount" name="courseReportType"
+                            value="courseEnrolmentCount">
+                        <label for="mdoUserList">Course-wise enrolment and completion count</label>
 
-                </div>
-                <div>
-                    <input type="radio" id="programEnrolmentCount" name="courseReportType"
-                        value="programEnrolmentCount">
-                    <label for="mdoUserList">Program-wise enrolment and completion count</label>
-                </div>
-                <div>
-                    <input type="radio" id="collectionEnrolmentReport" name="courseReportType"
-                        value="collectionEnrolmentReport">
-                    <label for="mdoUserList">Curated Collection-wise enrolment report</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="programEnrolmentReport" name="courseReportType"
+                            value="programEnrolmentReport">
+                        <label for="mdoUserList">Program-wise enrolment report</label>
 
-                </div>
-                <div>
-                    <input type="radio" id="collectionEnrolmentCount" name="courseReportType"
-                        value="collectionEnrolmentCount">
-                    <label for="mdoUserList">Curated Collection-wise enrolment and completion count</label>
-                </div>
+                    </div>
+                    <div>
+                        <input type="radio" id="programEnrolmentCount" name="courseReportType"
+                            value="programEnrolmentCount">
+                        <label for="mdoUserList">Program-wise enrolment and completion count</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="collectionEnrolmentReport" name="courseReportType"
+                            value="collectionEnrolmentReport">
+                        <label for="mdoUserList">Curated Collection-wise enrolment report</label>
 
-                <hr />
+                    </div>
+                    <div>
+                        <input type="radio" id="collectionEnrolmentCount" name="courseReportType"
+                            value="collectionEnrolmentCount">
+                        <label for="mdoUserList">Curated Collection-wise enrolment and completion count</label>
+                    </div>
 
-                <div class="container submitbutton">
-                    <label for="course">Course/Program/Collection: </label>
-                    <select name="course" id="course" class="form-control">
-                        <option value="notSelected">--Select Course/Program/Collection--</option>
-                        <?php
+                    <hr />
+
+                    <div class="container submitbutton">
+                        <label for="course" >Course/Program/Collection: </label>
+                        <select name="course" id="course" class="form-control">
+                            <option value="notSelected">--Select Course / Program / Collection--</option>
+                            <?php
                                 foreach($course as $row)
                                 {
                                     echo '<option value="'.$row->course_id.'">'.$row->course_name.'</option>';
                                 }
                                 ?>
-                    </select>
+                        </select>
 
 
-                    <div class="col-xs-3 container submitbutton"> 
-            <button class="btn btn-primary " type="submit" name="Submit" value="Submit" onclick="getReport(event,'courseReportType','course')"> Submit</button>
-        </div>
+                        <div class="col-xs-3 container submitbutton">
+                            <button class="btn btn-primary " type="submit" name="Submit" value="Submit"> Submit</button>
+                        </div>
 
-                </div>
+                    </div>
 
-                <?php echo form_close(); ?>
-                            </form>
+                    <?php echo form_close(); ?>
+                </form>
             </div>
         </div>
-        
-                          
+
+
     </section>
-    <div class="further">
+    <!-- <div class="further">
 
         <section>
             <table id='report' class='display dataTable'>
-
+                
 
                 <thead>
                     <tr>
@@ -483,24 +464,11 @@
 
         </section>
 
-    </div>
+    </div> -->
 
     <!-- FOOTER: DEBUG INFO + COPYRIGHTS -->
 
-    <footer>
-        <div class="environment">
-
-
-
-        </div>
-
-        <div class="copyrights">
-
-            <p>&copy; <?= date('Y') ?> National Informatics Centre</p>
-
-        </div>
-
-    </footer>
+    
 
     <!-- SCRIPTS -->
 
@@ -528,57 +496,79 @@
         evt.currentTarget.className += " active";
     }
 
-    var baseURL = "<?php echo base_url();?>";
+
+
     $(document).ready(function() {
-        // Miistry change
-        $("#ministry").change(function() {
-            var city = $(this).val();
-            // AJAX request
-            $.ajax({
-                url: "<?=base_url()?>",
-                method: "post",
-                data: {
-                    ms_id: ms_id
-                },
-                dataType: "json",
-                success: function(response) {
-                    // Remove options
-                    $("#dept").find("option").not(":first").remove();
-                    $("#org").find("option").not(":first").remove();
-                    // Add options
-                    $.each(response, function(index, data) {
-                        $("#dept").append(
-                            '<option value="' + data["dep_id"] + '">' + data[
-                                "dep_name"] + "</option>"
-                        );
-                    });
-                },
-            });
+
+        $('#ministry').change(function() {
+
+            var ministry = $('#ministry').val();
+
+            var action = 'get_dept';
+
+            if (ministry != 'notSelected') {
+                $.ajax({
+                    url: "<?php echo base_url('/action'); ?>",
+                    method: "POST",
+                    data: {
+                        ministry: ministry,
+                        action: action
+                    },
+                    dataType: "JSON",
+                    success: function(data) {
+                        var html =
+                            '<option value="notSelected">--Select Department--</option>';
+
+                        for (var count = 0; count < data.length; count++) {
+
+                            html += '<option value="' + data[count].dep_id + '">' + data[
+                                count].dep_name + '</option>';
+
+                        }
+
+                        $('#dept').html(html);
+                    }
+                });
+            } else {
+                $('#dept').val('notSelected');
+            }
+            $('#org').val('notSelected');
         });
-        // Department change
-        $("#sel_depart").change(function() {
-            var department = $(this).val();
-            // AJAX request
-            $.ajax({
-                url: "<?=base_url()?>",
-                method: "post",
-                data: {
-                    dep_id: dep_id
-                },
-                dataType: "json",
-                success: function(response) {
-                    // Remove options
-                    $("#org").find("option").not(":first").remove();
-                    // Add options
-                    $.each(response, function(index, data) {
-                        $("#org").append(
-                            '<option value="' + data["org_id"] + '">' + data[
-                                "org_name"] + "</option>"
-                        );
-                    });
-                },
-            });
+
+        $('#dept').change(function() {
+
+            var dept = $('#dept').val();
+
+
+            var action = 'get_org';
+
+            if (dept != 'notSelected') {
+                $.ajax({
+                    url: "<?php echo base_url('/action'); ?>",
+                    method: "POST",
+                    data: {
+                        dept: dept,
+                        action: action
+                    },
+                    dataType: "JSON",
+                    success: function(data) {
+                        var html =
+                            '<option value="notSelected">--Select Organisation--</option>';
+
+                        for (var count = 0; count < data.length; count++) {
+                            html += '<option value="' + data[count].org_id + '">' + data[
+                                count].org_name + '</option>';
+                        }
+
+                        $('#org').html(html);
+                    }
+                });
+            } else {
+                $('#org').val('notSelected');
+            }
+
         });
+
     });
     </script>
 

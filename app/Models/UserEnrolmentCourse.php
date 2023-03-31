@@ -11,14 +11,23 @@ class UserEnrolmentCourse extends Model
         $db = \Config\Database::connect();
     }
 
-    public function getCourseWiseEnrolmentReport() {
-
-       $query = $this->db->query('SELECT distinct concat(first_name,\' \',last_name) as name, designation,org_name,email_id, status,
-       completion_percentage,completed_on
+    public function getCourseWiseEnrolmentReport($course) {
+        $table = new \CodeIgniter\View\Table();
+       $query = $this->db->query('SELECT concat(first_name,\' \',last_name) as name, email_id, org_name, designation, status, completion_percentage, completed_on
            FROM public.master_user, public.user_enrolment_course
-           where master_user.user_id= user_enrolment_course.user_id 
+           where master_user.user_id = user_enrolment_course.user_id 
+           AND user_enrolment_course.course_id = \''.$course.'\'
            order by name');
-       return $query->getResult();
+
+           $template = [
+            'table_open' => '<table id="tbl-result" class="display dataTable">'
+        
+        ];
+        $table->setTemplate($template);
+        $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Status', 'Completion Percentage', 'Completed On');
+
+           return $table->generate($query);
+       //return $query->getResult();
     }
 
     

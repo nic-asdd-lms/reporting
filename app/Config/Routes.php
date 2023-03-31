@@ -31,7 +31,11 @@ $routes->set404Override();
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
 $routes->post('/getCourseWiseEnrolmentReport', 'Home::getCourseWiseEnrolmentReport');
-$routes->post('/getReport', 'Home::getReport');
+$routes->post('/getCourseReport', 'Home::getCourseReport');
+$routes->post('/getMDOReport', 'Home::getMDOReport');
+$routes->post('/reporting/action', 'Home::action');
+$routes->get("download-report", "Report::exportToExcel");
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing

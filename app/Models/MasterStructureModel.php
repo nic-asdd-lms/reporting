@@ -18,17 +18,16 @@ class MasterStructureModel extends Model
        return $query->getResult();
     }
 
-    public function getDepartment($postData) {
-      $sql = 'select distinct dep_id, dep_name from master_structure where ms_id ='.$postData['ms_id'] ;
+    public function getDepartment($ministry) {
+      $sql = 'select distinct dep_id, dep_name from master_structure where ms_id ='.$ministry.';' ;
       $query =  $this->db->query($sql);
 
       return $query->getResult();
     }
 
-    public function getOrganisation($postData) {
-      $sql = 'select distinct org_id, org_name from master_structure where dep_id ='.$postData['dep_id'] ;
+    public function getOrganisation($dept) {
+      $sql = 'select distinct org_id, org_name from master_structure where dep_id =\''.$dept.'\';' ;
       $query =  $this->db->query($sql);
-
       return $query->getResult();
     }
 
