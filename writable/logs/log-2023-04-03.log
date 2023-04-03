@@ -1,0 +1,90 @@
+CRITICAL - 2023-04-03 00:10:34 --> Attempt to read property "course_name" on null
+in APPPATH\Models\MasterCourseModel.php on line 22.
+ 1 APPPATH\Models\MasterCourseModel.php(22): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Attempt to read property "course_name" on null', 'C:\\Program Files\\xampp\\htdocs\\reporting\\app\\Models\\MasterCourseModel.php', 22)
+ 2 APPPATH\Controllers\Home.php(188): App\Models\MasterCourseModel->getCourseName('notSelected')
+ 3 APPPATH\Controllers\Home.php(91): App\Controllers\Home->getCourseName('notSelected')
+ 4 SYSTEMPATH\CodeIgniter.php(934): App\Controllers\Home->getCourseReport()
+ 5 SYSTEMPATH\CodeIgniter.php(499): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 6 SYSTEMPATH\CodeIgniter.php(368): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 FCPATH\index.php(67): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Commands\Server\rewrite.php(47): require_once('C:\\Program Files\\xampp\\htdocs\\reporting\\public\\index.php')
+CRITICAL - 2023-04-03 00:42:03 --> You must set the database table to be used with your query.
+in SYSTEMPATH\Database\BaseConnection.php on line 882.
+ 1 SYSTEMPATH\Model.php(642): CodeIgniter\Database\BaseConnection->table(null)
+ 2 SYSTEMPATH\Model.php(832): CodeIgniter\Model->builder()
+ 3 APPPATH\Controllers\Home.php(149): CodeIgniter\Model->__call('getMDOUserList', [...])
+ 4 APPPATH\Controllers\Home.php(134): App\Controllers\Home->getMDOUserList('6777')
+ 5 SYSTEMPATH\CodeIgniter.php(934): App\Controllers\Home->getMDOReport()
+ 6 SYSTEMPATH\CodeIgniter.php(499): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 7 SYSTEMPATH\CodeIgniter.php(368): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 FCPATH\index.php(67): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Commands\Server\rewrite.php(47): require_once('C:\\Program Files\\xampp\\htdocs\\reporting\\public\\index.php')
+CRITICAL - 2023-04-03 00:48:28 --> Attempt to read property "course_name" on null
+in APPPATH\Models\MasterCourseModel.php on line 22.
+ 1 APPPATH\Models\MasterCourseModel.php(22): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Attempt to read property "course_name" on null', 'C:\\Program Files\\xampp\\htdocs\\reporting\\app\\Models\\MasterCourseModel.php', 22)
+ 2 APPPATH\Controllers\Home.php(207): App\Models\MasterCourseModel->getCourseName('7054')
+ 3 APPPATH\Controllers\Home.php(136): App\Controllers\Home->getCourseName('7054')
+ 4 SYSTEMPATH\CodeIgniter.php(934): App\Controllers\Home->getMDOReport()
+ 5 SYSTEMPATH\CodeIgniter.php(499): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 6 SYSTEMPATH\CodeIgniter.php(368): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 FCPATH\index.php(67): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Commands\Server\rewrite.php(47): require_once('C:\\Program Files\\xampp\\htdocs\\reporting\\public\\index.php')
+CRITICAL - 2023-04-03 00:48:53 --> Object of class CodeIgniter\Database\Postgre\Result could not be converted to string
+in APPPATH\Controllers\Home.php on line 136.
+ 1 SYSTEMPATH\CodeIgniter.php(934): App\Controllers\Home->getMDOReport()
+ 2 SYSTEMPATH\CodeIgniter.php(499): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 3 SYSTEMPATH\CodeIgniter.php(368): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 4 FCPATH\index.php(67): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH\Commands\Server\rewrite.php(47): require_once('C:\\Program Files\\xampp\\htdocs\\reporting\\public\\index.php')
+CRITICAL - 2023-04-03 00:50:03 --> Object of class CodeIgniter\Database\Postgre\Result could not be converted to string
+in APPPATH\Models\MasterOrganizationModel.php on line 21.
+ 1 APPPATH\Controllers\Home.php(215): App\Models\MasterOrganizationModel->getOrgName('7324')
+ 2 APPPATH\Controllers\Home.php(136): App\Controllers\Home->getOrgName('7324')
+ 3 SYSTEMPATH\CodeIgniter.php(934): App\Controllers\Home->getMDOReport()
+ 4 SYSTEMPATH\CodeIgniter.php(499): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 5 SYSTEMPATH\CodeIgniter.php(368): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 FCPATH\index.php(67): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Commands\Server\rewrite.php(47): require_once('C:\\Program Files\\xampp\\htdocs\\reporting\\public\\index.php')
+CRITICAL - 2023-04-03 00:50:14 --> Object of class CodeIgniter\Database\Postgre\Result could not be converted to string
+in APPPATH\Models\MasterOrganizationModel.php on line 21.
+ 1 APPPATH\Controllers\Home.php(215): App\Models\MasterOrganizationModel->getOrgName('7324')
+ 2 APPPATH\Controllers\Home.php(136): App\Controllers\Home->getOrgName('7324')
+ 3 SYSTEMPATH\CodeIgniter.php(934): App\Controllers\Home->getMDOReport()
+ 4 SYSTEMPATH\CodeIgniter.php(499): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 5 SYSTEMPATH\CodeIgniter.php(368): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 FCPATH\index.php(67): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Commands\Server\rewrite.php(47): require_once('C:\\Program Files\\xampp\\htdocs\\reporting\\public\\index.php')
+CRITICAL - 2023-04-03 00:51:27 --> Array to string conversion
+in APPPATH\Controllers\Home.php on line 136.
+ 1 APPPATH\Controllers\Home.php(136): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Array to string conversion', 'C:\\Program Files\\xampp\\htdocs\\reporting\\app\\Controllers\\Home.php', 136)
+ 2 SYSTEMPATH\CodeIgniter.php(934): App\Controllers\Home->getMDOReport()
+ 3 SYSTEMPATH\CodeIgniter.php(499): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 4 SYSTEMPATH\CodeIgniter.php(368): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 FCPATH\index.php(67): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Commands\Server\rewrite.php(47): require_once('C:\\Program Files\\xampp\\htdocs\\reporting\\public\\index.php')
+CRITICAL - 2023-04-03 00:52:12 --> Undefined array key "org_name"
+in APPPATH\Controllers\Home.php on line 136.
+ 1 APPPATH\Controllers\Home.php(136): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key "org_name"', 'C:\\Program Files\\xampp\\htdocs\\reporting\\app\\Controllers\\Home.php', 136)
+ 2 SYSTEMPATH\CodeIgniter.php(934): App\Controllers\Home->getMDOReport()
+ 3 SYSTEMPATH\CodeIgniter.php(499): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 4 SYSTEMPATH\CodeIgniter.php(368): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 FCPATH\index.php(67): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Commands\Server\rewrite.php(47): require_once('C:\\Program Files\\xampp\\htdocs\\reporting\\public\\index.php')
+CRITICAL - 2023-04-03 00:52:29 --> Undefined array key 0
+in APPPATH\Controllers\Home.php on line 136.
+ 1 APPPATH\Controllers\Home.php(136): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key 0', 'C:\\Program Files\\xampp\\htdocs\\reporting\\app\\Controllers\\Home.php', 136)
+ 2 SYSTEMPATH\CodeIgniter.php(934): App\Controllers\Home->getMDOReport()
+ 3 SYSTEMPATH\CodeIgniter.php(499): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 4 SYSTEMPATH\CodeIgniter.php(368): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 FCPATH\index.php(67): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Commands\Server\rewrite.php(47): require_once('C:\\Program Files\\xampp\\htdocs\\reporting\\public\\index.php')
+CRITICAL - 2023-04-03 00:53:30 --> Attempt to read property "org_name" on null
+in APPPATH\Models\MasterOrganizationModel.php on line 22.
+ 1 APPPATH\Models\MasterOrganizationModel.php(22): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Attempt to read property "org_name" on null', 'C:\\Program Files\\xampp\\htdocs\\reporting\\app\\Models\\MasterOrganizationModel.php', 22)
+ 2 APPPATH\Controllers\Home.php(215): App\Models\MasterOrganizationModel->getOrgName('7324')
+ 3 APPPATH\Controllers\Home.php(136): App\Controllers\Home->getOrgName('7324')
+ 4 SYSTEMPATH\CodeIgniter.php(934): App\Controllers\Home->getMDOReport()
+ 5 SYSTEMPATH\CodeIgniter.php(499): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 6 SYSTEMPATH\CodeIgniter.php(368): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 FCPATH\index.php(67): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Commands\Server\rewrite.php(47): require_once('C:\\Program Files\\xampp\\htdocs\\reporting\\public\\index.php')

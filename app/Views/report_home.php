@@ -303,6 +303,8 @@
 
             <div id="MDO-wise" class="tabcontent">
                 <h3>Report type:</h3>
+                <form class="form-horizontal login_form" action="/getMDOReport" method="post">
+
                 <div>
                     <input type="radio" id="mdoUserList" class="form-check-input" name="mdoReportType" value="mdoUserList">
                     <label for="mdoUserList">MDO-wise user list</label>
@@ -365,7 +367,7 @@
                 </div>
                 <div class="col-xs-3 container submitbutton">
                     <button class="btn btn-primary " type="submit" name="Submit" value="Submit"
-                        onclick="getMDOReport(event,'courseReportType','course')"> Submit</button>
+                        onclick="getMDOReport(event,'mdoReportType','org')"> Submit</button>
                 </div>
 
 
