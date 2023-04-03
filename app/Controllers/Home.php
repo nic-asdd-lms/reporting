@@ -2,10 +2,12 @@
 
 namespace App\Controllers;
 
+use App\Models\MasterUserModel;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 
 use App\Models\MasterStructureModel;
+use App\Models\MasterOrganizationModel;
 use App\Models\MasterCourseModel;
 use App\Models\UserEnrolmentCourse;
 
@@ -84,25 +86,119 @@ class Home extends BaseController
         $data['result'] =$this->getCourseWiseEnrolmentReport($course);
         $data['reportTitle']='User Enrolment Report for Course - "'.$this->getCourseName($course).'"';
         $data['fileName']=$course.'_EnrolmentReport';
-        return view('header_view')
-        .view('report_result',$data)
-        .view('footer_view');
+        
        }
-
-       $response = array();
+       else if($courseReportType == 'courseEnrolmentCount') {
+        $data['result'] =$this->getCourseWiseEnrolmentCount($course);
+        $data['reportTitle']='Course-wise Enrolment/Completion Count';
+        $data['fileName']=$course.'_EnrolmentCompletionCount';
+        
+       }
+       else if($courseReportType == 'programEnrolmentReport') {
+        $data['result'] =$this->getProgramWiseEnrolmentReport($course);
+        $data['reportTitle']='User Enrolment Report for Program - "'.$this->getCourseName($course).'"';
+        $data['fileName']=$course.'_EnrolmentReport';
+        
+       }
+       else if($courseReportType == 'programEnrolmentCount') {
+        $data['result'] =$this->getProgramWiseEnrolmentCount($course);
+        $data['reportTitle']='Course-wise Enrolment/Completion Count';
+        $data['fileName']=$course.'_EnrolmentCompletionCount';
+        
+       }
+       else if($courseReportType == 'collectionEnrolmentReport') {
+        $data['result'] =$this->getCollectionWiseEnrolmentReport($course);
+        $data['reportTitle']='User Enrolment Report for Curated Collection - "'.$this->getCourseName($course).'"';
+        $data['fileName']=$course.'_EnrolmentReport';
+        
+       }
+       else if($courseReportType == 'collectionEnrolmentCount') {
+        $data['result'] =$this->getCollectionWiseEnrolmentCount($course);
+        $data['reportTitle']='Enrolment/Completion Count for Curated Collection - "'.$this->getCourseName($course).'"';
+        $data['fileName']=$course.'_EnrolmentCompletionCount';
+        
+       }
+       return view('header_view')
+       .view('report_result',$data)
+       .view('footer_view');
+       
     }
 
     public function getMDOReport() {
         $request = service('request');
-        $courseReportType = $request->getPost('courseReportType');
-        echo $courseReportType;
-       $postData = $request->getPost();
-       
+        $mdoReportType =$request->getPost('mdoReportType');
+        $ministry=$request->getPost('ministry');
+        $dept=$request->getPost('dept');
+        $org=$request->getPost('org');
+        $orgName=$this->getOrgName($org);
+
+        if($mdoReportType == 'mdoUserList') {
+            $data['result'] =$this->getMDOUserList($org);
+            $data['reportTitle']='Users onboarded from organisation - "'.$orgName.'"';
+            $data['fileName']=$org.'_UserList';
+            
+           }
         
-
-
-       $response = array();
+           else if($mdoReportType == 'mdoUserEnrolment') {
+            $data['result'] =$this->getMDOUserEnrolment($orgName);
+            $data['reportTitle']='Users Enrolment Report for organisation - "'.$orgName.'"';
+            $data['fileName']=$org.'_UserEnrolmentReport';
+            
+           }
+        
+           else if($mdoReportType == 'ministryUserEnrolment') {
+            $data['result'] =$this->getMinistryUserList($org);
+            $data['reportTitle']='Users onboarded from organisation - "'.$orgName.'"';
+            $data['fileName']=$org.'_UserList';
+            
+           }
+        
+           
+           else if($mdoReportType == 'userWiseCount') {
+            $data['result'] =$this->getMDOEnrolmentCount($org);
+            $data['reportTitle']='User-wise course enrolment/completion count for organisation - "'.$orgName.'"';
+            $data['fileName']=$org.'_UserList';
+            
+           }
+        
+           return view('header_view')
+           .view('report_result',$data)
+           .view('footer_view');
     }
+
+
+    public function getMDOUserList($org) {
+        $user = new MasterUserModel();
+        
+				$userData = $user->getUserByOrg($org);
+				return $userData;
+                
+   }
+
+   public function getMDOUserEnrolment($org) {
+    $enrolment = new UserEnrolmentCourse();
+    
+            $enrolmentData = $enrolment->getEnrolmentByOrg($org);
+            return $enrolmentData;
+            
+}
+
+public function getMinistryUserList($org) {
+    $user = new MasterUserModel();
+    
+            $userData = $user->getUserByMinistry($org);
+            return $userData;
+            
+}
+
+public function getMDOEnrolmentCount($org) {
+    $user = new MasterUserModel();
+    
+            $userData = $user->getUserByOrg($org);
+            return $userData;
+            
+}
+
     public function getCourseWiseEnrolmentReport($course) {
         $enrolment = new UserEnrolmentCourse();
         
@@ -110,11 +206,61 @@ class Home extends BaseController
 				return $enrolmentData;
                 
    }
+
+   public function getCourseWiseEnrolmentCount($course) {
+    $enrolment = new UserEnrolmentCourse();
+    
+            $enrolmentData = $enrolment->getCourseWiseEnrolmentCount($course);
+            return $enrolmentData;
+            
+}
+
+public function getProgramWiseEnrolmentReport($course) {
+    $enrolment = new UserEnrolmentCourse();
+    
+            $enrolmentData = $enrolment->getProgramWiseEnrolmentReport($course);
+            return $enrolmentData;
+            
+}
+
+public function getProgramWiseEnrolmentCount($course) {
+$enrolment = new UserEnrolmentCourse();
+
+        $enrolmentData = $enrolment->getProgramWiseEnrolmentCount($course);
+        return $enrolmentData;
+        
+}
+
+public function getCollectionWiseEnrolmentReport($course) {
+    $enrolment = new UserEnrolmentCourse();
+    
+            $enrolmentData = $enrolment->getCollectionWiseEnrolmentReport($course);
+            return $enrolmentData;
+            
+}
+
+public function getCollectionWiseEnrolmentCount($course) {
+$enrolment = new UserEnrolmentCourse();
+
+        $enrolmentData = $enrolment->getCollectionWiseEnrolmentCount($course);
+        return $enrolmentData;
+        
+}
+
+
    public function getCourseName($course_id) {
     $course = new MasterCourseModel();
     
             $course_name = $course->getCourseName($course_id);
            return $course_name;
+            
+            
+}
+public function getOrgName($org_id) {
+    $org = new MasterOrganizationModel();
+    
+            $org_name = $org->getOrgName($org_id);
+           return $org_name;
             
             
 }

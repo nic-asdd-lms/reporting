@@ -31,5 +31,7 @@ class MasterStructureModel extends Model
       return $query->getResult();
     }
 
+    
+
 }
 ?>
