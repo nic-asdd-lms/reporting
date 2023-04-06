@@ -13,14 +13,23 @@ class MasterCourseModel extends Model
     }
 
     public function getCourse() {
-
-       $query = $this->db->query('select course_id, course_name from master_course order by course_name');
+        $builder = $this->db->table('master_course');
+        $builder->select('course_id, course_name');
+        $builder->orderBy('course_name');
+        $query = $builder->get();
+    
        return $query->getResult();
     }
 
     public function getCourseName($course_id) {
-        $result = $this->db->query('select  course_name from master_course where course_id = \''.$course_id.'\'')->getRow()->course_name;
-       return $result;
+        $builder = $this->db->table('master_course');
+        $builder->select('course_name');
+        $builder->where('course_id',$course_id);
+        $query = $builder->get();
+    
+        return $query->getRow()->course_name;
+        //$result = $this->db->query('select  course_name from master_course where course_id = \''.$course_id.'\'')->getRow()->course_name;
+    //    return $result;
     }
     
 

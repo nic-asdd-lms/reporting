@@ -19,6 +19,7 @@ class MasterOrganizationModel extends Model
         $builder->where('org_id', $org_id);
         $query = $builder->get();
         
+        //echo $org_id,json_encode($query);
         return $query->getRow()->org_name;
     }
 
