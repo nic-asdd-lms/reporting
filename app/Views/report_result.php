@@ -193,10 +193,22 @@
         background-color: rgba(247, 248, 249, 1);
         border-bottom: 1px solid rgba(242, 242, 242, 1);
         border-top: 1px solid rgba(242, 242, 242, 1);
+        margin-bottom: 0;
+
     }
 
     .further h2:first-of-type {
         padding-top: 0;
+    }
+
+    .download-button {
+        float: right;
+        margin-right: 20px;
+    }
+
+    .report-table {
+        margin: 20px;
+        background-color: rgba(221, 72, 20, 0.1);
     }
     
 
@@ -204,7 +216,7 @@
 </head>
     <body>
     <div class="h2"><?php echo $reportTitle ?></h2>
-    <button class="btn btn-success" onclick="exportTableToExcel('tbl-result','<?php echo $fileName ?>')">Download Excel</button>
+    <button class="btn btn-success download-button" onclick="exportTableToExcel('tbl-result','<?php echo $fileName ?>')">Download Excel</button>
 </div>
     <div class="further">
 

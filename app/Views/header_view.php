@@ -22,11 +22,11 @@
     <style {csp-style-nonce}>
         header {
         background-color: rgba(247, 248, 249, 1);
-        padding: .4rem 0 0;
+        padding: .4rem .4rem;
     }
 
     .menu {
-        padding: .4rem 2rem;
+        padding: .4rem .4rem;
     }
 
     header ul {
@@ -34,7 +34,7 @@
         list-style-type: none;
         margin: 0;
         overflow: hidden;
-        padding: 0;
+        padding: .65rem .65rem;
         text-align: right;
     }
 
@@ -52,10 +52,10 @@
 
     header li.menu-item a {
         border-radius: 5px;
-        margin: 5px 0;
-        height: 38px;
+        margin: 25px 0;
+        height: 55px;
         line-height: 36px;
-        padding: .4rem .65rem;
+        padding: .65rem .65rem;
         text-align: center;
     }
 
@@ -63,12 +63,13 @@
     header li.menu-item a:focus {
         background-color: rgba(221, 72, 20, .2);
         color: rgba(221, 72, 20, 1);
+        
     }
 
     header .logo {
         float: left;
-        height: 64px;
-        padding: .4rem .5rem;
+        height: 55px;
+        padding: 0;
         color: rgba(221, 72, 20, .6);
     }
 
@@ -115,6 +116,11 @@
         font-size: 1.5rem;
         font-weight: 300;
     }
+    .title {
+        font-size: 40px;
+        font-weight: 1000;
+        padding: 1rem;
+    }
 @media (max-width: 629px) {
         header ul {
             padding: 0;
@@ -149,6 +155,8 @@
             color: rgba(255, 255, 255, .8);
         }
     }
+
+    
     </style>
 </head>
     <header>
@@ -156,16 +164,21 @@
 <div class="menu">
     <ul>
         <li class="logo">
-            <h1>iGOT Reporting</h1>
+            <div class="title">iGOT Reporting</div>
         </li>
         <li class="menu-toggle">
             <button onclick="toggleMenu();">&#9776;</button>
         </li>
-        <li class="menu-item "><a href="/">Home</a></li>
-        <li class="menu-item "><a href="https://codeigniter4.github.io/userguide/"
-                target="_blank">Dashboard</a>
-        </li>
-        <li class="menu-item "><a href="https://forum.codeigniter.com/" target="_blank">Logout</a></li>
+        <?php 
+        $session = \Config\Services::session();
+		
+       if ($session->get('logged_in') == true) {
+            echo "<li class='menu-item '><a href='/reporting'>Home</a></li>
+            <li class='menu-item '><a href='https://codeigniter4.github.io/userguide/' target='_blank'>Dashboard</a></li>
+            <li class='menu-item '><a href='/login/logout' >Logout</a></li>";
+        }
+        ?>
+        
 
     </ul>
 </div>
