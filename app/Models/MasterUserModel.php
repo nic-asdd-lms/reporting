@@ -46,10 +46,20 @@ class MasterUserModel extends Model
         $table = new \CodeIgniter\View\Table();
 
         $builder = $this->db->table('master_user');
-        $builder->select('concat(first_name,\' \',last_name) as name, email_id, org_name, designation, phone_no,created_date');
-        $builder->join('master_st', 'master_user.user_id = user_enrolment_course.user_id ');
-        $builder->where('org_name', $org);
-        $query = $builder->get();
+        $builder->select('concat(first_name,\' \',last_name) as name, email_id, master_user.org_name, designation, phone_no,created_date');
+        $builder->join('master_structure', 'master_structure.ministry_state_name = master_user.org_name ');
+        $builder->where('master_structure.ministry_state_name',$org);
+        
+        $unionDept = $this->db->table('master_user')
+                    ->select('concat(first_name,\' \',last_name) as name, email_id, master_user.org_name, designation, phone_no,created_date')
+                    ->join('master_structure', 'master_structure.dep_name = master_user.org_name ')
+                    ->where('master_structure.ministry_state_name',$org);
+        
+        $unionOrg = $this->db->table('master_user')
+                    ->select('concat(first_name,\' \',last_name) as name, email_id, master_user.org_name, designation, phone_no,created_date')
+                    ->join('master_structure', 'master_structure.org_name = master_user.org_name ')
+                    ->where('master_structure.ministry_state_name',$org);
+        $query = $builder->union($unionDept)->union($unionOrg)->get();
     
         $template = [
             'table_open' => '<table id="tbl-result" class="display dataTable">'
@@ -58,7 +68,7 @@ class MasterUserModel extends Model
         $table->setTemplate($template);
         $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Contact No.', 'Created Date');
 
-           return $table->generate($query);
+        return $table->generate($query);
     }
     
 

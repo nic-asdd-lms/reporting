@@ -130,10 +130,19 @@ class Home extends BaseController
         $ministry=$request->getPost('ministry');
         $dept=$request->getPost('dept');
         $org=$request->getPost('org');
-        $orgName=$this->getOrgName($org);
+        $ministryName=$this->getOrgName($ministry);
+        
+        if($dept != "notSelected") {
+            $deptName=$this->getOrgName($dept);
+        
+        }
+        if($org != "notSelected") {
+            $orgName=$this->getOrgName($org);
 
+        }
+        
         if($mdoReportType == 'mdoUserList') {
-            $data['result'] =$this->getMDOUserList($org);
+            $data['result'] =$this->getMDOUserList($orgName);
             $data['reportTitle']='Users onboarded from organisation - "'.$orgName.'"';
             $data['fileName']=$org.'_UserList';
             
@@ -147,15 +156,15 @@ class Home extends BaseController
            }
         
            else if($mdoReportType == 'ministryUserEnrolment') {
-            $data['result'] =$this->getMinistryUserList($org);
-            $data['reportTitle']='Users onboarded from organisation - "'.$orgName.'"';
+            $data['result'] =$this->getMinistryUserList($ministryName);
+            $data['reportTitle']='Users list for all organisations under ministry - "'.$ministryName.'"';
             $data['fileName']=$org.'_UserList';
             
            }
         
            
-           else if($mdoReportType == 'userWiseCount') {
-            $data['result'] =$this->getMDOEnrolmentCount($org);
+           else if($mdoReportType == 'mdoEnrolmentCount') {
+            $data['result'] =$this->getMDOEnrolmentCount($orgName);
             $data['reportTitle']='User-wise course enrolment/completion count for organisation - "'.$orgName.'"';
             $data['fileName']=$org.'_UserList';
             
@@ -192,10 +201,10 @@ public function getMinistryUserList($org) {
 }
 
 public function getMDOEnrolmentCount($org) {
-    $user = new MasterUserModel();
+    $enrolment = new UserEnrolmentCourse();
     
-            $userData = $user->getUserByOrg($org);
-            return $userData;
+            $enrolmentData = $enrolment->getUserEnrolmentCountByMDO($org);
+            return $enrolmentData;
             
 }
 

@@ -279,6 +279,11 @@
         width: 100%;
         padding: 10px;
         margin: 15px;
+        text-align: center;
+    }
+
+    .grid {
+        width:
     }
     </style>
 </head>
@@ -306,7 +311,7 @@
                 <form class="form-horizontal login_form" action="/getMDOReport" method="post">
 
                 <div>
-                    <input type="radio" id="mdoUserList" class="form-check-input" name="mdoReportType" value="mdoUserList">
+                    <input type="radio" id="mdoUserList" class="form-check-input" name="mdoReportType" value="mdoUserList" select="true">
                     <label for="mdoUserList">MDO-wise user list</label>
                 </div>
                 <div>
@@ -316,12 +321,7 @@
                 <div>
 
                     <input type="radio" id="ministryUserEnrolment" name="mdoReportType" value="ministryUserEnrolment">
-                    <label for="mdoUserList">Enrolment report for all organisations under a ministry</label>
-                </div>
-                <div>
-
-                    <input type="radio" id="mdoEnrolmentCount" name="mdoReportType" value="mdoEnrolmentCount">
-                    <label for="mdoUserList">MDO-wise user enrolment and completion count</label>
+                    <label for="mdoUserList">User list for all organisations under a ministry</label>
                 </div>
                 <div>
 
@@ -331,10 +331,10 @@
 
                 <hr />
 
-                <div>
-                    <table class="submitbutton">
+                <div  class="container ">
+                    <table class="grid submitbutton">
                         <tr>
-                            <td>
+                            <td  class="submitbutton">
                                 <!-- <label for="ministry">Ministry</label> -->
                                 <select name="ministry" class="form-control" id="ministry">
                                     <option value="notSelected">--Select Ministry--</option>
@@ -346,14 +346,18 @@
                                 ?>
                                 </select>
                             </td>
-                            <td>
+                            </tr>
+                            <tr>
+                            <td class="submitbutton">
                                 <!-- <label for="dept">Department</label> -->
                                 <select name="dept" class="form-control" id="dept">
                                     <option value="notSelected">--Select Department--</option>
 
                                 </select>
                             </td>
-                            <td>
+                            </tr>
+                            <tr>
+                             <td class="submitbutton">
                                 <!-- <label for="org">Organisation</label> -->
                                 <select name="org" class="form-control" id="org">
                                     <option value="notSelected">--Select Organisation--</option>
@@ -362,14 +366,14 @@
                             </td>
                         </tr>
                     </table>
-
+                    <div class="col-xs-3 container submitbutton">
+                            <button class="btn btn-primary " type="submit" name="Submit" value="Submit"> Submit</button>
+                        </div>
 
                 </div>
-                <div class="col-xs-3 container submitbutton">
-                    <button class="btn btn-primary " type="submit" name="Submit" value="Submit"
-                        onclick="getMDOReport(event,'mdoReportType','org')"> Submit</button>
-                </div>
-
+                
+                <?php echo form_close(); ?>
+                            </form>
 
 
             </div>
@@ -381,8 +385,7 @@
                 <form class="form-horizontal login_form" action="/getCourseReport" method="post">
 
                     <div>
-                        <input type="radio" id="courseEnrolmentReport" name="courseReportType"
-                            value="courseEnrolmentReport">
+                        <input type="radio" id="courseEnrolmentReport" name="courseReportType" value="courseEnrolmentReport" select="true">
                         <label for="mdoUserList">Course-wise enrolment report</label>
 
                     </div>
