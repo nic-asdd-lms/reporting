@@ -17,16 +17,17 @@
     <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <!-- STYLES -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+ 
     <style {csp-style-nonce}>
     * {
         transition: background-color 300ms ease, color 300ms ease;
     }
 
     *:focus {
-        background-color: rgba(221, 72, 20, .2);
         outline: none;
     }
 
@@ -42,101 +43,6 @@
         text-rendering: optimizeLegibility;
     }
 
-    header {
-        background-color: rgba(247, 248, 249, 1);
-        padding: .4rem 0 0;
-    }
-
-    .menu {
-        padding: .4rem 2rem;
-    }
-
-    header ul {
-        border-bottom: 1px solid rgba(242, 242, 242, 1);
-        list-style-type: none;
-        margin: 0;
-        overflow: hidden;
-        padding: 0;
-        text-align: right;
-    }
-
-    header li {
-        display: inline-block;
-    }
-
-    header li a {
-        border-radius: 5px;
-        color: rgba(0, 0, 0, .5);
-        display: block;
-        height: 44px;
-        text-decoration: none;
-    }
-
-    header li.menu-item a {
-        border-radius: 5px;
-        margin: 5px 0;
-        height: 38px;
-        line-height: 36px;
-        padding: .4rem .65rem;
-        text-align: center;
-    }
-
-    header li.menu-item a:hover,
-    header li.menu-item a:focus {
-        background-color: rgba(221, 72, 20, .2);
-        color: rgba(221, 72, 20, 1);
-    }
-
-    header .logo {
-        float: left;
-        height: 64px;
-        padding: .4rem .5rem;
-        color: rgba(221, 72, 20, .6);
-    }
-
-    header .menu-toggle {
-        display: none;
-        float: right;
-        font-size: 2rem;
-        font-weight: bold;
-    }
-
-    header .menu-toggle button {
-        background-color: rgba(221, 72, 20, .6);
-        border: none;
-        border-radius: 3px;
-        color: rgba(255, 255, 255, 1);
-        cursor: pointer;
-        font: inherit;
-        font-size: 1.3rem;
-        height: 36px;
-        padding: 0;
-        margin: 11px 0;
-        overflow: visible;
-        width: 40px;
-    }
-
-    header .menu-toggle button:hover,
-    header .menu-toggle button:focus {
-        background-color: rgba(221, 72, 20, .8);
-        color: rgba(255, 255, 255, .8);
-    }
-
-    header .heroe {
-        margin: 0 auto;
-        max-width: 1100px;
-        padding: 1rem 1.75rem 1.75rem 1.75rem;
-    }
-
-    header .heroe h1 {
-        font-size: 2.5rem;
-        font-weight: 500;
-    }
-
-    header .heroe h2 {
-        font-size: 1.5rem;
-        font-weight: 300;
-    }
 
     section {
         margin: 0 auto;
@@ -183,72 +89,29 @@
         background-color: rgba(247, 248, 249, 1);
         border-bottom: 1px solid rgba(242, 242, 242, 1);
         border-top: 1px solid rgba(242, 242, 242, 1);
+        margin-bottom: 100px;
+        padding-bottom: 30px;
     }
 
     .further h2:first-of-type {
         padding-top: 0;
     }
 
-    footer {
-        background-color: rgba(221, 72, 20, .8);
-        text-align: center;
-    }
+    
 
-    footer .environment {
-        color: rgba(255, 255, 255, 1);
-        padding: 2rem 1.75rem;
-    }
 
-    footer .copyrights {
-        background-color: rgba(62, 62, 62, 1);
-        color: rgba(200, 200, 200, 1);
-        padding: .25rem 1.75rem;
-    }
 
-    @media (max-width: 629px) {
-        header ul {
-            padding: 0;
-        }
-
-        header .menu-toggle {
-            padding: 0 1rem;
-        }
-
-        header .menu-item {
-            background-color: rgba(244, 245, 246, 1);
-            border-top: 1px solid rgba(242, 242, 242, 1);
-            margin: 0 15px;
-            width: calc(100% - 30px);
-        }
-
-        header .menu-toggle {
-            display: block;
-        }
-
-        header .hidden {
-            display: none;
-        }
-
-        header li.menu-item a {
-            background-color: rgba(221, 72, 20, .1);
-        }
-
-        header li.menu-item a:hover,
-        header li.menu-item a:focus {
-            background-color: rgba(221, 72, 20, .7);
-            color: rgba(255, 255, 255, .8);
-        }
-    }
+    
 
     .tab {
         overflow: hidden;
-        border: 1px solid #ccc;
-        background-color: #f1f1f1;
+        border: 1px solid #e2693f24;
+        background-color: #e2693f24;
     }
 
     /* Style the buttons that are used to open the tab content */
     .tab button {
-        background-color: inherit;
+        background-color: #e36b4200;;
         float: left;
         border: none;
         outline: none;
@@ -259,31 +122,44 @@
 
     /* Change background color of buttons on hover */
     .tab button:hover {
-        background-color: #ddd;
+        background-color: #e2693f17;
     }
 
     /* Create an active/current tablink class */
     .tab button.active {
-        background-color: #ccc;
+        background-color: #e36c432e;
     }
 
     /* Style the tab content */
     .tabcontent {
         display: none;
         padding: 6px 12px;
-        border: 1px solid #ccc;
+        border: 1px solid #c6562f08;
         border-top: none;
+        background-color: #c6562f08;
     }
 
     .submitbutton {
-        width: 100%;
+        width: 80%;
         padding: 10px;
         margin: 15px;
         text-align: center;
     }
 
-    .grid {
-        width:
+    .radio {
+        font-weight: 500;
+        display: inline;
+    }
+
+    .report-select {
+        width: 50%;
+        display: inline;
+    }
+
+    .report-type {
+        padding: 10px;
+        margin: 15px;
+        
     }
     </style>
 </head>
@@ -291,7 +167,7 @@
 <body>
 
     <!-- HEADER: MENU + HEROE SECTION -->
-   
+
 
     <!-- CONTENT -->
 
@@ -302,136 +178,150 @@
         <div id="body">
             <div class="tab">
                 <button class="tablinks" onclick="openTab(event, 'MDO-wise')" id="defaultOpen">MDO-wise Reports</button>
-                <button class="tablinks" onclick="openTab(event, 'Course-wise')">Course/Program-wise Reports</button>
+                <button class="tablinks" onclick="openTab(event, 'Course-wise')">Course-wise Reports</button>
+                <button class="tablinks" onclick="openTab(event, 'Role-wise')">Role-wise Reports</button>
 
             </div>
 
             <div id="MDO-wise" class="tabcontent">
-                <h3>Report type:</h3>
-                <form class="form-horizontal login_form" action="/getMDOReport" method="post">
+            <form class="form-horizontal login_form" action="/reporting/getMDOReport" method="post">
+            <div class="report-type">    
+            <label for="mdoReportType">Report type:</label>
+            <select name="mdoReportType" class="form-control report-select"  onchange="enable_disable_mdo(this)"  id="mdoReportType">
+            <option value="notSelected">-- Select Report Type --</option>
+            <?php 
+                    $session = \Config\Services::session();
+		
+                    if($session->get('role')=='SPV_ADMIN') {
+                    
+                        echo 
+                        '
+                    <option value="mdoUserCount">MDO-wise user count</option>
+                        <option value="mdoUserList">MDO-wise user List</option>
+                        <option value="mdoUserEnrolment">MDO-wise user enrolment report</option>
+                        <option value="ministryUserEnrolment">User List for all organisations under a ministry</option>
+                        '; }
+else if($session->get('role')=='MDO_ADMIN') {
+                    
+    echo '<option value="mdoUserList">User List</option>
+    <option value="mdoUserEnrolment">User enrolment report</option>
+    <option value="userWiseCount">User-wise enrolment and completion count</option>
+    
 
-                <div>
-                    <input type="radio" id="mdoUserList" class="form-check-input" name="mdoReportType" value="mdoUserList" select="true">
-                    <label for="mdoUserList">MDO-wise user list</label>
-                </div>
-                <div>
-                    <input type="radio" id="mdoUserEnrolment" name="mdoReportType" value="mdoUserEnrolment">
-                    <label for="mdoUserList">MDO-wise user enrolment report</label>
-                </div>
-                <div>
+'; } ?>
+                
+                        
+</select>
+</div>
+                    <hr />
 
-                    <input type="radio" id="ministryUserEnrolment" name="mdoReportType" value="ministryUserEnrolment">
-                    <label for="mdoUserList">User list for all organisations under a ministry</label>
-                </div>
-                <div>
+                    <div class="container ">
 
-                    <input type="radio" id="userWiseCount" name="mdoReportType" value="userWiseCount">
-                    <label for="mdoUserList">User-wise enrolment and completion count</label>
-                </div>
+                    
+                    <!-- <input type="text" id="search" placeholder="Search" class="form-control" /> -->
+                    
+                    <div id="tbl" >
+                    
+                    <table class="submitbutton" id="tbl-mdo" >
+                    <?php 
+                    $session = \Config\Services::session();
+		
+                    if($session->get('role')=='SPV_ADMIN') {
+                        echo '
 
-                <hr />
-
-                <div  class="container ">
-                    <table class="grid submitbutton">
-                        <tr>
+                        
+                    <tr>
                             <td  class="submitbutton">
-                                <!-- <label for="ministry">Ministry</label> -->
-                                <select name="ministry" class="form-control" id="ministry">
-                                    <option value="notSelected">--Select Ministry--</option>
-                                    <?php
-                                foreach($ministry as $row)
-                                {
-                                    echo '<option value="'.$row->ms_id.'">'.$row->ministry_state_name.'</option>';
-                                }
-                                ?>
-                                </select>
-                            </td>
+                            <select name="ministry" class="form-control"  id="ministry">
+                        <option value="notSelected">--Select Ministry--</option>';
+                        
+                    foreach($ministry as $row)
+                    {
+                        echo '<option value="'.$row->ms_id.'">'.$row->ministry_state_name.'</option>';
+                    }
+                    
+                    echo '	
+                    </select>
+                        
+                        </td>
                             </tr>
                             <tr>
                             <td class="submitbutton">
-                                <!-- <label for="dept">Department</label> -->
                                 <select name="dept" class="form-control" id="dept">
-                                    <option value="notSelected">--Select Department--</option>
-
-                                </select>
+                        <option value="notSelected">--Select Department--</option>
+                        </select>
                             </td>
                             </tr>
                             <tr>
                              <td class="submitbutton">
-                                <!-- <label for="org">Organisation</label> -->
-                                <select name="org" class="form-control" id="org">
-                                    <option value="notSelected">--Select Organisation--</option>
-
-                                </select>
+                               <select name="org" class="form-control" id="org">
+                        <option value="notSelected">--Select Organisation--</option>
+                        </select>
+                        
                             </td>
-                        </tr>
-                    </table>
-                    <div class="col-xs-3 container submitbutton">
+                        </tr>';
+              
+                    } ?>
+
+</table>
+                </div>
+                        <div class="col-xs-3 container submitbutton">
                             <button class="btn btn-primary " type="submit" name="Submit" value="Submit"> Submit</button>
                         </div>
 
-                </div>
-                
-                <?php echo form_close(); ?>
-                            </form>
+                    </div>
+
+                    <?php echo form_close(); ?>
+                </form>
 
 
             </div>
 
 
             <div id="Course-wise" class="tabcontent">
-                <h3>Report type:</h3>
 
-                <form class="form-horizontal login_form" action="/getCourseReport" method="post">
+                
+                <form class="form-horizontal login_form" action="/reporting/getCourseReport" method="post">
 
-                    <div>
-                        <input type="radio" id="courseEnrolmentReport" name="courseReportType" value="courseEnrolmentReport" select="true">
-                        <label for="mdoUserList">Course-wise enrolment report</label>
+                <div class="report-type">    
+            <label for="courseReportType">Report type:</label>
 
-                    </div>
-                    <div>
-                        <input type="radio" id="courseEnrolmentCount" name="courseReportType"
-                            value="courseEnrolmentCount">
-                        <label for="mdoUserList">Course-wise enrolment and completion count</label>
-
-                    </div>
-                    <div>
-                        <input type="radio" id="programEnrolmentReport" name="courseReportType"
-                            value="programEnrolmentReport">
-                        <label for="mdoUserList">Program-wise enrolment report</label>
-
-                    </div>
-                    <div>
-                        <input type="radio" id="programEnrolmentCount" name="courseReportType"
-                            value="programEnrolmentCount">
-                        <label for="mdoUserList">Program-wise enrolment and completion count</label>
-                    </div>
-                    <div>
-                        <input type="radio" id="collectionEnrolmentReport" name="courseReportType"
-                            value="collectionEnrolmentReport">
-                        <label for="mdoUserList">Curated Collection-wise enrolment report</label>
-
-                    </div>
-                    <div>
-                        <input type="radio" id="collectionEnrolmentCount" name="courseReportType"
-                            value="collectionEnrolmentCount">
-                        <label for="mdoUserList">Curated Collection-wise enrolment and completion count</label>
-                    </div>
+                <select name="courseReportType"  class="form-control report-select" onchange="enable_disable_course(this)" id="mdoReportType">
+                        <option value="notSelected">-- Select Report Type --</option>
+                        <option value="courseEnrolmentReport">Course-wise enrolment report</option>
+                        <option value="courseEnrolmentCount">Course-wise enrolment and completion count</option>
+                        <option value="programEnrolmentReport">Program-wise enrolment report</option>
+                        <option value="programEnrolmentCount">Program-wise enrolment and completion count</option>
+                        <option value="collectionEnrolmentReport">Curated Collection-wise enrolment report</option>
+                        <option value="collectionEnrolmentCount">Curated Collection-wise enrolment and completion count</option>
+                        </select>
+                
+            </div>
+                   
 
                     <hr />
 
-                    <div class="container submitbutton">
-                        <label for="course" >Course/Program/Collection: </label>
-                        <select name="course" id="course" class="form-control">
-                            <option value="notSelected">--Select Course / Program / Collection--</option>
-                            <?php
+                    <div class="container">
+                        <table class="submitbutton" id="tbl-course">
+                            <tr>
+                                <td>
+                                    <label for="course">Course/Program/Collection: </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="submitbutton">
+                                    <select name="course" id="course" class="form-control">
+                                        <option value="notSelected">--Select Course / Program / Collection--</option>
+                                        <?php
                                 foreach($course as $row)
                                 {
                                     echo '<option value="'.$row->course_id.'">'.$row->course_name.'</option>';
                                 }
                                 ?>
-                        </select>
-
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
 
                         <div class="col-xs-3 container submitbutton">
                             <button class="btn btn-primary " type="submit" name="Submit" value="Submit"> Submit</button>
@@ -442,6 +332,73 @@
                     <?php echo form_close(); ?>
                 </form>
             </div>
+       
+            <div id="Role-wise" class="tabcontent">
+            <form class="form-horizontal login_form" action="/reporting/getRoleReport" method="post">
+            <div class="report-type">    
+            <label for="roleReportType">Report type:</label>
+                    <?php 
+                    $session = \Config\Services::session();
+		
+                    if($session->get('role')=='SPV_ADMIN') {
+                    
+                        echo '<select name="roleReportType" class="form-control report-select"  onchange="enable_disable_mdo(this)"  id="roleReportType">
+                        <option value="notSelected">-- Select Report Type --</option>
+                        <option value="roleWiseCount">Role-wise count</option>
+                        <option value="monthWiseMDOAdminCount">Month-wise MDO ADMIN Creation Count</option>
+                        <option value="mdoAdminList">MDO ADMIN List</option>
+                        <option value="cbpAdminList">CBP ADMIN List</option>
+                        <option value="creatorList">CONTENT CREATOR List</option>
+                        <option value="reviewerList">CONTENT REVIEWER List</option>
+                        <option value="publisherList">CONTENT PUBLISHER List</option>
+                        <option value="editorList">EDITOR List</option>
+                        <option value="fracAdminList">FRAC ADMIN List</option>
+                        <option value="fracCompetencyMember">FRAC COMPETENCY MEMBER List</option>
+                        <option value="fracL1List">FRAC REVIEWER L1 List</option>
+                        <option value="fracL2List">FRAC REVIEWER L2 List</option>
+                        <option value="ifuMemberList">IFU MEMBER List</option>
+                        <option value="publicList">PUBLIC User List</option>
+                        <option value="spvAdminList">SPV ADMIN List</option>
+                        <option value="stateAdminList">STATE ADMIN List</option>
+                        <option value="watMemberList">WAT MEMBER List</option>
+                        </select>
+                
+'; }
+else if($session->get('role')=='MDO_ADMIN') {
+                    
+    echo '<select name="roleReportType" class="form-control  report-select" id="roleReportType" >
+    <option value="notSelected">-- Select Report Type --</option>
+    <option value="roleWiseCount">Role-wise count</option>
+    <option value="mdoAdminList">MDO ADMIN List</option>
+    <option value="cbpAdminList">CBP ADMIN List</option>
+    <option value="creatorList">CONTENT CREATOR List</option>
+    <option value="reviewerList">CONTENT REVIEWER List</option>
+    <option value="publisherList">CONTENT PUBLISHER List</option>
+    <option value="publicList">PUBLIC User List</option>
+                        
+                        </select>
+
+'; } ?>
+</div>
+                    <hr />
+
+                    <div class="container ">
+                    <!-- <input type="text" id="search" placeholder="Search" class="form-control" /> -->
+                    
+                        
+
+                        <div class="col-xs-3 container submitbutton">
+                            <button class="btn btn-primary " type="submit" name="Submit" value="Submit"> Submit</button>
+                        </div>
+
+                    </div>
+
+                    <?php echo form_close(); ?>
+                </form>
+
+
+            </div>
+
         </div>
 
 
@@ -473,7 +430,7 @@
 
     <!-- FOOTER: DEBUG INFO + COPYRIGHTS -->
 
-    
+
 
     <!-- SCRIPTS -->
 
@@ -501,8 +458,68 @@
         evt.currentTarget.className += " active";
     }
 
+    function enable_disable_mdo(value) {
+        
+        mdo = document.getElementById('tbl');
+        
+        mdo.style.display = value.value == "mdoUserCount" ? "none" : "block";
+        
+    }
+     
+    function enable_disable_course(value) {
+        course =document.getElementById("tbl-course");
+        if(value.value == "courseEnrolmentCount" || value.value == "programEnrolmentCount"){
+            course.style.display = "none";
+        }
+        else {
+            course.style.display = "block";
+        }
+        
+    }
 
+    $('.search').select2({
+        placeholder: 'Search Organisation',
+        ajax: {
+          url: '<?php echo base_url('/search');?>',
+          dataType: 'json',
+          processResults: function(data){
+            return {
+              results: data
+            };
+          },
+          cache: true
+        }
+      });
 
+    function getSuggestions(value) {
+        var searchKey= value.value;
+        var action = 'search';
+
+        //alert(value.value);
+        display = document.getElementById('display');
+        $.ajax({
+                    url: "<?php echo base_url('/action'); ?>",
+                    method: "POST",
+                    data: {
+                        key: searchKey,
+                        action: action
+                    },
+                    dataType: "JSON",
+                    success: function(data) {
+                        html='<ul>';
+                        for (var count = 0; count < data.length; count++) {
+
+                            html += '<li>' + data[count].org_name + '</li>';
+
+                        }
+html+='</ul>';
+                        $('#display').html(html);
+                    }
+                });
+        
+        
+    }
+   
     $(document).ready(function() {
 
         $('#ministry').change(function() {
@@ -575,6 +592,103 @@
         });
 
     });
+
+
+    $(document).ready(function() {
+
+
+
+        $('select[name=courseReportType]').change(function() {
+
+            if (this.value == 'courseEnrolmentReport') {
+                var action = 'get_course';
+
+                $.ajax({
+                    url: "<?php echo base_url('/action'); ?>",
+                    method: "POST",
+                    data: {
+                        action: action
+                    },
+                    dataType: "JSON",
+                    success: function(data) {
+                        var html =
+                            '<option value="notSelected">--Select Course--</option>';
+
+                        for (var count = 0; count < data.length; count++) {
+
+                            html += '<option value="' + data[count].course_id + '">' + data[
+                                count].course_name + '</option>';
+
+                        }
+
+                        $('#course').html(html);
+                    }
+                });
+
+            } else if (this.value == 'programEnrolmentReport') {
+
+                var action = 'get_program';
+
+                $.ajax({
+                    url: "<?php echo base_url('/action'); ?>",
+                    method: "POST",
+                    data: {
+                        action: action
+                    },
+                    dataType: "JSON",
+                    success: function(data) {
+                        var html =
+                            '<option value="notSelected">--Select Program--</option>';
+
+                        for (var count = 0; count < data.length; count++) {
+
+                            html += '<option value="' + data[count].program_id + '">' +
+                                data[
+                                    count].program_name + '</option>';
+
+                        }
+
+                        $('#course').html(html);
+                    }
+                });
+
+            } else if (this.value == 'collectionEnrolmentReport' || this.value == "collectionEnrolmentCount") {
+
+                var action = 'get_collection';
+
+                $.ajax({
+                    url: "<?php echo base_url('/action'); ?>",
+                    method: "POST",
+                    data: {
+                        action: action
+                    },
+                    dataType: "JSON",
+                    success: function(data) {
+                        var html =
+                            '<option value="notSelected">--Select Curated Collection--</option>';
+
+                        for (var count = 0; count < data.length; count++) {
+
+                            html += '<option value="' + data[count].curated_id + '">' + data[count].curated_name + '</option>';
+
+                        }
+
+                        $('#course').html(html);
+                    }
+                });
+
+                
+            }
+
+        });
+
+
+
+    });
+
+
+    
+
     </script>
 
     <!-- -->

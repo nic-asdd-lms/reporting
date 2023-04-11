@@ -19,7 +19,7 @@ class MasterStructureModel extends Model
     }
 
     public function getDepartment($ministry) {
-      $sql = 'select distinct dep_id, dep_name from master_structure where ms_id ='.$ministry.';' ;
+      $sql = 'select distinct dep_id, dep_name from master_structure where ms_id =\''.$ministry.'\';' ;
       $query =  $this->db->query($sql);
 
       return $query->getResult();

@@ -29,12 +29,18 @@ $routes->set404Override();
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->get('/', 'Home::index');
-$routes->post('/getCourseWiseEnrolmentReport', 'Home::getCourseWiseEnrolmentReport');
-$routes->post('/getCourseReport', 'Home::getCourseReport');
-$routes->post('/getMDOReport', 'Home::getMDOReport');
+$routes->get('/reporting', 'Home::index');
+$routes->get('/reporting/index.php', 'Home::index');
+$routes->get('/login', 'Login::index');
+$routes->post('/login', 'Login::index');
+$routes->post('/reporting/getCourseWiseEnrolmentReport', 'Home::getCourseWiseEnrolmentReport');
+$routes->post('/reporting/getCourseReport', 'Home::getCourseReport');
+$routes->post('/reporting/getMDOReport', 'Home::getMDOReport');
+$routes->post('/reporting/getRoleReport', 'Home::getRoleReport');
 $routes->post('/reporting/action', 'Home::action');
-$routes->get("download-report", "Report::exportToExcel");
+$routes->get("/reporting/download-report", "Report::exportToExcel");
+$routes->post('/login/user_login_process', 'Login::user_login_process');
+$routes->get('/login/logout', 'Login::logout');
 
 /*
  * --------------------------------------------------------------------
