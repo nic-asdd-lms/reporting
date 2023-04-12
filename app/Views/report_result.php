@@ -128,8 +128,7 @@ border-block-start-color: #e26b4259
 </head>
     <body>
     <div class="h2"><?php echo $reportTitle ?></h2>
-    <!-- <button class="btn btn-success download-button" onclick="exportTableToExcel('tbl-result','')">Download Excel</button> -->
-    <button class="btn btn-success download-button" onclick="tableToCSV('tbl-result','<?php echo $fileName ?>')">Download CSV</button>
+    <a class="btn btn-success download-button" href="/reporting/getUserByOrgReport?orgName=<?php echo $orgName;?>" target="_blank" > Download Excel </a>
     <!-- <form class="form-horizontal login_form" action="/reporting/download-report" method="post">
     <button class="btn btn-success download-button" >Download Excel</button>
 </form> -->
@@ -139,16 +138,20 @@ border-block-start-color: #e26b4259
 <section>
     
 <?php 
-echo $result
-?>
+echo $resultHTML;
 
-    
+?>
 
 </section>
 
 </div>
 
 <script>
+    /*
+
+    onclick="exportTableToExcel('tbl-result','')"
+     onclick="tableToCSV('tbl-result','')"
+
   $(document).ready(function() {
     $('#tbl-result').DataTable( {
         dom: 'Bfrtip',
@@ -159,12 +162,13 @@ echo $result
 } );
 
 function tableToCSV(tableID, filename ) {
- alert(tableID+filename);
  // Variable to store the final csv data
  var csv_data = [];
 
  // Get each row data
- var rows = tableID.getElementsByTag('tr');
+ var rows = document.getElementsByTagName('tr');
+//  alert(rows);
+ 
  for (var i = 0; i < rows.length; i++) {
 
      // Get each column data
@@ -247,7 +251,7 @@ function exportTableToExcel(tableID, filename = ''){
         //triggering the function
         downloadLink.click();
     }
-}
+}*/
 </script>
 </body>
 </html>

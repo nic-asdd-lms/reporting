@@ -11,8 +11,10 @@
     <link href='//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
 
     <!-- jQuery Library -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <!-- Datatable JS -->
     <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <!-- STYLES -->
@@ -21,6 +23,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+  
  
     <style {csp-style-nonce}>
     * {
@@ -185,7 +188,9 @@
                         echo '
                 <button class="tablinks" onclick="openTab(event, \'MDO-wise\')" id="defaultOpen">MDO-wise Reports</button>
                 <button class="tablinks" onclick="openTab(event, \'Course-wise\')">Course-wise Reports</button>
-                <button class="tablinks" onclick="openTab(event, \'Role-wise\')">Role-wise Reports</button>'; }?>
+                <button class="tablinks" onclick="openTab(event, \'Role-wise\')">Role-wise Reports</button>
+                <button class="tablinks" onclick="openTab(event, \'Analytics\')">Analytics</button>
+                '; }?>
 
                 <?php 
                     $session = \Config\Services::session();
@@ -230,7 +235,9 @@ else if($session->get('role')=='MDO_ADMIN') {
                     <hr />
 
                     <div class="container ">
-
+                    <div class="auto-widget">
+    <p>Organisation: <input type="text" id="org_search" placeholder="Search Organisation" /></p>
+</div>
                     
                     <!-- <input type="text" id="search" placeholder="Search" class="form-control" /> -->
                     
@@ -279,6 +286,11 @@ else if($session->get('role')=='MDO_ADMIN') {
 
 </table>
                 </div>
+
+                <div >
+                            <label class="error"><?php if($error != null) {echo $error;} ?></label>
+                        </div>
+
                         <div class="col-xs-3 container submitbutton">
                             <button class="btn btn-primary " type="submit" name="Submit" value="Submit"> Submit</button>
                         </div>
@@ -375,6 +387,58 @@ else if($session->get('role')=='MDO_ADMIN') {
                         <option value="spvAdminList">SPV ADMIN List</option>
                         <option value="stateAdminList">STATE ADMIN List</option>
                         <option value="watMemberList">WAT MEMBER List</option>
+                        </select>
+                
+'; }
+else if($session->get('role')=='MDO_ADMIN') {
+                    
+    echo '<select name="roleReportType" class="form-control  report-select" id="roleReportType" >
+    <option value="notSelected">-- Select Report Type --</option>
+    <option value="roleWiseCount">Role-wise count</option>
+    <option value="mdoAdminList">MDO ADMIN List</option>
+    <option value="cbpAdminList">CBP ADMIN List</option>
+    <option value="creatorList">CONTENT CREATOR List</option>
+    <option value="reviewerList">CONTENT REVIEWER List</option>
+    <option value="publisherList">CONTENT PUBLISHER List</option>
+    <option value="publicList">PUBLIC User List</option>
+                        
+                        </select>
+
+'; } ?>
+</div>
+                    <hr />
+
+                    <div class="container ">
+                    <!-- <input type="text" id="search" placeholder="Search" class="form-control" /> -->
+                    
+                        
+
+                        <div class="col-xs-3 container submitbutton">
+                            <button class="btn btn-primary " type="submit" name="Submit" value="Submit"> Submit</button>
+                        </div>
+
+                    </div>
+
+                    <?php echo form_close(); ?>
+                </form>
+
+
+            </div>
+
+            <div id="Analytics" class="tabcontent">
+            <form class="form-horizontal login_form" action="/reporting/getAnalytics" method="post">
+            <div class="report-type">    
+            <label for="analyticsReportType">Report type:</label>
+                    <?php 
+                    $session = \Config\Services::session();
+		
+                    if($session->get('role')=='SPV_ADMIN') {
+                    
+                        echo '<select name="analyticsReportType" class="form-control report-select" id="analyticsReportType">
+                        <option value="notSelected">-- Select Report Type --</option>
+                        <option value="dayWiseUserOnboarding">Day-wise User Onboarding</option>
+                        <option value="monthWiseUserOnboarding">Month-wise User Onboarding</option>
+                        <option value="monthWiseCourses">Month-wise Courses Published</option>
                         </select>
                 
 '; }
@@ -524,34 +588,7 @@ else if($session->get('role')=='MDO_ADMIN') {
 
 
     </section>
-    <!-- <div class="further">
-
-        <section>
-            <table id='report' class='display dataTable'>
-                
-
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Designation</th>
-                        <th>Organisation</th>
-                        <th>Email ID</th>
-                        <th>Status</th>
-                        <th>Completion Percentage</th>
-                        <th>Completed On</th>
-                    </tr>
-                </thead>
-
-            </table>
-
-
-        </section>
-
-    </div> -->
-
-    <!-- FOOTER: DEBUG INFO + COPYRIGHTS -->
-
-
+    
 
     <!-- SCRIPTS -->
 
@@ -822,6 +859,15 @@ html+='</ul>';
     });
 
 
+    $(function() {
+    $("#org_search").autocomplete({
+        source: "<?php echo base_url('/reporting/search'); ?>",
+        select: function( event, ui ) {
+            event.preventDefault();
+            $("#org_search").val(ui.item.id);
+        }
+    });
+});
     
 
     </script>

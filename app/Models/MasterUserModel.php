@@ -10,6 +10,7 @@ class MasterUserModel extends Model
         parent::__construct();
         //$this->load->database();
         $db = \Config\Database::connect();
+        helper('array');
     }
 
     public function getUserByOrg($org) {
@@ -26,8 +27,19 @@ class MasterUserModel extends Model
         ];
         $table->setTemplate($template);
         $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Contact No.', 'Created Date', 'Roles', 'Profile Update Status');
-
+        
+         
            return $table->generate($query);
+    }
+
+    public function getUserByOrgReport($org) {
+
+        $builder = $this->db->table('master_user');
+        $builder->select('concat(first_name,\' \',last_name) as name, email, org_name, designation, phone,created_date, roles, profile_update_status');
+        $builder->where('org_name', $org);
+        return $builder->get()->getResultArray();
+    
+        
     }
 
     public function getMDOAdminList($orgName) {
@@ -102,6 +114,37 @@ class MasterUserModel extends Model
     }
     
 
+    public function getDayWiseUserOnboarding() {
+        $table = new \CodeIgniter\View\Table();
+
+        $query = $this->db->query('select split_part(created_date::TEXT,\'/\', 1) as DAY ,split_part(created_date::TEXT,\'/\', 2) AS MONTH,split_part(created_date::TEXT,\'/\', 3) AS YEAR ,(count(user_id)) AS Day_wise_User_Onboarded from master_user group by created_date order by YEAR,MONTH,DAY ');
+        
+        $template = [
+            'table_open' => '<table id="tbl-result" class="display dataTable " style="width:90%">'
+        
+        ];
+        $table->setTemplate($template);
+        $table->setHeading('Day','Month', 'Year','Users Onboarded');
+
+           return $table->generate($query);
+    }
+    public function getMonthWiseUserOnboarding() {
+        $table = new \CodeIgniter\View\Table();
+
+        $query = $this->db->query('select split_part(created_datemmyy::TEXT,\'/\', 1) AS MONTH,split_part(created_datemmyy::TEXT,\'/\', 2) AS YEAR ,(count(user_id)) AS Day_wise_User_Onboarded from master_user group by created_datemmyy order by YEAR,MONTH ');
+        
+        $template = [
+            'table_open' => '<table id="tbl-result" class="display dataTable " style="width:90%">'
+        
+        ];
+        $table->setTemplate($template);
+        $table->setHeading('Month', 'Year','Users Onboarded');
+
+           return $table->generate($query);
+    }
+
+    
+
     public function getRoleWiseCount($orgName) {
         $table = new \CodeIgniter\View\Table();
 
@@ -125,17 +168,19 @@ class MasterUserModel extends Model
         $table = new \CodeIgniter\View\Table();
 
         $query = $this->db->query('select  split_part(created_datemmyy::TEXT,\'/\', 1) AS Month, split_part(created_datemmyy::TEXT,\'/\', 2) AS YEAR ,count(*) from master_user where roles ~\'MDO_ADMIN\' group by created_datemmyy order by YEAR, Month  Desc');
-       
+        //$query = $this->db->query('select distinct(created_datemmyy), count(*) from master_user where roles ~\'MDO_ADMIN\' group by  created_datemmyy order by created_datemmyy  DESC');
 
         $template = [
             'table_open' => '<table id="tbl-result" class="display dataTable " style="width:90%">'
         
         ];
         $table->setTemplate($template);
-        $table->setHeading('Month','Year', 'MDO ADMINs created');
+        $table->setHeading('Month', 'Year','MDO ADMINs created');
 
            return $table->generate($query);
     }
+
+
 
     public function getCBPAdminList($orgName) {
         $table = new \CodeIgniter\View\Table();
