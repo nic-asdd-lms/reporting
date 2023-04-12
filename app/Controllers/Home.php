@@ -13,6 +13,8 @@ use App\Models\UserEnrolmentCourse;
 use App\Models\UserEnrolmentProgram;
 use App\Models\MasterProgramModel;
 use App\Models\MasterCollectionModel;
+use PHPExcel_IOFactory;
+use PHPExcel_Reader_HTML;
 
 class Home extends BaseController
 {
@@ -216,7 +218,7 @@ class Home extends BaseController
             $data['result'] =$this->getMDOWiseUserCount();
             $data['reportTitle']='MDO-wise user count ';
             $data['fileName']='MDOWiseUserCount';
-            
+            $data['excelfile'] = $this->downloadExcel($data['result']);
            }
            
            else if($mdoReportType == 'mdoUserEnrolment') {
@@ -299,7 +301,7 @@ class Home extends BaseController
             $data['result'] =$this->getCreatorList($orgName);
             $data['reportTitle']='List of Content Creators';
             $data['fileName']='_UserEnrolmentReport';
-            
+            $data['excelfile'] = $this->downloadExcel($data['result']);
            }
         
            else if($roleReportType == 'reviewerList') {
@@ -385,11 +387,43 @@ class Home extends BaseController
            .view('footer_view');
     }
 
+    public function getDoptReport() {
+        $request = service('request');
+        $session = \Config\Services::session();
+
+        $role= $session->get('role');
+        $org='';
+        if ($role == 'ATI_ADMIN') {
+            $org = $session->get('organisation');
+        }
+        $doptReportType =$request->getPost('doptReportType');
+        $ati=$request->getPost('ati');
+       if($doptReportType == 'atiWiseOverview') {
+        $data['result'] =$this->getATIWiseOverview();
+        $data['reportTitle']='ATI-wise Overview';
+        $data['fileName']='ATIWiseOverview';
+        
+       }
+       
+       return view('header_view')
+       .view('report_result',$data)
+       .view('footer_view');
+       
+    }
+
 
     public function getRoleWiseCount($orgName) {
         $user = new MasterUserModel();
         
                 $userData = $user->getRoleWiseCount($orgName);
+                return $userData;
+                
+    }
+
+    public function getATIWiseOverview() {
+        $user = new UserEnrolmentProgram();
+        
+                $userData = $user->getATIWiseCount();
                 return $userData;
                 
     }
@@ -680,6 +714,11 @@ public function search()
          
         echo json_encode($data);
         
+    }
+
+    public function downloadExcel($table) {
+
+ 
     }
 
 }

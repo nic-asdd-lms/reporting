@@ -177,10 +177,24 @@
 
         <div id="body">
             <div class="tab">
-                <button class="tablinks" onclick="openTab(event, 'MDO-wise')" id="defaultOpen">MDO-wise Reports</button>
-                <button class="tablinks" onclick="openTab(event, 'Course-wise')">Course-wise Reports</button>
-                <button class="tablinks" onclick="openTab(event, 'Role-wise')">Role-wise Reports</button>
+            <?php 
+                    $session = \Config\Services::session();
+		
+                    if($session->get('role')!='DOPT_ADMIN') {
+                    
+                        echo '
+                <button class="tablinks" onclick="openTab(event, \'MDO-wise\')" id="defaultOpen">MDO-wise Reports</button>
+                <button class="tablinks" onclick="openTab(event, \'Course-wise\')">Course-wise Reports</button>
+                <button class="tablinks" onclick="openTab(event, \'Role-wise\')">Role-wise Reports</button>'; }?>
 
+                <?php 
+                    $session = \Config\Services::session();
+		
+                    if($session->get('role')=='DOPT_ADMIN') {
+                    
+                        echo '<button class="tablinks" onclick="openTab(event, \'Dopt\')" id="defaultOpen">DoPT Reports</button>';
+                    }
+                        ?>
             </div>
 
             <div id="MDO-wise" class="tabcontent">
@@ -199,7 +213,7 @@
                     <option value="mdoUserCount">MDO-wise user count</option>
                         <option value="mdoUserList">MDO-wise user List</option>
                         <option value="mdoUserEnrolment">MDO-wise user enrolment report</option>
-                        <option value="ministryUserEnrolment">User List for all organisations under a ministry</option>
+                        <option value="ministryUserEnrolment">User List for all organisations under a Ministry/State</option>
                         '; }
 else if($session->get('role')=='MDO_ADMIN') {
                     
@@ -286,14 +300,14 @@ else if($session->get('role')=='MDO_ADMIN') {
                 <div class="report-type">    
             <label for="courseReportType">Report type:</label>
 
-                <select name="courseReportType"  class="form-control report-select" onchange="enable_disable_course(this)" id="mdoReportType">
+                <select name="courseReportType"  class="form-control report-select" onchange="enable_disable_course(this)" id="courseReportType">
                         <option value="notSelected">-- Select Report Type --</option>
                         <option value="courseEnrolmentReport">Course-wise enrolment report</option>
-                        <option value="courseEnrolmentCount">Course-wise enrolment and completion count</option>
+                        <option value="courseEnrolmentCount">Course-wise summary</option>
                         <option value="programEnrolmentReport">Program-wise enrolment report</option>
-                        <option value="programEnrolmentCount">Program-wise enrolment and completion count</option>
+                        <option value="programEnrolmentCount">Program-wise summary</option>
                         <option value="collectionEnrolmentReport">Curated Collection-wise enrolment report</option>
-                        <option value="collectionEnrolmentCount">Curated Collection-wise enrolment and completion count</option>
+                        <option value="collectionEnrolmentCount">Curated Collection-wise summary</option>
                         </select>
                 
             </div>
@@ -311,7 +325,7 @@ else if($session->get('role')=='MDO_ADMIN') {
                             <tr>
                                 <td class="submitbutton">
                                     <select name="course" id="course" class="form-control">
-                                        <option value="notSelected">--Select Course / Program / Collection--</option>
+                                        <option value="notSelected">--Select Course--</option>
                                         <?php
                                 foreach($course as $row)
                                 {
@@ -399,6 +413,113 @@ else if($session->get('role')=='MDO_ADMIN') {
 
             </div>
 
+            <div id="Dopt" class="tabcontent">
+
+                
+                <form class="form-horizontal login_form" action="/reporting/getDoptReport" method="post">
+
+                <div class="report-type">    
+            <label for="doptReportType">Report type:</label>
+
+                <select name="doptReportType"  class="form-control report-select" onchange="enable_disable_program(this)" id="doptReportType">
+                        <option value="notSelected">-- Select Report Type --</option>
+                        <option value="atiWiseOverview">ATI-wise overview</option>
+                        </select>
+                
+            </div>
+                   
+
+                    <hr />
+
+                    <div class="container">
+                        <table class="submitbutton" id="tbl-program" style="display:none">
+                            <tr>
+                                <td>
+                                    <label for="course">ATI: </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="submitbutton">
+                                    <select name="course" id="course" class="form-control">
+                                        <option value="notSelected">--Select ATI --</option>
+                                        <?php
+                                foreach($course as $row)
+                                {
+                                    echo '<option value="'.$row->course_id.'">'.$row->course_name.'</option>';
+                                }
+                                ?>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div class="col-xs-3 container submitbutton">
+                            <button class="btn btn-primary " type="submit" name="Submit" value="Submit"> Submit</button>
+                        </div>
+
+                    </div>
+
+                    <?php echo form_close(); ?>
+                </form>
+            </div>
+       
+            <div id="Program-wise" class="tabcontent">
+
+                
+                <form class="form-horizontal login_form" action="/reporting/getCourseReport" method="post">
+
+                <div class="report-type">    
+            <label for="courseReportType">Report type:</label>
+
+                <select name="courseReportType"  class="form-control report-select" onchange="enable_disable_course(this)" id="mdoReportType">
+                        <option value="notSelected">-- Select Report Type --</option>
+                        <option value="courseEnrolmentReport">Course-wise enrolment report</option>
+                        <option value="courseEnrolmentCount">Course-wise enrolment and completion count</option>
+                        <option value="programEnrolmentReport">Program-wise enrolment report</option>
+                        <option value="programEnrolmentCount">Program-wise enrolment and completion count</option>
+                        <option value="collectionEnrolmentReport">Curated Collection-wise enrolment report</option>
+                        <option value="collectionEnrolmentCount">Curated Collection-wise enrolment and completion count</option>
+                        </select>
+                
+            </div>
+                   
+
+                    <hr />
+
+                    <div class="container">
+                        <table class="submitbutton" id="tbl-course">
+                            <tr>
+                                <td>
+                                    <label for="course">Course/Program/Collection: </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="submitbutton">
+                                    <select name="course" id="course" class="form-control">
+                                        <option value="notSelected">--Select Course / Program / Collection--</option>
+                                        <?php
+                                foreach($course as $row)
+                                {
+                                    echo '<option value="'.$row->course_id.'">'.$row->course_name.'</option>';
+                                }
+                                ?>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div class="col-xs-3 container submitbutton">
+                            <button class="btn btn-primary " type="submit" name="Submit" value="Submit"> Submit</button>
+                        </div>
+
+                    </div>
+
+                    <?php echo form_close(); ?>
+                </form>
+            </div>
+       
+            
+            
         </div>
 
 
@@ -461,14 +582,28 @@ else if($session->get('role')=='MDO_ADMIN') {
     function enable_disable_mdo(value) {
         
         mdo = document.getElementById('tbl');
-        
+        dept =document.getElementById('dept');
+        org =document.getElementById('org');
+
         mdo.style.display = value.value == "mdoUserCount" ? "none" : "block";
-        
+        dept.style.display =value.value == "ministryUserEnrolment" ? "none" : "block";
+        org.style.display =value.value == "ministryUserEnrolment" ? "none" : "block";
     }
      
     function enable_disable_course(value) {
         course =document.getElementById("tbl-course");
         if(value.value == "courseEnrolmentCount" || value.value == "programEnrolmentCount"){
+            course.style.display = "none";
+        }
+        else {
+            course.style.display = "block";
+        }
+        
+    }
+
+    function enable_disable_program(value) {
+        course =document.getElementById("tbl-program");
+        if(value.value == "atiWiseOverview"){
             course.style.display = "none";
         }
         else {

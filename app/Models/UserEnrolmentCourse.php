@@ -39,20 +39,20 @@ class UserEnrolmentCourse extends Model
         $table = new \CodeIgniter\View\Table();
         if($org == ''){
             $query = $this->db->query('SELECT course_name, published_date, durationh,COUNT(*) AS enrolled_count
-      ,SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count
+      ,SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count, avg_rating
   FROM user_course_enrolment
   INNER JOIN  master_course ON user_course_enrolment.course_id = master_course.course_id
-  GROUP BY course_name,published_date, durationh
+  GROUP BY course_name,published_date, durationh,avg_rating
   ORDER BY completed_count desc');
         }
         else {
             $query = $this->db->query('SELECT course_name, published_date, durationh,COUNT(*) AS enrolled_count
-      ,SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count
+      ,SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count, avg_rating
   FROM user_course_enrolment
   INNER JOIN  master_course ON user_course_enrolment.course_id = master_course.course_id
   INNER JOIN  master_user ON master_user.user_id =user_course_enrolment.user_id
   WHERE master_user.root_org_id=\''.$org.'\'
-  GROUP BY course_name,published_date, durationh
+  GROUP BY course_name,published_date, durationh,avg_rating
   ORDER BY completed_count desc');
         }
         
@@ -63,7 +63,7 @@ class UserEnrolmentCourse extends Model
         
         ];
         $table->setTemplate($template);
-        $table->setHeading('Course Name', 'Published Date', 'Duration (in hrs)', 'Enrollment Count', 'Completion Count');
+        $table->setHeading('Course Name', 'Published Date', 'Duration (in hrs)', 'Enrollment Count', 'Completion Count', 'Average Rating');
 
            return $table->generate($query);
        //return $query->getResult();

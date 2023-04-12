@@ -59,6 +59,7 @@
         padding: 10px;
         color: rgba(62, 62, 62, 1);
         
+        
     }
 
     .further {
@@ -83,12 +84,55 @@
         background-color: rgba(221, 72, 20, 0.1);
     }
     
+    .h2 {
+        margin-left:100px;
+        margin-top:20px;
+        margin-bottom:20px;
+    }
+
+    table {
+        background-color: #e26b420a;
+        border-left-style: solid;
+border-left-width: thin;
+border-left-color: #f4e4de;
+border-right-style: solid;
+border-right-width: thin;
+border-right-color: #f4e4de;
+border-block-start-style: solid;
+border-block-start-width: thin;
+border-block-start-color: #e26b4259
+    }
+
+    tr .odd {
+        background-color: #e26b4200;
+    }
+    td .sorting_1 {
+        background-color: #e26b4200;
+    }
+    td  {
+        background-color: #e26b4200;
+    }
+
+    thead .sorting{
+        background-color: #e26b421c;
+    }
+    thead .sorting_asc{
+        background-color: #e26b421c;
+    }
+    thead .sorting_desc{
+        background-color: #e26b421c;
+    }
+
 
     </style>
 </head>
     <body>
     <div class="h2"><?php echo $reportTitle ?></h2>
-    <button class="btn btn-success download-button" onclick="exportTableToExcel('tbl-result','<?php echo $fileName ?>')">Download Excel</button>
+    <!-- <button class="btn btn-success download-button" onclick="exportTableToExcel('tbl-result','')">Download Excel</button> -->
+    <button class="btn btn-success download-button" onclick="tableToCSV('tbl-result','<?php echo $fileName ?>')">Download CSV</button>
+    <!-- <form class="form-horizontal login_form" action="/reporting/download-report" method="post">
+    <button class="btn btn-success download-button" >Download Excel</button>
+</form> -->
 </div>
     <div class="further">
 
@@ -114,6 +158,65 @@ echo $result
     } );
 } );
 
+function tableToCSV(tableID, filename ) {
+ alert(tableID+filename);
+ // Variable to store the final csv data
+ var csv_data = [];
+
+ // Get each row data
+ var rows = tableID.getElementsByTag('tr');
+ for (var i = 0; i < rows.length; i++) {
+
+     // Get each column data
+     var cols = rows[i].querySelectorAll('td,th');
+
+     // Stores each csv row data
+     var csvrow = [];
+     for (var j = 0; j < cols.length; j++) {
+
+         // Get the text data of each cell
+         // of a row and push it to csvrow
+         csvrow.push(cols[j].innerHTML);
+     }
+
+     // Combine each column value with comma
+     csv_data.push(csvrow.join(","));
+ }
+
+ // Combine each row data with new line character
+ csv_data = csv_data.join('\n');
+
+ // Call this function to download csv file 
+ downloadCSVFile(csv_data);
+
+}
+
+function downloadCSVFile(csv_data) {
+
+ // Create CSV file object and feed
+ // our csv_data into it
+ CSVFile = new Blob([csv_data], {
+     type: "text/csv"
+ });
+
+ // Create to temporary link to initiate
+ // download process
+ var temp_link = document.createElement('a');
+
+ // Download csv file
+ temp_link.download = "GfG.csv";
+ var url = window.URL.createObjectURL(CSVFile);
+ temp_link.href = url;
+
+ // This link should not be displayed
+ temp_link.style.display = "none";
+ document.body.appendChild(temp_link);
+
+ // Automatically click the link to
+ // trigger download
+ temp_link.click();
+ document.body.removeChild(temp_link);
+}
 
 function exportTableToExcel(tableID, filename = ''){
     var downloadLink;

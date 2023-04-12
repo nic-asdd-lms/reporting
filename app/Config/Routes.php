@@ -37,8 +37,9 @@ $routes->post('/reporting/getCourseWiseEnrolmentReport', 'Home::getCourseWiseEnr
 $routes->post('/reporting/getCourseReport', 'Home::getCourseReport');
 $routes->post('/reporting/getMDOReport', 'Home::getMDOReport');
 $routes->post('/reporting/getRoleReport', 'Home::getRoleReport');
+$routes->post('/reporting/getDoptReport', 'Home::getDoptReport');
 $routes->post('/reporting/action', 'Home::action');
-$routes->get("/reporting/download-report", "Report::exportToExcel");
+$routes->post("/reporting/download-report", "Report::exportToExcel");
 $routes->post('/login/user_login_process', 'Login::user_login_process');
 $routes->get('/login/logout', 'Login::logout');
 

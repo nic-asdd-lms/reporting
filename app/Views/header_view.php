@@ -174,7 +174,7 @@
 		
        if ($session->get('logged_in') == true) {
             echo "<li class='menu-item '><a href='/reporting'>Home</a></li>
-            <li class='menu-item '><a href='https://codeigniter4.github.io/userguide/' target='_blank'>Dashboard</a></li>
+            <li class='menu-item '>Dashboard</a></li>
             <li class='menu-item '><a href='/login/logout' >Logout</a></li>";
         }
         ?>

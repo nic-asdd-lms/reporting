@@ -51,46 +51,33 @@ class UserEnrolmentProgram extends Model
        //return $query->getResult();
     }
 
+    public function getATIWiseCount() {
+        $table = new \CodeIgniter\View\Table();
+       $query = $this->db->query('SELECT distinct org_name,  COUNT(*) AS enrolled_count
+      ,SUM(CASE WHEN user_enrolment_program.status =\'Not Started\' THEN 1 ELSE 0 END) AS Not_Started,
+      SUM(CASE WHEN user_enrolment_program.status =\'In-Progress\' THEN 1 ELSE 0 END) AS In_Progress,
+      SUM(CASE WHEN user_enrolment_program.status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count      
+  FROM user_enrolment_program, master_program, master_organization
+  WHERE user_enrolment_program.program_id = master_program.program_id
+  AND master_program.root_org_id=master_organization.root_org_id
+  AND is_ati=true
+  GROUP BY program_name,batch_id
+  ORDER BY completed_count desc');
+
+           $template = [
+            'table_open' => '<table id="tbl-result" class="display dataTable" style="width:90%">'
+        
+        ];
+        $table->setTemplate($template);
+        $table->setHeading('Institute', 'Enrolled',  'Not Started','In Progress', 'Completed');
+
+           return $table->generate($query);
+       //return $query->getResult();
+    }
+
     
 
-    public function getCollectionWiseEnrolmentReport($course) {
-        $table = new \CodeIgniter\View\Table();
-       $query = $this->db->query('SELECT concat(first_name,\' \',last_name) as name, email, org_name, designation, status, completion_percentage, completed_on
-           FROM public.master_user, public.user_enrolment_course
-           where master_user.user_id = user_enrolment_course.user_id 
-           AND user_enrolment_course.course_id = \''.$course.'\'
-           order by name');
-
-           $template = [
-            'table_open' => '<table id="tbl-result" class="display dataTable" style="width:90%">'
-        
-        ];
-        $table->setTemplate($template);
-        $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Status', 'Completion Percentage', 'Completed On');
-
-           return $table->generate($query);
-       //return $query->getResult();
-    }
-
-    public function getCollectionWiseEnrolmentCount($course) {
-        $table = new \CodeIgniter\View\Table();
-       $query = $this->db->query('SELECT concat(first_name,\' \',last_name) as name, email, org_name, designation, status, completion_percentage, completed_on
-           FROM public.master_user, public.user_enrolment_course
-           where master_user.user_id = user_enrolment_course.user_id 
-           AND user_enrolment_course.course_id = \''.$course.'\'
-           order by name');
-
-           $template = [
-            'table_open' => '<table id="tbl-result" class="display dataTable" style="width:90%">'
-        
-        ];
-        $table->setTemplate($template);
-        $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Status', 'Completion Percentage', 'Completed On');
-
-           return $table->generate($query);
-       //return $query->getResult();
-    }
-
+    
 
     public function getEnrolmentByOrg($org) {
         $table = new \CodeIgniter\View\Table();
