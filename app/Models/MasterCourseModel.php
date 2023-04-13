@@ -46,6 +46,15 @@ class MasterCourseModel extends Model
 
            return $table->generate($query);
     }
+
+    public function getMonthWiseCoursesExcel() {
+        $table = new \CodeIgniter\View\Table();
+
+        $query = $this->db->query('select split_part(publishedmmyy::TEXT,\'/\', 1) AS Month,  split_part(publishedmmyy::TEXT,\'/\', 2) AS YEAR ,count(*) as Live_course from master_course where status=\'Live\' group by publishedmmyy  order by YEAR,MONTH');
+        
+        return $query->getResultArray();
+
+    }
     
 
 }

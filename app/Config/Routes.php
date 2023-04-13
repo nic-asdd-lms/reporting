@@ -45,7 +45,7 @@ $routes->post('/login/user_login_process', 'Login::user_login_process');
 $routes->get('/login/logout', 'Login::logout');
 $routes->post('/reporting/search', 'Home::search');
 $routes->post('/reporting/orgSearch', 'Home::orgSearch');
-$routes->get('/reporting/getUserByOrgReport', 'Home::getUserByOrgReport');
+$routes->get('/reporting/getExcelReport', 'Home::getExcelReport');
 
 /*
  * --------------------------------------------------------------------

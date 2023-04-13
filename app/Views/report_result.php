@@ -129,9 +129,8 @@ border-block-start-color: #e26b4259
     <body>
     <div class="h2"><?php echo $reportTitle ?></h2>
     <?php 
-    if($reportType == 'org') {
-        echo '<a class="btn btn-success download-button" href="/reporting/getUserByOrgReport?orgName='. $orgName.'" target="_blank" > Download Excel </a>';
-    }
+    echo '<a class="btn btn-success download-button" href="/reporting/getExcelReport?'. $params.'" target="_blank" > Download Excel </a>';
+    
     // else if($reportType == 'course') {
     //     echo '<a class="btn btn-success download-button" href="/reporting/getCourseReports?course='. $course.'&orgName='.$orgName.'" target="_blank" > Download Excel </a>';
     // }

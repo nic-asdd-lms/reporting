@@ -89,7 +89,7 @@ class Home extends BaseController
             }
         }
     }
-    
+
     public function getCourseReport()
     {
         $request = service('request');
@@ -106,59 +106,73 @@ class Home extends BaseController
         $courseReportType = $request->getPost('courseReportType');
         $course = $request->getPost('course');
         if ($courseReportType == 'courseEnrolmentReport') {
-            $data['org'] = $org;
-            $data['course'] = $course;
-            $data['reportType'] = 'course';
+            if ($role == 'MDO_ADMIN') {
+                $data['params'] = 'reportType=courseEnrolmentReport&org=' . $org.'&course='.$course;
+            }
+            else if($role == 'SPV_ADMIN'){
+                $data['params'] = 'reportType=courseEnrolmentReport&course='.$course;
+            }
             $data['resultHTML'] = $enrolment->getCourseWiseEnrolmentReport($course, $org);
             $data['reportTitle'] = 'User Enrolment Report for Course - "' . $this->getCourseName($course) . '"';
             $data['fileName'] = $course . '_EnrolmentReport';
 
         } else if ($courseReportType == 'courseEnrolmentCount') {
-            $data['org'] = $org;
-            $data['course'] = $course;
-            $data['reportType'] = 'course';
-            $data['resultHTML'] = $enrolment->getCourseWiseEnrolmentCount($course, $org);
+            if ($role == 'MDO_ADMIN') {
+                $data['params'] = 'reportType=courseEnrolmentCount&org=' . $org;
+            }
+            else if($role == 'SPV_ADMIN'){
+                $data['params'] = 'reportType=courseEnrolmentCount';
+            }
+            $data['resultHTML'] = $enrolment->getCourseWiseEnrolmentCount($org);
             $data['reportTitle'] = 'Course-wise Enrolment/Completion Count';
             $data['fileName'] = $course . '_EnrolmentCompletionCount';
 
         } else if ($courseReportType == 'programEnrolmentReport') {
-            $data['org'] = $org;
-            $data['course'] = $course;
-            $data['reportType'] = 'course';
+            if ($role == 'MDO_ADMIN') {
+                $data['params'] = 'reportType=programEnrolmentReport&org=' . $org.'&course='.$course;
+            }
+            else if($role == 'SPV_ADMIN'){
+                $data['params'] = 'reportType=programEnrolmentReport&course='.$course;
+            }
             $data['resultHTML'] = $enrolmentProgram->getProgramWiseEnrolmentReport($course, $org);
             $data['reportTitle'] = 'User Enrolment Report for Program - "' . $this->getProgramName($course) . '"';
             $data['fileName'] = $course . '_EnrolmentReport';
 
         } else if ($courseReportType == 'programEnrolmentCount') {
-            $data['org'] = $org;
-            $data['course'] = $course;
-            $data['reportType'] = 'course';
-             $data['resultHTML'] = $enrolmentProgram->getProgramWiseEnrolmentCount($course, $org);
+            if ($role == 'MDO_ADMIN') {
+                $data['params'] = 'reportType=programEnrolmentCount&org=' . $org;
+            }
+            else if($role == 'SPV_ADMIN'){
+                $data['params'] = 'reportType=programEnrolmentCount';
+            }
+            $data['resultHTML'] = $enrolmentProgram->getProgramWiseEnrolmentCount($org);
             $data['reportTitle'] = 'Program-wise Enrolment/Completion Count';
             $data['fileName'] = $course . '_EnrolmentCompletionCount';
 
         } else if ($courseReportType == 'collectionEnrolmentReport') {
-            $data['org'] = $org;
-            $data['course'] = $course;
-            $data['reportType'] = 'course';
-            $data['resultHTML'] = $enrolment->getCollectionWiseEnrolmentRepor($course, $org);
+            if ($role == 'MDO_ADMIN') {
+                $data['params'] = 'reportType=collectionEnrolmentReport&org=' . $org.'&course='.$course;
+            }
+            else if($role == 'SPV_ADMIN'){
+                $data['params'] = 'reportType=collectionEnrolmentReport&course='.$course;
+            }
+            $data['resultHTML'] = $enrolment->getCollectionWiseEnrolmentReport($course, $org);
             $data['reportTitle'] = 'User Enrolment Report for Curated Collection - "' . $this->getCollectionName($course) . '"';
             $data['fileName'] = $course . '_EnrolmentReport';
 
         } else if ($courseReportType == 'collectionEnrolmentCount') {
-            $data['org'] = $org;
-            $data['course'] = $course;
-            $data['reportType'] = 'course';
+            if ($role == 'MDO_ADMIN') {
+                $data['params'] = 'reportType=collectionEnrolmentCount&org=' . $org.'&course='.$course;
+            }
+            else if($role == 'SPV_ADMIN'){
+                $data['params'] = 'reportType=collectionEnrolmentCount&course='.$course;
+            }
             $data['resultHTML'] = $enrolment->getCollectionWiseEnrolmentCount($course, $org);
             $data['reportTitle'] = 'Enrolment/Completion Count for Curated Collection - "' . $this->getCollectionName($course) . '"';
             $data['fileName'] = $course . '_EnrolmentCompletionCount';
 
-        }
-
-        else if ($courseReportType == 'courseMinistrySummary') {
-            $data['org'] = $org;
-            $data['course'] = $course;
-            $data['reportType'] = 'course';
+        } else if ($courseReportType == 'courseMinistrySummary') {
+            $data['params'] = 'reportType=courseMinistrySummary&course='.$course;
             $data['resultHTML'] = $enrolment->getCourseMinistrySummary($course);
             $data['reportTitle'] = 'Ministry-wise Summary for course - "' . $this->getCourseName($course) . '"';
             $data['fileName'] = $course . '_MinistrySummary';
@@ -205,8 +219,10 @@ class Home extends BaseController
             $orgName = $this->getOrgName($org);
 
         } else if ($dept != "notSelected") {
+            $org = $dept;
             $orgName = $this->getOrgName($dept);
         } else if ($ministry != "notSelected") {
+            $org = $ministry;
             $orgName = $this->getOrgName($ministry);
         }
 
@@ -230,37 +246,33 @@ class Home extends BaseController
 
                 // }
 
-                
-                
-                $data['orgName'] = $orgName;
-                $data['reportType'] = 'org';
+
+
+                $data['params'] = 'reportType=mdoUserList&org=' . $org;
                 $data['resultHTML'] = $user->getUserByOrg($orgName);
                 $data['reportTitle'] = 'Users onboarded from organisation - "' . $orgName . '"';
                 $data['fileName'] = $orgName . '_UserList';
             }
         } else
             if ($mdoReportType == 'mdoUserCount') {
+                $data['params'] = 'reportType=mdoUserCount';
                 $data['resultHTML'] = $user->getUserCountByOrg();
-                $data['reportType'] = 'no_param';
                 $data['reportTitle'] = 'MDO-wise user count ';
                 $data['fileName'] = 'MDOWiseUserCount';
             } else if ($mdoReportType == 'mdoUserEnrolment') {
-                $data['orgName'] = $orgName;
-                $data['reportType'] = 'org';
+                $data['params'] = 'reportType=mdoUserEnrolment&org=' . $org;
                 $data['resultHTML'] = $enrolment->getEnrolmentByOrg($orgName);
                 $data['reportTitle'] = 'Users Enrolment Report for organisation - "' . $orgName . '"';
                 $data['fileName'] = $orgName . '_UserEnrolmentReport';
 
             } else if ($mdoReportType == 'ministryUserEnrolment') {
-                $data['orgName'] = $ministryName;
-                $data['reportType'] = 'org';
+                $data['params'] = 'reportType=ministryUserEnrolment&org=' . $org;
                 $data['resultHTML'] = $user->getUserByMinistry($ministryName);
                 $data['reportTitle'] = 'Users list for all organisations under ministry - "' . $ministryName . '"';
                 $data['fileName'] = $orgName . '_UserList';
 
             } else if ($mdoReportType == 'userWiseCount') {
-                $data['orgName'] = $ministryName;
-                $data['reportType'] = 'org';
+                $data['params'] = 'reportType=userWiseCount&org=' . $org;
                 $data['resultHTML'] = $enrolment->getUserEnrolmentCountByMDO($orgName);
                 $data['reportTitle'] = 'User-wise course enrolment/completion count for organisation - "' . $orgName . '"';
                 $data['fileName'] = $orgName . '_UserList';
@@ -297,85 +309,171 @@ class Home extends BaseController
         }
 
         if ($roleReportType == 'roleWiseCount') {
+            if ($role == 'SPV_ADMIN') {
+                $data['params'] = 'reportType=roleWiseCount';
+            } elseif ($role == 'MDO_ADMIN') {
+                $data['params'] = 'reportType=roleWiseCount&org=' . $org;
+            }
             $data['resultHTML'] = $user->getRoleWiseCount($orgName);
             $data['reportTitle'] = 'Role-wise count';
             $data['fileName'] = 'RoleWiseCount';
 
         } else if ($roleReportType == 'monthWiseMDOAdminCount') {
+            if ($role == 'SPV_ADMIN') {
+                $data['params'] = 'reportType=monthWiseMDOAdminCount';
+            } elseif ($role == 'MDO_ADMIN') {
+                $data['params'] = 'reportType=monthWiseMDOAdminCount&org=' . $org;
+            }
             $data['resultHTML'] = $user->getMonthWiseMDOAdminCount($orgName);
             $data['reportTitle'] = 'Month-wise MDO Admin Creation Count';
             $data['fileName'] = 'RoleWiseCount';
 
         } else if ($roleReportType == 'cbpAdminList') {
+            if ($role == 'SPV_ADMIN') {
+                $data['params'] = 'reportType=cbpAdminList';
+            } elseif ($role == 'MDO_ADMIN') {
+                $data['params'] = 'reportType=cbpAdminList&org=' . $org;
+            }
             $data['resultHTML'] = $user->getCBPAdminList($orgName);
             $data['reportTitle'] = 'MDO-wise user count ';
             $data['fileName'] = 'MDOWiseUserCount';
 
         } else if ($roleReportType == 'mdoAdminList') {
+            if ($role == 'SPV_ADMIN') {
+                $data['params'] = 'reportType=mdoAdminList';
+            } elseif ($role == 'MDO_ADMIN') {
+                $data['params'] = 'reportType=mdoAdminList&org=' . $org;
+            }
+
             $data['resultHTML'] = $user->getMDOAdminList($orgName);
             $data['reportTitle'] = 'MDO Admin List ';
             $data['fileName'] = 'MDOAdminList';
 
         } else if ($roleReportType == 'creatorList') {
+            if ($role == 'SPV_ADMIN') {
+                $data['params'] = 'reportType=creatorList';
+            } elseif ($role == 'MDO_ADMIN') {
+                $data['params'] = 'reportType=creatorList&org=' . $org;
+            }
             $data['resultHTML'] = $user->getCreatorList($orgName);
             $data['reportTitle'] = 'List of Content Creators';
             $data['fileName'] = '_UserEnrolmentReport';
         } else if ($roleReportType == 'reviewerList') {
+            if ($role == 'SPV_ADMIN') {
+                $data['params'] = 'reportType=reviewerList';
+            } elseif ($role == 'MDO_ADMIN') {
+                $data['params'] = 'reportType=reviewerList&org=' . $org;
+            }
             $data['resultHTML'] = $user->getReviewerList($orgName);
             $data['reportTitle'] = 'List of Content Reviewers';
             $data['fileName'] = '_UserList';
 
         } else if ($roleReportType == 'publisherList') {
+            if ($role == 'SPV_ADMIN') {
+                $data['params'] = 'reportType=publisherList';
+            } elseif ($role == 'MDO_ADMIN') {
+                $data['params'] = 'reportType=publisherList&org=' . $org;
+            }
             $data['resultHTML'] = $user->getPublisherList($orgName);
             $data['reportTitle'] = 'List of Content Publishers';
             $data['fileName'] = '_UserList';
 
         } else if ($roleReportType == 'editorList') {
+            if ($role == 'SPV_ADMIN') {
+                $data['params'] = 'reportType=editorList';
+            } elseif ($role == 'MDO_ADMIN') {
+                $data['params'] = 'reportType=editorList&org=' . $org;
+            }
             $data['resultHTML'] = $user->getEditorList($orgName);
             $data['reportTitle'] = 'List of Editors';
             $data['fileName'] = '_UserList';
 
         } else if ($roleReportType == 'fracAdminList') {
+            if ($role == 'SPV_ADMIN') {
+                $data['params'] = 'reportType=fracAdminList';
+            } elseif ($role == 'MDO_ADMIN') {
+                $data['params'] = 'reportType=fracAdminList&org=' . $org;
+            }
             $data['resultHTML'] = $user->getFracAdminList($orgName);
             $data['reportTitle'] = 'List of FRAC Admins';
             $data['fileName'] = '_UserList';
 
         } else if ($roleReportType == 'fracCompetencyMember') {
+            if ($role == 'SPV_ADMIN') {
+                $data['params'] = 'reportType=fracCompetencyMember';
+            } elseif ($role == 'MDO_ADMIN') {
+                $data['params'] = 'reportType=fracCompetencyMember&org=' . $org;
+            }
             $data['resultHTML'] = $user->getFracCompetencyMemberList($orgName);
             $data['reportTitle'] = 'List of FRAC Competency Members';
             $data['fileName'] = '_UserList';
 
         } else if ($roleReportType == 'fracL1List') {
+            if ($role == 'SPV_ADMIN') {
+                $data['params'] = 'reportType=fracL1List';
+            } elseif ($role == 'MDO_ADMIN') {
+                $data['params'] = 'reportType=fracL1List&org=' . $org;
+            }
             $data['resultHTML'] = $user->getFRACL1List($orgName);
             $data['reportTitle'] = 'MDO Admin List ';
             $data['fileName'] = 'MDOAdminList';
 
         } else if ($roleReportType == 'fracL2List') {
+            if ($role == 'SPV_ADMIN') {
+                $data['params'] = 'reportType=fracL2List';
+            } elseif ($role == 'MDO_ADMIN') {
+                $data['params'] = 'reportType=fracL2List&org=' . $org;
+            }
             $data['resultHTML'] = $user->getFRACL2List($orgName);
             $data['reportTitle'] = 'List of Content Creators';
             $data['fileName'] = '_UserEnrolmentReport';
 
         } else if ($roleReportType == 'ifuMemberList') {
+            if ($role == 'SPV_ADMIN') {
+                $data['params'] = 'reportType=ifuMemberList';
+            } elseif ($role == 'MDO_ADMIN') {
+                $data['params'] = 'reportType=ifuMemberList&org=' . $org;
+            }
             $data['resultHTML'] = $user->getIFUMemberList($orgName);
             $data['reportTitle'] = 'List of Content Reviewers';
             $data['fileName'] = '_UserList';
 
         } else if ($roleReportType == 'publicList') {
+            if ($role == 'SPV_ADMIN') {
+                $data['params'] = 'reportType=publicList';
+            } elseif ($role == 'MDO_ADMIN') {
+                $data['params'] = 'reportType=publicList&org=' . $org;
+            }
             $data['resultHTML'] = $user->getPublicList($orgName);
             $data['reportTitle'] = 'List of Content Publishers';
             $data['fileName'] = '_UserList';
 
         } else if ($roleReportType == 'spvAdminList') {
+            if ($role == 'SPV_ADMIN') {
+                $data['params'] = 'reportType=spvAdminList';
+            } elseif ($role == 'MDO_ADMIN') {
+                $data['params'] = 'reportType=spvAdminList&org=' . $org;
+            }
             $data['resultHTML'] = $user->getSPVAdminList($orgName);
             $data['reportTitle'] = 'List of Editors';
             $data['fileName'] = '_UserList';
 
         } else if ($roleReportType == 'stateAdminList') {
+            if ($role == 'SPV_ADMIN') {
+                $data['params'] = 'reportType=stateAdminList';
+            } elseif ($role == 'MDO_ADMIN') {
+                $data['params'] = 'reportType=stateAdminList&org=' . $org;
+            }
             $data['resultHTML'] = $user->getStateAdminList($orgName);
             $data['reportTitle'] = 'List of FRAC Admins';
             $data['fileName'] = '_UserList';
 
         } else if ($roleReportType == 'watMemberList') {
+            if ($role == 'SPV_ADMIN') {
+                $data['params'] = 'reportType=watMemberList';
+            } elseif ($role == 'MDO_ADMIN') {
+                $data['params'] = 'reportType=watMemberList&org=' . $org;
+            }
             $data['resultHTML'] = $user->getWATMemberList($orgName);
             $data['reportTitle'] = 'List of FRAC Competency Members';
             $data['fileName'] = '_UserList';
@@ -413,16 +511,19 @@ class Home extends BaseController
         }
 
         if ($analyticsReportType == 'dayWiseUserOnboarding') {
+            $data['params'] = 'reportType=dayWiseUserOnboarding';
             $data['resultHTML'] = $user->getDayWiseUserOnboarding();
             $data['reportTitle'] = 'Day-wise User Onboarding';
             $data['fileName'] = 'RoleWiseCount';
 
         } else if ($analyticsReportType == 'monthWiseUserOnboarding') {
+            $data['params'] = 'reportType=monthWiseUserOnboarding';
             $data['resultHTML'] = $user->getMonthWiseUserOnboarding();
             $data['reportTitle'] = 'Month-wise User Onboarding';
             $data['fileName'] = 'MDOWiseUserCount';
 
         } else if ($analyticsReportType == 'monthWiseCourses') {
+            $data['params'] = 'reportType=monthWiseCourses';
             $data['resultHTML'] = $course->getMonthWiseCourses();
             $data['reportTitle'] = 'Month-wise Courses Published';
             $data['fileName'] = 'MDOAdminList';
@@ -450,7 +551,8 @@ class Home extends BaseController
         $doptReportType = $request->getPost('doptReportType');
         $ati = $request->getPost('ati');
         if ($doptReportType == 'atiWiseOverview') {
-            $data['resultHTML'] = $user->getATIWiseOverview();
+            $data['params'] = 'reportType=atiWiseOverview';
+            $data['resultHTML'] = $user->getATIWiseCount();
             $data['reportTitle'] = 'ATI-wise Overview';
             $data['fileName'] = 'ATIWiseOverview';
 
@@ -462,107 +564,187 @@ class Home extends BaseController
 
     }
 
+
+
+
+    public function getExcelReport()
+    {
+        helper('array');
+
+        $user = new MasterUserModel();
+        $enrolmentCourse = new UserEnrolmentCourse();
+        $enrolmentProgram = new UserEnrolmentProgram();
+        $course = new MasterCourseModel();
+
+        $query_params = explode("&", current_url(true)->getQuery());
+
+        $params = array();
+        $keys = array();
+        $reportType = '';
+        $course_id = '';
+        $org_id = '';
+        foreach ($query_params as $param) {
+            list($k, $v) = explode('=', $param);
+            $params[$k] = $v;
+        }
+
+        foreach ($params as $key => $value) {
+
+            if ($key == 'reportType') {
+                $reportType = $value;
+            } else if ($key == 'course') {
+                $course_id = $value;
+            } else if ($key == 'org') {
+                $org_id = $value;
+            }
+
+        }
+
+        switch ($reportType) {
+            case 'mdoUserList':
+                $report = $user->getUserByOrgExcel($org_id);
+                break;
+            case 'mdoUserCount':
+                $report = $user->getUserCountByOrgExcel();
+                break;
+            case 'mdoUserEnrolment':
+                $report = $enrolmentCourse->getEnrolmentByOrgExcel($org_id);
+                break;
+            case 'ministryUserEnrolment':
+                $report = $user->getUserByMinistryExcel($org_id);
+                break;
+            case 'userWiseCount':
+                $report = $user->getUserEnrolmentCountByMDOExcel($org_id);
+                break;
+            case 'courseEnrolmentReport':
+                $report = $enrolmentCourse->getCourseWiseEnrolmentReporExcelt($course_id, $org_id);
+                break;
+            case 'courseEnrolmentCount':
+                $report = $enrolmentCourse->getCourseWiseEnrolmentCountExcel($course_id, $org_id);
+                break;
+            case 'programEnrolmentReport':
+                $report = $enrolmentProgram->getProgramWiseEnrolmentReportExcel($course_id, $org_id);
+                break;
+            case 'programEnrolmentCount':
+                $report = $enrolmentProgram->getProgramWiseEnrolmentCountExcel($course_id, $org_id);
+                break;
+            case 'collectionEnrolmentReport':
+                $report = $enrolmentCourse->getCollectionWiseEnrolmentReportExcel($course_id, $org_id);
+                break;
+            case 'collectionEnrolmentCount':
+                $report = $enrolmentCourse->getCollectionWiseEnrolmentCountExcel($course_id, $org_id);
+                break;
+            case 'courseMinistrySummary':
+                $report = $enrolmentCourse->getCourseMinistrySummaryExcel($course_id);
+                break;
+            case 'roleWiseCount':
+                $report = $user->getRoleWiseCountExcel($org_id);
+                break;
+            case 'monthWiseMDOAdminCount':
+                $report = $user->getMonthWiseMDOAdminCountExcel($org_id);
+                break;
+            case 'mdoAdminList':
+                $report = $user->getMDOAdminListExcel($org_id);
+                break;
+            case 'cbpAdminList':
+                $report = $user->getCBPAdminListExcel($org_id);
+                break;
+            case 'creatorList':
+                $report = $user->getCreatorListExcel($org_id);
+                break;
+            case 'reviewerList':
+                $report = $user->getReviewerListExcel($org_id);
+                break;
+            case 'publisherList':
+                $report = $user->getPublisherListExcel($org_id);
+                break;
+            case 'editorList':
+                $report = $user->getEditorListExcel($org_id);
+                break;
+            case 'fracAdminList':
+                $report = $user->getFracAdminListExcel($org_id);
+                break;
+            case 'fracCompetencyMember':
+                $report = $user->getFracCompetencyMemberListExcel($org_id);
+                break;
+            case 'fracL1List':
+                $report = $user->getFRACL1ListExcel($org_id);
+                break;
+            case 'fracL2List':
+                $report = $user->getFRACL2ListExcel($org_id);
+                break;
+            case 'ifuMemberList':
+                $report = $user->getIFUMemberListExcel($org_id);
+                break;
+            case 'publicList':
+                $report = $user->getPublicListExcel($org_id);
+                break;
+            case 'spvAdminList':
+                $report = $user->getSPVAdminListExcel($org_id);
+                break;
+            case 'stateAdminList':
+                $report = $user->getStateAdminListExcel($org_id);
+                break;
+            case 'watMemberList':
+                $report = $user->getWATMemberListExcel($org_id);
+                break;
+            case 'dayWiseUserOnboarding':
+                $report = $user->getDayWiseUserOnboardingExcel();
+                break;
+            case 'monthWiseUserOnboarding':
+                $report = $user->getMonthWiseUserOnboardingExcel();
+                break;
+            case 'monthWiseCourses':
+                $report = $course->getMonthWiseCoursesExcel();
+                break;
+            case 'atiWiseOverview':
+                $report = $user->getATIWiseCountExcel();
+                break;
+            
+        }
+
+        foreach ($report[0] as $key => $value) {
+            array_push($keys, $key);
+        }
+
+        $fileName = $reportType .'_'. $org_id . '_' . $course_id . '.xlsx';
+        $spreadsheet = new Spreadsheet();
+
+        $sheet = $spreadsheet->getActiveSheet();
+        $column = 'A';
+        foreach ($keys as $key) {
+            $sheet->setCellValue($column . '1', $key);
+            $column++;
+        }
+
+
+        $rows = 2;
+
+
+
+        foreach ($report as $row) {
+            $column = 'A';
+            foreach ($row as $key => $val) {
+                $sheet->setCellValue($column . $rows, $val);
+                $column++;
+            }
+
+
+            $rows++;
+        }
+        //header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        header("Content-Type: application/vnd.ms-excel");
+header("Content-Disposition: attachment; filename=".$fileName);
+        header("Cache-Control: max-age=0");
+
+        $writer = new Xlsx($spreadsheet);
+        ob_clean();
+        $writer->save('php://output');
+        header("Content-Type: application/vnd.ms-excel");
+
+
+    }
     
-
-
-    public function getUserByOrgReport()
-    {
-        $request = service('request');
-$orgName = $request->getPost('orgName');
-        
-        $user = new MasterUserModel();
-
-        $userDataReport = $user->getUserByOrgReport($orgName);
-
-
-        $fileName = 'students'.time().'.xlsx';  
-		$spreadsheet = new Spreadsheet();
-
-		$sheet = $spreadsheet->getActiveSheet();
-		$sheet->setCellValue('A1', 'name');
-		$sheet->setCellValue('B1', 'email');
-		$sheet->setCellValue('C1', 'org_name');
-		$sheet->setCellValue('D1', 'designation');
-		$sheet->setCellValue('E1', 'phone');
-		$sheet->setCellValue('F1', 'created_date');       
-		$sheet->setCellValue('G1', 'roles');       
-		$sheet->setCellValue('H1', 'profile_update_status');       
-		$rows = 2;
-
-		foreach ($userDataReport as $val){
-		  $sheet->setCellValue('A' . $rows, $val['name']);
-		  $sheet->setCellValue('B' . $rows, $val['email']);
-		  $sheet->setCellValue('C' . $rows, $val['org_name']);
-		  $sheet->setCellValue('D' . $rows, $val['designation']);
-		  $sheet->setCellValue('E' . $rows, $val['phone']);
-		  $sheet->setCellValue('F' . $rows, $val['created_date']);
-		  $sheet->setCellValue('G' . $rows, $val['roles']);
-		  $sheet->setCellValue('H' . $rows, $val['profile_update_status']);
-		  $rows++;
-		} 
-		$writer = new Xlsx($spreadsheet);
-		$writer->save("upload/".$fileName);
-		header("Content-Type: application/vnd.ms-excel");
-		//redirect(base_url()."/upload/".$fileName);
-
-
-
-
-        // print_r($userDataReport);
-        // die;
-
-    }
-    public function getOrgReports()
-    {
-        $request = service('request');
-
-        $orgName = $request->getPost('orgName');
-
-        $user = new MasterUserModel();
-
-        $userDataReport = $user->getUserByOrgReport($orgName);
-
-
-        $fileName = 'students.xlsx';  
-		$spreadsheet = new Spreadsheet();
-
-		$sheet = $spreadsheet->getActiveSheet();
-		$sheet->setCellValue('A1', 'name');
-		$sheet->setCellValue('B1', 'email');
-		$sheet->setCellValue('C1', 'org_name');
-		$sheet->setCellValue('D1', 'designation');
-		$sheet->setCellValue('E1', 'phone');
-		$sheet->setCellValue('F1', 'created_date');       
-		$sheet->setCellValue('G1', 'roles');       
-		$sheet->setCellValue('H1', 'profile_update_status');       
-		$rows = 2;
-
-		foreach ($userDataReport as $val){
-		  $sheet->setCellValue('A' . $rows, $val['name']);
-		  $sheet->setCellValue('B' . $rows, $val['email']);
-		  $sheet->setCellValue('C' . $rows, $val['org_name']);
-		  $sheet->setCellValue('D' . $rows, $val['designation']);
-		  $sheet->setCellValue('E' . $rows, $val['phone']);
-		  $sheet->setCellValue('F' . $rows, $val['created_date']);
-		  $sheet->setCellValue('G' . $rows, $val['roles']);
-		  $sheet->setCellValue('H' . $rows, $val['profile_update_status']);
-		  $rows++;
-		} 
-		$writer = new Xlsx($spreadsheet);
-		$writer->save("upload/".$fileName);
-		header("Content-Type: application/vnd.ms-excel");
-		//redirect(base_url()."/upload/".$fileName);
-
-
-
-
-        // print_r($userDataReport);
-        // die;
-
-    }
-
-
-
     public function getCourseName($course_id)
     {
         $course = new MasterCourseModel();

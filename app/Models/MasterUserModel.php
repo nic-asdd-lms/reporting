@@ -32,11 +32,12 @@ class MasterUserModel extends Model
            return $table->generate($query);
     }
 
-    public function getUserByOrgReport($org) {
+    public function getUserByOrgExcel($org) {
 
         $builder = $this->db->table('master_user');
         $builder->select('concat(first_name,\' \',last_name) as name, email, org_name, designation, phone,created_date, roles, profile_update_status');
-        $builder->where('org_name', $org);
+        $builder->where('root_org_id', $org);
+
         return $builder->get()->getResultArray();
     
         
@@ -64,6 +65,21 @@ class MasterUserModel extends Model
 
            return $table->generate($query);
     }
+
+    public function getMDOAdminListExcel($orgName) {
+        $table = new \CodeIgniter\View\Table();
+
+        $builder = $this->db->table('master_user');
+        $builder->select('concat(first_name,\' \',last_name) as name, email, org_name, designation, phone,created_date, roles');
+        $builder->like('roles', 'MDO_ADMIN');
+        if($orgName != '')
+        {
+            $builder->where('root_org_id',$orgName);
+            
+        }
+        return $builder->get()->getResultArray();
+    
+    }
     public function getUserCountByOrg() {
         $table = new \CodeIgniter\View\Table();
 
@@ -81,6 +97,16 @@ class MasterUserModel extends Model
         $table->setHeading('Organisation', 'User Count');
 
            return $table->generate($query);
+    }
+
+    public function getUserCountByOrgExcel() {
+        $table = new \CodeIgniter\View\Table();
+
+        $builder = $this->db->table('master_user');
+        $builder->select(' org_name, count(*)');
+       // $builder->where(' org_name IS NOT NULL');
+        $builder->groupBy('org_name');
+        return $builder->get()->getResultArray();
     }
     
 
@@ -113,6 +139,30 @@ class MasterUserModel extends Model
         return $table->generate($query);
     }
     
+    public function getUserByMinistryExcel($org) {
+        $table = new \CodeIgniter\View\Table();
+
+        $builder = $this->db->table('master_user');
+        $builder->select('concat(first_name,\' \',last_name) as name, email, master_user.org_name, designation, phone,created_date,roles');
+        $builder->join('master_structure', 'master_structure.ministry_state_name = master_user.org_name ');
+        $builder->where('master_structure.ms_id',$org);
+        
+        $unionDept = $this->db->table('master_user')
+                    ->select('concat(first_name,\' \',last_name) as name, email, master_user.org_name, designation, phone,created_date,roles')
+                    ->join('master_structure', 'master_structure.dep_name = master_user.org_name ')
+                    ->where('master_structure.ms_id',$org);
+        
+        $unionOrg = $this->db->table('master_user')
+                    ->select('concat(first_name,\' \',last_name) as name, email, master_user.org_name, designation, phone,created_date,roles')
+                    ->join('master_structure', 'master_structure.org_name = master_user.org_name ')
+                    ->where('master_structure.ms_id',$org);
+        $query = $builder->union($unionDept)->union($unionOrg)->get();
+    
+        
+        return $query->getResultArray();
+
+    }
+    
 
     public function getDayWiseUserOnboarding() {
         $table = new \CodeIgniter\View\Table();
@@ -128,6 +178,16 @@ class MasterUserModel extends Model
 
            return $table->generate($query);
     }
+
+
+    public function getDayWiseUserOnboardingExcel() {
+        $table = new \CodeIgniter\View\Table();
+
+        $query = $this->db->query('select split_part(created_date::TEXT,\'/\', 1) as DAY ,split_part(created_date::TEXT,\'/\', 2) AS MONTH,split_part(created_date::TEXT,\'/\', 3) AS YEAR ,(count(user_id)) AS Day_wise_User_Onboarded from master_user group by created_date order by YEAR,MONTH,DAY ');
+        
+        return $query->getResultArray();
+
+    }
     public function getMonthWiseUserOnboarding() {
         $table = new \CodeIgniter\View\Table();
 
@@ -141,6 +201,15 @@ class MasterUserModel extends Model
         $table->setHeading('Month', 'Year','Users Onboarded');
 
            return $table->generate($query);
+    }
+
+    public function getMonthWiseUserOnboardingExcel() {
+        $table = new \CodeIgniter\View\Table();
+
+        $query = $this->db->query('select split_part(created_datemmyy::TEXT,\'/\', 1) AS MONTH,split_part(created_datemmyy::TEXT,\'/\', 2) AS YEAR ,(count(user_id)) AS Day_wise_User_Onboarded from master_user group by created_datemmyy order by YEAR,MONTH ');
+        
+        return $query->getResultArray();
+
     }
 
     
@@ -164,6 +233,17 @@ class MasterUserModel extends Model
            return $table->generate($query);
     }
 
+    public function getRoleWiseCountExcel($orgName) {
+        $table = new \CodeIgniter\View\Table();
+
+        if($orgName == '')
+        $query = $this->db->query('select unnest(string_to_array(roles,\' / \')) as role, count(*) from master_user group by role order by role');
+       else
+       $query = $this->db->query('select unnest(string_to_array(roles,\' / \')) as role, count(*) from master_user where root_org_id= \''.$orgName.'\' group by role order by role');
+       return $query->getResultArray();
+
+    }
+
     public function getMonthWiseMDOAdminCount($orgName) {
         $table = new \CodeIgniter\View\Table();
 
@@ -178,6 +258,16 @@ class MasterUserModel extends Model
         $table->setHeading('Month', 'Year','MDO ADMINs created');
 
            return $table->generate($query);
+    }
+
+    public function getMonthWiseMDOAdminCountExcel($orgName) {
+        $table = new \CodeIgniter\View\Table();
+
+        $query = $this->db->query('select  split_part(created_datemmyy::TEXT,\'/\', 1) AS Month, split_part(created_datemmyy::TEXT,\'/\', 2) AS YEAR ,count(*) from master_user where roles ~\'MDO_ADMIN\' group by created_datemmyy order by YEAR, Month  Desc');
+        //$query = $this->db->query('select distinct(created_datemmyy), count(*) from master_user where roles ~\'MDO_ADMIN\' group by  created_datemmyy order by created_datemmyy  DESC');
+
+        return $query->getResultArray();
+
     }
 
 
@@ -203,6 +293,23 @@ class MasterUserModel extends Model
         $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Contact No.', 'Created Date', 'Roles');
 
            return $table->generate($query);
+    }
+
+    public function getCBPAdminListExcel($orgName) {
+        $table = new \CodeIgniter\View\Table();
+
+        $builder = $this->db->table('master_user');
+        $builder->select('concat(first_name,\' \',last_name) as name, email, org_name, designation, phone,created_date,roles');
+        $builder->like('roles', 'CBP_ADMIN');
+        if($orgName != '')
+        {
+            $builder->where('root_org_id',$orgName);
+            
+        }
+        $query = $builder->get();
+    
+        return $query->getResultArray();
+
     }
     
 
@@ -496,7 +603,217 @@ class MasterUserModel extends Model
            return $table->generate($query);
     }
 
+    public function getCreatorListExcel($orgName) {
+        $table = new \CodeIgniter\View\Table();
+
+        $builder = $this->db->table('master_user');
+        $builder->select('concat(first_name,\' \',last_name) as name, email, org_name, designation, phone,created_date,roles');
+        $builder->like('roles', 'CONTENT_CREATOR');
+        if($orgName != '')
+        {
+            $builder->where('root_org_id',$orgName);
+        }
+        $query = $builder->get();
     
+        return $query->getResultArray();
+
+    }
+    
+
+    public function getReviewerListExcel($orgName) {
+        $table = new \CodeIgniter\View\Table();
+
+        $builder = $this->db->table('master_user');
+        $builder->select('concat(first_name,\' \',last_name) as name, email, org_name, designation, phone,created_date,roles');
+        $builder->like('roles', 'CONTENT_REVIEWER');
+        if($orgName != '')
+        {
+            $builder->where('root_org_id',$orgName);
+        }
+        $query = $builder->get();
+    
+        return $query->getResultArray();
+
+    }
+    
+
+    public function getPublisherListExcel($orgName) {
+        $table = new \CodeIgniter\View\Table();
+
+        $builder = $this->db->table('master_user');
+        $builder->select('concat(first_name,\' \',last_name) as name, email, org_name, designation, phone,created_date,roles');
+        $builder->like('roles', 'CONTENT_PUBLISHER');
+        if($orgName != '')
+        {
+            $builder->where('root_org_id',$orgName);
+        }
+        $query = $builder->get();
+    
+        return $query->getResultArray();
+
+    }
+    
+
+    public function getEditorListExcel($orgName) {
+        $table = new \CodeIgniter\View\Table();
+
+        $builder = $this->db->table('master_user');
+        $builder->select('concat(first_name,\' \',last_name) as name, email, org_name, designation, phone,created_date,roles');
+        $builder->like('roles', 'EDITOR');
+        if($orgName != '')
+        {
+            $builder->where('root_org_id',$orgName);
+        }
+        $query = $builder->get();
+    
+        return $query->getResultArray();
+
+    }
+    
+
+    public function getFracAdminListExcel($orgName) {
+        $table = new \CodeIgniter\View\Table();
+
+        $builder = $this->db->table('master_user');
+        $builder->select('concat(first_name,\' \',last_name) as name, email, org_name, designation, phone,created_date,roles');
+        $builder->like('roles', 'FRAC_ADMIN');
+        if($orgName != '')
+        {
+            $builder->where('root_org_id',$orgName);
+        }
+        $query = $builder->get();
+    
+        return $query->getResultArray();
+
+    }
+
+    public function getFracCompetencyMemberListExcel($orgName) {
+        $table = new \CodeIgniter\View\Table();
+
+        $builder = $this->db->table('master_user');
+        $builder->select('concat(first_name,\' \',last_name) as name, email, org_name, designation, phone,created_date,roles');
+        $builder->like('roles', 'FRAC_COMPETENCY_MEMBER');
+        if($orgName != '')
+        {
+            $builder->where('root_org_id',$orgName);
+        }
+        $query = $builder->get();
+    
+        return $query->getResultArray();
+
+    }
+
+    public function getFRACL1ListExcel($orgName) {
+        $table = new \CodeIgniter\View\Table();
+
+        $builder = $this->db->table('master_user');
+        $builder->select('concat(first_name,\' \',last_name) as name, email, org_name, designation, phone,created_date,roles');
+        $builder->like('roles', 'FRAC_REVIEWER_L1');
+        if($orgName != '')
+        {
+            $builder->where('root_org_id',$orgName);
+        }
+        $query = $builder->get();
+    
+        return $query->getResultArray();
+
+    }
+
+    public function getFRACL2ListExcel($orgName) {
+        $table = new \CodeIgniter\View\Table();
+
+        $builder = $this->db->table('master_user');
+        $builder->select('concat(first_name,\' \',last_name) as name, email, org_name, designation, phone,created_date,roles');
+        $builder->like('roles', 'FRAC_REVIEWER_L2');
+        if($orgName != '')
+        {
+            $builder->where('root_org_id',$orgName);
+        }
+        $query = $builder->get();
+    
+        return $query->getResultArray();
+
+    }
+
+    public function getIFUMemberListExcel($orgName) {
+        $table = new \CodeIgniter\View\Table();
+
+        $builder = $this->db->table('master_user');
+        $builder->select('concat(first_name,\' \',last_name) as name, email, org_name, designation, phone,created_date,roles');
+        $builder->like('roles', 'IFU_MEMBER');
+        if($orgName != '')
+        {
+            $builder->where('root_org_id',$orgName);
+        }
+        $query = $builder->get();
+    
+        return $query->getResultArray();
+
+    }
+
+    public function getPublicListExcel($orgName) {
+        $table = new \CodeIgniter\View\Table();
+
+        $builder = $this->db->table('master_user');
+        $builder->select('concat(first_name,\' \',last_name) as name, email, org_name, designation, phone,created_date,roles');
+        $builder->like('roles', 'PUBLIC');
+        if($orgName != '')
+        {
+            $builder->where('root_org_id',$orgName);
+        }
+        $query = $builder->get();
+    
+        return $query->getResultArray();
+
+    }
+
+    public function getSPVAdminListExcel($orgName) {
+        $table = new \CodeIgniter\View\Table();
+
+        $builder = $this->db->table('master_user');
+        $builder->select('concat(first_name,\' \',last_name) as name, email, org_name, designation, phone,created_date,roles');
+        $builder->like('roles', 'SPV_ADMIN');
+        if($orgName != '')
+        {
+            $builder->where('root_org_id',$orgName);
+        }
+        $query = $builder->get();
+    
+        return $query->getResultArray();
+
+    }
+
+    public function getStateAdminListExcel($orgName) {
+        $table = new \CodeIgniter\View\Table();
+
+        $builder = $this->db->table('master_user');
+        $builder->select('concat(first_name,\' \',last_name) as name, email, org_name, designation, phone,created_date,roles');
+        $builder->like('roles', 'STATE_ADMIN');
+        if($orgName != '')
+        {
+            $builder->where('root_org_id',$orgName);
+        }
+        $query = $builder->get();
+    
+        return $query->getResultArray();
+
+    }
+
+    public function getWATMemberListExcel($orgName) {
+        $table = new \CodeIgniter\View\Table();
+
+        $builder = $this->db->table('master_user');
+        $builder->select('concat(first_name,\' \',last_name) as name, email, org_name, designation, phone,created_date,roles');
+        $builder->like('roles', 'WAT_MEMBER');
+        if($orgName != '')
+        {
+            $builder->where('root_org_id',$orgName);
+        }
+        $query = $builder->get();
+    
+        return $query->getResultArray();
+
+    }
 
 }
 ?>
