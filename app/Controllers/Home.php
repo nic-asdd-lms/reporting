@@ -98,7 +98,9 @@ class Home extends BaseController
         $role = $session->get('role');
         $enrolment = new UserEnrolmentCourse();
         $enrolmentProgram = new UserEnrolmentProgram();
-
+        $lastUpdate='';
+        $data['lastUpdated'] = '[Report last updated on ' . $lastUpdate . '"]';
+        
         $org = '';
         if ($role == 'MDO_ADMIN') {
             $org = $session->get('organisation');
@@ -186,6 +188,7 @@ class Home extends BaseController
 
     public function getMDOReport()
     {
+                
         $request = service('request');
         $session = \Config\Services::session();
 
@@ -195,8 +198,9 @@ class Home extends BaseController
 
         $user = new MasterUserModel();
         $enrolment = new UserEnrolmentCourse();
-
-
+        $lastUpdate='';
+        $data['lastUpdated'] = '[Report last updated on ' . $lastUpdate . '"]';
+        
         if ($role == 'SPV_ADMIN') {
             $ministry = $request->getPost('ministry');
             $dept = $request->getPost('dept');
@@ -291,7 +295,9 @@ class Home extends BaseController
 
         $roleReportType = $request->getPost('roleReportType');
         $user = new MasterUserModel();
-
+        $lastUpdate='';
+        $data['lastUpdated'] = '[Report last updated on ' . $lastUpdate . '"]';
+        
         $role = $session->get('role');
         if ($role == 'SPV_ADMIN') {
             $ministry = '';
@@ -494,7 +500,9 @@ class Home extends BaseController
 
         $user = new MasterUserModel();
         $course = new MasterCourseModel();
-
+        $lastUpdate='';
+        $data['lastUpdated'] = '[Report last updated on ' . $lastUpdate . '"]';
+        
         if ($role == 'SPV_ADMIN') {
             $ministry = '';
             $dept = '';
@@ -543,7 +551,9 @@ class Home extends BaseController
 
         $role = $session->get('role');
         $user = new UserEnrolmentProgram();
-
+        $lastUpdate='';
+        $data['lastUpdated'] = '[Report last updated on ' . $lastUpdate . '"]';
+        
         $org = '';
         if ($role == 'ATI_ADMIN') {
             $org = $session->get('organisation');

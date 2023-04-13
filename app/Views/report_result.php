@@ -8,7 +8,7 @@
     <title>iGOT Reports</title>
     <meta name="description" content="The small framework with powerful features">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/png" href="/favicon.ico">
+    <link rel="shortcut icon" type="image/jpg" href="/assets/karmayogiLogo_thumbnail.jpg">
     <!-- Datatable CSS -->
     <link href='//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
 
@@ -56,9 +56,10 @@
     
     h2 {
         text-align: center;
-        padding: 10px;
-        color: rgba(62, 62, 62, 1);
         
+        color: rgb(38, 64, 146);
+        font-size:30px;
+
         
     }
 
@@ -81,7 +82,8 @@
 
     .report-table {
         margin: 20px;
-        background-color: rgba(221, 72, 20, 0.1);
+        background-color: rgba(239, 149, 30, 0.46);
+        color:rgb(38, 64, 146);
     }
     
     .h2 {
@@ -123,21 +125,26 @@ border-block-start-color: #e26b4259
         background-color: #e26b421c;
     }
 
+    label {
+        font-weight: 50;
+        font-size:25px
+    }
+
 
     </style>
 </head>
     <body>
-    <div class="h2"><?php echo $reportTitle ?></h2>
+        <div>
+    <div class="h2">
+        <h2><?php echo $reportTitle ?><h2>
+        
+        <label><?php echo $lastUpdated ?></label>
     <?php 
     echo '<a class="btn btn-success download-button" href="/reporting/getExcelReport?'. $params.'" target="_blank" > Download Excel </a>';
-    
-    // else if($reportType == 'course') {
-    //     echo '<a class="btn btn-success download-button" href="/reporting/getCourseReports?course='. $course.'&orgName='.$orgName.'" target="_blank" > Download Excel </a>';
-    // }
-    // else if($reportType == 'no_param') {
-    //     echo '<a class="btn btn-success download-button" href="/reporting/getReports" target="_blank" > Download Excel </a>';
-    // }
+
     ?>
+
+
     
     <!-- <form class="form-horizontal login_form" action="/reporting/download-report" method="post">
     <button class="btn btn-success download-button" >Download Excel</button>
@@ -155,7 +162,7 @@ echo $resultHTML;
 </section>
 
 </div>
-
+</div>
 <script>
     
 

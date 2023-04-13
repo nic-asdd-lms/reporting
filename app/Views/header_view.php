@@ -8,7 +8,7 @@
     <title>iGOT Reports</title>
     <meta name="description" content="The small framework with powerful features">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/png" href="/favicon.ico">
+    <link rel="shortcut icon" type="image/jpg" href="/assets/karmayogiLogo_thumbnail.jpg">
     <!-- Datatable CSS -->
     <link href='//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
 
@@ -22,11 +22,11 @@
     <style {csp-style-nonce}>
         header {
         background-color: rgba(247, 248, 249, 1);
-        padding: .4rem .4rem;
+        /* padding: .4rem .4rem; */
     }
 
     .menu {
-        padding: .4rem .4rem;
+        /* padding: .4rem .4rem; */
     }
 
     header ul {
@@ -34,7 +34,7 @@
         list-style-type: none;
         margin: 0;
         overflow: hidden;
-        padding: .65rem .65rem;
+        /* padding: .65rem .65rem; */
         text-align: right;
     }
 
@@ -61,14 +61,14 @@
 
     header li.menu-item a:hover,
     header li.menu-item a:focus {
-        background-color: rgba(221, 72, 20, .2);
-        color: rgba(221, 72, 20, 1);
+        background-color:rgba(239, 149, 30, 0.17);
+            color: rgb(239, 149, 30);
         
     }
 
     header .logo {
         float: left;
-        height: 50px;
+        height: 100px;
         padding: 0;
         color: rgba(221, 72, 20, .6);
     }
@@ -151,10 +151,12 @@
 
         header li.menu-item a:hover,
         header li.menu-item a:focus {
-            background-color: rgba(221, 72, 20, .7);
-            color: rgba(255, 255, 255, .8);
+            background-color:rgba(239, 149, 30, 0.17);
+            color: rgb(239, 149, 30);
         }
     }
+
+    
 
     
     </style>
@@ -164,7 +166,7 @@
 <div class="menu">
     <ul>
         <li class="logo">
-            <div class="title">iGOT Reporting</div>
+            <div class="title"><img src="/assets/karmayogiLogo.svg"/></div>
         </li>
         <li class="menu-toggle">
             <button onclick="toggleMenu();">&#9776;</button>

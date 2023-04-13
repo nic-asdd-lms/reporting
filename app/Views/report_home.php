@@ -6,7 +6,7 @@
     <title>iGOT Reports</title>
     <meta name="description" content="The small framework with powerful features">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/png" href="/favicon.ico">
+    <link rel="shortcut icon" type="image/jpg" href="/assets/karmayogiLogo_thumbnail.jpg">
     <!-- Datatable CSS -->
     <link href='//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
 
@@ -109,7 +109,7 @@
         .tab {
             overflow: hidden;
             border: 1px solid #e2693f24;
-            background-color: #e2693f24;
+            background-color: #f4d3a7;
         }
 
         /* Style the buttons that are used to open the tab content */
@@ -140,7 +140,7 @@
             padding: 6px 12px;
             border: 1px solid #c6562f08;
             border-top: none;
-            background-color: #c6562f08;
+            background-color: #ef951e0f;
         }
 
         .submitbutton {

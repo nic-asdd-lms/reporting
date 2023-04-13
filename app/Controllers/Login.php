@@ -13,7 +13,10 @@ class Login extends BaseController
 
 	protected $helpers = ['form'];
 
-
+	public function checkIgotUser(){                         // First Check if the user is logged in or not
+		//$data['userID'] = $this->input->get('email');  
+		return view('keyCloakLogin');
+	}
 	public function index()
 	{
 		$validation = \Config\Services::validation();
