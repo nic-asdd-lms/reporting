@@ -235,9 +235,9 @@ else if($session->get('role')=='MDO_ADMIN') {
                     <hr />
 
                     <div class="container ">
-                    <div class="auto-widget">
+                    <!-- <div class="auto-widget">
     <p>Organisation: <input type="text" id="org_search" placeholder="Search Organisation" /></p>
-</div>
+</div> -->
                     
                     <!-- <input type="text" id="search" placeholder="Search" class="form-control" /> -->
                     
@@ -320,6 +320,7 @@ else if($session->get('role')=='MDO_ADMIN') {
                         <option value="programEnrolmentCount">Program-wise summary</option>
                         <option value="collectionEnrolmentReport">Curated Collection-wise enrolment report</option>
                         <option value="collectionEnrolmentCount">Curated Collection-wise summary</option>
+                        <option value="courseMinistrySummary">Ministry-wise summary for course</option>
                         </select>
                 
             </div>

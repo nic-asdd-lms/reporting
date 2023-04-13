@@ -69,6 +69,36 @@ class UserEnrolmentCourse extends Model
        //return $query->getResult();
     }
 
+
+
+    public function getCourseMinistrySummary($course) {
+        $table = new \CodeIgniter\View\Table();
+        
+            $query = $this->db->query('SELECT  distinct ministry_state_name, COUNT(distinct user_course_enrolment.user_id) AS enrolled_count
+            ,(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count
+        FROM user_course_enrolment, master_course, master_user, master_structure
+          WHERE user_course_enrolment.user_id=master_user.user_id
+          AND user_course_enrolment.course_id= \''.$course.'\'
+
+          AND (master_user.root_org_id = master_structure.org_id
+        OR master_user.root_org_id = master_structure.dep_id
+        OR master_user.root_org_id = master_structure.ms_id)
+        GROUP BY course_name,  ministry_state_name, user_course_enrolment.completion_status
+        ORDER BY ministry_state_name desc
+        ');
+       
+        
+           $template = [
+            'table_open' => '<table id="tbl-result" class="display dataTable report-table" style="width:90%">'
+        
+        ];
+        $table->setTemplate($template);
+        $table->setHeading( 'Ministry Name',  'Enrollment Count', 'Completion Count');
+
+           return $table->generate($query);
+       //return $query->getResult();
+    }
+
     
     public function getCollectionWiseEnrolmentReport($collection,$org) {
         $table = new \CodeIgniter\View\Table();

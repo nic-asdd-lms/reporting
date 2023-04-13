@@ -128,7 +128,18 @@ border-block-start-color: #e26b4259
 </head>
     <body>
     <div class="h2"><?php echo $reportTitle ?></h2>
-    <a class="btn btn-success download-button" href="/reporting/getUserByOrgReport?orgName=<?php echo $orgName;?>" target="_blank" > Download Excel </a>
+    <?php 
+    if($reportType == 'org') {
+        echo '<a class="btn btn-success download-button" href="/reporting/getUserByOrgReport?orgName='. $orgName.'" target="_blank" > Download Excel </a>';
+    }
+    // else if($reportType == 'course') {
+    //     echo '<a class="btn btn-success download-button" href="/reporting/getCourseReports?course='. $course.'&orgName='.$orgName.'" target="_blank" > Download Excel </a>';
+    // }
+    // else if($reportType == 'no_param') {
+    //     echo '<a class="btn btn-success download-button" href="/reporting/getReports" target="_blank" > Download Excel </a>';
+    // }
+    ?>
+    
     <!-- <form class="form-horizontal login_form" action="/reporting/download-report" method="post">
     <button class="btn btn-success download-button" >Download Excel</button>
 </form> -->
@@ -147,10 +158,9 @@ echo $resultHTML;
 </div>
 
 <script>
-    /*
+    
 
-    onclick="exportTableToExcel('tbl-result','')"
-     onclick="tableToCSV('tbl-result','')"
+    
 
   $(document).ready(function() {
     $('#tbl-result').DataTable( {
@@ -222,36 +232,7 @@ function downloadCSVFile(csv_data) {
  document.body.removeChild(temp_link);
 }
 
-function exportTableToExcel(tableID, filename = ''){
-    var downloadLink;
-    var dataType = 'application/vnd.ms-excel';
-    var tableSelect = document.getElementById(tableID);
-    var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
-    
-    // Specify file name
-    filename = filename?filename+'.xls':'excel_data.xls';
-    
-    // Create download link element
-    downloadLink = document.createElement("a");
-    
-    document.body.appendChild(downloadLink);
-    
-    if(navigator.msSaveOrOpenBlob){
-        var blob = new Blob(['\ufeff', tableHTML], {
-            type: dataType
-        });
-        navigator.msSaveOrOpenBlob( blob, filename);
-    }else{
-        // Create a link to the file
-        downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
-    
-        // Setting the file name
-        downloadLink.download = filename;
-        
-        //triggering the function
-        downloadLink.click();
-    }
-}*/
+
 </script>
 </body>
 </html>
