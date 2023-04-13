@@ -262,7 +262,7 @@
                         <option value="notSelected">--Select Ministry--</option>';
 
                                     foreach ($ministry as $row) {
-                                        echo '<option value="' . $row->ms_id . '">' . $row->ministry_state_name . '</option>';
+                                        echo '<option value="' . $row->ms_id . '">' . $row->ms_name . '</option>';
                                     }
 
                                     echo '	

@@ -115,18 +115,18 @@ class MasterUserModel extends Model
 
         $builder = $this->db->table('master_user');
         $builder->select('concat(first_name,\' \',last_name) as name, email, master_user.org_name, designation, phone,created_date,roles');
-        $builder->join('master_structure', 'master_structure.ministry_state_name = master_user.org_name ');
-        $builder->where('master_structure.ministry_state_name',$org);
+        $builder->join('master_org_hierarchy', 'master_org_hierarchy.ms_name = master_user.org_name ');
+        $builder->where('master_org_hierarchy.ms_name',$org);
         
         $unionDept = $this->db->table('master_user')
                     ->select('concat(first_name,\' \',last_name) as name, email, master_user.org_name, designation, phone,created_date,roles')
-                    ->join('master_structure', 'master_structure.dep_name = master_user.org_name ')
-                    ->where('master_structure.ministry_state_name',$org);
+                    ->join('master_org_hierarchy', 'master_org_hierarchy.dept_name = master_user.org_name ')
+                    ->where('master_org_hierarchy.ms_name',$org);
         
         $unionOrg = $this->db->table('master_user')
                     ->select('concat(first_name,\' \',last_name) as name, email, master_user.org_name, designation, phone,created_date,roles')
-                    ->join('master_structure', 'master_structure.org_name = master_user.org_name ')
-                    ->where('master_structure.ministry_state_name',$org);
+                    ->join('master_org_hierarchy', 'master_org_hierarchy.org_name = master_user.org_name ')
+                    ->where('master_org_hierarchy.ms_name',$org);
         $query = $builder->union($unionDept)->union($unionOrg)->get();
     
         $template = [
@@ -144,18 +144,18 @@ class MasterUserModel extends Model
 
         $builder = $this->db->table('master_user');
         $builder->select('concat(first_name,\' \',last_name) as name, email, master_user.org_name, designation, phone,created_date,roles');
-        $builder->join('master_structure', 'master_structure.ministry_state_name = master_user.org_name ');
-        $builder->where('master_structure.ms_id',$org);
+        $builder->join('master_org_hierarchy', 'master_org_hierarchy.ms_name = master_user.org_name ');
+        $builder->where('master_org_hierarchy.ms_id',$org);
         
         $unionDept = $this->db->table('master_user')
                     ->select('concat(first_name,\' \',last_name) as name, email, master_user.org_name, designation, phone,created_date,roles')
-                    ->join('master_structure', 'master_structure.dep_name = master_user.org_name ')
-                    ->where('master_structure.ms_id',$org);
+                    ->join('master_org_hierarchy', 'master_org_hierarchy.dept_name = master_user.org_name ')
+                    ->where('master_org_hierarchy.ms_id',$org);
         
         $unionOrg = $this->db->table('master_user')
                     ->select('concat(first_name,\' \',last_name) as name, email, master_user.org_name, designation, phone,created_date,roles')
-                    ->join('master_structure', 'master_structure.org_name = master_user.org_name ')
-                    ->where('master_structure.ms_id',$org);
+                    ->join('master_org_hierarchy', 'master_org_hierarchy.org_name = master_user.org_name ')
+                    ->where('master_org_hierarchy.ms_id',$org);
         $query = $builder->union($unionDept)->union($unionOrg)->get();
     
         

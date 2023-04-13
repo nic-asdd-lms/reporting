@@ -14,19 +14,19 @@ class MasterStructureModel extends Model
 
     public function getMinistry() {
 
-       $query = $this->db->query('select distinct ms_id, ministry_state_name from master_structure');
+       $query = $this->db->query('select distinct ms_id, ms_name from master_org_hierarchy');
        return $query->getResult();
     }
 
     public function getDepartment($ministry) {
-      $sql = 'select distinct dep_id, dep_name from master_structure where ms_id =\''.$ministry.'\';' ;
+      $sql = 'select distinct dept_id, dept_name from master_org_hierarchy where ms_id =\''.$ministry.'\';' ;
       $query =  $this->db->query($sql);
 
       return $query->getResult();
     }
 
     public function getOrganisation($dept) {
-      $sql = 'select distinct org_id, org_name from master_structure where dep_id =\''.$dept.'\';' ;
+      $sql = 'select distinct org_id, org_name from master_org_hierarchy where dep_id =\''.$dept.'\';' ;
       $query =  $this->db->query($sql);
       return $query->getResult();
     }
