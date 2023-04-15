@@ -13,6 +13,8 @@ use App\Models\UserEnrolmentCourse;
 use App\Models\UserEnrolmentProgram;
 use App\Models\MasterProgramModel;
 use App\Models\MasterCollectionModel;
+use App\Models\DataUpdateModel;
+
 use PHPExcel_IOFactory;
 use PHPExcel_Reader_HTML;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -98,8 +100,8 @@ class Home extends BaseController
         $role = $session->get('role');
         $enrolment = new UserEnrolmentCourse();
         $enrolmentProgram = new UserEnrolmentProgram();
-        $lastUpdate='';
-        $data['lastUpdated'] = '[Report last updated on ' . $lastUpdate . '"]';
+        $lastUpdate=new DataUpdateModel();
+        $data['lastUpdated'] = '[Report last updated on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
         
         $org = '';
         if ($role == 'MDO_ADMIN') {
@@ -198,8 +200,10 @@ class Home extends BaseController
 
         $user = new MasterUserModel();
         $enrolment = new UserEnrolmentCourse();
-        $lastUpdate='';
-        $data['lastUpdated'] = '[Report last updated on ' . $lastUpdate . '"]';
+        $org_hierarchy = new MasterStructureModel();
+        $lastUpdate=new DataUpdateModel();
+
+        $data['lastUpdated'] = '[Report last updated on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
         
         if ($role == 'SPV_ADMIN') {
             $ministry = $request->getPost('ministry');
@@ -212,10 +216,10 @@ class Home extends BaseController
         }
 
         if ($ministry != "notSelected") {
-            $ministryName = $this->getOrgName($ministry);
+            $ministryName = $org_hierarchy->getMinistryName($ministry);
         }
         if ($dept != "notSelected") {
-            $deptName = $this->getOrgName($dept);
+            $deptName = $org_hierarchy->getDeptName($dept);
 
         }
 
@@ -295,8 +299,8 @@ class Home extends BaseController
 
         $roleReportType = $request->getPost('roleReportType');
         $user = new MasterUserModel();
-        $lastUpdate='';
-        $data['lastUpdated'] = '[Report last updated on ' . $lastUpdate . '"]';
+        $lastUpdate=new DataUpdateModel();
+        $data['lastUpdated'] = '[Report last updated on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
         
         $role = $session->get('role');
         if ($role == 'SPV_ADMIN') {
@@ -500,8 +504,8 @@ class Home extends BaseController
 
         $user = new MasterUserModel();
         $course = new MasterCourseModel();
-        $lastUpdate='';
-        $data['lastUpdated'] = '[Report last updated on ' . $lastUpdate . '"]';
+        $lastUpdate=new DataUpdateModel();
+        $data['lastUpdated'] = '[Report last updated on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
         
         if ($role == 'SPV_ADMIN') {
             $ministry = '';
@@ -551,8 +555,8 @@ class Home extends BaseController
 
         $role = $session->get('role');
         $user = new UserEnrolmentProgram();
-        $lastUpdate='';
-        $data['lastUpdated'] = '[Report last updated on ' . $lastUpdate . '"]';
+        $lastUpdate=new DataUpdateModel();
+        $data['lastUpdated'] = '[Report last updated on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
         
         $org = '';
         if ($role == 'ATI_ADMIN') {
@@ -609,7 +613,7 @@ class Home extends BaseController
             }
 
         }
-
+        
         switch ($reportType) {
             case 'mdoUserList':
                 $report = $user->getUserByOrgExcel($org_id);
@@ -624,7 +628,7 @@ class Home extends BaseController
                 $report = $user->getUserByMinistryExcel($org_id);
                 break;
             case 'userWiseCount':
-                $report = $user->getUserEnrolmentCountByMDOExcel($org_id);
+                $report = $enrolmentCourse->getUserEnrolmentCountByMDOExcel($org_id);
                 break;
             case 'courseEnrolmentReport':
                 $report = $enrolmentCourse->getCourseWiseEnrolmentReporExcelt($course_id, $org_id);
@@ -713,13 +717,15 @@ class Home extends BaseController
             
         }
 
+
         foreach ($report[0] as $key => $value) {
             array_push($keys, $key);
         }
 
-        $fileName = $reportType .'_'. $org_id . '_' . $course_id . '.xlsx';
+        $fileName = $reportType .'_'. $org_id . '_' . $course_id . '.xls';
         $spreadsheet = new Spreadsheet();
 
+        
         $sheet = $spreadsheet->getActiveSheet();
         $column = 'A';
         foreach ($keys as $key) {
@@ -737,20 +743,25 @@ class Home extends BaseController
             foreach ($row as $key => $val) {
                 $sheet->setCellValue($column . $rows, $val);
                 $column++;
+                
             }
 
 
             $rows++;
         }
+        
         //header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        ob_end_clean();
         header("Content-Type: application/vnd.ms-excel");
-header("Content-Disposition: attachment; filename=".$fileName);
+        header("Content-Disposition: attachment; filename=".$fileName);
         header("Cache-Control: max-age=0");
-
+        ob_end_clean();
+        
+        //ob_clean();
         $writer = new Xlsx($spreadsheet);
-        ob_clean();
         $writer->save('php://output');
-        header("Content-Type: application/vnd.ms-excel");
+        die;
+        // header("Content-Type: application/vnd.ms-excel");
 
 
     }

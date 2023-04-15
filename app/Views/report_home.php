@@ -206,7 +206,7 @@
             </div>
 
             <div id="MDO-wise" class="tabcontent">
-                <form class="form-horizontal login_form" action="/reporting/getMDOReport" method="post">
+                <form class="form-horizontal login_form" action="/home/getMDOReport" method="post">
                     <div class="report-type">
                         <label for="mdoReportType">Report type:</label>
                         <select name="mdoReportType" class="form-control report-select"
@@ -259,7 +259,7 @@
                     <tr>
                             <td  class="submitbutton">
                             <select name="ministry" class="form-control"  id="ministry">
-                        <option value="notSelected">--Select Ministry--</option>';
+                        <option value="notSelected">--Select Ministry/State--</option>';
 
                                     foreach ($ministry as $row) {
                                         echo '<option value="' . $row->ms_id . '">' . $row->ms_name . '</option>';
@@ -315,7 +315,7 @@
             <div id="Course-wise" class="tabcontent">
 
 
-                <form class="form-horizontal login_form" action="/reporting/getCourseReport" method="post">
+                <form class="form-horizontal login_form" action="/home/getCourseReport" method="post">
 
                     <div class="report-type">
                         <label for="courseReportType">Report type:</label>
@@ -374,7 +374,7 @@
             </div>
 
             <div id="Role-wise" class="tabcontent">
-                <form class="form-horizontal login_form" action="/reporting/getRoleReport" method="post">
+                <form class="form-horizontal login_form" action="/home/getRoleReport" method="post">
                     <div class="report-type">
                         <label for="roleReportType">Report type:</label>
                         <?php
@@ -441,7 +441,7 @@
             </div>
 
             <div id="Analytics" class="tabcontent">
-                <form class="form-horizontal login_form" action="/reporting/getAnalytics" method="post">
+                <form class="form-horizontal login_form" action="/home/getAnalytics" method="post">
                     <div class="report-type">
                         <label for="analyticsReportType">Report type:</label>
                         <?php
@@ -482,7 +482,7 @@
             <div id="Dopt" class="tabcontent">
 
 
-                <form class="form-horizontal login_form" action="/reporting/getDoptReport" method="post">
+                <form class="form-horizontal login_form" action="/home/getDoptReport" method="post">
 
                     <div class="report-type">
                         <label for="doptReportType">Report type:</label>
@@ -532,7 +532,7 @@
             <div id="Program-wise" class="tabcontent">
 
 
-                <form class="form-horizontal login_form" action="/reporting/getCourseReport" method="post">
+                <form class="form-horizontal login_form" action="/home/getCourseReport" method="post">
 
                     <div class="report-type">
                         <label for="courseReportType">Report type:</label>
@@ -705,7 +705,7 @@
 
                 if (ministry != 'notSelected') {
                     $.ajax({
-                        url: "<?php echo base_url('/action'); ?>",
+                        url: "<?php echo '/home/action'; ?>",
                         method: "POST",
                         data: {
                             ministry: ministry,
@@ -718,8 +718,8 @@
 
                             for (var count = 0; count < data.length; count++) {
 
-                                html += '<option value="' + data[count].dep_id + '">' + data[
-                                    count].dep_name + '</option>';
+                                html += '<option value="' + data[count].dept_id + '">' + data[
+                                    count].dept_name + '</option>';
 
                             }
 
@@ -741,7 +741,7 @@
 
                 if (dept != 'notSelected') {
                     $.ajax({
-                        url: "<?php echo base_url('/action'); ?>",
+                        url: "<?php echo '/home/action'; ?>",
                         method: "POST",
                         data: {
                             dept: dept,
@@ -864,7 +864,7 @@
 
         $(function () {
             $("#org_search").autocomplete({
-                source: "<?php echo base_url('/reporting/search'); ?>",
+                source: "<?php echo base_url('/home/search'); ?>",
                 select: function (event, ui) {
                     event.preventDefault();
                     $("#org_search").val(ui.item.id);

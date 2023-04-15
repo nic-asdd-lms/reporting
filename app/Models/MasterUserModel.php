@@ -88,7 +88,6 @@ class MasterUserModel extends Model
        // $builder->where(' org_name IS NOT NULL');
         $builder->groupBy('org_name');
         $query = $builder->get();
-    
         $template = [
             'table_open' => '<table id="tbl-result" class="display dataTable " style="width:90%">'
         

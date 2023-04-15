@@ -40,11 +40,11 @@ footer {
     </style>
 </head>
 <footer>
-        <div class="environment">
+        <!-- <div class="environment">
 
 
 
-        </div>
+        </div> -->
 
         <div class="copyrights">
 

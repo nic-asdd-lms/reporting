@@ -74,18 +74,35 @@ class UserEnrolmentCourse extends Model
     public function getCourseMinistrySummary($course) {
         $table = new \CodeIgniter\View\Table();
         
-            $query = $this->db->query('SELECT  distinct ms_name, COUNT(distinct user_course_enrolment.user_id) AS enrolled_count
-            ,(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count
-        FROM user_course_enrolment, master_course, master_user, master_org_hierarchy
-          WHERE user_course_enrolment.user_id=master_user.user_id
-          AND user_course_enrolment.course_id= \''.$course.'\'
-
-          AND (master_user.root_org_id = master_org_hierarchy.org_id
-        OR master_user.root_org_id = master_org_hierarchy.dept_id
-        OR master_user.root_org_id = master_org_hierarchy.ms_id)
-        GROUP BY course_name,  ms_name, user_course_enrolment.completion_status
-        ORDER BY ms_name desc
-        ');
+            $query = $this->db->query('select distinct ms_name,COUNT(distinct user_course_enrolment.user_id) AS enrolled_count ,(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count 
+            from master_org_hierarchy ,user_course_enrolment, master_user  
+            where user_course_enrolment.user_id = master_user.user_id 
+            and ms_id in 
+            (select ms_id from master_org_hierarchy  
+            join master_user on master_user.root_org_id = master_org_hierarchy.ms_id  
+            join user_course_enrolment on master_user.user_id = user_course_enrolment.user_id 
+            where course_id=\''.$course.'\')
+            group by ms_name,user_course_enrolment.completion_status
+            union
+            select distinct ms_name,COUNT(distinct user_course_enrolment.user_id) AS enrolled_count ,(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count 
+            from master_org_hierarchy ,user_course_enrolment   , master_user  
+            where user_course_enrolment.user_id = master_user.user_id 
+            and ms_id in 
+            (select ms_id from master_org_hierarchy  
+            join master_user on master_user.root_org_id = master_org_hierarchy.dept_id  
+            join user_course_enrolment on master_user.user_id = user_course_enrolment.user_id 
+            where course_id=\''.$course.'\')
+            group by ms_name,user_course_enrolment.completion_status
+            union
+            select distinct ms_name,COUNT(distinct user_course_enrolment.user_id) AS enrolled_count ,(CASE WHEN user_course_enrolment.completion_status =\'Completed\'   THEN 1 ELSE 0 END) AS completed_count 
+            from master_org_hierarchy ,user_course_enrolment , master_user   
+            where user_course_enrolment.user_id = master_user.user_id 
+            and ms_id in 
+            (select ms_id from master_org_hierarchy  
+            join master_user on master_user.root_org_id = master_org_hierarchy.org_id  
+            join user_course_enrolment on master_user.user_id = user_course_enrolment.user_id 
+            where course_id=\''.$course.'\')
+            group by ms_name,user_course_enrolment.completion_status');
        
         
            $template = [
@@ -340,13 +357,13 @@ class UserEnrolmentCourse extends Model
        ,SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count
    FROM user_course_enrolment, master_user
    WHERE user_course_enrolment.user_id = master_user.user_id
-   AND master_user.org_name=\''.$org.'\'
+   AND master_user.root_org_id=\''.$org.'\'
    GROUP BY name, email, org_name, designation
    UNION
    SELECT concat(first_name,\' \',last_name) as name, email, org_name, designation,0 AS enrolled_count
        ,0 AS completed_count
    FROM  master_user
-   WHERE master_user.org_name=\''.$org.'\'
+   WHERE master_user.root_org_id=\''.$org.'\'
    AND master_user.user_id NOT IN (SELECT DISTINCT user_id from user_course_enrolment)
    ORDER BY completed_count desc');
  

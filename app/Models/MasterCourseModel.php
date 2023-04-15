@@ -15,6 +15,7 @@ class MasterCourseModel extends Model
     public function getCourse() {
         $builder = $this->db->table('master_course');
         $builder->select('course_id, course_name');
+        $builder->where('status','Live');
         $builder->orderBy('course_name');
         $query = $builder->get();
     

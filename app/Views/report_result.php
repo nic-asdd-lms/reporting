@@ -59,7 +59,7 @@
         
         color: rgb(38, 64, 146);
         font-size:30px;
-
+font-weight: bold;
         
     }
 
@@ -69,6 +69,8 @@
         border-top: 1px solid rgba(242, 242, 242, 1);
         margin-bottom: 100px;
         padding-bottom: 30px;
+        margin-top: 50px;
+        padding-top:10px;
     }
 
     .further h2:first-of-type {
@@ -78,6 +80,8 @@
     .download-button {
         float: right;
         margin-right: 20px;
+        display: block;
+
     }
 
     .report-table {
@@ -90,6 +94,8 @@
         margin-left:100px;
         margin-top:20px;
         margin-bottom:20px;
+        display: block;
+
     }
 
     table {
@@ -130,25 +136,54 @@ border-block-start-color: #e26b4259
         font-size:25px
     }
 
+     .dataTables_filter label{
+        font-size: 17px;
+    }
+
+    .dataTables_filter input{
+        font-size: 14px;
+        display:inline;
+        height: 34px;
+        padding: 6px 12px;
+        line-height: 1.42857143;
+        color: #555;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+        transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    }
+
+    .title {
+        color: rgb(38, 64, 146);
+        font-size: 35px;
+        display: block;
+        text-align: center;
+    }
+
+    .subtitle {
+        color: rgb(38, 64, 146);
+        display: block;
+        text-align: center;
+
+    }
+
 
     </style>
 </head>
     <body>
         <div>
     <div class="h2">
-        <h2><?php echo $reportTitle ?><h2>
         
-        <label><?php echo $lastUpdated ?></label>
+        <label class="title"><?php echo $reportTitle ?></label>
+        
+        <label class="subtitle"><?php echo $lastUpdated ?></label>
     <?php 
-    echo '<a class="btn btn-success download-button" href="/reporting/getExcelReport?'. $params.'" target="_blank" > Download Excel </a>';
+    echo '<a class="btn btn-success download-button" href="/home/getExcelReport?'. $params.'" target="_blank" > Download Excel </a>';
 
     ?>
-
-
-    
-    <!-- <form class="form-horizontal login_form" action="/reporting/download-report" method="post">
-    <button class="btn btn-success download-button" >Download Excel</button>
-</form> -->
+ 
+   
 </div>
     <div class="further">
 

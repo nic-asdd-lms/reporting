@@ -29,23 +29,24 @@ $routes->set404Override();
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->get('/reporting', 'Home::index');
-$routes->get('/reporting/index.php', 'Home::index');
+$routes->get('/', 'Home::index');
+$routes->get('/home', 'Home::index');
+$routes->get('/home/index.php', 'Home::index');
 $routes->get('/login', 'Login::index');
 $routes->post('/login', 'Login::index');
-$routes->post('/reporting/getCourseWiseEnrolmentReport', 'Home::getCourseWiseEnrolmentReport');
-$routes->post('/reporting/getCourseReport', 'Home::getCourseReport');
-$routes->post('/reporting/getMDOReport', 'Home::getMDOReport');
-$routes->post('/reporting/getRoleReport', 'Home::getRoleReport');
-$routes->post('/reporting/getDoptReport', 'Home::getDoptReport');
-$routes->post('/reporting/getAnalytics', 'Home::getAnalytics');
-$routes->post('/reporting/action', 'Home::action');
-$routes->post("/reporting/download-report", "Report::exportToExcel");
+$routes->post('/home/getCourseWiseEnrolmentReport', 'Home::getCourseWiseEnrolmentReport');
+$routes->post('/home/getCourseReport', 'Home::getCourseReport');
+$routes->post('/home/getMDOReport', 'Home::getMDOReport');
+$routes->post('/home/getRoleReport', 'Home::getRoleReport');
+$routes->post('/home/getDoptReport', 'Home::getDoptReport');
+$routes->post('/home/getAnalytics', 'Home::getAnalytics');
+$routes->post('/home/action', 'Home::action');
+$routes->post("/home/download-report", "Report::exportToExcel");
 $routes->post('/login/user_login_process', 'Login::user_login_process');
 $routes->get('/login/logout', 'Login::logout');
-$routes->post('/reporting/search', 'Home::search');
-$routes->post('/reporting/orgSearch', 'Home::orgSearch');
-$routes->get('/reporting/getExcelReport', 'Home::getExcelReport');
+$routes->post('/home/search', 'Home::search');
+$routes->post('/home/orgSearch', 'Home::orgSearch');
+$routes->get('/home/getExcelReport', 'Home::getExcelReport');
 $routes->get('/login/checkIgotUser', 'Login::checkIgotUser');
 
 /*
