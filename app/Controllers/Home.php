@@ -45,7 +45,20 @@ class Home extends BaseController
         if ($this->request->getVar('action')) {
             $action = $this->request->getVar('action');
 
-            if ($action == 'get_dept') {
+            if ($action == 'get_ministry') {
+                $ministryModel = new MasterStructureModel();
+
+                if($this->request->getVar('ms') == 'ministry') {
+                    $msdata = $ministryModel->getMinistry();
+                }
+                else if($this->request->getVar('ms') == 'state') {
+                    $msdata = $ministryModel->getState();
+                }
+                
+
+                echo json_encode($msdata);
+            }
+            else if ($action == 'get_dept') {
                 $deptModel = new MasterStructureModel();
 
                 $deptdata = $deptModel->getDepartment($this->request->getVar('ministry'));
@@ -216,7 +229,7 @@ class Home extends BaseController
         }
 
         if ($ministry != "notSelected") {
-            $ministryName = $org_hierarchy->getMinistryName($ministry);
+            $ministryName = $org_hierarchy->getMinistryStateName($ministry);
         }
         if ($dept != "notSelected") {
             $deptName = $org_hierarchy->getDeptName($dept);
@@ -345,7 +358,7 @@ class Home extends BaseController
                 $data['params'] = 'reportType=cbpAdminList&org=' . $org;
             }
             $data['resultHTML'] = $user->getCBPAdminList($orgName);
-            $data['reportTitle'] = 'MDO-wise user count ';
+            $data['reportTitle'] = 'List of CBP Admins';
             $data['fileName'] = 'MDOWiseUserCount';
 
         } else if ($roleReportType == 'mdoAdminList') {

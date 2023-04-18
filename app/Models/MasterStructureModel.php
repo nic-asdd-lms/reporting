@@ -12,12 +12,25 @@ class MasterStructureModel extends Model
         $db = \Config\Database::connect();
     }
 
+
+
     public function getMinistry() {
-
-       $query = $this->db->query('select distinct ms_id, ms_name from master_org_hierarchy order by ms_name');
-       return $query->getResult();
+      $builder =$this->db->table('master_org_hierarchy');
+      $builder->select('ms_id, ms_name');
+      $builder->where('ms_type','ministry');
+      $builder->orderBy('ms_name');
+      $builder->distinct();
+      return $builder->get()->getResult();
     }
-
+    
+    public function getState() {
+      $builder =$this->db->table('master_org_hierarchy');
+      $builder->select('ms_id, ms_name');
+      $builder->where('ms_type','state');
+      $builder->orderBy('ms_name');
+      $builder->distinct();
+      return $builder->get()->getResult();
+    }
     public function getDepartment($ministry) {
       $sql = 'select distinct dept_id, dept_name from master_org_hierarchy where ms_id =\''.$ministry.'\' order by dept_name;' ;
       $query =  $this->db->query($sql);
@@ -31,12 +44,13 @@ class MasterStructureModel extends Model
       return $query->getResult();
     }
 
-    public function getMinistryName($ms_id) {
+    public function getMinistryStateName($ms_id) {
       $builder =$this->db->table('master_org_hierarchy');
       $builder->select('ms_name');
       $builder->where('ms_id',$ms_id);
       return $builder->get()->getRow()->ms_name;
     }
+    
 
     public function getDeptName($dept_id) {
       $builder =$this->db->table('master_org_hierarchy');

@@ -47,7 +47,7 @@ $routes->get('/reporting/login/logout', 'Login::logout');
 $routes->post('/reporting/home/search', 'Home::search');
 $routes->post('/reporting/home/orgSearch', 'Home::orgSearch');
 $routes->get('/reporting/home/getExcelReport', 'Home::getExcelReport');
-$routes->get('/reporting/login/checkIgotUser', 'Login::checkIgotUser');
+$routes->get('/login/checkIgotUser', 'Login::checkIgotUser');
 
 /*
  * --------------------------------------------------------------------

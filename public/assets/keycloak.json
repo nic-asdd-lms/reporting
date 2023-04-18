@@ -1,6 +1,6 @@
 {
     "realm": "sunbird",
-    "auth-server-url": "https://karmayogibm.nic.in/auth",
+    "auth-server-url": "https://portal.karmayogibm.nic.in/auth",
     "ssl-required": "external",
     "resource": "portal",
     "public-client": true,
