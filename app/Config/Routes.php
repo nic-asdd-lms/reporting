@@ -29,25 +29,25 @@ $routes->set404Override();
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->get('/', 'Home::index');
-$routes->get('/home', 'Home::index');
-$routes->get('/home/index.php', 'Home::index');
-$routes->get('/login', 'Login::index');
-$routes->post('/login', 'Login::index');
-$routes->post('/home/getCourseWiseEnrolmentReport', 'Home::getCourseWiseEnrolmentReport');
-$routes->post('/home/getCourseReport', 'Home::getCourseReport');
-$routes->post('/home/getMDOReport', 'Home::getMDOReport');
-$routes->post('/home/getRoleReport', 'Home::getRoleReport');
-$routes->post('/home/getDoptReport', 'Home::getDoptReport');
-$routes->post('/home/getAnalytics', 'Home::getAnalytics');
-$routes->post('/home/action', 'Home::action');
-$routes->post("/home/download-report", "Report::exportToExcel");
-$routes->post('/login/user_login_process', 'Login::user_login_process');
-$routes->get('/login/logout', 'Login::logout');
-$routes->post('/home/search', 'Home::search');
-$routes->post('/home/orgSearch', 'Home::orgSearch');
-$routes->get('/home/getExcelReport', 'Home::getExcelReport');
-$routes->get('/login/checkIgotUser', 'Login::checkIgotUser');
+$routes->get('/reporting/', 'Home::index');
+$routes->get('/reporting/home', 'Home::index');
+$routes->get('/reporting/home/index.php', 'Home::index');
+$routes->get('/reporting/login', 'Login::index');
+$routes->post('/reporting/login', 'Login::index');
+$routes->post('/reporting/home/getCourseWiseEnrolmentReport', 'Home::getCourseWiseEnrolmentReport');
+$routes->post('/reporting/home/getCourseReport', 'Home::getCourseReport');
+$routes->post('/reporting/home/getMDOReport', 'Home::getMDOReport');
+$routes->post('/reporting/home/getRoleReport', 'Home::getRoleReport');
+$routes->post('/reporting/home/getDoptReport', 'Home::getDoptReport');
+$routes->post('/reporting/home/getAnalytics', 'Home::getAnalytics');
+$routes->post('/reporting/home/action', 'Home::action');
+$routes->post("/reporting/home/download-report", "Report::exportToExcel");
+$routes->post('/reporting/login/user_login_process', 'Login::user_login_process');
+$routes->get('/reporting/login/logout', 'Login::logout');
+$routes->post('/reporting/home/search', 'Home::search');
+$routes->post('/reporting/home/orgSearch', 'Home::orgSearch');
+$routes->get('/reporting/home/getExcelReport', 'Home::getExcelReport');
+$routes->get('/reporting/login/checkIgotUser', 'Login::checkIgotUser');
 
 /*
  * --------------------------------------------------------------------

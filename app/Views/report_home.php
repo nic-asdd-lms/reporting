@@ -6,7 +6,7 @@
     <title>iGOT Reports</title>
     <meta name="description" content="The small framework with powerful features">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/jpg" href="/assets/karmayogiLogo_thumbnail.jpg">
+    <!-- <link rel="shortcut icon" type="image/jpg" href="/assets/images/karmayogiLogo_thumbnail.jpg"> -->
     <!-- Datatable CSS -->
     <link href='//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
 
@@ -206,7 +206,7 @@
             </div>
 
             <div id="MDO-wise" class="tabcontent">
-                <form class="form-horizontal login_form" action="/home/getMDOReport" method="post">
+                <form class="form-horizontal login_form" action="<?php echo base_url('/home/getMDOReport');?>" method="post">
                     <div class="report-type">
                         <label for="mdoReportType">Report type:</label>
                         <select name="mdoReportType" class="form-control report-select"
@@ -315,7 +315,7 @@
             <div id="Course-wise" class="tabcontent">
 
 
-                <form class="form-horizontal login_form" action="/home/getCourseReport" method="post">
+                <form class="form-horizontal login_form" action="<?php echo base_url('/home/getCourseReport');?>" method="post">
 
                     <div class="report-type">
                         <label for="courseReportType">Report type:</label>
@@ -374,7 +374,7 @@
             </div>
 
             <div id="Role-wise" class="tabcontent">
-                <form class="form-horizontal login_form" action="/home/getRoleReport" method="post">
+                <form class="form-horizontal login_form" action="<?php echo base_url('/home/getRoleReport');?>" method="post">
                     <div class="report-type">
                         <label for="roleReportType">Report type:</label>
                         <?php
@@ -441,7 +441,7 @@
             </div>
 
             <div id="Analytics" class="tabcontent">
-                <form class="form-horizontal login_form" action="/home/getAnalytics" method="post">
+                <form class="form-horizontal login_form" action="<?php echo base_url('/home/getAnalytics');?>" method="post">
                     <div class="report-type">
                         <label for="analyticsReportType">Report type:</label>
                         <?php
@@ -482,7 +482,7 @@
             <div id="Dopt" class="tabcontent">
 
 
-                <form class="form-horizontal login_form" action="/home/getDoptReport" method="post">
+                <form class="form-horizontal login_form" action="<?php echo base_url('/home/getDoptReport');?>" method="post">
 
                     <div class="report-type">
                         <label for="doptReportType">Report type:</label>
@@ -532,7 +532,7 @@
             <div id="Program-wise" class="tabcontent">
 
 
-                <form class="form-horizontal login_form" action="/home/getCourseReport" method="post">
+                <form class="form-horizontal login_form" action="<?php echo base_url('/home/getCourseReport');?>" method="post">
 
                     <div class="report-type">
                         <label for="courseReportType">Report type:</label>
@@ -673,7 +673,7 @@
             //alert(value.value);
             display = document.getElementById('display');
             $.ajax({
-                url: "<?php echo base_url('/action'); ?>",
+                url: "<?php echo base_url('/home/action'); ?>",
                 method: "POST",
                 data: {
                     key: searchKey,
@@ -705,7 +705,7 @@
 
                 if (ministry != 'notSelected') {
                     $.ajax({
-                        url: "<?php echo '/home/action'; ?>",
+                        url: "<?php echo base_url('/home/action'); ?>",
                         method: "POST",
                         data: {
                             ministry: ministry,
@@ -741,7 +741,7 @@
 
                 if (dept != 'notSelected') {
                     $.ajax({
-                        url: "<?php echo '/home/action'; ?>",
+                        url: "<?php echo base_url('/home/action'); ?>",
                         method: "POST",
                         data: {
                             dept: dept,
@@ -779,7 +779,7 @@
                     var action = 'get_course';
 
                     $.ajax({
-                        url: "<?php echo base_url('/action'); ?>",
+                        url: "<?php echo base_url('/home/action'); ?>",
                         method: "POST",
                         data: {
                             action: action
@@ -805,7 +805,7 @@
                     var action = 'get_program';
 
                     $.ajax({
-                        url: "<?php echo base_url('/action'); ?>",
+                        url: "<?php echo base_url('/home/action'); ?>",
                         method: "POST",
                         data: {
                             action: action
@@ -832,7 +832,7 @@
                     var action = 'get_collection';
 
                     $.ajax({
-                        url: "<?php echo base_url('/action'); ?>",
+                        url: "<?php echo base_url('/home/action'); ?>",
                         method: "POST",
                         data: {
                             action: action

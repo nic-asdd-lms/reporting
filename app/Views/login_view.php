@@ -6,7 +6,7 @@
     <title>iGOT Reports</title>
     <meta name="description" content="The small framework with powerful features">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/jpg" href="/assets/karmayogiLogo_thumbnail.jpg">
+    <!-- <link rel="shortcut icon" type="image/jpg" href="/assets/images/karmayogiLogo_thumbnail.jpg"> -->
     <!-- Datatable CSS -->
     <link href='//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
 
@@ -218,7 +218,7 @@
 	</div>
 	<div class='row'>
 		<div class='col-md-8 col-md-offset-2 imgcontainer'>
-			<form class="form-horizontal login_form" action="/login/user_login_process" method="post">
+			<form class="form-horizontal login_form" action="<?php echo base_url('/login/user_login_process');?>" method="post">
                
 			<?php //echo form_open('login//user_login_process'); ?>
 			

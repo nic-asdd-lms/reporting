@@ -8,7 +8,7 @@
     <title>iGOT Reports</title>
     <meta name="description" content="The small framework with powerful features">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/jpg" href="/assets/karmayogiLogo_thumbnail.jpg">
+    <link rel="shortcut icon" type="image/jpg" href="/assets/images/karmayogiLogo_thumbnail.jpg">
     <!-- Datatable CSS -->
     <link href='//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
 
@@ -166,7 +166,7 @@
 <div class="menu">
     <ul>
         <li class="logo">
-            <div class="title"><img src="/assets/karmayogiLogo.svg"/></div>
+            <div class="title"><img src="/assets/images/karmayogiLogo.svg"/></div>
         </li>
         <li class="menu-toggle">
             <button onclick="toggleMenu();">&#9776;</button>
@@ -175,9 +175,9 @@
         $session = \Config\Services::session();
 		
        if ($session->get('logged_in') == true) {
-            echo "<li class='menu-item '><a href='/home'>Home</a></li>
+            echo "<li class='menu-item '><a href=".base_url('/home').">Home</a></li>
             <li class='menu-item '>Dashboard</a></li>
-            <li class='menu-item '><a href='/login/logout' >Logout</a></li>";
+            <li class='menu-item '><a href='".base_url('/login/logout')."' >Logout</a></li>";
         }
         ?>
         
