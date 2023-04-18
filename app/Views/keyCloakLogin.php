@@ -14,7 +14,7 @@
             keycloak.init(initOptions).success(function(authenticated) {
                         //alert(authenticated ? 'authenticated' : 'not authenticated');
                         if(authenticated){
-                            window.location.replace("/login");
+                            window.location.replace("/reporting/login");
                         }
                         else 
                         {
