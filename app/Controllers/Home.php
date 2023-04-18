@@ -289,7 +289,7 @@ class Home extends BaseController
             } else if ($mdoReportType == 'ministryUserEnrolment') {
                 $data['params'] = 'reportType=ministryUserEnrolment&org=' . $org;
                 $data['resultHTML'] = $user->getUserByMinistry($ministryName);
-                $data['reportTitle'] = 'Users list for all organisations under ministry - "' . $ministryName . '"';
+                $data['reportTitle'] = 'Users list for all organisations under ministry/state - "' . $ministryName . '"';
                 $data['fileName'] = $orgName . '_UserList';
 
             } else if ($mdoReportType == 'userWiseCount') {
@@ -359,7 +359,7 @@ class Home extends BaseController
             }
             $data['resultHTML'] = $user->getCBPAdminList($orgName);
             $data['reportTitle'] = 'List of CBP Admins';
-            $data['fileName'] = 'MDOWiseUserCount';
+            $data['fileName'] = 'cbbAdminList';
 
         } else if ($roleReportType == 'mdoAdminList') {
             if ($role == 'SPV_ADMIN') {
