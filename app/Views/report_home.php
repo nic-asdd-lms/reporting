@@ -214,7 +214,7 @@
             </div>
 
             <div id="MDO-wise" class="tabcontent">
-                <form class="form-horizontal login_form" action="<?php echo base_url('/home/getMDOReport');?>"
+                <form class="form-horizontal login_form" action="<?php echo base_url('/getMDOReport');?>"
                     method="post">
                     <div class="report-type">
                         <label for="mdoReportType" class="lbl-reporttype">Report type:</label>
@@ -340,7 +340,7 @@
             <div id="Course-wise" class="tabcontent">
 
 
-                <form class="form-horizontal login_form" action="<?php echo base_url('/home/getCourseReport');?>"
+                <form class="form-horizontal login_form" action="<?php echo base_url('/getCourseReport');?>"
                     method="post">
 
                     <div class="report-type">
@@ -400,7 +400,7 @@
             </div>
 
             <div id="Role-wise" class="tabcontent">
-                <form class="form-horizontal login_form" action="<?php echo base_url('/home/getRoleReport');?>"
+                <form class="form-horizontal login_form" action="<?php echo base_url('/getRoleReport');?>"
                     method="post">
                     <div class="report-type">
                         <label for="roleReportType" class="lbl-reporttype">Report type:</label>
@@ -468,7 +468,7 @@
             </div>
 
             <div id="Analytics" class="tabcontent">
-                <form class="form-horizontal login_form" action="<?php echo base_url('/home/getAnalytics');?>"
+                <form class="form-horizontal login_form" action="<?php echo base_url('/getAnalytics');?>"
                     method="post">
                     <div class="report-type">
                         <label for="analyticsReportType" class="lbl-reporttype">Report type:</label>
@@ -510,7 +510,7 @@
             <div id="Dopt" class="tabcontent">
 
 
-                <form class="form-horizontal login_form" action="<?php echo base_url('/home/getDoptReport');?>"
+                <form class="form-horizontal login_form" action="<?php echo base_url('/getDoptReport');?>"
                     method="post">
 
                     <div class="report-type">
@@ -561,7 +561,7 @@
             <div id="Program-wise" class="tabcontent">
 
 
-                <form class="form-horizontal login_form" action="<?php echo base_url('/home/getCourseReport');?>"
+                <form class="form-horizontal login_form" action="<?php echo base_url('/getCourseReport');?>"
                     method="post">
 
                     <div class="report-type">
@@ -637,7 +637,7 @@ function initKeycloak() {
             keycloak.init(initOptions).success(function(authenticated) {
                         //alert(authenticated ? 'authenticated' : 'not authenticated');
                         if(authenticated){
-                            window.location.replace("/reporting/");
+                            window.location.replace("/");
                         }
                         else 
                         {
@@ -722,7 +722,7 @@ function initKeycloak() {
         //alert(value.value);
         display = document.getElementById('display');
         $.ajax({
-            url: "<?php echo base_url('/home/action'); ?>",
+            url: "<?php echo base_url('/action'); ?>",
             method: "POST",
             data: {
                 key: searchKey,
@@ -754,7 +754,7 @@ function initKeycloak() {
 
             if (ms != 'notSelected') {
                 $.ajax({
-                    url: "<?php echo base_url('/home/action'); ?>",
+                    url: "<?php echo base_url('/action'); ?>",
                     method: "POST",
                     data: {
                         ms: ms,
@@ -794,7 +794,7 @@ function initKeycloak() {
 
                 if (ministry != 'notSelected') {
                     $.ajax({
-                        url: "<?php echo base_url('/home/action'); ?>",
+                        url: "<?php echo base_url('/action'); ?>",
                         method: "POST",
                         data: {
                             ministry: ministry,
@@ -831,7 +831,7 @@ function initKeycloak() {
 
                 if (dept != 'notSelected') {
                     $.ajax({
-                        url: "<?php echo base_url('/home/action'); ?>",
+                        url: "<?php echo base_url('/action'); ?>",
                         method: "POST",
                         data: {
                             dept: dept,
@@ -870,7 +870,7 @@ function initKeycloak() {
                 var action = 'get_course';
 
                 $.ajax({
-                    url: "<?php echo base_url('/home/action'); ?>",
+                    url: "<?php echo base_url('/action'); ?>",
                     method: "POST",
                     data: {
                         action: action
@@ -896,7 +896,7 @@ function initKeycloak() {
                 var action = 'get_program';
 
                 $.ajax({
-                    url: "<?php echo base_url('/home/action'); ?>",
+                    url: "<?php echo base_url('/action'); ?>",
                     method: "POST",
                     data: {
                         action: action
@@ -924,7 +924,7 @@ function initKeycloak() {
                 var action = 'get_collection';
 
                 $.ajax({
-                    url: "<?php echo base_url('/home/action'); ?>",
+                    url: "<?php echo base_url('/action'); ?>",
                     method: "POST",
                     data: {
                         action: action
@@ -957,7 +957,7 @@ function initKeycloak() {
 
     $(function() {
         $("#org_search").autocomplete({
-            source: "<?php echo base_url('/home/search'); ?>",
+            source: "<?php echo base_url('/search'); ?>",
             select: function(event, ui) {
                 event.preventDefault();
                 $("#org_search").val(ui.item.id);

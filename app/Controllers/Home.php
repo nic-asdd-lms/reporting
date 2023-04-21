@@ -218,7 +218,7 @@ class Home extends BaseController
     }
 }
 catch (\Exception $e) {
-    return view('header_view') . view('error_general') . view('footer_view');
+    throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
 }
 
     }
@@ -342,8 +342,7 @@ catch (\Exception $e) {
         }
     }
 	catch (\Exception $e) {
-		return view('header_view') . view('error_general') . view('footer_view');
-	}
+        throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);	}
 	
     }
 

@@ -44,8 +44,7 @@ class Login extends BaseController
 		}
 	}
 	catch (\Exception $e) {
-		return view('header_view') . view('error_general') . view('footer_view');
-	}
+		throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);	}
 	
 	}
 
@@ -53,7 +52,8 @@ class Login extends BaseController
 	{
 		try {
 
-
+			
+		
 		
 		$request = service('request');
 		if (!$this->request->is('post')) {
@@ -66,23 +66,28 @@ class Login extends BaseController
 			'password' => 'required'
 		];
 
+
 		if (!$this->validate($rules)) {
 
 			return view('header_view') . view('login_view') . view('footer_view');
 		} else {
 
 
+			
 			$data = array(
 				'username' => $request->getPost('username'),
 				'password' => $request->getPost('password')
 			);
+
+			
 			$user = new UserMasterModel();
 			$result = $user->login($data);
+			
 			if ($result == TRUE) {
 
 				$username = $request->getPost('username');
 				$result = $user->read_user_information($username);
-
+				
 				if ($result != false) {
 
 					$session_data = [
@@ -97,7 +102,6 @@ class Login extends BaseController
 					$session = \Config\Services::session();
 					$session->set($session_data);
 					$_SESSION['logged_in'] = true;
-
 					if ($session->get('role') == 'SPV_ADMIN') {
 						$data['role'] = 'SPV_ADMIN';
 						$data['logged_in'] = true;
@@ -165,8 +169,7 @@ class Login extends BaseController
 	}
 	
 	catch (\Exception $e) {
-		return view('header_view') . view('error_general') . view('footer_view');
-	}
+		throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);	}
 	
 	}
 	// Logout from admin page
@@ -192,7 +195,6 @@ class Login extends BaseController
 		return view('header_view') . view('login_view', $data) . view('footer_view');
 	}
 	catch (\Exception $e) {
-		return view('header_view') . view('error_general') . view('footer_view');
-	}
+		throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);	}
 	}
 }

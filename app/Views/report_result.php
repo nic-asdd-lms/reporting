@@ -202,7 +202,7 @@ color: rgb(38, 64, 146);
         
         <label class="subtitle"><?php echo $lastUpdated ?></label>
     <?php 
-    echo '<a class="btn btn-success download-button" href="'.base_url('/home/getExcelReport').'?'. $params.'" target="_blank" > Download Excel </a>';
+    echo '<a class="btn btn-success download-button" href="'.base_url('/getExcelReport').'?'. $params.'" target="_blank" > Download Excel </a>';
 
     ?>
  

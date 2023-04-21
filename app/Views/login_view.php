@@ -228,7 +228,7 @@
 	</div>
 	<div class='row'>
 		<div class='col-md-8 col-md-offset-2 imgcontainer ' >
-			<form class="form-horizontal login_form" action="<?php echo base_url('/login/user_login_process');?>" method="post">
+			<form class="form-horizontal login_form" action="<?php echo base_url('/user_login_process');?>" method="post">
                
 			<?php //echo form_open('login//user_login_process'); ?>
 			
@@ -289,7 +289,7 @@
             keycloak.init(initOptions).success(function(authenticated) {
                         //alert(authenticated ? 'authenticated' : 'not authenticated');
                         if(authenticated){
-                            window.location.replace("/reporting/login");
+                            window.location.replace("/login");
                         }
                         else 
                         {

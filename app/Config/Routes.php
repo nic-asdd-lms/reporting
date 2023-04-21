@@ -30,26 +30,27 @@ $routes->set404Override();
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->get('/reporting/', 'Home::index');
-$routes->get('/reporting/login/checkIgotUser', 'Login::checkIgotUser');
-$routes->post('/reporting/login/user_login_process', 'Login::user_login_process');
-$routes->get('/reporting/login/logout', 'Login::logout');
-$routes->get('/reporting/login', 'Login::index');
-$routes->post('/reporting/login', 'Login::index');
-$routes->get('/reporting/home', 'Home::index');
-$routes->get('/reporting/home/index.php', 'Home::index');
-$routes->post('/reporting/home/getCourseWiseEnrolmentReport', 'Home::getCourseWiseEnrolmentReport');
-$routes->post('/reporting/home/getCourseReport', 'Home::getCourseReport');
-$routes->post('/reporting/home/getMDOReport', 'Home::getMDOReport');
-$routes->post('/reporting/home/getRoleReport', 'Home::getRoleReport');
-$routes->post('/reporting/home/getDoptReport', 'Home::getDoptReport');
-$routes->post('/reporting/home/getAnalytics', 'Home::getAnalytics');
-$routes->post('/reporting/home/action', 'Home::action');
-$routes->post("/reporting/home/download-report", "Report::exportToExcel");
-$routes->post('/reporting/home/search', 'Home::search');
-$routes->post('/reporting/home/orgSearch', 'Home::orgSearch');
-$routes->get('/reporting/home/getExcelReport', 'Home::getExcelReport');
-$routes->get('/assets/images/karmayogiLogo.svg' , 'assets\images\karmayogiLogo.svg');
+$routes->get('/home', 'Home::index');
+$routes->get('/checkIgotUser', 'Login::checkIgotUser');
+$routes->post('/user_login_process', 'Login::user_login_process');
+$routes->get('/logout', 'Login::logout');
+$routes->get('/', 'Login::index');
+$routes->get('/login', 'Login::index');
+$routes->post('/login', 'Login::index');
+//$routes->get('/', 'Home::index');
+$routes->get('/index.php', 'Home::index');
+$routes->post('/getCourseWiseEnrolmentReport', 'Home::getCourseWiseEnrolmentReport');
+$routes->post('/getCourseReport', 'Home::getCourseReport');
+$routes->post('/getMDOReport', 'Home::getMDOReport');
+$routes->post('/getRoleReport', 'Home::getRoleReport');
+$routes->post('/getDoptReport', 'Home::getDoptReport');
+$routes->post('/getAnalytics', 'Home::getAnalytics');
+$routes->post('/action', 'Home::action');
+$routes->post("/download-report", "Report::exportToExcel");
+$routes->post('/search', 'Home::search');
+$routes->post('/orgSearch', 'Home::orgSearch');
+$routes->get('/getExcelReport', 'Home::getExcelReport');
+//$routes->get('/assets/images/karmayogiLogo.svg' , 'assets\images\karmayogiLogo.svg');
 // $routes->resource('/reporting/assets/images',['controller' => 'App\Assets\Images']);
 //$routes->get('/reporting/assets/images/karmayogiLogo.svg' , 'assets\images\karmayogiLogo.svg');
 /*

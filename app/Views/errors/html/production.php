@@ -11,7 +11,6 @@
     </style>
 </head>
 <body>
-<?php include 'header_view.php'; ?>
     <div class="container text-center">
 
         <h1 class="headline"><?= lang('Errors.whoops') ?></h1>
@@ -19,7 +18,7 @@
         <p class="lead"><?= lang('Errors.weHitASnag') ?></p>
 
     </div>
-    <?php include 'footer_view.php'; ?>
+    
 </body>
 
 </html>

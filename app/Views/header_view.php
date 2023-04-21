@@ -195,9 +195,9 @@
         $session = \Config\Services::session();
 		
        if ($session->get('logged_in') == true) {
-            echo "<li class='menu-item '><a href=".base_url('/home').">Home</a></li>
+            echo "<li class='menu-item '><a href=".base_url('/').">Home</a></li>
             <li class='menu-item '>Dashboard</li>
-            <li class='menu-item '><a href='".base_url('/login/logout')."' >Logout</a></li>";
+            <li class='menu-item '><a href='".base_url('/logout')."' >Logout</a></li>";
         }
         ?>
         

@@ -187,6 +187,7 @@ class UserEnrolmentCourse extends Model
         $builder->join('master_user', 'master_user.user_id = user_course_enrolment.user_id ');
         $builder->join('master_course', 'master_course.course_id = user_course_enrolment.course_id ');
         $builder->where('master_user.org_name', $org);
+        $builder->where('master_course.status','Live');
         $query = $builder->get();
            $template = [
             'table_open' => '<table id="tbl-result" class="display dataTable report-table" style="width:90%">'
