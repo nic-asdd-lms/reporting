@@ -6,7 +6,7 @@
     <title>iGOT Reports</title>
     <meta name="description" content="The small framework with powerful features">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/png" href="/favicon.ico">
+    <!-- <link rel="shortcut icon" type="image/jpg" href="/assets/images/karmayogiLogo_thumbnail.jpg"> -->
     <!-- Datatable CSS -->
     <link href='//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
 
@@ -20,7 +20,7 @@
     <style {csp-style-nonce}>
     
 footer {
-        background-color: rgba(221, 72, 20, .8);
+        background-color: #373434;
         text-align: center;
         position: fixed;
         bottom: 0;
@@ -40,11 +40,11 @@ footer {
     </style>
 </head>
 <footer>
-        <div class="environment">
+        <!-- <div class="environment">
 
 
 
-        </div>
+        </div> -->
 
         <div class="copyrights">
 

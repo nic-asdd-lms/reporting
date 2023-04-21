@@ -13,24 +13,37 @@ class MasterCollectionModel extends Model
     }
 
     public function getCollection() {
+try {
+    $builder = $this->db->table('master_curated_collection');
+    $builder->select('curated_id, curated_name');
+    $builder->orderBy('curated_name');
+    $query = $builder->get();
 
-        $builder = $this->db->table('master_curated_collection');
-        $builder->select('curated_id, curated_name');
-        $builder->orderBy('curated_name');
-        $query = $builder->get();
-    
-       return $query->getResult();
+   return $query->getResult();
+}
+catch (\Exception $e) {
+    throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+} 
+        
     }
 
     public function getCollectionName($course_id) {
-        $builder = $this->db->table('master_curated_collection');
-        $builder->select('curated_name');
-        $builder->where('curated_id',$course_id);
-        $query = $builder->get();
-    
-        return $query->getRow()->curated_name;
+        try {
+            $builder = $this->db->table('master_curated_collection');
+            $builder->select('curated_name');
+            $builder->where('curated_id',$course_id);
+            $query = $builder->get();
+        
+            //echo $course_id,json_encode($query->getResult());
+            return $query->getRow()->curated_name;
+        }
+        catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        } 
+        
     }
     
 
 }
+
 ?>

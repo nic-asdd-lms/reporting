@@ -16,7 +16,7 @@ public function __construct() {
 
 public function login($data) {
     
-    $builder = $this->db->table('user_master');
+    $builder = $this->db->table('user_account');
     $builder->select('*');
     $builder->where('username', $data['username']);
     $builder->where('password',$data['password']);
@@ -31,6 +31,7 @@ public function login($data) {
 
 if ($query->getNumRows() == 1) {
     
+		
 return true;
 } else {
     
@@ -41,7 +42,7 @@ return false;
 // Read data from database to show data in admin page
 public function read_user_information($username) {
 
-    $builder = $this->db->table('user_master');
+    $builder = $this->db->table('user_account');
     $builder->select('*');
     $builder->where('username', $username);
     $query = $builder->get();
@@ -55,5 +56,6 @@ return false;
 }
 }
 }
+
 
 ?>
