@@ -1,6 +1,5 @@
 <IfModule authz_core_module>
-    Require all denied
-</IfModule>
+    RewriteCond $1 !^(index\.php|assets|public|images|css|scripts)</IfModule>
 <IfModule !authz_core_module>
     Deny from all
 </IfModule>

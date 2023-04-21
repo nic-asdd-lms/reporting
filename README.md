@@ -11,3 +11,7 @@
 1. Run "composer install"
 1. Run "php spark serve"
 1. Open URL http://localhost:8080/login in browser
+
+## Deployment on server
+1. In `.env` file, change the value of `CI_ENVIRONMENT` to `production`
+1. Update database details in `app/Config/Database.php` 

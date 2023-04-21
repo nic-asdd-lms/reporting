@@ -38,21 +38,23 @@ class UserEnrolmentCourse extends Model
     public function getCourseWiseEnrolmentCount($org) {
         $table = new \CodeIgniter\View\Table();
         if($org == ''){
-            $query = $this->db->query('SELECT course_name, published_date, durationh,COUNT(*) AS enrolled_count
+            $query = $this->db->query('SELECT course_name, published_date, durationhms,COUNT(*) AS enrolled_count
       ,SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count, avg_rating
   FROM user_course_enrolment
   INNER JOIN  master_course ON user_course_enrolment.course_id = master_course.course_id
-  GROUP BY course_name,published_date, durationh,avg_rating
+  WHERE master_course.status=\'Live\'
+  GROUP BY course_name,published_date, durationhms,avg_rating
   ORDER BY completed_count desc');
         }
         else {
-            $query = $this->db->query('SELECT course_name, published_date, durationh,COUNT(*) AS enrolled_count
+            $query = $this->db->query('SELECT course_name, published_date, durationhms,COUNT(*) AS enrolled_count
       ,SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count, avg_rating
   FROM user_course_enrolment
   INNER JOIN  master_course ON user_course_enrolment.course_id = master_course.course_id
   INNER JOIN  master_user ON master_user.user_id =user_course_enrolment.user_id
   WHERE master_user.root_org_id=\''.$org.'\'
-  GROUP BY course_name,published_date, durationh,avg_rating
+  AND master_course.status=\'Live\'
+  GROUP BY course_name,published_date, durationhms,avg_rating
   ORDER BY completed_count desc');
         }
         
@@ -63,7 +65,7 @@ class UserEnrolmentCourse extends Model
         
         ];
         $table->setTemplate($template);
-        $table->setHeading('Course Name', 'Published Date', 'Duration (in hrs)', 'Enrollment Count', 'Completion Count', 'Average Rating');
+        $table->setHeading('Course Name', 'Published Date', 'Duration (HH:MM:SS)', 'Enrollment Count', 'Completion Count', 'Average Rating');
 
            return $table->generate($query);
        //return $query->getResult();
@@ -73,21 +75,38 @@ class UserEnrolmentCourse extends Model
 
     public function getCourseMinistrySummary($course) {
         $table = new \CodeIgniter\View\Table();
+        $queryString = 'select distinct ms_name,COUNT(distinct user_course_enrolment.user_id) AS enrolled_count ,(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count 
+        from master_org_hierarchy ,user_course_enrolment, master_user  
+        where user_course_enrolment.user_id = master_user.user_id 
+        and ms_id in 
+        (select ms_id from master_org_hierarchy  
+        join master_user on master_user.root_org_id = master_org_hierarchy.ms_id  
+        join user_course_enrolment on master_user.user_id = user_course_enrolment.user_id 
+        where course_id=\''.$course.'\')
+        group by ms_name,user_course_enrolment.completion_status
+        union
+        select distinct ms_name,COUNT(distinct user_course_enrolment.user_id) AS enrolled_count ,(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count 
+        from master_org_hierarchy ,user_course_enrolment   , master_user  
+        where user_course_enrolment.user_id = master_user.user_id 
+        and ms_id in 
+        (select ms_id from master_org_hierarchy  
+        join master_user on master_user.root_org_id = master_org_hierarchy.dept_id  
+        join user_course_enrolment on master_user.user_id = user_course_enrolment.user_id 
+        where course_id=\''.$course.'\')
+        group by ms_name,user_course_enrolment.completion_status
+        union
+        select distinct ms_name,COUNT(distinct user_course_enrolment.user_id) AS enrolled_count ,(CASE WHEN user_course_enrolment.completion_status =\'Completed\'   THEN 1 ELSE 0 END) AS completed_count 
+        from master_org_hierarchy ,user_course_enrolment , master_user   
+        where user_course_enrolment.user_id = master_user.user_id 
+        and ms_id in 
+        (select ms_id from master_org_hierarchy  
+        join master_user on master_user.root_org_id = master_org_hierarchy.org_id  
+        join user_course_enrolment on master_user.user_id = user_course_enrolment.user_id 
+        where course_id=\''.$course.'\')
+        group by ms_name,user_course_enrolment.completion_status';
         
-            $query = $this->db->query('SELECT  distinct ministry_state_name, COUNT(distinct user_course_enrolment.user_id) AS enrolled_count
-            ,(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count
-        FROM user_course_enrolment, master_course, master_user, master_structure
-          WHERE user_course_enrolment.user_id=master_user.user_id
-          AND user_course_enrolment.course_id= \''.$course.'\'
-
-          AND (master_user.root_org_id = master_structure.org_id
-        OR master_user.root_org_id = master_structure.dep_id
-        OR master_user.root_org_id = master_structure.ms_id)
-        GROUP BY course_name,  ministry_state_name, user_course_enrolment.completion_status
-        ORDER BY ministry_state_name desc
-        ');
-       
-        
+            $query = $this->db->query($queryString);
+            
            $template = [
             'table_open' => '<table id="tbl-result" class="display dataTable report-table" style="width:90%">'
         
@@ -168,6 +187,7 @@ class UserEnrolmentCourse extends Model
         $builder->join('master_user', 'master_user.user_id = user_course_enrolment.user_id ');
         $builder->join('master_course', 'master_course.course_id = user_course_enrolment.course_id ');
         $builder->where('master_user.org_name', $org);
+        $builder->where('master_course.status','Live');
         $query = $builder->get();
            $template = [
             'table_open' => '<table id="tbl-result" class="display dataTable report-table" style="width:90%">'
@@ -254,17 +274,17 @@ class UserEnrolmentCourse extends Model
     public function getCourseMinistrySummaryExcel($course) {
         $table = new \CodeIgniter\View\Table();
         
-            $query = $this->db->query('SELECT  distinct ministry_state_name, COUNT(distinct user_course_enrolment.user_id) AS enrolled_count
+            $query = $this->db->query('SELECT  distinct ms_name, COUNT(distinct user_course_enrolment.user_id) AS enrolled_count
             ,(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count
-        FROM user_course_enrolment, master_course, master_user, master_structure
+        FROM user_course_enrolment, master_course, master_user, master_org_hierarchy
           WHERE user_course_enrolment.user_id=master_user.user_id
           AND user_course_enrolment.course_id= \''.$course.'\'
 
-          AND (master_user.root_org_id = master_structure.org_id
-        OR master_user.root_org_id = master_structure.dep_id
-        OR master_user.root_org_id = master_structure.ms_id)
-        GROUP BY course_name,  ministry_state_name, user_course_enrolment.completion_status
-        ORDER BY ministry_state_name desc
+          AND (master_user.root_org_id = master_org_hierarchy.org_id
+        OR master_user.root_org_id = master_org_hierarchy.dept_id
+        OR master_user.root_org_id = master_org_hierarchy.ms_id)
+        GROUP BY course_name,  ms_name, user_course_enrolment.completion_status
+        ORDER BY ms_name desc
         ');
        
         
@@ -340,13 +360,13 @@ class UserEnrolmentCourse extends Model
        ,SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count
    FROM user_course_enrolment, master_user
    WHERE user_course_enrolment.user_id = master_user.user_id
-   AND master_user.org_name=\''.$org.'\'
+   AND master_user.root_org_id=\''.$org.'\'
    GROUP BY name, email, org_name, designation
    UNION
    SELECT concat(first_name,\' \',last_name) as name, email, org_name, designation,0 AS enrolled_count
        ,0 AS completed_count
    FROM  master_user
-   WHERE master_user.org_name=\''.$org.'\'
+   WHERE master_user.root_org_id=\''.$org.'\'
    AND master_user.user_id NOT IN (SELECT DISTINCT user_id from user_course_enrolment)
    ORDER BY completed_count desc');
  

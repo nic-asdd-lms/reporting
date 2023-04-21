@@ -8,7 +8,7 @@
     <title>iGOT Reports</title>
     <meta name="description" content="The small framework with powerful features">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/png" href="/favicon.ico">
+    <!-- <link rel="shortcut icon" type="image/jpg" href="/assets/images/karmayogiLogo_thumbnail.jpg"> -->
     <!-- Datatable CSS -->
     <link href='//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
 
@@ -56,9 +56,10 @@
     
     h2 {
         text-align: center;
-        padding: 10px;
-        color: rgba(62, 62, 62, 1);
         
+        color: rgb(38, 64, 146);
+        font-size:30px;
+font-weight: bold;
         
     }
 
@@ -68,6 +69,8 @@
         border-top: 1px solid rgba(242, 242, 242, 1);
         margin-bottom: 100px;
         padding-bottom: 30px;
+        margin-top: 50px;
+        padding-top:10px;
     }
 
     .further h2:first-of-type {
@@ -77,34 +80,49 @@
     .download-button {
         float: right;
         margin-right: 20px;
+        display: block;
+
     }
 
     .report-table {
         margin: 20px;
-        background-color: rgba(221, 72, 20, 0.1);
+        background-color: #f0a54200;
+        color:rgb(38, 64, 146);
+        border-bottom: 1px solid #f2c498;
+
     }
     
     .h2 {
         margin-left:100px;
         margin-top:20px;
         margin-bottom:20px;
+        display: block;
+
     }
 
     table {
-        background-color: #e26b420a;
+        /* background-color: #f0a542a6; */
         border-left-style: solid;
 border-left-width: thin;
-border-left-color: #f4e4de;
+border-left-color: #f0a542a6;
 border-right-style: solid;
 border-right-width: thin;
-border-right-color: #f4e4de;
+border-right-color: #f0a542a6;
 border-block-start-style: solid;
 border-block-start-width: thin;
-border-block-start-color: #e26b4259
+border-block-start-color: #f0a542a6;
+border-block-end-style: solid;
+border-block-end-width: thin;
+border-block-end-color: #f0a542a6;
+color: rgb(38, 64, 146);
     }
 
-    tr .odd {
-        background-color: #e26b4200;
+    .odd {
+        background-color: #f0aa4f14;
+    }
+
+    .even {
+        background-color: #f0aa4f36;
     }
     td .sorting_1 {
         background-color: #e26b4200;
@@ -113,35 +131,82 @@ border-block-start-color: #e26b4259
         background-color: #e26b4200;
     }
 
+    thead {
+        background-color: #f0a54200;
+        
+    }
     thead .sorting{
-        background-color: #e26b421c;
+        background-color: #f0a542a6;;
+        border-bottom: 1px solid #f2c182;
     }
     thead .sorting_asc{
-        background-color: #e26b421c;
+        background-color: #f0a542ed;
+        border-bottom: 1px solid #f2c182;
     }
     thead .sorting_desc{
-        background-color: #e26b421c;
+        background-color: #f0a542ed;
+        border-bottom: 1px solid #f2c182;
+    }
+
+    label {
+        font-weight: 50;
+        font-size:25px
+    }
+    .dataTable.no-footer {
+  border-bottom: 1px solid #f2c498;
+}
+     .dataTables_filter label{
+        font-size: 17px;
+    }
+
+    .dataTables_filter input{
+        font-size: 14px;
+        display:inline;
+        height: 34px;
+        padding: 6px 12px;
+        line-height: 1.42857143;
+        color: #555;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+        transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    }
+
+    table.dataTable tbody tr{
+        background-color: #f0aa4f14;
+    }
+
+    .title {
+        color: rgb(38, 64, 146);
+        font-size: 35px;
+        display: block;
+        text-align: center;
+    }
+
+    .subtitle {
+        color: rgb(38, 64, 146);
+        display: block;
+        text-align: center;
+
     }
 
 
     </style>
 </head>
-    <body>
-    <div class="h2"><?php echo $reportTitle ?></h2>
+    <body  onload="initKeycloak()">
+        <div>
+    <div class="h2">
+        
+        <label class="title"><?php echo $reportTitle ?></label>
+        
+        <label class="subtitle"><?php echo $lastUpdated ?></label>
     <?php 
-    echo '<a class="btn btn-success download-button" href="/reporting/getExcelReport?'. $params.'" target="_blank" > Download Excel </a>';
-    
-    // else if($reportType == 'course') {
-    //     echo '<a class="btn btn-success download-button" href="/reporting/getCourseReports?course='. $course.'&orgName='.$orgName.'" target="_blank" > Download Excel </a>';
-    // }
-    // else if($reportType == 'no_param') {
-    //     echo '<a class="btn btn-success download-button" href="/reporting/getReports" target="_blank" > Download Excel </a>';
-    // }
+    echo '<a class="btn btn-success download-button" href="'.base_url('/getExcelReport').'?'. $params.'" target="_blank" > Download Excel </a>';
+
     ?>
-    
-    <!-- <form class="form-horizontal login_form" action="/reporting/download-report" method="post">
-    <button class="btn btn-success download-button" >Download Excel</button>
-</form> -->
+ 
+   
 </div>
     <div class="further">
 
@@ -155,10 +220,26 @@ echo $resultHTML;
 </section>
 
 </div>
-
+</div>
 <script>
     
-
+    function initKeycloak() { 
+            const keycloak = Keycloak('/assets/keycloak.json');
+            const initOptions = {
+                responseMode: 'fragment',
+                flow: 'standard',
+                onLoad: 'login-required'
+            };
+            keycloak.init(initOptions).success(function(authenticated) {
+                        //alert(authenticated ? 'authenticated' : 'not authenticated');
+                        if(!authenticated){
+                            alert('Not iGOT user'); 
+                        }
+                        
+            }).catch(function() {
+                    alert('failed to initialize');
+            });
+        }
     
 
   $(document).ready(function() {

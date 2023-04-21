@@ -8,7 +8,7 @@
     <title>iGOT Reports</title>
     <meta name="description" content="The small framework with powerful features">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/png" href="/favicon.ico">
+    <link rel="shortcut icon" type="image/jpg" href="/assets/images/karmayogiLogo_thumbnail.jpg">
     <!-- Datatable CSS -->
     <link href='//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
 
@@ -22,11 +22,11 @@
     <style {csp-style-nonce}>
         header {
         background-color: rgba(247, 248, 249, 1);
-        padding: .4rem .4rem;
+        /* padding: .4rem .4rem; */
     }
 
     .menu {
-        padding: .4rem .4rem;
+        /* padding: .4rem .4rem; */
     }
 
     header ul {
@@ -34,7 +34,7 @@
         list-style-type: none;
         margin: 0;
         overflow: hidden;
-        padding: .65rem .65rem;
+        /* padding: .65rem .65rem; */
         text-align: right;
     }
 
@@ -61,14 +61,14 @@
 
     header li.menu-item a:hover,
     header li.menu-item a:focus {
-        background-color: rgba(221, 72, 20, .2);
-        color: rgba(221, 72, 20, 1);
+        background-color:rgba(239, 149, 30, 0.17);
+            color: rgb(239, 149, 30);
         
     }
 
     header .logo {
         float: left;
-        height: 50px;
+        height: 100px;
         padding: 0;
         color: rgba(221, 72, 20, .6);
     }
@@ -151,10 +151,23 @@
 
         header li.menu-item a:hover,
         header li.menu-item a:focus {
-            background-color: rgba(221, 72, 20, .7);
-            color: rgba(255, 255, 255, .8);
+            background-color:rgba(239, 149, 30, 0.17);
+            color: rgb(239, 149, 30);
         }
     }
+    .app-title {
+        font-size: 40px;
+        font-weight: 1000;
+        padding: 1rem;
+        color: rgb(38, 64, 146);
+        vertical-align: middle;
+    }
+    .div-title {
+        font-size: 40px;
+        font-weight: 1000;
+        width: 70%;
+    }
+    
 
     
     </style>
@@ -164,7 +177,16 @@
 <div class="menu">
     <ul>
         <li class="logo">
-            <div class="title">iGOT Reporting</div>
+        
+            <div class="title">
+                <img  src="/assets/images/karmayogiLogo.svg" alt="iGOT Reporting"/> 
+            </div>
+        </li>
+        <li class="logo">
+        
+            <div class="title">
+                <label class="app-title">iGOT Reporting</label> 
+            </div>
         </li>
         <li class="menu-toggle">
             <button onclick="toggleMenu();">&#9776;</button>
@@ -173,9 +195,9 @@
         $session = \Config\Services::session();
 		
        if ($session->get('logged_in') == true) {
-            echo "<li class='menu-item '><a href='/reporting'>Home</a></li>
-            <li class='menu-item '>Dashboard</a></li>
-            <li class='menu-item '><a href='/login/logout' >Logout</a></li>";
+            echo "<li class='menu-item '><a href=".base_url('/').">Home</a></li>
+            <li class='menu-item '>Dashboard</li>
+            <li class='menu-item '><a href='".base_url('/logout')."' >Logout</a></li>";
         }
         ?>
         

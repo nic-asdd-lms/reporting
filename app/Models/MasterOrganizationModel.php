@@ -20,17 +20,24 @@ class MasterOrganizationModel extends Model
 
     
     public function getOrgName($org_id) {
-        $builder = $this->db->table('master_organization');
-        $builder->select('org_name');
-        $builder->where('root_org_id', $org_id);
-        $query = $builder->get();
+        try{
+            $builder = $this->db->table('master_organization');
+            $builder->select('org_name');
+            $builder->where('root_org_id', $org_id);
+            $query = $builder->get();
+            
+           // echo $org_id,json_encode($query);
+            return $query->getRow()->org_name;
+        }
         
-       // echo $org_id,json_encode($query);
-        return $query->getRow()->org_name;
+        catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        } 
     }
 
     public function searchOrg($search_key) {
-        $builder = $this->db->table('master_organization');
+        try {
+            $builder = $this->db->table('master_organization');
         $builder->select('org_name');
         $builder->where('root_org_id', $search_key);
         $query = $builder->get();
@@ -38,6 +45,11 @@ class MasterOrganizationModel extends Model
         $result = $this->db->query('SELECT org_name FROM master_organization WHERE SIMILARITY(org_name,\''.$search_key.'\') > 0.4 ;')->getResultObject();
         echo $search_key,json_encode($query);
         return $result;
+        }
+        catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        } 
+        
     }
 
     

@@ -2,6 +2,7 @@
 
 namespace Config;
 
+
 // Create a new instance of our RouteCollection class.
 $routes = Services::routes();
 
@@ -19,7 +20,7 @@ $routes->set404Override();
 // where controller filters or CSRF protection are bypassed.
 // If you don't want to define all routes, please use the Auto Routing (Improved).
 // Set `$autoRoutesImproved` to true in `app/Config/Feature.php` and set the following to true.
-// $routes->setAutoRoute(false);
+ $routes->setAutoRoute(true);
 
 /*
  * --------------------------------------------------------------------
@@ -29,24 +30,29 @@ $routes->set404Override();
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->get('/reporting', 'Home::index');
-$routes->get('/reporting/index.php', 'Home::index');
+$routes->get('/home', 'Home::index');
+$routes->get('/checkIgotUser', 'Login::checkIgotUser');
+$routes->post('/user_login_process', 'Login::user_login_process');
+$routes->get('/logout', 'Login::logout');
+$routes->get('/', 'Login::index');
 $routes->get('/login', 'Login::index');
 $routes->post('/login', 'Login::index');
-$routes->post('/reporting/getCourseWiseEnrolmentReport', 'Home::getCourseWiseEnrolmentReport');
-$routes->post('/reporting/getCourseReport', 'Home::getCourseReport');
-$routes->post('/reporting/getMDOReport', 'Home::getMDOReport');
-$routes->post('/reporting/getRoleReport', 'Home::getRoleReport');
-$routes->post('/reporting/getDoptReport', 'Home::getDoptReport');
-$routes->post('/reporting/getAnalytics', 'Home::getAnalytics');
-$routes->post('/reporting/action', 'Home::action');
-$routes->post("/reporting/download-report", "Report::exportToExcel");
-$routes->post('/login/user_login_process', 'Login::user_login_process');
-$routes->get('/login/logout', 'Login::logout');
-$routes->post('/reporting/search', 'Home::search');
-$routes->post('/reporting/orgSearch', 'Home::orgSearch');
-$routes->get('/reporting/getExcelReport', 'Home::getExcelReport');
-
+//$routes->get('/', 'Home::index');
+$routes->get('/index.php', 'Home::index');
+$routes->post('/getCourseWiseEnrolmentReport', 'Home::getCourseWiseEnrolmentReport');
+$routes->post('/getCourseReport', 'Home::getCourseReport');
+$routes->post('/getMDOReport', 'Home::getMDOReport');
+$routes->post('/getRoleReport', 'Home::getRoleReport');
+$routes->post('/getDoptReport', 'Home::getDoptReport');
+$routes->post('/getAnalytics', 'Home::getAnalytics');
+$routes->post('/action', 'Home::action');
+$routes->post("/download-report", "Report::exportToExcel");
+$routes->post('/search', 'Home::search');
+$routes->post('/orgSearch', 'Home::orgSearch');
+$routes->get('/getExcelReport', 'Home::getExcelReport');
+//$routes->get('/assets/images/karmayogiLogo.svg' , 'assets\images\karmayogiLogo.svg');
+// $routes->resource('/reporting/assets/images',['controller' => 'App\Assets\Images']);
+//$routes->get('/reporting/assets/images/karmayogiLogo.svg' , 'assets\images\karmayogiLogo.svg');
 /*
  * --------------------------------------------------------------------
  * Additional Routing

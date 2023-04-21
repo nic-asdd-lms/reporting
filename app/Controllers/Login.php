@@ -5,17 +5,30 @@ namespace App\Controllers;
 
 use App\Models\UserMasterModel;
 use App\Config\App;
+use App\Config\Assets;
 
 //session_start(); //we need to start session in order to access it through CI
 
 class Login extends BaseController
 {
+	
+
+
+
 
 	protected $helpers = ['form'];
 
-
+	public function checkIgotUser(){                         // First Check if the user is logged in or not
+		//$data['userID'] = $this->input->get('email');  
+		return view('keyCloakLogin');
+	}
 	public function index()
 	{
+		try{
+
+
+		
+
 		$validation = \Config\Services::validation();
 		if (!$this->request->is('post')) {
 			return view('header_view') . view('login_view') . view('footer_view');
@@ -29,11 +42,19 @@ class Login extends BaseController
 		if (!$this->validate($rules)) {
 			return view('header_view') . view('login_view') . view('footer_view');
 		}
-
+	}
+	catch (\Exception $e) {
+		throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);	}
+	
 	}
 
 	public function user_login_process()
 	{
+		try {
+
+			
+		
+		
 		$request = service('request');
 		if (!$this->request->is('post')) {
 
@@ -45,23 +66,28 @@ class Login extends BaseController
 			'password' => 'required'
 		];
 
+
 		if (!$this->validate($rules)) {
 
 			return view('header_view') . view('login_view') . view('footer_view');
 		} else {
 
 
+			
 			$data = array(
 				'username' => $request->getPost('username'),
 				'password' => $request->getPost('password')
 			);
+
+			
 			$user = new UserMasterModel();
 			$result = $user->login($data);
+			
 			if ($result == TRUE) {
 
 				$username = $request->getPost('username');
 				$result = $user->read_user_information($username);
-
+				
 				if ($result != false) {
 
 					$session_data = [
@@ -76,12 +102,10 @@ class Login extends BaseController
 					$session = \Config\Services::session();
 					$session->set($session_data);
 					$_SESSION['logged_in'] = true;
-
 					if ($session->get('role') == 'SPV_ADMIN') {
 						$data['role'] = 'SPV_ADMIN';
 						$data['logged_in'] = true;
 
-						return $this->response->redirect(site_url('/'));
 						//  $red = $config->item('base_url_other');
 						//  redirect($red, 'refresh');
 					} elseif ($session->get('role') == 'MDO_ADMIN') {
@@ -91,14 +115,14 @@ class Login extends BaseController
 						$data['department'] = $session->get('department');
 						$data['organisation'] = $session->get('organisation');
 
-						return $this->response->redirect(site_url('/'));
+						// return $this->response->redirect('/home');
 						// $red = $this->config->item('base_url_other').'/Admin/email_data';
 						// redirect($red, 'refresh');
 					} elseif ($session->get('role') == 'CBC_ADMIN') {
 						$data['role'] = 'CBC_ADMIN';
 						$data['logged_in'] = true;
 
-						return $this->response->redirect(site_url('/'));
+						// return $this->response->redirect('/home');
 						// $red = $this->config->item('base_url_other').'/Admin/email_data';
 						// redirect($red, 'refresh');
 					} elseif ($session->get('role') == 'CBP_ADMIN') {
@@ -108,14 +132,14 @@ class Login extends BaseController
 						$data['ministry'] = $session->get('ministry');
 						$data['department'] = $session->get('department');
 						$data['organisation'] = $session->get('organisation');
-						return $this->response->redirect(site_url('/'));
+						// return $this->response->redirect('/home');
 						// $red = $this->config->item('base_url_other').'/Admin/email_data';
 						// redirect($red, 'refresh');
 					} elseif ($session->get('role') == 'DOPT_ADMIN') {
 
 						$data['role'] = 'DOPT_ADMIN';
 						$data['logged_in'] = true;
-						return $this->response->redirect(site_url('/'));
+						// return $this->response->redirect('/home');
 						// $red = $this->config->item('base_url_other').'/Admin/email_data';
 						// redirect($red, 'refresh');
 					} elseif ($session->get('role') == 'ATI_ADMIN') {
@@ -125,11 +149,12 @@ class Login extends BaseController
 						$data['ministry'] = $session->get('ministry');
 						$data['department'] = $session->get('department');
 						$data['organisation'] = $session->get('organisation');
-						return $this->response->redirect(site_url('/'));
+						// return $this->response->redirect('/home');
 						// $red = $this->config->item('base_url_other').'/Admin/email_data';
 						// redirect($red, 'refresh');
 					}
-
+					return $this->response->redirect(base_url('/home'));
+						
 
 
 				} else {
@@ -142,11 +167,19 @@ class Login extends BaseController
 			}
 		}
 	}
+	
+	catch (\Exception $e) {
+		throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);	}
+	
+	}
 	// Logout from admin page
 
 	public function logout()
 	{
 		// Removing session data
+		try {
+
+		
 		$session = \Config\Services::session();
 		$sess_array = array(
 			'username' => '',
@@ -160,5 +193,8 @@ class Login extends BaseController
 
 		//$red = $this->config->item('base_url_other').'/login/index';
 		return view('header_view') . view('login_view', $data) . view('footer_view');
+	}
+	catch (\Exception $e) {
+		throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);	}
 	}
 }
