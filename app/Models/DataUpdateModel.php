@@ -13,11 +13,17 @@ class DataUpdateModel extends Model
     }
 
     public function getReportLastUpdatedTime() {
-        $builder = $this->db->table('data_update');
-        $builder->select('last_updated');
-        $query = $builder->get();
-    
-       return $query->getRow()->last_updated;
+        try {
+            $builder = $this->db->table('data_update');
+            $builder->select('last_updated');
+            $query = $builder->get();
+        
+           return $query->getRow()->last_updated;
+        }
+        catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        } 
+        
     }
 
     

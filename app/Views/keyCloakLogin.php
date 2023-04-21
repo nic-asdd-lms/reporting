@@ -1,11 +1,11 @@
 <html>
 <head>
-        <script src="/assets/keycloak_client_adaptor/dist/keycloak.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
+        <script type="text/javascript" src="/assets/keycloak_client_adaptor/dist/keycloak.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
         <script>
        
         function initKeycloak() { 
-            const keycloak = Keycloak('/assets//keycloak.json');
+            const keycloak = Keycloak('/assets/keycloak.json');
             const initOptions = {
                 responseMode: 'fragment',
                 flow: 'standard',

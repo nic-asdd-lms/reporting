@@ -2,6 +2,7 @@
 
 namespace Config;
 
+
 // Create a new instance of our RouteCollection class.
 $routes = Services::routes();
 
@@ -19,7 +20,7 @@ $routes->set404Override();
 // where controller filters or CSRF protection are bypassed.
 // If you don't want to define all routes, please use the Auto Routing (Improved).
 // Set `$autoRoutesImproved` to true in `app/Config/Feature.php` and set the following to true.
-// $routes->setAutoRoute(false);
+ $routes->setAutoRoute(true);
 
 /*
  * --------------------------------------------------------------------
@@ -48,7 +49,9 @@ $routes->post("/reporting/home/download-report", "Report::exportToExcel");
 $routes->post('/reporting/home/search', 'Home::search');
 $routes->post('/reporting/home/orgSearch', 'Home::orgSearch');
 $routes->get('/reporting/home/getExcelReport', 'Home::getExcelReport');
-
+$routes->get('/assets/images/karmayogiLogo.svg' , 'assets\images\karmayogiLogo.svg');
+// $routes->resource('/reporting/assets/images',['controller' => 'App\Assets\Images']);
+//$routes->get('/reporting/assets/images/karmayogiLogo.svg' , 'assets\images\karmayogiLogo.svg');
 /*
  * --------------------------------------------------------------------
  * Additional Routing

@@ -5,11 +5,16 @@ namespace App\Controllers;
 
 use App\Models\UserMasterModel;
 use App\Config\App;
+use App\Config\Assets;
 
 //session_start(); //we need to start session in order to access it through CI
 
 class Login extends BaseController
 {
+	
+
+
+
 
 	protected $helpers = ['form'];
 
@@ -19,6 +24,11 @@ class Login extends BaseController
 	}
 	public function index()
 	{
+		try{
+
+
+		
+
 		$validation = \Config\Services::validation();
 		if (!$this->request->is('post')) {
 			return view('header_view') . view('login_view') . view('footer_view');
@@ -32,11 +42,19 @@ class Login extends BaseController
 		if (!$this->validate($rules)) {
 			return view('header_view') . view('login_view') . view('footer_view');
 		}
-
+	}
+	catch (\Exception $e) {
+		return view('header_view') . view('error_general') . view('footer_view');
+	}
+	
 	}
 
 	public function user_login_process()
 	{
+		try {
+
+
+		
 		$request = service('request');
 		if (!$this->request->is('post')) {
 
@@ -145,11 +163,20 @@ class Login extends BaseController
 			}
 		}
 	}
+	
+	catch (\Exception $e) {
+		return view('header_view') . view('error_general') . view('footer_view');
+	}
+	
+	}
 	// Logout from admin page
 
 	public function logout()
 	{
 		// Removing session data
+		try {
+
+		
 		$session = \Config\Services::session();
 		$sess_array = array(
 			'username' => '',
@@ -163,5 +190,9 @@ class Login extends BaseController
 
 		//$red = $this->config->item('base_url_other').'/login/index';
 		return view('header_view') . view('login_view', $data) . view('footer_view');
+	}
+	catch (\Exception $e) {
+		return view('header_view') . view('error_general') . view('footer_view');
+	}
 	}
 }

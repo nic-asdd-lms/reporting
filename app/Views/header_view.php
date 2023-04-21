@@ -155,7 +155,18 @@
             color: rgb(239, 149, 30);
         }
     }
-
+    .app-title {
+        font-size: 40px;
+        font-weight: 1000;
+        padding: 1rem;
+        color: rgb(38, 64, 146);
+        vertical-align: middle;
+    }
+    .div-title {
+        font-size: 40px;
+        font-weight: 1000;
+        width: 70%;
+    }
     
 
     
@@ -166,7 +177,16 @@
 <div class="menu">
     <ul>
         <li class="logo">
-            <div class="title"><img src="/assets/images/karmayogiLogo.svg"/></div>
+        
+            <div class="title">
+                <img  src="/assets/images/karmayogiLogo.svg" alt="iGOT Reporting"/> 
+            </div>
+        </li>
+        <li class="logo">
+        
+            <div class="title">
+                <label class="app-title">iGOT Reporting</label> 
+            </div>
         </li>
         <li class="menu-toggle">
             <button onclick="toggleMenu();">&#9776;</button>
@@ -176,7 +196,7 @@
 		
        if ($session->get('logged_in') == true) {
             echo "<li class='menu-item '><a href=".base_url('/home').">Home</a></li>
-            <li class='menu-item '>Dashboard</a></li>
+            <li class='menu-item '>Dashboard</li>
             <li class='menu-item '><a href='".base_url('/login/logout')."' >Logout</a></li>";
         }
         ?>

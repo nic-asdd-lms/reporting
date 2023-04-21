@@ -193,10 +193,20 @@
     label {
         font-weight: 400;
     }
+
+    .login-div {
+        align-items: center;
+        align-self: center;
+        background-color: #f1f1f1;
+        width: 70%;
+        margin: 30px;
+        display: grid;
+        padding: 30px;
+    }
     </style>
 </head>
 
-<body>
+<body  onload="initKeycloak()">
 <?= validation_list_errors() ?>
     <!-- HEADER: MENU + HEROE SECTION -->
    
@@ -207,7 +217,7 @@
 
 
 
-        <div id="body">
+        <div id="body" style="display: grid">
         <div class='login-container'>
 	<div class='row'>
 		<div class='col-md-8 col-md-offset-2'>
@@ -217,7 +227,7 @@
 		</div>
 	</div>
 	<div class='row'>
-		<div class='col-md-8 col-md-offset-2 imgcontainer'>
+		<div class='col-md-8 col-md-offset-2 imgcontainer ' >
 			<form class="form-horizontal login_form" action="<?php echo base_url('/login/user_login_process');?>" method="post">
                
 			<?php //echo form_open('login//user_login_process'); ?>
@@ -269,7 +279,26 @@
     <!-- SCRIPTS -->
 
     <script>
-   
+   function initKeycloak() { 
+            const keycloak = Keycloak('/assets/keycloak.json');
+            const initOptions = {
+                responseMode: 'fragment',
+                flow: 'standard',
+                onLoad: 'login-required'
+            };
+            keycloak.init(initOptions).success(function(authenticated) {
+                        //alert(authenticated ? 'authenticated' : 'not authenticated');
+                        if(authenticated){
+                            window.location.replace("/reporting/login");
+                        }
+                        else 
+                        {
+                            alert('Not an iGOT user'); 
+                        }
+            }).catch(function() {
+                    alert('failed to initialize');
+            });
+        }
     </script>
 
     <!-- -->

@@ -24,41 +24,49 @@ class Home extends BaseController
 {
     public function index()
     {
-        helper(['form', 'url']);
-        $masterStructureModel = new MasterStructureModel();
-        $masterOrganizationModel = new MasterOrganizationModel();
-        $masterCourseModel = new MasterCourseModel();
-        $data['mdoReportTypes'] = $this->getMDOReportTypes();
-        $data['ministry'] = $masterStructureModel->getMinistry();
-        $data['org'] = $masterOrganizationModel->getOrganizations();
-        $data['course'] = $masterCourseModel->getCourse();
-        $data['error'] = '';
-        return view('header_view')
-            . view('report_home', $data)
-            . view('footer_view');
-
-
+        try{
+            helper(['form', 'url']);
+            $masterStructureModel = new MasterStructureModel();
+            $masterOrganizationModel = new MasterOrganizationModel();
+            $masterCourseModel = new MasterCourseModel();
+            $data['mdoReportTypes'] = $this->getMDOReportTypes();
+            $data['ministry'] = $masterStructureModel->getMinistry();
+            $data['org'] = $masterOrganizationModel->getOrganizations();
+            $data['course'] = $masterCourseModel->getCourse();
+            $data['error'] = '';
+            return view('header_view')
+                . view('report_home', $data)
+                . view('footer_view');
+    
+    
+        }
+	catch (\Exception $e) {
+		return view('header_view') . view('error_general') . view('footer_view');
+	}
+	
+        
     }
 
     public function action()
     {
+        try{
+
+        
         if ($this->request->getVar('action')) {
             $action = $this->request->getVar('action');
 
             if ($action == 'get_ministry') {
                 $ministryModel = new MasterStructureModel();
 
-                if($this->request->getVar('ms') == 'ministry') {
+                if ($this->request->getVar('ms') == 'ministry') {
                     $msdata = $ministryModel->getMinistry();
-                }
-                else if($this->request->getVar('ms') == 'state') {
+                } else if ($this->request->getVar('ms') == 'state') {
                     $msdata = $ministryModel->getState();
                 }
-                
+
 
                 echo json_encode($msdata);
-            }
-            else if ($action == 'get_dept') {
+            } else if ($action == 'get_dept') {
                 $deptModel = new MasterStructureModel();
 
                 $deptdata = $deptModel->getDepartment($this->request->getVar('ministry'));
@@ -104,30 +112,44 @@ class Home extends BaseController
             }
         }
     }
+	catch (\Exception $e) {
+		return view('header_view') . view('error_general') . view('footer_view');
+	}
+	
+    }
 
     public function getCourseReport()
     {
+        try {
+
+        
         $request = service('request');
         $session = \Config\Services::session();
 
         $role = $session->get('role');
+        $courseReportType = $request->getPost('courseReportType');
+        $course = $request->getPost('course');
+        
         $enrolment = new UserEnrolmentCourse();
         $enrolmentProgram = new UserEnrolmentProgram();
-        $lastUpdate=new DataUpdateModel();
+        $lastUpdate = new DataUpdateModel();
+        if ($courseReportType == 'notSelected') {
+            echo '<script>alert("Please select report type!");</script>';
+            return view('header_view')
+                . view('footer_view');
+        } else {
+            
         $data['lastUpdated'] = '[Report last updated on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
-        
+
         $org = '';
         if ($role == 'MDO_ADMIN') {
             $org = $session->get('organisation');
         }
-        $courseReportType = $request->getPost('courseReportType');
-        $course = $request->getPost('course');
         if ($courseReportType == 'courseEnrolmentReport') {
             if ($role == 'MDO_ADMIN') {
-                $data['params'] = 'reportType=courseEnrolmentReport&org=' . $org.'&course='.$course;
-            }
-            else if($role == 'SPV_ADMIN'){
-                $data['params'] = 'reportType=courseEnrolmentReport&course='.$course;
+                $data['params'] = 'reportType=courseEnrolmentReport&org=' . $org . '&course=' . $course;
+            } else if ($role == 'SPV_ADMIN') {
+                $data['params'] = 'reportType=courseEnrolmentReport&course=' . $course;
             }
             $data['resultHTML'] = $enrolment->getCourseWiseEnrolmentReport($course, $org);
             $data['reportTitle'] = 'User Enrolment Report for Course - "' . $this->getCourseName($course) . '"';
@@ -136,8 +158,7 @@ class Home extends BaseController
         } else if ($courseReportType == 'courseEnrolmentCount') {
             if ($role == 'MDO_ADMIN') {
                 $data['params'] = 'reportType=courseEnrolmentCount&org=' . $org;
-            }
-            else if($role == 'SPV_ADMIN'){
+            } else if ($role == 'SPV_ADMIN') {
                 $data['params'] = 'reportType=courseEnrolmentCount';
             }
             $data['resultHTML'] = $enrolment->getCourseWiseEnrolmentCount($org);
@@ -146,10 +167,9 @@ class Home extends BaseController
 
         } else if ($courseReportType == 'programEnrolmentReport') {
             if ($role == 'MDO_ADMIN') {
-                $data['params'] = 'reportType=programEnrolmentReport&org=' . $org.'&course='.$course;
-            }
-            else if($role == 'SPV_ADMIN'){
-                $data['params'] = 'reportType=programEnrolmentReport&course='.$course;
+                $data['params'] = 'reportType=programEnrolmentReport&org=' . $org . '&course=' . $course;
+            } else if ($role == 'SPV_ADMIN') {
+                $data['params'] = 'reportType=programEnrolmentReport&course=' . $course;
             }
             $data['resultHTML'] = $enrolmentProgram->getProgramWiseEnrolmentReport($course, $org);
             $data['reportTitle'] = 'User Enrolment Report for Program - "' . $this->getProgramName($course) . '"';
@@ -158,8 +178,7 @@ class Home extends BaseController
         } else if ($courseReportType == 'programEnrolmentCount') {
             if ($role == 'MDO_ADMIN') {
                 $data['params'] = 'reportType=programEnrolmentCount&org=' . $org;
-            }
-            else if($role == 'SPV_ADMIN'){
+            } else if ($role == 'SPV_ADMIN') {
                 $data['params'] = 'reportType=programEnrolmentCount';
             }
             $data['resultHTML'] = $enrolmentProgram->getProgramWiseEnrolmentCount($org);
@@ -168,10 +187,9 @@ class Home extends BaseController
 
         } else if ($courseReportType == 'collectionEnrolmentReport') {
             if ($role == 'MDO_ADMIN') {
-                $data['params'] = 'reportType=collectionEnrolmentReport&org=' . $org.'&course='.$course;
-            }
-            else if($role == 'SPV_ADMIN'){
-                $data['params'] = 'reportType=collectionEnrolmentReport&course='.$course;
+                $data['params'] = 'reportType=collectionEnrolmentReport&org=' . $org . '&course=' . $course;
+            } else if ($role == 'SPV_ADMIN') {
+                $data['params'] = 'reportType=collectionEnrolmentReport&course=' . $course;
             }
             $data['resultHTML'] = $enrolment->getCollectionWiseEnrolmentReport($course, $org);
             $data['reportTitle'] = 'User Enrolment Report for Curated Collection - "' . $this->getCollectionName($course) . '"';
@@ -179,17 +197,16 @@ class Home extends BaseController
 
         } else if ($courseReportType == 'collectionEnrolmentCount') {
             if ($role == 'MDO_ADMIN') {
-                $data['params'] = 'reportType=collectionEnrolmentCount&org=' . $org.'&course='.$course;
-            }
-            else if($role == 'SPV_ADMIN'){
-                $data['params'] = 'reportType=collectionEnrolmentCount&course='.$course;
+                $data['params'] = 'reportType=collectionEnrolmentCount&org=' . $org . '&course=' . $course;
+            } else if ($role == 'SPV_ADMIN') {
+                $data['params'] = 'reportType=collectionEnrolmentCount&course=' . $course;
             }
             $data['resultHTML'] = $enrolment->getCollectionWiseEnrolmentCount($course, $org);
             $data['reportTitle'] = 'Enrolment/Completion Count for Curated Collection - "' . $this->getCollectionName($course) . '"';
             $data['fileName'] = $course . '_EnrolmentCompletionCount';
 
         } else if ($courseReportType == 'courseMinistrySummary') {
-            $data['params'] = 'reportType=courseMinistrySummary&course='.$course;
+            $data['params'] = 'reportType=courseMinistrySummary&course=' . $course;
             $data['resultHTML'] = $enrolment->getCourseMinistrySummary($course);
             $data['reportTitle'] = 'Ministry-wise Summary for course - "' . $this->getCourseName($course) . '"';
             $data['fileName'] = $course . '_MinistrySummary';
@@ -198,123 +215,158 @@ class Home extends BaseController
         return view('header_view')
             . view('report_result', $data)
             . view('footer_view');
+    }
+}
+catch (\Exception $e) {
+    return view('header_view') . view('error_general') . view('footer_view');
+}
 
     }
 
     public function getMDOReport()
     {
-                
+        try{
+
+        
+
         $request = service('request');
         $session = \Config\Services::session();
 
         $mdoReportType = $request->getPost('mdoReportType');
+
 
         $role = $session->get('role');
 
         $user = new MasterUserModel();
         $enrolment = new UserEnrolmentCourse();
         $org_hierarchy = new MasterStructureModel();
-        $lastUpdate=new DataUpdateModel();
+        $lastUpdate = new DataUpdateModel();
 
-        $data['lastUpdated'] = '[Report last updated on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
-        
-        if ($role == 'SPV_ADMIN') {
-            $ministry = $request->getPost('ministry');
-            $dept = $request->getPost('dept');
-            $org = $request->getPost('org');
-        } else if ($role == 'MDO_ADMIN') {
-            $ministry = $session->get('ministry');
-            $dept = $session->get('department');
-            $org = $session->get('organisation');
-        }
+        if ($mdoReportType == 'notSelected') {
+            echo '<script>alert("Please select report type!");</script>';
+            return view('header_view')
+                . view('footer_view');
+        } else {
+            $data['lastUpdated'] = '[Report last updated on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
 
-        if ($ministry != "notSelected") {
-            $ministryName = $org_hierarchy->getMinistryStateName($ministry);
-        }
-        if ($dept != "notSelected") {
-            $deptName = $org_hierarchy->getDeptName($dept);
-
-        }
-
-        if ($org != "notSelected") {
-            $orgName = $this->getOrgName($org);
-
-        } else if ($dept != "notSelected") {
-            $org = $dept;
-            $orgName = $this->getOrgName($dept);
-        } else if ($ministry != "notSelected") {
-            $org = $ministry;
-            $orgName = $this->getOrgName($ministry);
-        }
-
-        if ($mdoReportType == 'mdoUserList') {
-
-            // if ($ministry == "notSelected"){
-            //     $data['error']= 'Please Select Ministry';
-            //     $data['resultHTML'] ='';
-            //     $data['reportTitle']='';
-            //     $data['fileName']='';
-            // }
-            // else 
-            {
-                // $data['error']='';
-                // if($ministry != "notSelected" && $dept == "notSelected") {
-                //     $orgName=$ministryName;
-
-                // }
-                // else if($ministry != "notSelected" && $dept == "notSelected" && $org == "notSelected") {
-                //     $orgName=$deptName;
-
-                // }
-
-
-
-                $data['params'] = 'reportType=mdoUserList&org=' . $org;
-                $data['resultHTML'] = $user->getUserByOrg($orgName);
-                $data['reportTitle'] = 'Users onboarded from organisation - "' . $orgName . '"';
-                $data['fileName'] = $orgName . '_UserList';
+            if ($role == 'SPV_ADMIN') {
+                $ministry = $request->getPost('ministry');
+                $dept = $request->getPost('dept');
+                $org = $request->getPost('org');
+            } else if ($role == 'MDO_ADMIN') {
+                $ministry = $session->get('ministry');
+                $dept = $session->get('department');
+                $org = $session->get('organisation');
             }
-        } else
-            if ($mdoReportType == 'mdoUserCount') {
-                $data['params'] = 'reportType=mdoUserCount';
-                $data['resultHTML'] = $user->getUserCountByOrg();
-                $data['reportTitle'] = 'MDO-wise user count ';
-                $data['fileName'] = 'MDOWiseUserCount';
-            } else if ($mdoReportType == 'mdoUserEnrolment') {
-                $data['params'] = 'reportType=mdoUserEnrolment&org=' . $org;
-                $data['resultHTML'] = $enrolment->getEnrolmentByOrg($orgName);
-                $data['reportTitle'] = 'Users Enrolment Report for organisation - "' . $orgName . '"';
-                $data['fileName'] = $orgName . '_UserEnrolmentReport';
 
-            } else if ($mdoReportType == 'ministryUserEnrolment') {
-                $data['params'] = 'reportType=ministryUserEnrolment&org=' . $org;
-                $data['resultHTML'] = $user->getUserByMinistry($ministryName);
-                $data['reportTitle'] = 'Users list for all organisations under ministry/state - "' . $ministryName . '"';
-                $data['fileName'] = $orgName . '_UserList';
-
-            } else if ($mdoReportType == 'userWiseCount') {
-                $data['params'] = 'reportType=userWiseCount&org=' . $org;
-                $data['resultHTML'] = $enrolment->getUserEnrolmentCountByMDO($orgName);
-                $data['reportTitle'] = 'User-wise course enrolment/completion count for organisation - "' . $orgName . '"';
-                $data['fileName'] = $orgName . '_UserList';
+            if ($ministry != "notSelected") {
+                $ministryName = $org_hierarchy->getMinistryStateName($ministry);
+            }
+            if ($dept != "notSelected") {
+                $deptName = $org_hierarchy->getDeptName($dept);
 
             }
 
-        return view('header_view')
-            . view('report_result', $data)
-            . view('footer_view');
+            if ($org != "notSelected") {
+                $orgName = $this->getOrgName($org);
+
+            } else if ($dept != "notSelected") {
+                $org = $dept;
+                $orgName = $this->getOrgName($dept);
+            } else if ($ministry != "notSelected") {
+                $org = $ministry;
+                $orgName = $this->getOrgName($ministry);
+            }
+
+            if ($mdoReportType == 'mdoUserList') {
+
+                // if ($ministry == "notSelected"){
+                //     $data['error']= 'Please Select Ministry';
+                //     $data['resultHTML'] ='';
+                //     $data['reportTitle']='';
+                //     $data['fileName']='';
+                // }
+                // else 
+                {
+                    // $data['error']='';
+                    // if($ministry != "notSelected" && $dept == "notSelected") {
+                    //     $orgName=$ministryName;
+
+                    // }
+                    // else if($ministry != "notSelected" && $dept == "notSelected" && $org == "notSelected") {
+                    //     $orgName=$deptName;
+
+                    // }
+
+                    if ($ministry == "notSelected") {
+                        echo '<script>alert("Please select ministry!");</script>';
+                        return view('header_view')
+                            . view('footer_view');
+                    } else {
+                        $data['params'] = 'reportType=mdoUserList&org=' . $org;
+                        $data['resultHTML'] = $user->getUserByOrg($orgName);
+                        $data['reportTitle'] = 'Users onboarded from organisation - "' . $orgName . '"';
+                        $data['fileName'] = $orgName . '_UserList';
+                    }
+
+                }
+            } else
+                if ($mdoReportType == 'mdoUserCount') {
+                    $data['params'] = 'reportType=mdoUserCount';
+                    $data['resultHTML'] = $user->getUserCountByOrg();
+                    $data['reportTitle'] = 'MDO-wise user count ';
+                    $data['fileName'] = 'MDOWiseUserCount';
+                } else if ($mdoReportType == 'mdoUserEnrolment') {
+                    $data['params'] = 'reportType=mdoUserEnrolment&org=' . $org;
+                    $data['resultHTML'] = $enrolment->getEnrolmentByOrg($orgName);
+                    $data['reportTitle'] = 'Users Enrolment Report for organisation - "' . $orgName . '"';
+                    $data['fileName'] = $orgName . '_UserEnrolmentReport';
+
+                } else if ($mdoReportType == 'ministryUserEnrolment') {
+                    $data['params'] = 'reportType=ministryUserEnrolment&org=' . $org;
+                    $data['resultHTML'] = $user->getUserByMinistry($ministryName);
+                    $data['reportTitle'] = 'Users list for all organisations under ministry/state - "' . $ministryName . '"';
+                    $data['fileName'] = $orgName . '_UserList';
+
+                } else if ($mdoReportType == 'userWiseCount') {
+                    $data['params'] = 'reportType=userWiseCount&org=' . $org;
+                    $data['resultHTML'] = $enrolment->getUserEnrolmentCountByMDO($orgName);
+                    $data['reportTitle'] = 'User-wise course enrolment/completion count for organisation - "' . $orgName . '"';
+                    $data['fileName'] = $orgName . '_UserList';
+
+                }
+
+            return view('header_view')
+                . view('report_result', $data)
+                . view('footer_view');
+        }
+    }
+	catch (\Exception $e) {
+		return view('header_view') . view('error_general') . view('footer_view');
+	}
+	
     }
 
     public function getRoleReport()
     {
+        try {
+
+        
         $request = service('request');
         $session = \Config\Services::session();
 
         $roleReportType = $request->getPost('roleReportType');
         $user = new MasterUserModel();
-        $lastUpdate=new DataUpdateModel();
+        $lastUpdate = new DataUpdateModel();
+
+        if ($roleReportType == 'notSelected') {
+            echo '<script>alert("Please select report type!");</script>';
+            return view('header_view')
+                . view('footer_view');
+        } else {
+            
         $data['lastUpdated'] = '[Report last updated on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
-        
+
         $role = $session->get('role');
         if ($role == 'SPV_ADMIN') {
             $ministry = '';
@@ -506,9 +558,18 @@ class Home extends BaseController
             . view('report_result', $data)
             . view('footer_view');
     }
+}
+catch (\Exception $e) {
+    return view('header_view') . view('error_general') . view('footer_view');
+}
+
+    }
 
     public function getAnalytics()
     {
+        try {
+
+        
         $request = service('request');
         $session = \Config\Services::session();
 
@@ -517,9 +578,15 @@ class Home extends BaseController
 
         $user = new MasterUserModel();
         $course = new MasterCourseModel();
-        $lastUpdate=new DataUpdateModel();
+        $lastUpdate = new DataUpdateModel();
+        if ($analyticsReportType == 'notSelected') {
+            echo '<script>alert("Please select report type!");</script>';
+            return view('header_view')
+                . view('footer_view');
+        } else {
+            
         $data['lastUpdated'] = '[Report last updated on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
-        
+
         if ($role == 'SPV_ADMIN') {
             $ministry = '';
             $dept = '';
@@ -560,22 +627,38 @@ class Home extends BaseController
             . view('report_result', $data)
             . view('footer_view');
     }
+}
+catch (\Exception $e) {
+    return view('header_view') . view('error_general') . view('footer_view');
+}
+
+    }
 
     public function getDoptReport()
     {
+        try {
+
+        
         $request = service('request');
         $session = \Config\Services::session();
 
         $role = $session->get('role');
         $user = new UserEnrolmentProgram();
-        $lastUpdate=new DataUpdateModel();
+        $lastUpdate = new DataUpdateModel();
+            
         $data['lastUpdated'] = '[Report last updated on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
-        
+
         $org = '';
         if ($role == 'ATI_ADMIN') {
             $org = $session->get('organisation');
         }
         $doptReportType = $request->getPost('doptReportType');
+        if ($doptReportType == 'notSelected') {
+            echo '<script>alert("Please select report type!");</script>';
+            return view('header_view')
+                . view('footer_view');
+        } else {
+        
         $ati = $request->getPost('ati');
         if ($doptReportType == 'atiWiseOverview') {
             $data['params'] = 'reportType=atiWiseOverview';
@@ -588,6 +671,11 @@ class Home extends BaseController
         return view('header_view')
             . view('report_result', $data)
             . view('footer_view');
+    }
+}
+catch (\Exception $e) {
+    return view('header_view') . view('error_general') . view('footer_view');
+}
 
     }
 
@@ -596,6 +684,9 @@ class Home extends BaseController
 
     public function getExcelReport()
     {
+        try {
+
+        
         helper('array');
 
         $user = new MasterUserModel();
@@ -626,7 +717,7 @@ class Home extends BaseController
             }
 
         }
-        
+
         switch ($reportType) {
             case 'mdoUserList':
                 $report = $user->getUserByOrgExcel($org_id);
@@ -727,7 +818,7 @@ class Home extends BaseController
             case 'atiWiseOverview':
                 $report = $user->getATIWiseCountExcel();
                 break;
-            
+
         }
 
 
@@ -735,10 +826,10 @@ class Home extends BaseController
             array_push($keys, $key);
         }
 
-        $fileName = $reportType .'_'. $org_id . '_' . $course_id . '.xls';
+        $fileName = $reportType . '_' . $org_id . '_' . $course_id . '.xls';
         $spreadsheet = new Spreadsheet();
 
-        
+
         $sheet = $spreadsheet->getActiveSheet();
         $column = 'A';
         foreach ($keys as $key) {
@@ -756,92 +847,141 @@ class Home extends BaseController
             foreach ($row as $key => $val) {
                 $sheet->setCellValue($column . $rows, $val);
                 $column++;
-                
+
             }
 
 
             $rows++;
         }
-        
+
         //header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         ob_end_clean();
         header("Content-Type: application/vnd.ms-excel");
-        header("Content-Disposition: attachment; filename=".$fileName);
+        header("Content-Disposition: attachment; filename=" . $fileName);
         header("Cache-Control: max-age=0");
         ob_end_clean();
-        
+
         //ob_clean();
         $writer = new Xlsx($spreadsheet);
         $writer->save('php://output');
         die;
         // header("Content-Type: application/vnd.ms-excel");
-
+    }
+	catch (\Exception $e) {
+		return view('header_view') . view('error_general') . view('footer_view');
+	}
+	
 
     }
-    
+
     public function getCourseName($course_id)
     {
-        $course = new MasterCourseModel();
+        try {
+            $course = new MasterCourseModel();
 
-        $course_name = $course->getCourseName($course_id);
-        return $course_name;
+            $course_name = $course->getCourseName($course_id);
+            return $course_name;
+        }
+        catch (\Exception $e) {
+            return view('header_view') . view('error_general') . view('footer_view');
+        }
+        
+        
 
 
     }
     public function getCollectionName($collection_id)
     {
-        $collection = new MasterCollectionModel();
+        try {
+            $collection = new MasterCollectionModel();
 
-        $collection_name = $collection->getCollectionName($collection_id);
-        return $collection_name;
+            $collection_name = $collection->getCollectionName($collection_id);
+            return $collection_name;
+        }
+        catch (\Exception $e) {
+            return view('header_view') . view('error_general') . view('footer_view');
+        }
+        
+        
 
 
     }
 
     public function getProgramName($program_id)
     {
-        $program = new MasterProgramModel();
+        try {
+            $program = new MasterProgramModel();
 
-        $program_name = $program->getProgramName($program_id);
-        return $program_name;
+            $program_name = $program->getProgramName($program_id);
+            return $program_name;
+        }
+        catch (\Exception $e) {
+            return view('header_view') . view('error_general') . view('footer_view');
+        }
+        
+        
 
 
     }
     public function getOrgName($org_id)
     {
-        $org = new MasterOrganizationModel();
+        try {
+            $org = new MasterOrganizationModel();
 
-        $org_name = $org->getOrgName($org_id);
-        return $org_name;
+            $org_name = $org->getOrgName($org_id);
+            return $org_name;
+        }
+        catch (\Exception $e) {
+            return view('header_view') . view('error_general') . view('footer_view');
+        }
+        
+        
 
 
     }
 
     public function orgSearch($search_key)
     {
-        if (isset($_POST['submit'])) {
-            $skill = $_POST['org_search'];
-            echo 'Selected Skill: ' . $skill;
+        try {
+            if (isset($_POST['submit'])) {
+                $skill = $_POST['org_search'];
+                echo 'Selected Skill: ' . $skill;
+            }
         }
+        
+	catch (\Exception $e) {
+		return view('header_view') . view('error_general') . view('footer_view');
+	}
+	
 
 
     }
 
     public function getMDOReportTypes()
     {
-        $options = array();
-        $options['mdoUserList'] = 'MDO-wise user list';
-        $options['mdoUserCount'] = 'MDO-wise user count';
-        $options['mdoAdminList'] = 'MDO Admin list';
-        $options['mdoUserEnrolment'] = 'MDO-wise user enrolment report';
-        $options['ministryUserEnrolment'] = 'User list for all organisations under a ministry';
-
-        return $options;
+        try {
+            $options = array();
+            $options['mdoUserList'] = 'MDO-wise user list';
+            $options['mdoUserCount'] = 'MDO-wise user count';
+            $options['mdoAdminList'] = 'MDO Admin list';
+            $options['mdoUserEnrolment'] = 'MDO-wise user enrolment report';
+            $options['ministryUserEnrolment'] = 'User list for all organisations under a ministry';
+    
+            return $options;
+        }
+        catch (\Exception $e) {
+            return view('header_view') . view('error_general') . view('footer_view');
+        }
+        
+        
     }
 
 
     public function search()
     {
+        try {
+
+        
         $returnData = array();
         $request = service('request');
 
@@ -862,12 +1002,22 @@ class Home extends BaseController
         // Return results as json encoded array
         echo json_encode($returnData);
         die;
-
+    }
+	catch (\Exception $e) {
+		return view('header_view') . view('error_general') . view('footer_view');
+	}
+	
     }
 
     public function getExcel()
     {
+try{
 
+}
+	catch (\Exception $e) {
+		return view('header_view') . view('error_general') . view('footer_view');
+	}
+	
 
     }
 

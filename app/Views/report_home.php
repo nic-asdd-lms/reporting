@@ -46,6 +46,11 @@
         text-rendering: optimizeLegibility;
     }
 
+    .lbl-reporttype {
+        font-weight: 600;
+        margin: 20px;
+    }
+
 
     section {
         margin: 0 auto;
@@ -114,8 +119,8 @@
 
     /* Style the buttons that are used to open the tab content */
     .tab button {
-        background-color: #e36b4200;
-        ;
+        background-color: #f0a54200;
+        color: rgb(38, 64, 146);
         float: left;
         border: none;
         outline: none;
@@ -126,12 +131,13 @@
 
     /* Change background color of buttons on hover */
     .tab button:hover {
-        background-color: #e2693f17;
+        background-color: #f0a54263;
     }
 
     /* Create an active/current tablink class */
     .tab button.active {
-        background-color: #e36c432e;
+        background-color: #ef951eba;
+        color: #fff;
     }
 
     /* Style the tab content */
@@ -141,6 +147,7 @@
         border: 1px solid #c6562f08;
         border-top: none;
         background-color: #ef951e0f;
+        color: rgb(38, 64, 146);
     }
 
     .submitbutton {
@@ -158,6 +165,7 @@
     .report-select {
         width: 50%;
         display: inline;
+        margin-left: 40px;
     }
 
     .report-type {
@@ -168,7 +176,7 @@
     </style>
 </head>
 
-<body>
+<body  onload="initKeycloak()">
 
     <!-- HEADER: MENU + HEROE SECTION -->
 
@@ -209,7 +217,7 @@
                 <form class="form-horizontal login_form" action="<?php echo base_url('/home/getMDOReport');?>"
                     method="post">
                     <div class="report-type">
-                        <label for="mdoReportType">Report type:</label>
+                        <label for="mdoReportType" class="lbl-reporttype">Report type:</label>
                         <select name="mdoReportType" class="form-control report-select"
                             onchange="enable_disable_mdo(this)" id="mdoReportType">
                             <option value="notSelected">-- Select Report Type --</option>
@@ -308,13 +316,13 @@
                             </table>
                         </div>
 
-                        <div>
+                        <!-- <div>
                             <label class="error">
-                                <?php if ($error != null) {
-                                    echo $error;
-                                } ?>
+                                <?php //if ($error != null) {
+                                  //  echo $error;
+                               // } ?>
                             </label>
-                        </div>
+                        </div> -->
 
                         <div class="col-xs-3 container submitbutton">
                             <button class="btn btn-primary " type="submit" name="Submit" value="Submit"> Submit</button>
@@ -336,7 +344,7 @@
                     method="post">
 
                     <div class="report-type">
-                        <label for="courseReportType">Report type:</label>
+                        <label for="courseReportType" class="lbl-reporttype">Report type:</label>
 
                         <select name="courseReportType" class="form-control report-select"
                             onchange="enable_disable_course(this)" id="courseReportType">
@@ -395,7 +403,7 @@
                 <form class="form-horizontal login_form" action="<?php echo base_url('/home/getRoleReport');?>"
                     method="post">
                     <div class="report-type">
-                        <label for="roleReportType">Report type:</label>
+                        <label for="roleReportType" class="lbl-reporttype">Report type:</label>
                         <?php
                         $session = \Config\Services::session();
 
@@ -463,7 +471,7 @@
                 <form class="form-horizontal login_form" action="<?php echo base_url('/home/getAnalytics');?>"
                     method="post">
                     <div class="report-type">
-                        <label for="analyticsReportType">Report type:</label>
+                        <label for="analyticsReportType" class="lbl-reporttype">Report type:</label>
                         <?php
                         $session = \Config\Services::session();
 
@@ -506,7 +514,7 @@
                     method="post">
 
                     <div class="report-type">
-                        <label for="doptReportType">Report type:</label>
+                        <label for="doptReportType" class="lbl-reporttype">Report type:</label>
 
                         <select name="doptReportType" class="form-control report-select"
                             onchange="enable_disable_program(this)" id="doptReportType">
@@ -557,7 +565,7 @@
                     method="post">
 
                     <div class="report-type">
-                        <label for="courseReportType">Report type:</label>
+                        <label for="courseReportType" class="lbl-reporttype">Report type:</label>
 
                         <select name="courseReportType" class="form-control report-select"
                             onchange="enable_disable_course(this)" id="mdoReportType">
@@ -618,6 +626,27 @@
     <!-- SCRIPTS -->
 
     <script>
+
+function initKeycloak() { 
+            const keycloak = Keycloak('/assets/keycloak.json');
+            const initOptions = {
+                responseMode: 'fragment',
+                flow: 'standard',
+                onLoad: 'login-required'
+            };
+            keycloak.init(initOptions).success(function(authenticated) {
+                        //alert(authenticated ? 'authenticated' : 'not authenticated');
+                        if(authenticated){
+                            window.location.replace("/reporting/");
+                        }
+                        else 
+                        {
+                            alert('Show error page'); 
+                        }
+            }).catch(function() {
+                    alert('failed to initialize');
+            });
+        }
     function toggleMenu() {
         var menuItems = document.getElementsByClassName('menu-item');
         for (var i = 0; i < menuItems.length; i++) {

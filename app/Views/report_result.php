@@ -86,8 +86,10 @@ font-weight: bold;
 
     .report-table {
         margin: 20px;
-        background-color: rgba(239, 149, 30, 0.46);
+        background-color: #f0a54200;
         color:rgb(38, 64, 146);
+        border-bottom: 1px solid #f2c498;
+
     }
     
     .h2 {
@@ -99,20 +101,28 @@ font-weight: bold;
     }
 
     table {
-        background-color: #e26b420a;
+        /* background-color: #f0a542a6; */
         border-left-style: solid;
 border-left-width: thin;
-border-left-color: #f4e4de;
+border-left-color: #f0a542a6;
 border-right-style: solid;
 border-right-width: thin;
-border-right-color: #f4e4de;
+border-right-color: #f0a542a6;
 border-block-start-style: solid;
 border-block-start-width: thin;
-border-block-start-color: #e26b4259
+border-block-start-color: #f0a542a6;
+border-block-end-style: solid;
+border-block-end-width: thin;
+border-block-end-color: #f0a542a6;
+color: rgb(38, 64, 146);
     }
 
-    tr .odd {
-        background-color: #e26b4200;
+    .odd {
+        background-color: #f0aa4f14;
+    }
+
+    .even {
+        background-color: #f0aa4f36;
     }
     td .sorting_1 {
         background-color: #e26b4200;
@@ -121,21 +131,30 @@ border-block-start-color: #e26b4259
         background-color: #e26b4200;
     }
 
+    thead {
+        background-color: #f0a54200;
+        
+    }
     thead .sorting{
-        background-color: #e26b421c;
+        background-color: #f0a542a6;;
+        border-bottom: 1px solid #f2c182;
     }
     thead .sorting_asc{
-        background-color: #e26b421c;
+        background-color: #f0a542ed;
+        border-bottom: 1px solid #f2c182;
     }
     thead .sorting_desc{
-        background-color: #e26b421c;
+        background-color: #f0a542ed;
+        border-bottom: 1px solid #f2c182;
     }
 
     label {
         font-weight: 50;
         font-size:25px
     }
-
+    .dataTable.no-footer {
+  border-bottom: 1px solid #f2c498;
+}
      .dataTables_filter label{
         font-size: 17px;
     }
@@ -152,6 +171,10 @@ border-block-start-color: #e26b4259
         border-radius: 4px;
         box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
         transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    }
+
+    table.dataTable tbody tr{
+        background-color: #f0aa4f14;
     }
 
     .title {
@@ -171,7 +194,7 @@ border-block-start-color: #e26b4259
 
     </style>
 </head>
-    <body>
+    <body  onload="initKeycloak()">
         <div>
     <div class="h2">
         
@@ -200,7 +223,23 @@ echo $resultHTML;
 </div>
 <script>
     
-
+    function initKeycloak() { 
+            const keycloak = Keycloak('/assets/keycloak.json');
+            const initOptions = {
+                responseMode: 'fragment',
+                flow: 'standard',
+                onLoad: 'login-required'
+            };
+            keycloak.init(initOptions).success(function(authenticated) {
+                        //alert(authenticated ? 'authenticated' : 'not authenticated');
+                        if(!authenticated){
+                            alert('Not iGOT user'); 
+                        }
+                        
+            }).catch(function() {
+                    alert('failed to initialize');
+            });
+        }
     
 
   $(document).ready(function() {
