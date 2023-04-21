@@ -53,6 +53,7 @@ $routes->get('/getExcelReport', 'Home::getExcelReport');
 //$routes->get('/assets/images/karmayogiLogo.svg' , 'assets\images\karmayogiLogo.svg');
 // $routes->resource('/reporting/assets/images',['controller' => 'App\Assets\Images']);
 //$routes->get('/reporting/assets/images/karmayogiLogo.svg' , 'assets\images\karmayogiLogo.svg');
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing

@@ -15,3 +15,4 @@
 ## Deployment on server
 1. In `.env` file, change the value of `CI_ENVIRONMENT` to `production`
 1. Update database details in `app/Config/Database.php` 
+

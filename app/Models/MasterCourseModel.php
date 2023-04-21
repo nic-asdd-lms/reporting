@@ -83,4 +83,5 @@ class MasterCourseModel extends Model
     
 
 }
+
 ?>

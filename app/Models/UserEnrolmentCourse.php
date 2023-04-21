@@ -377,4 +377,5 @@ class UserEnrolmentCourse extends Model
     
 
 }
+
 ?>

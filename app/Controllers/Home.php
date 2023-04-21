@@ -20,6 +20,7 @@ use PHPExcel_Reader_HTML;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
+
 class Home extends BaseController
 {
     public function index()
@@ -43,8 +44,7 @@ class Home extends BaseController
 	catch (\Exception $e) {
 		return view('header_view') . view('error_general') . view('footer_view');
 	}
-	
-        
+
     }
 
     public function action()
@@ -63,12 +63,8 @@ class Home extends BaseController
                 } else if ($this->request->getVar('ms') == 'state') {
                     $msdata = $ministryModel->getState();
                 }
-
-
-                echo json_encode($msdata);
             } else if ($action == 'get_dept') {
                 $deptModel = new MasterStructureModel();
-
                 $deptdata = $deptModel->getDepartment($this->request->getVar('ministry'));
 
                 echo json_encode($deptdata);
@@ -95,21 +91,14 @@ class Home extends BaseController
             } else if ($action == 'search') {
                 //Search box value assigning to $Name variable.
                 $search_key = $_GET['term'];
-                echo $search_key;
-
-
                 //Search query.
                 $orgModel = new MasterOrganizationModel();
                 $orgdata = $orgModel->searchOrg($search_key);
 
-                echo json_encode($orgdata);
-                //Query execution
+               //Query execution
 
                 //Creating unordered list to display result.
-
-
-
-            }
+           }
         }
     }
 	catch (\Exception $e) {
@@ -129,7 +118,7 @@ class Home extends BaseController
         $role = $session->get('role');
         $courseReportType = $request->getPost('courseReportType');
         $course = $request->getPost('course');
-        
+
         $enrolment = new UserEnrolmentCourse();
         $enrolmentProgram = new UserEnrolmentProgram();
         $lastUpdate = new DataUpdateModel();
@@ -226,9 +215,6 @@ catch (\Exception $e) {
     public function getMDOReport()
     {
         try{
-
-        
-
         $request = service('request');
         $session = \Config\Services::session();
 
@@ -350,7 +336,6 @@ catch (\Exception $e) {
     {
         try {
 
-        
         $request = service('request');
         $session = \Config\Services::session();
 
@@ -583,7 +568,7 @@ catch (\Exception $e) {
             return view('header_view')
                 . view('footer_view');
         } else {
-            
+           
         $data['lastUpdated'] = '[Report last updated on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
 
         if ($role == 'SPV_ADMIN') {
@@ -644,6 +629,7 @@ catch (\Exception $e) {
         $role = $session->get('role');
         $user = new UserEnrolmentProgram();
         $lastUpdate = new DataUpdateModel();
+
             
         $data['lastUpdated'] = '[Report last updated on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
 
@@ -885,8 +871,6 @@ catch (\Exception $e) {
             return view('header_view') . view('error_general') . view('footer_view');
         }
         
-        
-
 
     }
     public function getCollectionName($collection_id)
@@ -900,9 +884,6 @@ catch (\Exception $e) {
         catch (\Exception $e) {
             return view('header_view') . view('error_general') . view('footer_view');
         }
-        
-        
-
 
     }
 
@@ -918,9 +899,6 @@ catch (\Exception $e) {
             return view('header_view') . view('error_general') . view('footer_view');
         }
         
-        
-
-
     }
     public function getOrgName($org_id)
     {
@@ -933,10 +911,7 @@ catch (\Exception $e) {
         catch (\Exception $e) {
             return view('header_view') . view('error_general') . view('footer_view');
         }
-        
-        
-
-
+     
     }
 
     public function orgSearch($search_key)
@@ -947,6 +922,7 @@ catch (\Exception $e) {
                 echo 'Selected Skill: ' . $skill;
             }
         }
+
         
 	catch (\Exception $e) {
 		return view('header_view') . view('error_general') . view('footer_view');
@@ -980,7 +956,6 @@ catch (\Exception $e) {
     {
         try {
 
-        
         $returnData = array();
         $request = service('request');
 

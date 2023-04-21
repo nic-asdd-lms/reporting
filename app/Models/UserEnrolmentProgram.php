@@ -137,13 +137,6 @@ return $query->getResultArray();
 
     }
 
-    
-
-    
-
-    
-
-    
-
 }
+
 ?>

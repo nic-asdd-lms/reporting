@@ -12,10 +12,6 @@ use App\Config\Assets;
 class Login extends BaseController
 {
 	
-
-
-
-
 	protected $helpers = ['form'];
 
 	public function checkIgotUser(){                         // First Check if the user is logged in or not
@@ -25,9 +21,6 @@ class Login extends BaseController
 	public function index()
 	{
 		try{
-
-
-		
 
 		$validation = \Config\Services::validation();
 		if (!$this->request->is('post')) {
@@ -51,9 +44,6 @@ class Login extends BaseController
 	public function user_login_process()
 	{
 		try {
-
-			
-		
 		
 		$request = service('request');
 		if (!$this->request->is('post')) {
@@ -198,3 +188,4 @@ class Login extends BaseController
 		throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);	}
 	}
 }
+
