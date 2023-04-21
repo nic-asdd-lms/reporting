@@ -8,7 +8,7 @@
     <title>iGOT Reports</title>
     <meta name="description" content="The small framework with powerful features">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/png" href="/favicon.ico">
+    <!-- <link rel="shortcut icon" type="image/jpg" href="/assets/images/karmayogiLogo_thumbnail.jpg"> -->
     <!-- Datatable CSS -->
     <link href='//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
 
@@ -53,174 +53,195 @@
         -moz-osx-font-smoothing: grayscale;
         text-rendering: optimizeLegibility;
     }
-        header {
-        background-color: rgba(247, 248, 249, 1);
-        padding: .4rem 0 0;
-    }
-
-    .menu {
-        padding: .4rem 2rem;
-    }
-
-    header ul {
-        border-bottom: 1px solid rgba(242, 242, 242, 1);
-        list-style-type: none;
-        margin: 0;
-        overflow: hidden;
-        padding: 0;
-        text-align: right;
-    }
-
-    header li {
-        display: inline-block;
-    }
-
-    header li a {
-        border-radius: 5px;
-        color: rgba(0, 0, 0, .5);
-        display: block;
-        height: 44px;
-        text-decoration: none;
-    }
-
-    header li.menu-item a {
-        border-radius: 5px;
-        margin: 5px 0;
-        height: 38px;
-        line-height: 36px;
-        padding: .4rem .65rem;
-        text-align: center;
-    }
-
-    header li.menu-item a:hover,
-    header li.menu-item a:focus {
-        background-color: rgba(221, 72, 20, .2);
-        color: rgba(221, 72, 20, 1);
-    }
-
-    header .logo {
-        float: left;
-        height: 64px;
-        padding: .4rem .5rem;
-        color: rgba(221, 72, 20, .6);
-    }
-
-    header .menu-toggle {
-        display: none;
-        float: right;
-        font-size: 2rem;
-        font-weight: bold;
-    }
-
-    header .menu-toggle button {
-        background-color: rgba(221, 72, 20, .6);
-        border: none;
-        border-radius: 3px;
-        color: rgba(255, 255, 255, 1);
-        cursor: pointer;
-        font: inherit;
-        font-size: 1.3rem;
-        height: 36px;
-        padding: 0;
-        margin: 11px 0;
-        overflow: visible;
-        width: 40px;
-    }
-
-    header .menu-toggle button:hover,
-    header .menu-toggle button:focus {
-        background-color: rgba(221, 72, 20, .8);
-        color: rgba(255, 255, 255, .8);
-    }
-
-    header .heroe {
-        margin: 0 auto;
-        max-width: 1100px;
-        padding: 1rem 1.75rem 1.75rem 1.75rem;
-    }
-
-    header .heroe h1 {
-        font-size: 2.5rem;
-        font-weight: 500;
-    }
-
-    header .heroe h2 {
-        font-size: 1.5rem;
-        font-weight: 300;
-    }
-
+    
     h2 {
         text-align: center;
-        padding: 10px;
-        color: rgba(62, 62, 62, 1);
+        
+        color: rgb(38, 64, 146);
+        font-size:30px;
+font-weight: bold;
         
     }
-@media (max-width: 629px) {
-        header ul {
-            padding: 0;
-        }
 
-        header .menu-toggle {
-            padding: 0 1rem;
-        }
-
-        header .menu-item {
-            background-color: rgba(244, 245, 246, 1);
-            border-top: 1px solid rgba(242, 242, 242, 1);
-            margin: 0 15px;
-            width: calc(100% - 30px);
-        }
-
-        header .menu-toggle {
-            display: block;
-        }
-
-        header .hidden {
-            display: none;
-        }
-
-        header li.menu-item a {
-            background-color: rgba(221, 72, 20, .1);
-        }
-
-        header li.menu-item a:hover,
-        header li.menu-item a:focus {
-            background-color: rgba(221, 72, 20, .7);
-            color: rgba(255, 255, 255, .8);
-        }
-    }
     .further {
         background-color: rgba(247, 248, 249, 1);
         border-bottom: 1px solid rgba(242, 242, 242, 1);
         border-top: 1px solid rgba(242, 242, 242, 1);
+        margin-bottom: 100px;
+        padding-bottom: 30px;
+        margin-top: 50px;
+        padding-top:10px;
     }
 
     .further h2:first-of-type {
         padding-top: 0;
     }
+
+    .download-button {
+        float: right;
+        margin-right: 20px;
+        display: block;
+
+    }
+
+    .report-table {
+        margin: 20px;
+        background-color: #f0a54200;
+        color:rgb(38, 64, 146);
+        border-bottom: 1px solid #f2c498;
+
+    }
     
+    .h2 {
+        margin-left:100px;
+        margin-top:20px;
+        margin-bottom:20px;
+        display: block;
+
+    }
+
+    table {
+        /* background-color: #f0a542a6; */
+        border-left-style: solid;
+border-left-width: thin;
+border-left-color: #f0a542a6;
+border-right-style: solid;
+border-right-width: thin;
+border-right-color: #f0a542a6;
+border-block-start-style: solid;
+border-block-start-width: thin;
+border-block-start-color: #f0a542a6;
+border-block-end-style: solid;
+border-block-end-width: thin;
+border-block-end-color: #f0a542a6;
+color: rgb(38, 64, 146);
+    }
+
+    .odd {
+        background-color: #f0aa4f14;
+    }
+
+    .even {
+        background-color: #f0aa4f36;
+    }
+    td .sorting_1 {
+        background-color: #e26b4200;
+    }
+    td  {
+        background-color: #e26b4200;
+    }
+
+    thead {
+        background-color: #f0a54200;
+        
+    }
+    thead .sorting{
+        background-color: #f0a542a6;;
+        border-bottom: 1px solid #f2c182;
+    }
+    thead .sorting_asc{
+        background-color: #f0a542ed;
+        border-bottom: 1px solid #f2c182;
+    }
+    thead .sorting_desc{
+        background-color: #f0a542ed;
+        border-bottom: 1px solid #f2c182;
+    }
+
+    label {
+        font-weight: 50;
+        font-size:25px
+    }
+    .dataTable.no-footer {
+  border-bottom: 1px solid #f2c498;
+}
+     .dataTables_filter label{
+        font-size: 17px;
+    }
+
+    .dataTables_filter input{
+        font-size: 14px;
+        display:inline;
+        height: 34px;
+        padding: 6px 12px;
+        line-height: 1.42857143;
+        color: #555;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+        transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    }
+
+    table.dataTable tbody tr{
+        background-color: #f0aa4f14;
+    }
+
+    .title {
+        color: rgb(38, 64, 146);
+        font-size: 35px;
+        display: block;
+        text-align: center;
+    }
+
+    .subtitle {
+        color: rgb(38, 64, 146);
+        display: block;
+        text-align: center;
+
+    }
+
 
     </style>
 </head>
-    <body>
-    <div class="h2"><?php echo $reportTitle ?></h2>
-    <button class="btn btn-success" onclick="exportTableToExcel('tbl-result','<?php echo $fileName ?>')">Download Excel</button>
+    <body  onload="initKeycloak()">
+        <div>
+    <div class="h2">
+        
+        <label class="title"><?php echo $reportTitle ?></label>
+        
+        <label class="subtitle"><?php echo $lastUpdated ?></label>
+    <?php 
+    echo '<a class="btn btn-success download-button" href="'.base_url('/getExcelReport').'?'. $params.'" target="_blank" > Download Excel </a>';
+
+    ?>
+ 
+   
 </div>
     <div class="further">
 
 <section>
     
 <?php 
-echo $result
-?>
+echo $resultHTML;
 
-    
+?>
 
 </section>
 
 </div>
-
+</div>
 <script>
+    
+    function initKeycloak() { 
+            const keycloak = Keycloak('/assets/keycloak.json');
+            const initOptions = {
+                responseMode: 'fragment',
+                flow: 'standard',
+                onLoad: 'login-required'
+            };
+            keycloak.init(initOptions).success(function(authenticated) {
+                        //alert(authenticated ? 'authenticated' : 'not authenticated');
+                        if(!authenticated){
+                            alert('Not iGOT user'); 
+                        }
+                        
+            }).catch(function() {
+                    alert('failed to initialize');
+            });
+        }
+    
+
   $(document).ready(function() {
     $('#tbl-result').DataTable( {
         dom: 'Bfrtip',
@@ -230,37 +251,68 @@ echo $result
     } );
 } );
 
+function tableToCSV(tableID, filename ) {
+ // Variable to store the final csv data
+ var csv_data = [];
 
-function exportTableToExcel(tableID, filename = ''){
-    var downloadLink;
-    var dataType = 'application/vnd.ms-excel';
-    var tableSelect = document.getElementById(tableID);
-    var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
-    
-    // Specify file name
-    filename = filename?filename+'.xls':'excel_data.xls';
-    
-    // Create download link element
-    downloadLink = document.createElement("a");
-    
-    document.body.appendChild(downloadLink);
-    
-    if(navigator.msSaveOrOpenBlob){
-        var blob = new Blob(['\ufeff', tableHTML], {
-            type: dataType
-        });
-        navigator.msSaveOrOpenBlob( blob, filename);
-    }else{
-        // Create a link to the file
-        downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
-    
-        // Setting the file name
-        downloadLink.download = filename;
-        
-        //triggering the function
-        downloadLink.click();
-    }
+ // Get each row data
+ var rows = document.getElementsByTagName('tr');
+//  alert(rows);
+ 
+ for (var i = 0; i < rows.length; i++) {
+
+     // Get each column data
+     var cols = rows[i].querySelectorAll('td,th');
+
+     // Stores each csv row data
+     var csvrow = [];
+     for (var j = 0; j < cols.length; j++) {
+
+         // Get the text data of each cell
+         // of a row and push it to csvrow
+         csvrow.push(cols[j].innerHTML);
+     }
+
+     // Combine each column value with comma
+     csv_data.push(csvrow.join(","));
+ }
+
+ // Combine each row data with new line character
+ csv_data = csv_data.join('\n');
+
+ // Call this function to download csv file 
+ downloadCSVFile(csv_data);
+
 }
+
+function downloadCSVFile(csv_data) {
+
+ // Create CSV file object and feed
+ // our csv_data into it
+ CSVFile = new Blob([csv_data], {
+     type: "text/csv"
+ });
+
+ // Create to temporary link to initiate
+ // download process
+ var temp_link = document.createElement('a');
+
+ // Download csv file
+ temp_link.download = "GfG.csv";
+ var url = window.URL.createObjectURL(CSVFile);
+ temp_link.href = url;
+
+ // This link should not be displayed
+ temp_link.style.display = "none";
+ document.body.appendChild(temp_link);
+
+ // Automatically click the link to
+ // trigger download
+ temp_link.click();
+ document.body.removeChild(temp_link);
+}
+
+
 </script>
 </body>
 </html>
