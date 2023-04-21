@@ -6,7 +6,7 @@
     <title>iGOT Reports</title>
     <meta name="description" content="The small framework with powerful features">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/png" href="/favicon.ico">
+    <!-- <link rel="shortcut icon" type="image/jpg" href="/assets/images/karmayogiLogo_thumbnail.jpg"> -->
     <!-- Datatable CSS -->
     <link href='//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
 
@@ -139,8 +139,8 @@
 
         header li.menu-item a:hover,
         header li.menu-item a:focus {
-            background-color: rgba(221, 72, 20, .7);
-            color: rgba(255, 255, 255, .8);
+            background-color:rgba(239, 149, 30, 0.17);
+            color: rgb(239, 149, 30);
         }
     }
 
@@ -193,10 +193,20 @@
     label {
         font-weight: 400;
     }
+
+    .login-div {
+        align-items: center;
+        align-self: center;
+        background-color: #f1f1f1;
+        width: 70%;
+        margin: 30px;
+        display: grid;
+        padding: 30px;
+    }
     </style>
 </head>
 
-<body>
+<body  onload="initKeycloak()">
 <?= validation_list_errors() ?>
     <!-- HEADER: MENU + HEROE SECTION -->
    
@@ -207,7 +217,7 @@
 
 
 
-        <div id="body">
+        <div id="body" style="display: grid">
         <div class='login-container'>
 	<div class='row'>
 		<div class='col-md-8 col-md-offset-2'>
@@ -217,8 +227,8 @@
 		</div>
 	</div>
 	<div class='row'>
-		<div class='col-md-8 col-md-offset-2 imgcontainer'>
-			<form class="form-horizontal login_form" action="/login/user_login_process" method="post">
+		<div class='col-md-8 col-md-offset-2 imgcontainer ' >
+			<form class="form-horizontal login_form" action="<?php echo base_url('/user_login_process');?>" method="post">
                
 			<?php //echo form_open('login//user_login_process'); ?>
 			
@@ -269,7 +279,26 @@
     <!-- SCRIPTS -->
 
     <script>
-   
+   function initKeycloak() { 
+            const keycloak = Keycloak('/assets/keycloak.json');
+            const initOptions = {
+                responseMode: 'fragment',
+                flow: 'standard',
+                onLoad: 'login-required'
+            };
+            keycloak.init(initOptions).success(function(authenticated) {
+                        //alert(authenticated ? 'authenticated' : 'not authenticated');
+                        if(authenticated){
+                            window.location.replace("/login");
+                        }
+                        else 
+                        {
+                            alert('Not an iGOT user'); 
+                        }
+            }).catch(function() {
+                    alert('failed to initialize');
+            });
+        }
     </script>
 
     <!-- -->
