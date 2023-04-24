@@ -63,6 +63,7 @@ class Home extends BaseController
                 } else if ($this->request->getVar('ms') == 'state') {
                     $msdata = $ministryModel->getState();
                 }
+		    echo json_encode($msdata);
             } else if ($action == 'get_dept') {
                 $deptModel = new MasterStructureModel();
                 $deptdata = $deptModel->getDepartment($this->request->getVar('ministry'));
