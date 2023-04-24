@@ -50,15 +50,7 @@ class MasterCourseModel extends Model
             $table = new \CodeIgniter\View\Table();
 
             $query = $this->db->query('select split_part(publishedmmyy::TEXT,\'/\', 1) AS Month,  split_part(publishedmmyy::TEXT,\'/\', 2) AS YEAR ,count(*) as Live_course from master_course where status=\'Live\' group by publishedmmyy  order by YEAR,MONTH');
-            
-            $template = [
-                'table_open' => '<table id="tbl-result" class="display dataTable " style="width:90%">'
-            
-            ];
-            $table->setTemplate($template);
-            $table->setHeading('Month', 'Year','Courses Published');
-    
-               return $table->generate($query);
+            return $query;
         }
         catch (\Exception $e) {
             throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
@@ -66,20 +58,7 @@ class MasterCourseModel extends Model
         
     }
 
-    public function getMonthWiseCoursesExcel() {
-        try {
-            $table = new \CodeIgniter\View\Table();
-
-            $query = $this->db->query('select split_part(publishedmmyy::TEXT,\'/\', 1) AS Month,  split_part(publishedmmyy::TEXT,\'/\', 2) AS YEAR ,count(*) as Live_course from master_course where status=\'Live\' group by publishedmmyy  order by YEAR,MONTH');
-            
-            return $query->getResultArray();
     
-        }
-        catch (\Exception $e) {
-            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
-        } 
-        
-    }
     
 
 }

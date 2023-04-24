@@ -66,6 +66,10 @@
 
                     echo '<button class="tablinks" onclick="openTab(event, \'Dopt\')" id="defaultOpen">DoPT Reports</button>';
                 }
+                else if ($session->get('role') == 'ATI_ADMIN') {
+
+                    echo '<button class="tablinks" onclick="openTab(event, \'ATI\')" id="defaultOpen">ATI Reports</button>';
+                }
                 ?>
             </div>
 
@@ -373,6 +377,61 @@
                             onchange="enable_disable_program(this)" id="doptReportType">
                             <option value="notSelected">-- Select Report Type --</option>
                             <option value="atiWiseOverview">ATI-wise overview</option>
+                        </select>
+
+                    </div>
+
+
+                    <hr />
+
+                    <div class="container">
+                        <table class="submitbutton" id="tbl-program" style="display:none">
+                            <tr>
+                                <td>
+                                    <label for="course">ATI: </label>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="submitbutton">
+                                    <select name="course" id="course" class="form-control">
+                                        <option value="notSelected">--Select ATI --</option>
+                                        <?php
+                                        foreach ($course as $row) {
+                                            echo '<option value="' . $row->course_id . '">' . $row->course_name . '</option>';
+                                        }
+                                        ?>
+
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div class="col-xs-3 container submitbutton">
+                            <button class="btn btn-primary " type="submit" name="Submit" value="Submit"> Submit</button>
+                        </div>
+
+                    </div>
+
+                    <?php echo form_close(); ?>
+                </form>
+            </div>
+
+
+            <div id="ATI" class="tabcontent">
+
+
+                <form class="form-horizontal login_form" action="<?php echo base_url('/getAtiReport');?>"
+                    method="post">
+
+                    <div class="report-type">
+                        <label for="doptReportType" class="lbl-reporttype">Report type:</label>
+
+                        <select name="doptReportType" class="form-control report-select"
+                            onchange="enable_disable_program(this)" id="doptReportType">
+                            <option value="notSelected">-- Select Report Type --</option>
+                            <option value="atiWiseOverview">ATI-wise overview</option>
+                            
                         </select>
 
                     </div>
