@@ -25,149 +25,11 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
 
-    <style {csp-style-nonce}>
-    * {
-        transition: background-color 300ms ease, color 300ms ease;
-    }
+    
+     <!-- ASSETS -->
+ <link  href="<?php echo base_url('assets/css/home_style.css');?>" rel="stylesheet" type="text/css">
+    <script src="<?php echo base_url('assets/scripts/home.js')?>" type="text/javascript"></script>
 
-    *:focus {
-        outline: none;
-    }
-
-    html,
-    body {
-        color: rgba(33, 37, 41, 1);
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-        font-size: 16px;
-        margin: 0;
-        padding: 0;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        text-rendering: optimizeLegibility;
-    }
-
-    .lbl-reporttype {
-        font-weight: 600;
-        margin: 20px;
-    }
-
-
-
-    section {
-        margin: 0 auto;
-        max-width: 1100px;
-        padding: 2.5rem 1.75rem 3.5rem 1.75rem;
-    }
-
-    section h1 {
-        margin-bottom: 2.5rem;
-    }
-
-    section h2 {
-        font-size: 120%;
-        line-height: 2.5rem;
-        padding-top: 1.5rem;
-    }
-
-    section pre {
-        background-color: rgba(247, 248, 249, 1);
-        border: 1px solid rgba(242, 242, 242, 1);
-        display: block;
-        font-size: .9rem;
-        margin: 2rem 0;
-        padding: 1rem 1.5rem;
-        white-space: pre-wrap;
-        word-break: break-all;
-    }
-
-    section code {
-        display: block;
-    }
-
-    section a {
-        color: rgba(221, 72, 20, 1);
-    }
-
-    section svg {
-        margin-bottom: -5px;
-        margin-right: 5px;
-        width: 25px;
-    }
-
-    .further {
-        background-color: rgba(247, 248, 249, 1);
-        border-bottom: 1px solid rgba(242, 242, 242, 1);
-        border-top: 1px solid rgba(242, 242, 242, 1);
-        margin-bottom: 100px;
-        padding-bottom: 30px;
-    }
-
-    .further h2:first-of-type {
-        padding-top: 0;
-    }
-
-    .tab {
-        overflow: hidden;
-        border: 1px solid #e2693f24;
-        background-color: #f4d3a7;
-    }
-
-    /* Style the buttons that are used to open the tab content */
-    .tab button {
-        background-color: #f0a54200;
-        color: rgb(38, 64, 146);
-        float: left;
-        border: none;
-        outline: none;
-        cursor: pointer;
-        padding: 14px 16px;
-        transition: 0.3s;
-    }
-
-    /* Change background color of buttons on hover */
-    .tab button:hover {
-        background-color: #f0a54263;
-    }
-
-    /* Create an active/current tablink class */
-    .tab button.active {
-        background-color: #ef951eba;
-        color: #fff;
-    }
-
-    /* Style the tab content */
-    .tabcontent {
-        display: none;
-        padding: 6px 12px;
-        border: 1px solid #c6562f08;
-        border-top: none;
-        background-color: #ef951e0f;
-        color: rgb(38, 64, 146);
-    }
-
-    .submitbutton {
-        width: 80%;
-        padding: 10px;
-        margin: 15px;
-        text-align: center;
-    }
-
-    .radio {
-        font-weight: 500;
-        display: inline;
-    }
-
-    .report-select {
-        width: 50%;
-        display: inline;
-        margin-left: 40px;
-    }
-
-    .report-type {
-        padding: 10px;
-        margin: 15px;
-    }
-    </style>
 </head>
 
 <body  onload="initKeycloak()">
@@ -640,59 +502,11 @@ function initKeycloak() {
                     alert('failed to initialize');
             });
         }
-    function toggleMenu() {
-        var menuItems = document.getElementsByClassName('menu-item');
-        for (var i = 0; i < menuItems.length; i++) {
-            var menuItem = menuItems[i];
-            menuItem.classList.toggle("hidden");
-        }
-    }
+    
     document.getElementById("defaultOpen").click();
 
-    function openTab(evt, reprotName) {
-        var i, tabcontent, tablinks;
-        tabcontent = document.getElementsByClassName("tabcontent");
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
-        }
-        tablinks = document.getElementsByClassName("tablinks");
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-        document.getElementById(reprotName).style.display = "block";
-        evt.currentTarget.className += " active";
-    }
-
-    function enable_disable_mdo(value) {
-
-        mdo = document.getElementById('tbl');
-        dept = document.getElementById('dept');
-        org = document.getElementById('org');
-
-        mdo.style.display = value.value == "mdoUserCount" ? "none" : "block";
-        dept.style.display = value.value == "ministryUserEnrolment" ? "none" : "block";
-        org.style.display = value.value == "ministryUserEnrolment" ? "none" : "block";
-    }
-
-    function enable_disable_course(value) {
-        course = document.getElementById("tbl-course");
-        if (value.value == "courseEnrolmentCount" || value.value == "programEnrolmentCount") {
-            course.style.display = "none";
-        } else {
-            course.style.display = "block";
-        }
-
-    }
-
-    function enable_disable_program(value) {
-        course = document.getElementById("tbl-program");
-        if (value.value == "atiWiseOverview") {
-            course.style.display = "none";
-        } else {
-            course.style.display = "block";
-        }
-
-    }
+    
+   
 
     $('.search').select2({
         placeholder: 'Search Organisation',
@@ -708,35 +522,7 @@ function initKeycloak() {
         }
     });
 
-    function getSuggestions(value) {
-        var searchKey = value.value;
-        var action = 'search';
-
-        //alert(value.value);
-        display = document.getElementById('display');
-        $.ajax({
-            url: "<?php echo base_url('/action'); ?>",
-            method: "POST",
-            data: {
-                key: searchKey,
-                action: action
-            },
-            dataType: "JSON",
-            success: function(data) {
-                html = '<ul>';
-                for (var count = 0; count < data.length; count++) {
-
-                    html += '<li>' + data[count].org_name + '</li>';
-
-                }
-                html += '</ul>';
-                $('#display').html(html);
-            }
-        });
-
-
-    }
-
+    
     $(document).ready(function() {
 
         $('#ms_type').change(function() {

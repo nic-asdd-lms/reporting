@@ -47,10 +47,13 @@ class MasterStructureModel extends Model
     }
     public function getDepartment($ministry) {
       try {
-        $sql = 'select distinct dept_id, dept_name from master_org_hierarchy where ms_id =\''.$ministry.'\' order by dept_name;' ;
-        $query =  $this->db->query($sql);
-  
-        return $query->getResult();
+        $builder =$this->db->table('master_org_hierarchy');
+        $builder->select('dept_id, dept_name');
+        $builder->where('ms_id',$ministry);
+        $builder->orderBy('dept_name');
+        $builder->distinct();
+        
+        return $builder->get()->getResult();
       }
       catch (\Exception $e) {
           throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
@@ -61,9 +64,13 @@ class MasterStructureModel extends Model
 
     public function getOrganisation($dept) {
       try {
-        $sql = 'select distinct org_id, org_name from master_org_hierarchy where dept_id =\''.$dept.'\' order by org_name;' ;
-        $query =  $this->db->query($sql);
-        return $query->getResult();
+        $builder =$this->db->table('master_org_hierarchy');
+        $builder->select('org_id, org_name');
+        $builder->where('dept_id',$dept);
+        $builder->orderBy('org_name');
+        $builder->distinct();
+        
+        return $builder->get()->getResult();
       }
       catch (\Exception $e) {
           throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
@@ -71,6 +78,7 @@ class MasterStructureModel extends Model
      
       
     }
+
 
     public function getMinistryStateName($ms_id) {
       try {

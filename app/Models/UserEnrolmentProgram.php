@@ -16,8 +16,9 @@ class UserEnrolmentProgram extends Model
         $table = new \CodeIgniter\View\Table();
 
         $builder = $this->db->table('user_program_enrolment');
-        $builder->select('concat(first_name,\' \',last_name) as name, email, org_name, designation, status, completion_percentage, completed_on');
+        $builder->select('concat(first_name,\' \',last_name) as name, email, master_organization.org_name, designation, user_program_enrolment.status, completed_on');
         $builder->join('master_user', 'master_user.user_id = user_program_enrolment.user_id ');
+        $builder->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id ');
         $builder->where('program_id', $program);
         $query = $builder->get();
     
@@ -26,7 +27,7 @@ class UserEnrolmentProgram extends Model
         
         ];
         $table->setTemplate($template);
-        $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Status', 'Completion Percentage', 'Completed On');
+        $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Status', 'Completed On');
 
            return $table->generate($query);
        } 
