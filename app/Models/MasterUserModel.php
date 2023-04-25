@@ -110,7 +110,6 @@ class MasterUserModel extends Model
                         ->join('master_organization', 'master_organization.root_org_id = master_user.root_org_id ')
                         ->join('master_org_hierarchy', 'master_org_hierarchy.org_id = master_user.root_org_id ')
                         ->where('master_org_hierarchy.ms_name',$org)
-                        ->where('master_org_hierarchy.dept_id != master_org_hierarchy.ms_id')
                         ->where('master_org_hierarchy.dept_id != master_org_hierarchy.org_id')
                         ->where('master_org_hierarchy.org_id != master_org_hierarchy.ms_id');
             $query = $builder->union($unionDept)->union($unionOrg)->get();
