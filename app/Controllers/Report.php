@@ -563,7 +563,7 @@ class Report extends BaseController
                 }
 
                 if ($analyticsReportType == 'dayWiseUserOnboarding') {
-                    $table->setHeading( 'Day', 'Month', 'Year', 'Count');
+                    $table->setHeading( 'Creation Date', 'Count');
 
                     $result = $user->getDayWiseUserOnboarding();
                     
@@ -574,7 +574,7 @@ class Report extends BaseController
                     $data['reportTitle'] ='Day-wise User Onboarding';
 
                 } else if ($analyticsReportType == 'monthWiseUserOnboarding') {
-                    $table->setHeading( 'Month', 'Year', 'Count');
+                    $table->setHeading( 'Creation Month', 'Count');
 
                     $result = $user->getMonthWiseUserOnboarding();
                     
@@ -585,7 +585,7 @@ class Report extends BaseController
                     $data['reportTitle'] ='Month-wise User Onboarding';
 
                 } else if ($analyticsReportType == 'monthWiseCourses') {
-                    $table->setHeading( 'Month', 'Year', 'Count');
+                    $table->setHeading( 'Month of Publishing', 'Count');
 
                     $result = $course->getMonthWiseCourses();
                     
@@ -668,8 +668,8 @@ class Report extends BaseController
             
             helper('array');
 
-             $report = $session->getTempdata('resultArray');
-            $fileName = $session->getTempdata('fileName');
+            $report = $session->getTempdata('resultArray');
+            $fileName = $session->getTempdata('fileName'). '.xls';
             
             
             $keys = array();

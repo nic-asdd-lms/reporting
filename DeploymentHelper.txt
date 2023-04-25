@@ -1,8 +1,5 @@
 Files changed after previous deployment:
 
 1. Models
-2. Views
-3. Controllers
-4. publics/assets
-5. app/Config/Constants.php
-6. Routes.php
+2. Controllers
+3. Views

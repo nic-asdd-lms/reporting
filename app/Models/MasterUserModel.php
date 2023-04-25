@@ -128,7 +128,7 @@ class MasterUserModel extends Model
         try {
             $table = new \CodeIgniter\View\Table();
 
-            $query = $this->db->query('select split_part(created_date::TEXT,\'/\', 1) as DAY ,split_part(created_date::TEXT,\'/\', 2) AS MONTH,split_part(created_date::TEXT,\'/\', 3) AS YEAR ,(count(user_id)) AS Day_wise_User_Onboarded from master_user group by created_date order by YEAR,MONTH,DAY desc');
+            $query = $this->db->query('select TO_DATE(created_date,\'DD-MM-YYYY\') as creation_date ,count(user_id) AS Day_wise_User_Onboarded from master_user group by created_date order by creation_date desc');
             
             return $query;
         }
@@ -144,7 +144,7 @@ class MasterUserModel extends Model
         try {
             $table = new \CodeIgniter\View\Table();
 
-            $query = $this->db->query('select split_part(created_datemmyy::TEXT,\'/\', 1) AS MONTH,split_part(created_datemmyy::TEXT,\'/\', 2) AS YEAR ,(count(user_id)) AS Day_wise_User_Onboarded from master_user group by created_datemmyy order by YEAR,MONTH desc');
+            $query = $this->db->query('select concat(split_part(created_datemmyy::TEXT,\'/\', 2),\'/\' ,split_part(created_datemmyy::TEXT,\'/\', 1)) as created_month,(count(user_id)) AS Day_wise_User_Onboarded from master_user group by created_month order by created_month desc');
             
             return $query;
         }

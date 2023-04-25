@@ -49,7 +49,11 @@ class MasterCourseModel extends Model
         try {
             $table = new \CodeIgniter\View\Table();
 
-            $query = $this->db->query('select split_part(publishedmmyy::TEXT,\'/\', 1) AS Month,  split_part(publishedmmyy::TEXT,\'/\', 2) AS YEAR ,count(*) as Live_course from master_course where status=\'Live\' group by publishedmmyy  order by YEAR,MONTH');
+            $query = $this->db->query('	select concat(split_part(publishedmmyy::TEXT,\'/\', 2),\'/\', split_part(publishedmmyy::TEXT,\'/\', 1) ) as published_month, count(*) as Live_course 
+            from master_course 
+            where status=\'Live\' 
+            group by published_month  
+            order by published_month desc');
             return $query;
         }
         catch (\Exception $e) {
