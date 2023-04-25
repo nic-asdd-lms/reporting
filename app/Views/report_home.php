@@ -9,7 +9,7 @@
     <!-- <link rel="shortcut icon" type="image/jpg" href="/assets/images/karmayogiLogo_thumbnail.jpg"> -->
     <!-- Datatable CSS -->
     <link href='//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
-
+    
     <!-- jQuery Library -->
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 
@@ -23,7 +23,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
-
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato">
+    
 
     
      <!-- ASSETS -->
@@ -88,14 +89,14 @@
 
                                 echo
                                     '
-                    <option value="mdoUserCount">MDO-wise user count</option>
-                        <option value="mdoUserList">MDO-wise user List</option>
-                        <option value="mdoUserEnrolment">MDO-wise user enrolment report</option>
-                        <option value="ministryUserEnrolment">User List for all organisations under a Ministry/State</option>
+                    <option class="options" value="mdoUserCount">MDO-wise user count</option>
+                        <option class="options" value="mdoUserList">MDO-wise user List</option>
+                        <option class="options" value="mdoUserEnrolment">MDO-wise user enrolment report</option>
+                        <option class="options" value="ministryUserEnrolment">User List for all organisations under a Ministry/State</option>
                         ';
                             } else if ($session->get('role') == 'MDO_ADMIN') {
 
-                                echo '<option value="mdoUserList">User List</option>
+                                echo '<option class="options" value="mdoUserList">User List</option>
     <option value="mdoUserEnrolment">User enrolment report</option>
     <option value="userWiseCount">User-wise enrolment and completion count</option>
     

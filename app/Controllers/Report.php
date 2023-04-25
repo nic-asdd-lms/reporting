@@ -52,7 +52,7 @@ class Report extends BaseController
                 return view('header_view')
                     . view('footer_view');
             } else {
-                $data['lastUpdated'] = '[Report upto ' . $lastUpdate->getReportLastUpdatedTime() . ']';
+                $data['lastUpdated'] = '[Report as on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
 
                 if ($role == 'SPV_ADMIN') {
                     $ministry = $request->getPost('ministry');
@@ -190,7 +190,7 @@ class Report extends BaseController
                     . view('footer_view');
             } else {
 
-                $data['lastUpdated'] = '[Report upto ' . $lastUpdate->getReportLastUpdatedTime() . ']';
+                $data['lastUpdated'] = '[Report as on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
 
                 $org = '';
                 if ($role == 'MDO_ADMIN') {
@@ -307,7 +307,7 @@ class Report extends BaseController
                     . view('footer_view');
             } else {
 
-                $data['lastUpdated'] = '[Report upto ' . $lastUpdate->getReportLastUpdatedTime() . ']';
+                $data['lastUpdated'] = '[Report as on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
 
                 $role = $session->get('role');
                 if ($role == 'SPV_ADMIN') {
@@ -551,7 +551,7 @@ class Report extends BaseController
                     . view('footer_view');
             } else {
 
-                $data['lastUpdated'] = '[Report upto ' . $lastUpdate->getReportLastUpdatedTime() . ']';
+                $data['lastUpdated'] = '[Report as on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
 
                 if ($role == 'SPV_ADMIN') {
                     $ministry = '';
@@ -630,7 +630,7 @@ class Report extends BaseController
             $lastUpdate = new DataUpdateModel();
 
 
-            $data['lastUpdated'] = '[Report upto ' . $lastUpdate->getReportLastUpdatedTime() . ']';
+            $data['lastUpdated'] = '[Report as on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
 
             $org = '';
             if ($role == 'ATI_ADMIN') {

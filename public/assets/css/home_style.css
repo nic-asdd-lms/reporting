@@ -9,16 +9,17 @@
 html,
 body {
     color: rgba(33, 37, 41, 1);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
     font-size: 16px;
     margin: 0;
     padding: 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    background-color: #f7f8f9;
 }
 
 .lbl-reporttype {
+    font-family: Lato;
     font-weight: 600;
     margin: 20px;
 }
@@ -91,6 +92,7 @@ section svg {
 
 /* Style the buttons that are used to open the tab content */
 .tab button {
+    font-family: Lato;
     background-color: #f0a54200;
     color: rgb(38, 64, 146);
     float: left;
@@ -103,11 +105,13 @@ section svg {
 
 /* Change background color of buttons on hover */
 .tab button:hover {
+    font-family: Lato;
     background-color: #f0a54263;
 }
 
 /* Create an active/current tablink class */
 .tab button.active {
+    font-family: Lato;
     background-color: #ef951eba;
     color: #fff;
 }
@@ -130,6 +134,7 @@ section svg {
 }
 
 .radio {
+    font-family: Lato;
     font-weight: 500;
     display: inline;
 }
@@ -145,3 +150,4 @@ section svg {
     margin: 15px;
 
 }
+

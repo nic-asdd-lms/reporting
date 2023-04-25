@@ -32,6 +32,9 @@ class Home extends BaseController
             $masterStructureModel = new MasterStructureModel();
             $masterOrganizationModel = new MasterOrganizationModel();
             $masterCourseModel = new MasterCourseModel();
+            $lastUpdate = new DataUpdateModel();
+
+            $data['lastUpdated'] = '[Report as on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
             $data['mdoReportTypes'] = $this->getMDOReportTypes();
             $data['ministry'] = $masterStructureModel->getMinistry();
             $data['org'] = $masterOrganizationModel->getOrganizations();

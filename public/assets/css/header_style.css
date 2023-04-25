@@ -1,9 +1,13 @@
 header {
-    background-color: rgba(247, 248, 249, 1);
+    background-color: rgb(255, 255, 255);
+    font-family: Lato;
+
     /* padding: .4rem .4rem; */
 }
 
 .menu {
+    margin-left: 2%;
+    margin-right: 2%;
     /* padding: .4rem .4rem; */
 }
 
@@ -14,10 +18,14 @@ header ul {
     overflow: hidden;
     /* padding: .65rem .65rem; */
     text-align: right;
+    font-family: Lato;
+
 }
 
 header li {
     display: inline-block;
+    font-family: Lato;
+
 }
 
 header li a {
@@ -26,6 +34,8 @@ header li a {
     display: block;
     height: 44px;
     text-decoration: none;
+    font-family: Lato;
+
 }
 
 header li.menu-item a {
@@ -34,17 +44,20 @@ header li.menu-item a {
     height: 55px;
     line-height: 36px;
     padding: .65rem .65rem;
+    font-family: Lato;
     text-align: center;
 }
 
 header li.menu-item a:hover,
 header li.menu-item a:focus {
+    font-family: Lato;
     background-color:rgba(239, 149, 30, 0.17);
         color: rgb(239, 149, 30);
     
 }
 
 header .logo {
+    font-family: Lato;
     float: left;
     height: 100px;
     padding: 0;
@@ -52,6 +65,7 @@ header .logo {
 }
 
 header .menu-toggle {
+    font-family: Lato;
     display: none;
     float: right;
     font-size: 2rem;
@@ -59,6 +73,7 @@ header .menu-toggle {
 }
 
 header .menu-toggle button {
+    font-family: Lato;
     background-color: rgba(221, 72, 20, .6);
     border: none;
     border-radius: 3px;
@@ -75,74 +90,89 @@ header .menu-toggle button {
 
 header .menu-toggle button:hover,
 header .menu-toggle button:focus {
+    font-family: Lato;
     background-color: rgba(221, 72, 20, .8);
     color: rgba(255, 255, 255, .8);
 }
 
 header .heroe {
+    font-family: Lato;
     margin: 0 auto;
     max-width: 1100px;
     padding: 1rem 1.75rem 1.75rem 1.75rem;
 }
 
 header .heroe h1 {
+    font-family: Lato;
     font-size: 2.5rem;
     font-weight: 500;
 }
 
 header .heroe h2 {
+    font-family: Lato;
     font-size: 1.5rem;
     font-weight: 300;
 }
 .title {
+    font-family: Lato;
     font-size: 40px;
     font-weight: 1000;
     padding: 1rem;
 }
 @media (max-width: 629px) {
     header ul {
-        padding: 0;
+        font-family: Lato;
+    padding: 0;
     }
 
     header .menu-toggle {
-        padding: 0 1rem;
+        font-family: Lato;
+    padding: 0 1rem;
     }
 
     header .menu-item {
-        background-color: rgba(244, 245, 246, 1);
+        font-family: Lato;
+    background-color: rgba(244, 245, 246, 1);
         border-top: 1px solid rgba(242, 242, 242, 1);
         margin: 0 15px;
         width: calc(100% - 30px);
     }
 
     header .menu-toggle {
-        display: block;
+        font-family: Lato;
+    display: block;
     }
 
     header .hidden {
-        display: none;
+        font-family: Lato;
+    display: none;
     }
 
     header li.menu-item a {
-        background-color: rgba(221, 72, 20, .1);
+        font-family: Lato;
+    background-color: rgba(221, 72, 20, .1);
     }
 
     header li.menu-item a:hover,
     header li.menu-item a:focus {
-        background-color:rgba(239, 149, 30, 0.17);
+        font-family: Lato;
+    background-color:rgba(239, 149, 30, 0.17);
         color: rgb(239, 149, 30);
     }
 }
 .app-title {
+    font-family: Lato;
     font-size: 40px;
     font-weight: 1000;
-    padding: 1rem;
     color: rgb(38, 64, 146);
     vertical-align: middle;
 }
 .div-title {
+    font-family: Lato;
     font-size: 40px;
     font-weight: 1000;
     width: 70%;
 }
+
+
 

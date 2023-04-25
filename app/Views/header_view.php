@@ -9,13 +9,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Datatable CSS -->
     <link href='//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
+    
 
     <!-- jQuery Library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <!-- Datatable JS -->
     <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-   
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato">
     <!-- ASSETS -->
     <link rel="shortcut icon" type="image/jpg" href="<?php echo base_url('assets/images/karmayogiLogo_thumbnail.jpg');?>">
     <link href="<?php echo base_url('/assets/css/header_style.css');?>" rel="stylesheet" type="text/css">
@@ -27,13 +28,13 @@
         <li class="logo">
         
             <div class="title">
-                <img  src="/assets/images/karmayogiLogo.svg" alt="iGOT Reporting"/> 
+                <img  src="<?php echo base_url('assets/images/karmayogiLogo.svg');?>" alt="iGOT Reporting"/> 
             </div>
         </li>
         <li class="logo">
         
             <div class="title">
-                <label class="app-title">iGOT Reporting</label> 
+                <label class="app-title">iGOT REPORTING</label> 
             </div>
         </li>
         <li class="menu-toggle">
@@ -51,7 +52,9 @@
         
 
     </ul>
+    
 </div>
+
 
 <!-- <div class="heroe">
 

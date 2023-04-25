@@ -1,17 +1,19 @@
 html,
     body {
         color: rgba(33, 37, 41, 1);
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+        font-family: Lato;
         font-size: 16px;
         margin: 0;
         padding: 0;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         text-rendering: optimizeLegibility;
+        background-color: #f7f8f9;
     }
     
     h2 {
         text-align: center;
+        font-family: Lato;
         
         color: rgb(38, 64, 146);
         font-size:30px;
@@ -20,6 +22,7 @@ font-weight: bold;
     }
 
     .further {
+        font-family: Lato;
         background-color: rgba(247, 248, 249, 1);
         border-bottom: 1px solid rgba(242, 242, 242, 1);
         border-top: 1px solid rgba(242, 242, 242, 1);
@@ -30,17 +33,20 @@ font-weight: bold;
     }
 
     .further h2:first-of-type {
+        font-family: Lato;
         padding-top: 0;
     }
 
     .download-button {
+        font-family: Lato;
         float: right;
-        margin-right: 20px;
+        margin-right:5%;
         display: block;
 
     }
 
     .report-table {
+        font-family: Lato;
         margin: 20px;
         background-color: #f0a54200;
         color:rgb(38, 64, 146);
@@ -49,6 +55,7 @@ font-weight: bold;
     }
     
     .h2 {
+        font-family: Lato;
         margin-left:100px;
         margin-top:20px;
         margin-bottom:20px;
@@ -58,6 +65,7 @@ font-weight: bold;
 
     table {
         /* background-color: #f0a542a6; */
+        font-family: Lato;
         border-left-style: solid;
 border-left-width: thin;
 border-left-color: #f0a542a6;
@@ -74,48 +82,63 @@ color: rgb(38, 64, 146);
     }
 
     .odd {
+        font-family: Lato;
         background-color: #f0aa4f14;
     }
 
     .even {
+        font-family: Lato;
         background-color: #f0aa4f36;
     }
     td .sorting_1 {
+        font-family: Lato;
         background-color: #e26b4200;
     }
     td  {
+        font-family: Lato;
         background-color: #e26b4200;
     }
 
     thead {
+        font-family: Lato;
         background-color: #f0a54200;
         
     }
     thead .sorting{
+        font-family: Lato;
         background-color: #f0a542a6;;
         border-bottom: 1px solid #f2c182;
     }
     thead .sorting_asc{
+        font-family: Lato;
         background-color: #f0a542ed;
         border-bottom: 1px solid #f2c182;
     }
     thead .sorting_desc{
+        font-family: Lato;
         background-color: #f0a542ed;
         border-bottom: 1px solid #f2c182;
     }
 
     label {
+        font-family: Lato;
         font-weight: 50;
         font-size:25px
     }
     .dataTable.no-footer {
-  border-bottom: 1px solid #f2c498;
+        font-family: Lato;
+        border-bottom: 1px solid #f2c498;
 }
      .dataTables_filter label{
+        font-family: Lato;
         font-size: 17px;
+    }
+    .dataTables_filter {
+        margin-right: 5%;
     }
 
     .dataTables_filter input{
+        font-family: Lato;
         font-size: 14px;
         display:inline;
         height: 34px;
@@ -129,20 +152,36 @@ color: rgb(38, 64, 146);
         transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
     }
 
+    .dataTables_paginate{
+        margin-right: 5%;
+    }
+    
+    .dataTables_info{
+        margin-left: 5%;
+    }
+    
     table.dataTable tbody tr{
+        font-family: Lato;
         background-color: #f0aa4f14;
     }
 
     .title {
-        color: rgb(38, 64, 146);
+        font-family: Lato;
+        color: rgb(43, 125, 138);
         font-size: 35px;
         display: block;
         text-align: center;
     }
 
     .subtitle {
+        font-family: Lato;
         color: rgb(38, 64, 146);
         display: block;
         text-align: center;
 
+    }
+    .report-date {
+        text-align: right;
+        margin-right:5%;
+        color: rgb(43, 125, 138);
     }

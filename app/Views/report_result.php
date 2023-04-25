@@ -11,7 +11,7 @@
     <!-- <link rel="shortcut icon" type="image/jpg" href="/assets/images/karmayogiLogo_thumbnail.jpg"> -->
     <!-- Datatable CSS -->
     <link href='//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
-
+    
     <!-- jQuery Library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
@@ -37,6 +37,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato">
     
 
 
@@ -47,11 +48,14 @@
 </head>
     <body  onload="initKeycloak()">
         <div>
+        <div class="report-date">
+<?php echo $lastUpdated ?>
+</div>
     <div class="h2">
         
         <label class="title"><?php echo $reportTitle ?></label>
         
-        <label class="subtitle"><?php echo $lastUpdated ?></label>
+        <!-- <label class="subtitle"><?php //echo $lastUpdated ?></label> -->
     <?php 
     echo '<a class="btn btn-success download-button" href="'.base_url('/getExcelReport').'" target="_blank" > Download Excel </a>';
     //echo '<a class="btn btn-success download-button" href="'.base_url('/getExcelReport').'?'. $params.'" target="_blank" > Download Excel </a>';
@@ -61,8 +65,8 @@
    
 </div>
     <div class="further">
-
     
+
 <section>
     
 <?php 
@@ -97,6 +101,9 @@ echo $resultHTML;
 
   $(document).ready(function() {
     $('#tbl-result').DataTable( {
+        processing: true,
+        // serverSide: true,
+        // ajax: 'scripts/server_processing.php',
         dom: 'Bfrtip',
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
