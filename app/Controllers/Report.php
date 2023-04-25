@@ -45,13 +45,14 @@ class Report extends BaseController
             $enrolment = new UserEnrolmentCourse();
             $org_hierarchy = new MasterStructureModel();
             $lastUpdate = new DataUpdateModel();
+            $orgModel = new MasterOrganizationModel();
 
             if ($mdoReportType == 'notSelected') {
                 echo '<script>alert("Please select report type!");</script>';
                 return view('header_view')
                     . view('footer_view');
             } else {
-                $data['lastUpdated'] = '[Report last updated on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
+                $data['lastUpdated'] = '[Report upto ' . $lastUpdate->getReportLastUpdatedTime() . ']';
 
                 if ($role == 'SPV_ADMIN') {
                     $ministry = $request->getPost('ministry');
@@ -72,7 +73,12 @@ class Report extends BaseController
                 }
 
                 if ($org != "notSelected") {
-                    $orgName = $home->getOrgName($org);
+                    $orgName = $orgModel->getOrgName($org); 
+                    if($orgName == null) {
+                        return view('header_view')
+                    
+                    . view('footer_view');
+                    }
 
                 } else if ($dept != "notSelected") {
                     $org = $dept;
@@ -184,7 +190,7 @@ class Report extends BaseController
                     . view('footer_view');
             } else {
 
-                $data['lastUpdated'] = '[Report last updated on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
+                $data['lastUpdated'] = '[Report upto ' . $lastUpdate->getReportLastUpdatedTime() . ']';
 
                 $org = '';
                 if ($role == 'MDO_ADMIN') {
@@ -301,7 +307,7 @@ class Report extends BaseController
                     . view('footer_view');
             } else {
 
-                $data['lastUpdated'] = '[Report last updated on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
+                $data['lastUpdated'] = '[Report upto ' . $lastUpdate->getReportLastUpdatedTime() . ']';
 
                 $role = $session->get('role');
                 if ($role == 'SPV_ADMIN') {
@@ -545,7 +551,7 @@ class Report extends BaseController
                     . view('footer_view');
             } else {
 
-                $data['lastUpdated'] = '[Report last updated on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
+                $data['lastUpdated'] = '[Report upto ' . $lastUpdate->getReportLastUpdatedTime() . ']';
 
                 if ($role == 'SPV_ADMIN') {
                     $ministry = '';
@@ -624,7 +630,7 @@ class Report extends BaseController
             $lastUpdate = new DataUpdateModel();
 
 
-            $data['lastUpdated'] = '[Report last updated on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
+            $data['lastUpdated'] = '[Report upto ' . $lastUpdate->getReportLastUpdatedTime() . ']';
 
             $org = '';
             if ($role == 'ATI_ADMIN') {
