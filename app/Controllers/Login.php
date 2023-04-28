@@ -1,28 +1,35 @@
 <?php
 namespace App\Controllers;
 
-
-
 use App\Models\UserMasterModel;
 use App\Config\App;
 use App\Config\Assets;
 
-//session_start(); //we need to start session in order to access it through CI
+//session_start(); 							//we need to start session in order to access it through CI
 
 class Login extends BaseController
 {
 	
 	protected $helpers = ['form'];
 
-	public function checkIgotUser(){                         // First Check if the user is logged in or not
+	public function checkIgotUser(){  // First Check if the user is logged in or not
 		//$data['userID'] = $this->input->get('email');  
 		return view('keyCloakLogin');
 	}
+
 	public function index()
 	{
 		try{
 
 		$validation = \Config\Services::validation();
+		
+        	echo "<pre>" ; 
+        	print_r($_COOKIE);                
+            die ; 
+            // IN cookie we are getting uid which is user ID now we have to hit user read API and get Appropriate data and manage role 
+           
+
+    
 		if (!$this->request->is('post')) {
 			return view('header_view') . view('login_view') . view('footer_view');
 		}
@@ -38,38 +45,31 @@ class Login extends BaseController
 	}
 	catch (\Exception $e) {
 		throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);	}
-	
 	}
 
 	public function user_login_process()
 	{
 		try {
-		
 		$request = service('request');
 		if (!$this->request->is('post')) {
 
 			return view('header_view') . view('login_view') . view('footer_view');
 		}
-
 		$rules = [
 			'username' => 'required',
 			'password' => 'required'
 		];
 
-
 		if (!$this->validate($rules)) {
 
 			return view('header_view') . view('login_view') . view('footer_view');
 		} else {
-
-
-			
+	
 			$data = array(
 				'username' => $request->getPost('username'),
 				'password' => $request->getPost('password')
 			);
 
-			
 			$user = new UserMasterModel();
 			$result = $user->login($data);
 			
@@ -144,9 +144,6 @@ class Login extends BaseController
 						// redirect($red, 'refresh');
 					}
 					return $this->response->redirect(base_url('/home'));
-						
-
-
 				} else {
 					$data = array(
 						'error_message' => 'Invalid Username or Password'
@@ -188,4 +185,3 @@ class Login extends BaseController
 		throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);	}
 	}
 }
-

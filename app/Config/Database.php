@@ -1,9 +1,6 @@
 <?php
-
 namespace Config;
-
 use CodeIgniter\Database\Config;
-
 /**
  * Database Configuration
  */
@@ -14,22 +11,20 @@ class Database extends Config
      * and Seeds directories.
      */
     public string $filesPath = APPPATH . 'Database' . DIRECTORY_SEPARATOR;
-
     /**
      * Lets you choose which connection group to
      * use if no other is specified.
      */
     public string $defaultGroup = 'default';
-
     /**
      * The default database connection.
      */
     public array $default = [
-        'DSN'      => 'Postgre://postgres:postgres@localhost:5432/igot_reporting_2404?charset=utf8&connect_timeout=5&sslmode=disable',
+        'DSN'      => 'Postgre://postgres:postgres@localhost:5432/igot_reporting?charset=utf8&connect_timeout=5&sslmode=disable',
         'hostname' => 'localhost',
         'username' => 'postgres',
         'password' => 'postgres',
-        'database' => 'igot_reporting_2404',
+        'database' => 'igot_reporting',
         'DBDriver' => 'Postgre',
         'DBPrefix' => '',
         'pConnect' => false,
@@ -43,7 +38,6 @@ class Database extends Config
         'failover' => [],
         'port'     => 5432,
     ];
-
     /**
      * This database connection is used when
      * running PHPUnit database tests.

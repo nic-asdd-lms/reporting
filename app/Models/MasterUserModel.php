@@ -33,8 +33,6 @@ class MasterUserModel extends Model
         
     }
 
-    
-
     public function getMDOAdminList($orgName) {
         try {
             $table = new \CodeIgniter\View\Table();
@@ -58,7 +56,6 @@ class MasterUserModel extends Model
         
     }
 
-    
     public function getUserCountByOrg() {
         try {
             $table = new \CodeIgniter\View\Table();
@@ -85,8 +82,6 @@ class MasterUserModel extends Model
         throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
     } 
     }
-
-    
 
     public function getUserByMinistry($org) {
         try {

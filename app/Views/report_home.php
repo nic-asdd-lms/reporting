@@ -9,10 +9,8 @@
     <!-- <link rel="shortcut icon" type="image/jpg" href="/assets/images/karmayogiLogo_thumbnail.jpg"> -->
     <!-- Datatable CSS -->
     <link href='//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
-
     <!-- jQuery Library -->
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <!-- Datatable JS -->
@@ -23,25 +21,347 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
-
-
-    
      <!-- ASSETS -->
- <link  href="<?php echo base_url('assets/css/home_style.css');?>" rel="stylesheet" type="text/css">
+    <link  href="<?php echo base_url('assets/css/home_style.css');?>" rel="stylesheet" type="text/css">
     <script src="<?php echo base_url('assets/scripts/home.js')?>" type="text/javascript"></script>
+    <!-- for custom validation pop up boxes -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11">  </script>
+    
+    <style>
+        .required:after {
+        content:" *";
+        color: red;
+    }
+    </style>
 
+    <script>
+        $(document).ready(function(){  
+        $("#mdowisereportform").submit(function(){                    // Tab 1 Validation 
+            var mdoReportType= $('#mdoReportType').val();
+            if(mdoReportType=='notSelected')
+            {
+                Swal.fire({
+                            title: 'Error!',
+                            text: 'Please Select Report Type !',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                });
+                return false ;
+            }                                                   // If report type is not selected then do not submit the form
+            else if(mdoReportType=='mdoUserCount')              // Only one option is there no need to check sub dropdowns
+            {
+                   return true ; 
+            }
+            else if(mdoReportType=='mdoUserList')                //  Report type 2nd option validation 
+            {
+                var ms =  $('#ms_type').val();
+                if(ms=='notSelected')
+                {
+                    Swal.fire({
+                                title: 'Error!',
+                                text: 'Please Select Ministry/State!',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                    });
+                    return false ;
+                }      
+                else if(ms=='ministry')
+                {
+                    var ministry =  $('#ministry').val();
+                    if(ministry=='notSelected')
+                    {
+                        Swal.fire({
+                                title: 'Error!',
+                                text: 'Please Select Ministry!',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                    });
+                        return false ; 
+                    }
+                    else 
+                    {
+                        return true ;
+                    }
+                } 
+                else if(ms=='state')
+                {
+                    var state =  $('#ministry').val();
+                    if(state=='notSelected')
+                    {
+                        Swal.fire({
+                                title: 'Error!',
+                                text: 'Please Select State!',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                    });
+                        return false ; 
+                    }
+                    else 
+                    {
+                        return true ;
+                    }
+                } 
+            }
+            else if(mdoReportType=='mdoUserEnrolment')             //Report type 3rd option validation  
+            {
+                var ms =  $('#ms_type').val();
+                if(ms=='notSelected')
+                {
+                    Swal.fire({
+                                title: 'Error!',
+                                text: 'Please Select Ministry/State!',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                    });
+                    return false ;
+                }      
+                else if(ms=='ministry')
+                {
+                    var ministry =  $('#ministry').val();
+                    if(ministry=='notSelected')
+                    {
+                        Swal.fire({
+                                title: 'Error!',
+                                text: 'Please Select Ministry!',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                    });
+                        return false ; 
+                    }
+                    else 
+                    {
+                        return true ;
+                    }
+                } 
+                else if(ms=='state')
+                {
+                    var state =  $('#ministry').val();
+                    if(state=='notSelected')
+                    {
+                        Swal.fire({
+                                title: 'Error!',
+                                text: 'Please Select State!',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                    });
+                        return false ; 
+                    }
+                    else 
+                    {
+                        return true ;
+                    }
+                }
+            } 
+            else if(mdoReportType=='ministryUserEnrolment')       //  Report type 4th option validation 
+            {
+                var ms =  $('#ms_type').val();
+                if(ms=='notSelected')
+                {
+                    Swal.fire({
+                                title: 'Error!',
+                                text: 'Please Select Ministry/State!',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                    });
+                    return false ;
+                }      
+                else if(ms=='ministry')
+                {
+                    var ministry =  $('#ministry').val();
+                    if(ministry=='notSelected')
+                    {
+                        Swal.fire({
+                                title: 'Error!',
+                                text: 'Please Select Ministry!',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                    });
+                        return false ; 
+                    }
+                    else 
+                    {
+                        return true ;
+                    }
+                } 
+                else if(ms=='state')
+                {
+                    var state =  $('#ministry').val();
+                    if(state=='notSelected')
+                    {
+                        Swal.fire({
+                                title: 'Error!',
+                                text: 'Please Select State!',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                    });
+                        return false ; 
+                    }
+                    else 
+                    {
+                        return true ;
+                    }
+                }
+            }
+        });
+
+        $("#coursereportform").submit(function(){                    // Tab 2 Validation 
+            var courseReportType= $('#courseReportType').val();
+            //alert(courseReportType) ; 
+            if(courseReportType=='notSelected')
+            {
+                Swal.fire({
+                            title: 'Error!',
+                            text: 'Please Select Course Report Type !',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                });
+                return false ;                                              // If report type is not selected then do not submit the form
+            }                                                   
+            else if(courseReportType=='courseEnrolmentCount')              // Only one option is there no need to check sub dropdowns 2nd option validation
+            {
+                   return true ; 
+            }
+            else if(courseReportType=='programEnrolmentCount')              // Only one option is there no need to check sub dropdowns 4th option validation
+            {
+                   return true ; 
+            }
+            
+            else if(courseReportType=='courseEnrolmentReport')                //  Report type 1st option validation 
+            {
+                var course =  $('#course').val();
+                if(course=='notSelected')
+                {
+                    Swal.fire({
+                                title: 'Error!',
+                                text: 'Please Select Course',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                    });
+                    return false ;
+                }      
+                else  
+                    {
+                        return true ;
+                    }
+            }
+
+            else if(courseReportType=='programEnrolmentReport')                //  Report type 3rd option validation 
+            { 
+                var program =  $('#course').val();
+                if(program=='notSelected')
+                {
+                    Swal.fire({
+                                title: 'Error!',
+                                text: 'Please Select program',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                    });
+                    return false ;
+                }      
+                else  
+                    {
+                        return true ;
+                    }
+            }
+            else if(courseReportType=='collectionEnrolmentReport')                //  Report type 5th option validation 
+            { 
+                var curated =  $('#course').val();
+                if(curated=='notSelected')
+                {
+                    Swal.fire({
+                                title: 'Error!',
+                                text: 'Please Select Curated Collection',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                    });
+                    return false ;
+                }      
+                else  
+                    {
+                        return true ;
+                    }
+            }
+            else if(courseReportType=='collectionEnrolmentCount')                //  Report type 5th option validation 
+            { 
+                var collection =  $('#course').val();
+                if(collection=='notSelected')
+                {
+                    Swal.fire({
+                                title: 'Error!',
+                                text: 'Please Select Collection',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                    });
+                    return false ;
+                }      
+                else  
+                    {
+                        return true ;
+                    }
+            }
+            else if(courseReportType=='courseMinistrySummary')                //  Report type 5th option validation 
+            { 
+                var coursemin =  $('#course').val();
+                if(coursemin=='notSelected')
+                {
+                    Swal.fire({
+                                title: 'Error!',
+                                text: 'Please Select Course',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                    });
+                    return false ;
+                }      
+                else  
+                    {
+                        return true ;
+                    }
+            }
+            
+            
+        });
+
+        $("#rolereportform").submit(function(){                     // Tab 3 Validation 
+            var roleReportType= $('#roleReportType').val();
+            if(roleReportType=='notSelected')
+            {
+                Swal.fire({
+                            title: 'Error!',
+                            text: 'Please Select Report Type !',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                });
+                return false ;
+            }                                                       // If report type is not selected then do not submit the form
+            else                                                    // Only one option is there no need to check sub dropdowns
+            {
+                   return true ; 
+            }
+        });
+        
+        $("#analyticsreportform").submit(function(){                    // Tab 4 Validation 
+            var analyticsReportType= $('#analyticsReportType').val();
+            if(analyticsReportType=='notSelected')
+            {
+                Swal.fire({
+                            title: 'Error!',
+                            text: 'Please Select Analytics Report Type !',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                });
+                return false ;
+            }                                                           // If report type is not selected then do not submit the form
+            else                                                        // Only one option is there no need to check sub dropdowns
+            {
+                   return true ; 
+            }
+        });    
+        });
+    </script>
 </head>
-
 <body  onload="initKeycloak()">
-
     <!-- HEADER: MENU + HEROE SECTION -->
-
-
-    <!-- CONTENT -->
-
     <section>
-
-
 
         <div id="body">
             <div class="tab">
@@ -49,8 +369,7 @@
                 $session = \Config\Services::session();
 
                 if ($session->get('role') == 'SPV_ADMIN') {
-
-                    echo '
+                echo '
                 <button class="tablinks" onclick="openTab(event, \'MDO-wise\')" id="defaultOpen">MDO-wise Reports</button>
                 <button class="tablinks" onclick="openTab(event, \'Course-wise\')">Course-wise Reports</button>
                 <button class="tablinks" onclick="openTab(event, \'Role-wise\')">Role-wise Reports</button>
@@ -74,10 +393,10 @@
             </div>
 
             <div id="MDO-wise" class="tabcontent">
-                <form class="form-horizontal login_form" action="<?php echo base_url('/getMDOReport');?>"
+                <form id="mdowisereportform" class="form-horizontal login_form" action="<?php echo base_url('/getMDOReport');?>"
                     method="post">
                     <div class="report-type">
-                        <label for="mdoReportType" class="lbl-reporttype">Report type:</label>
+                        <label for="mdoReportType" class="lbl-reporttype required ">  Report type:  </label>
                         <select name="mdoReportType" class="form-control report-select"
                             onchange="enable_disable_mdo(this)" id="mdoReportType">
                             <option value="notSelected">-- Select Report Type --</option>
@@ -88,21 +407,18 @@
 
                                 echo
                                     '
-                    <option value="mdoUserCount">MDO-wise user count</option>
-                        <option value="mdoUserList">MDO-wise user List</option>
-                        <option value="mdoUserEnrolment">MDO-wise user enrolment report</option>
-                        <option value="ministryUserEnrolment">User List for all organisations under a Ministry/State</option>
-                        ';
+                                    <option value="mdoUserCount">MDO-wise user count</option>
+                                    <option value="mdoUserList">MDO-wise user List</option>
+                                    <option value="mdoUserEnrolment">MDO-wise user enrolment report</option>
+                                    <option value="ministryUserEnrolment">User List for all organisations under a Ministry/State</option>
+                                    ';
                             } else if ($session->get('role') == 'MDO_ADMIN') {
 
                                 echo '<option value="mdoUserList">User List</option>
-    <option value="mdoUserEnrolment">User enrolment report</option>
-    <option value="userWiseCount">User-wise enrolment and completion count</option>
-    
-
-';
+                                        <option value="mdoUserEnrolment">User enrolment report</option>
+                                        <option value="userWiseCount">User-wise enrolment and completion count</option>
+                                      ';
                             } ?>
-
 
                         </select>
                     </div>
@@ -110,13 +426,11 @@
 
                     <div class="container ">
                         <!-- <div class="auto-widget">
-    <p>Organisation: <input type="text" id="org_search" placeholder="Search Organisation" /></p>
-</div> -->
+                            <p>Organisation: <input type="text" id="org_search" placeholder="Search Organisation" /></p>
+                        </div> -->
 
                         <!-- <input type="text" id="search" placeholder="Search" class="form-control" /> -->
-
                         <div id="tbl">
-
 
                             <table class="submitbutton" id="tbl-mdo">
                                 <?php
@@ -124,31 +438,24 @@
 
                                 if ($session->get('role') == 'SPV_ADMIN') {
                                     echo '
-
                                     <tr>
                                     <td  class="submitbutton">
                                     
                                     <select name="ms_type" class="form-control"  id="ms_type">
-                                <option value="notSelected">--Ministry/State-</option>
-                                <option value="ministry">Ministry</option>
-                                <option value="state">State</option>
-        
-                                            
-                                            
-                            </select>
-                                
-                                </td>
+                                    <option value="notSelected">    --Ministry/State--  </option>
+                                    <option value="ministry">   Ministry    </option>
+                                    <option value="state">  State   </option>
+                                    </select>
+                                    </td>
                                     </tr>
                     <tr>
                             <td  class="submitbutton">
                             
                             <select name="ministry" class="form-control"  id="ministry">
                          <option value="notSelected">--Select Ministry/State--</option>';
-
                         //             foreach ($ministry as $row) {
                         //                 echo '<option value="' . $row->ms_id . '">' . $row->ms_name . '</option>';
                         //             }
-
                                      echo 
                                     '	
                     </select>
@@ -185,20 +492,18 @@
                         </div> -->
 
                         <div class="col-xs-3 container submitbutton">
-                            <button class="btn btn-primary " type="submit" name="Submit" value="Submit"> Submit</button>
+                            <button id="mdowisereport" class="btn btn-primary" type="submit" name="Submit" value="Submit"> Submit  </button>
                         </div>
 
                     </div>
 
                     <?php echo form_close(); ?>
                 </form>
-
-
             </div>
 
 
             <div id="Course-wise" class="tabcontent">
-                <form class="form-horizontal login_form" action="<?php echo base_url('/getCourseReport');?>"
+                <form id="coursereportform" class="form-horizontal login_form" action="<?php echo base_url('/getCourseReport');?>"
                     method="post">
 
                     <div class="report-type">
@@ -258,7 +563,7 @@
             </div>
 
             <div id="Role-wise" class="tabcontent">
-                <form class="form-horizontal login_form" action="<?php echo base_url('/getRoleReport');?>"
+                <form id="rolereportform" class="form-horizontal login_form" action="<?php echo base_url('/getRoleReport');?>"
                     method="post">
                     <div class="report-type">
                         <label for="roleReportType" class="lbl-reporttype">Report type:</label>
@@ -326,7 +631,7 @@
             </div>
 
             <div id="Analytics" class="tabcontent">
-                <form class="form-horizontal login_form" action="<?php echo base_url('/getAnalytics');?>"
+                <form id="analyticsreportform" class="form-horizontal login_form" action="<?php echo base_url('/getAnalytics');?>"
                     method="post">
                     <div class="report-type">
                         <label for="analyticsReportType" class="lbl-reporttype">Report type:</label>
@@ -335,14 +640,13 @@
 
                         if ($session->get('role') == 'SPV_ADMIN') {
 
-                            echo '<select name="analyticsReportType" class="form-control report-select" id="analyticsReportType">
+                        echo '<select name="analyticsReportType" class="form-control report-select" id="analyticsReportType">
                         <option value="notSelected">-- Select Report Type --</option>
                         <option value="dayWiseUserOnboarding">Day-wise User Onboarding</option>
                         <option value="monthWiseUserOnboarding">Month-wise User Onboarding</option>
                         <option value="monthWiseCourses">Month-wise Courses Published</option>
-                        </select>
-                
-';
+                        </select>';
+
                         }
                         ?>
                     </div>
@@ -474,7 +778,6 @@
 
             <div id="Program-wise" class="tabcontent">
 
-
                 <form class="form-horizontal login_form" action="<?php echo base_url('/getCourseReport');?>"
                     method="post">
 
@@ -492,12 +795,8 @@
                             <option value="collectionEnrolmentCount">Curated Collection-wise enrolment and completion
                                 count</option>
                         </select>
-
                     </div>
-
-
                     <hr />
-
                     <div class="container">
                         <table class="submitbutton" id="tbl-course">
                             <tr>
@@ -700,8 +999,6 @@ function initKeycloak() {
 
     $(document).ready(function() {
 
-
-
         $('select[name=courseReportType]').change(function() {
 
             if (this.value == 'courseEnrolmentReport') {
@@ -805,7 +1102,6 @@ function initKeycloak() {
 
 
     $(document).ready(function() {
-
 
 
         $('input[type=radio][name=courseReportType]').change(function() {

@@ -22,7 +22,6 @@ use PHPExcel_Reader_HTML;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-
 class Report extends BaseController
 {
     var $resultArray;
@@ -36,7 +35,6 @@ class Report extends BaseController
             $table->setTemplate($GLOBALS['tableTemplate']);
                         
             $mdoReportType = $request->getPost('mdoReportType');
-
 
             $role = $session->get('role');
 
@@ -148,7 +146,6 @@ class Report extends BaseController
                         $data['reportTitle'] = 'User-wise course enrolment/completion count for organisation - "' . $orgName . '"';
 
                     }
-
                 return view('header_view')
                     . view('report_result', $data)
                     . view('footer_view');
@@ -156,7 +153,6 @@ class Report extends BaseController
         } catch (\Exception $e) {
             throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
-
     }
 
     public function getCourseReport()
@@ -277,7 +273,6 @@ class Report extends BaseController
         } catch (\Exception $e) {
             throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
-
     }
 
     public function getRoleReport()
