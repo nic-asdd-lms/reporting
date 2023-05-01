@@ -43,7 +43,7 @@ class Home extends BaseController
 
 
         } catch (\Exception $e) {
-            return view('header_view') . view('error_general') . view('footer_view');
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
 
     }
@@ -236,4 +236,17 @@ class Home extends BaseController
 
     }
 
+
+    public function result()
+    {
+        $request = service('request');
+            
+        $lastUpdate = new DataUpdateModel();
+        $data['mdoReportType']=$request->getPost('mdoReportType');
+        $data['lastUpdated'] = '[Report as on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
+        $data['reportTitle'] = 'MDO-wise user count ';
+        return view('header_view')
+                    . view('report_result',$data)
+                    . view('footer_view');
+    }
 }

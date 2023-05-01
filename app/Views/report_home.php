@@ -21,7 +21,9 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
-     <!-- ASSETS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato">
+
+<!-- ASSETS -->
     <link  href="<?php echo base_url('assets/css/home_style.css');?>" rel="stylesheet" type="text/css">
     <script src="<?php echo base_url('assets/scripts/home.js')?>" type="text/javascript"></script>
     <!-- for custom validation pop up boxes -->
@@ -395,6 +397,7 @@
             <div id="MDO-wise" class="tabcontent">
                 <form id="mdowisereportform" class="form-horizontal login_form" action="<?php echo base_url('/getMDOReport');?>"
                     method="post">
+
                     <div class="report-type">
                         <label for="mdoReportType" class="lbl-reporttype required ">  Report type:  </label>
                         <select name="mdoReportType" class="form-control report-select"
@@ -407,17 +410,20 @@
 
                                 echo
                                     '
-                                    <option value="mdoUserCount">MDO-wise user count</option>
-                                    <option value="mdoUserList">MDO-wise user List</option>
-                                    <option value="mdoUserEnrolment">MDO-wise user enrolment report</option>
-                                    <option value="ministryUserEnrolment">User List for all organisations under a Ministry/State</option>
-                                    ';
+
+                    <option class="options" value="mdoUserCount">MDO-wise user count</option>
+                        <option class="options" value="mdoUserList">MDO-wise user List</option>
+                        <option class="options" value="mdoUserEnrolment">MDO-wise user enrolment report</option>
+                        <option class="options" value="ministryUserEnrolment">User List for all organisations under a Ministry/State</option>
+                        ';
                             } else if ($session->get('role') == 'MDO_ADMIN') {
 
-                                echo '<option value="mdoUserList">User List</option>
-                                        <option value="mdoUserEnrolment">User enrolment report</option>
-                                        <option value="userWiseCount">User-wise enrolment and completion count</option>
-                                      ';
+                                echo '<option class="options" value="mdoUserList">User List</option>
+    <option value="mdoUserEnrolment">User enrolment report</option>
+    <option value="userWiseCount">User-wise enrolment and completion count</option>
+    
+
+';
                             } ?>
 
                         </select>
@@ -834,6 +840,12 @@
 
 
     </section>
+    <!-- <section>
+        <table id="tbl-result">
+        </table>
+    </section> -->
+    
+    
 
 
     <!-- SCRIPTS -->
@@ -863,8 +875,41 @@ function initKeycloak() {
     
     document.getElementById("defaultOpen").click();
 
+
+
+    function submit_form_mdo(form){
+        //var mdoReportType = $(this).find('select[name="mdoReportType"]').val(); // Get report type
+        mdoReportType = document.getElementById('mdoReportType').value;
+        alert(mdoReportType);
+                    $('#tbl-result').DataTable({
+                          processing: true,
+                          serverSide: true,
+                          ajax: {
+                              url: "/getMDOReport",
+                              type: "POST",
+                              data: {
+                                  mdoReportType: mdoReportType, // Pass report type as parameter
+                                  ms_type: ms_type,
+                                  ministry: ministry,
+                                  dept: dept,
+                                  org: org
+                              }
+                          },
+                          columns: [
+                              { data: org_name },
+                              { data: count }
+                          ]
+                      });
+    }
+                
+                
+                    
+                    
+                
+            
     
-   
+    
+    
 
     $('.search').select2({
         placeholder: 'Search Organisation',
