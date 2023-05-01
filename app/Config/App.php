@@ -17,8 +17,8 @@ class App extends BaseConfig
      *
      *    http://example.com/
      */
-    public string $baseURL = 'http://localhost:8080';
-    public string $assetURL = 'http://localhost:8080/reporting/public/';
+    public string $baseURL = 'http://localhost:8080/';
+    public string $assetURL = 'http://localhost:8081/reporting/public/';
 
 
     /**

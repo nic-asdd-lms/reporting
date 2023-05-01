@@ -1,6 +1,8 @@
 Files changed after previous deployment:
 
-1. Controller/Report.php
-2. assets/css/*
-3. Views/*
-4. Controller/Home.php
+1. app/Controllers/Report.php
+2. public/assets/css/*
+3. app/Views/*
+4. app/Controller/Home.php
+5. app/Config/Routes.php
+6. app/Models/*

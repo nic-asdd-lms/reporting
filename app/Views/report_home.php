@@ -75,8 +75,10 @@
             </div>
 
             <div id="MDO-wise" class="tabcontent">
-                <form class="form-horizontal login_form" action="<?php echo base_url('/getMDOReport');?>"
-                    method="post">
+                <form id="mdoWise" class="form-horizontal login_form" action="<?php echo base_url('/getMDOReport');?>" method="post">
+                <!-- <form class="form-horizontal login_form" id="mdoWise"  action="/result" method="post"> -->
+                <input type="hidden" name="limit" value="10">
+                <input type="hidden" name="offset" value="0">
                     <div class="report-type">
                         <label for="mdoReportType" class="lbl-reporttype">Report type:</label>
                         <select name="mdoReportType" class="form-control report-select"
@@ -536,6 +538,12 @@
 
 
     </section>
+    <!-- <section>
+        <table id="tbl-result">
+        </table>
+    </section> -->
+    
+    
 
 
     <!-- SCRIPTS -->
@@ -565,8 +573,41 @@ function initKeycloak() {
     
     document.getElementById("defaultOpen").click();
 
+
+
+    function submit_form_mdo(form){
+        //var mdoReportType = $(this).find('select[name="mdoReportType"]').val(); // Get report type
+        mdoReportType = document.getElementById('mdoReportType').value;
+        alert(mdoReportType);
+                    $('#tbl-result').DataTable({
+                          processing: true,
+                          serverSide: true,
+                          ajax: {
+                              url: "/getMDOReport",
+                              type: "POST",
+                              data: {
+                                  mdoReportType: mdoReportType, // Pass report type as parameter
+                                  ms_type: ms_type,
+                                  ministry: ministry,
+                                  dept: dept,
+                                  org: org
+                              }
+                          },
+                          columns: [
+                              { data: org_name },
+                              { data: count }
+                          ]
+                      });
+    }
+                
+                
+                    
+                    
+                
+            
     
-   
+    
+    
 
     $('.search').select2({
         placeholder: 'Search Organisation',

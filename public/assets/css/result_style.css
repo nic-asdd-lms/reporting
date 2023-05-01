@@ -1,187 +1,225 @@
 html,
-    body {
-        color: rgba(33, 37, 41, 1);
-        font-family: Lato;
-        font-size: 16px;
-        margin: 0;
-        padding: 0;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        text-rendering: optimizeLegibility;
-        background-color: #f7f8f9;
-    }
-    
-    h2 {
-        text-align: center;
-        font-family: Lato;
-        
-        color: rgb(38, 64, 146);
-        font-size:30px;
-font-weight: bold;
-        
-    }
-
-    .further {
-        font-family: Lato;
-        background-color: rgba(247, 248, 249, 1);
-        border-bottom: 1px solid rgba(242, 242, 242, 1);
-        border-top: 1px solid rgba(242, 242, 242, 1);
-        margin-bottom: 100px;
-        padding-bottom: 30px;
-        margin-top: 50px;
-        padding-top:10px;
-    }
-
-    .further h2:first-of-type {
-        font-family: Lato;
-        padding-top: 0;
-    }
-
-    .download-button {
-        font-family: Lato;
-        float: right;
-        margin-right:5%;
-        display: block;
-
-    }
-
-    .report-table {
-        font-family: Lato;
-        margin: 20px;
-        background-color: #f0a54200;
-        color:rgb(38, 64, 146);
-        border-bottom: 1px solid #f2c498;
-
-    }
-    
-    .h2 {
-        font-family: Lato;
-        margin-left:100px;
-        margin-top:20px;
-        margin-bottom:20px;
-        display: block;
-
-    }
-
-    table {
-        /* background-color: #f0a542a6; */
-        font-family: Lato;
-        border-left-style: solid;
-border-left-width: thin;
-border-left-color: #f0a542a6;
-border-right-style: solid;
-border-right-width: thin;
-border-right-color: #f0a542a6;
-border-block-start-style: solid;
-border-block-start-width: thin;
-border-block-start-color: #f0a542a6;
-border-block-end-style: solid;
-border-block-end-width: thin;
-border-block-end-color: #f0a542a6;
-color: rgb(38, 64, 146);
-    }
-
-    .odd {
-        font-family: Lato;
-        background-color: #f0aa4f14;
-    }
-
-    .even {
-        font-family: Lato;
-        background-color: #f0aa4f36;
-    }
-    td .sorting_1 {
-        font-family: Lato;
-        background-color: #e26b4200;
-    }
-    td  {
-        font-family: Lato;
-        background-color: #e26b4200;
-    }
-
-    thead {
-        font-family: Lato;
-        background-color: #f0a54200;
-        
-    }
-    thead .sorting{
-        font-family: Lato;
-        background-color: #f0a542a6;;
-        border-bottom: 1px solid #f2c182;
-    }
-    thead .sorting_asc{
-        font-family: Lato;
-        background-color: #f0a542ed;
-        border-bottom: 1px solid #f2c182;
-    }
-    thead .sorting_desc{
-        font-family: Lato;
-        background-color: #f0a542ed;
-        border-bottom: 1px solid #f2c182;
-    }
-
-    label {
-        font-family: Lato;
-        font-weight: 50;
-        font-size:25px
-    }
-    .dataTable.no-footer {
-        font-family: Lato;
-        border-bottom: 1px solid #f2c498;
+body {
+    color: rgba(33, 37, 41, 1);
+    font-family: Lato;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    background-color: #f7f8f9;
 }
-     .dataTables_filter label{
-        font-family: Lato;
-        font-size: 17px;
-    }
-    .dataTables_filter {
-        margin-right: 5%;
-    }
 
-    .dataTables_filter input{
-        font-family: Lato;
-        font-size: 14px;
-        display:inline;
-        height: 34px;
-        padding: 6px 12px;
-        line-height: 1.42857143;
-        color: #555;
-        background-color: #fff;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-        transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
-    }
+h2 {
+    text-align: center;
+    font-family: Lato;
 
-    .dataTables_paginate{
-        margin-right: 5%;
-    }
-    
-    .dataTables_info{
-        margin-left: 5%;
-    }
-    
-    table.dataTable tbody tr{
-        font-family: Lato;
-        background-color: #f0aa4f14;
-    }
+    color: rgb(38, 64, 146);
+    font-size: 30px;
+    font-weight: bold;
 
-    .title {
-        font-family: Lato;
-        color: rgb(43, 125, 138);
-        font-size: 35px;
-        display: block;
-        text-align: center;
-    }
+}
 
-    .subtitle {
-        font-family: Lato;
-        color: rgb(38, 64, 146);
-        display: block;
-        text-align: center;
+.further {
+    font-family: Lato;
+    background-color: rgba(247, 248, 249, 1);
+    border-bottom: 1px solid rgba(242, 242, 242, 1);
+    border-top: 1px solid rgba(242, 242, 242, 1);
+    margin-bottom: 100px;
+    padding-bottom: 30px;
+    margin-top: 50px;
+    padding-top: 10px;
+}
 
-    }
-    .report-date {
-        text-align: right;
-        margin-right:5%;
-        color: rgb(43, 125, 138);
-    }
+.further h2:first-of-type {
+    font-family: Lato;
+    padding-top: 0;
+}
+
+.download-button {
+    font-family: Lato;
+    float: right;
+    display: block;
+    margin: 1%;
+}
+
+.div-button {
+    margin-right: 5%;
+
+}
+
+.report-table {
+    font-family: Lato;
+    margin: 20px;
+    background-color: #f0a54200;
+    color: rgb(38, 64, 146);
+    border-bottom: 1px solid #f2c498;
+
+}
+
+.h2 {
+    font-family: Lato;
+    margin-left: 100px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: block;
+
+}
+
+table {
+    /* background-color: #f0a542a6; */
+    font-family: Lato;
+    border-left-style: solid;
+    border-left-width: thin;
+    border-left-color: #f0a542a6;
+    border-right-style: solid;
+    border-right-width: thin;
+    border-right-color: #f0a542a6;
+    border-block-start-style: solid;
+    border-block-start-width: thin;
+    border-block-start-color: #f0a542a6;
+    border-block-end-style: solid;
+    border-block-end-width: thin;
+    border-block-end-color: #f0a542a6;
+    color: rgb(38, 64, 146);
+}
+
+.odd {
+    font-family: Lato;
+    background-color: #f0aa4f14;
+}
+
+.even {
+    font-family: Lato;
+    background-color: #f0aa4f36;
+}
+
+td .sorting_1 {
+    font-family: Lato;
+    background-color: #e26b4200;
+}
+
+td {
+    font-family: Lato;
+    background-color: #e26b4200;
+}
+
+thead {
+    font-family: Lato;
+    background-color: #f0a54200;
+
+}
+
+thead .sorting {
+    font-family: Lato;
+    background-color: #f0a542a6;
+    ;
+    border-bottom: 1px solid #f2c182;
+}
+
+thead .sorting_asc {
+    font-family: Lato;
+    background-color: #f0a542ed;
+    border-bottom: 1px solid #f2c182;
+}
+
+thead .sorting_desc {
+    font-family: Lato;
+    background-color: #f0a542ed;
+    border-bottom: 1px solid #f2c182;
+}
+
+label {
+    font-family: Lato;
+    font-weight: 50;
+    font-size: 25px
+}
+
+.dataTable.no-footer {
+    font-family: Lato;
+    border-bottom: 1px solid #f2c498;
+}
+
+.dataTables_filter label {
+    font-family: Lato;
+    font-size: 17px;
+}
+
+.dataTables_filter {
+    margin-right: 5%;
+}
+
+.dataTables_filter input {
+    font-family: Lato;
+    font-size: 14px;
+    display: inline;
+    height: 34px;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+}
+
+.dataTables_paginate {
+    margin-right: 5%;
+}
+
+.dataTables_info {
+    margin-left: 5%;
+}
+
+.dataTables_length label {
+    font-family: Lato;
+    font-size: 17px;
+}
+.dataTables_length select {
+    font-family: Lato;
+font-size: 14px;
+display: inline;
+height: 34px;
+padding: 6px 12px;
+line-height: 1.42857143;
+color: #555;
+background-color: #fff;
+border: 1px solid #ccc;
+border-radius: 4px;
+box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+}
+.dataTables_length {
+    margin-left: 5%;
+}
+
+
+table.dataTable tbody tr {
+    font-family: Lato;
+    background-color: #f0aa4f14;
+}
+
+.title {
+    font-family: Lato;
+    color: rgb(43, 125, 138);
+    font-size: 35px;
+    display: block;
+    text-align: center;
+    font-variant-caps: all-petite-caps;
+}
+
+.subtitle {
+    font-family: Lato;
+    color: rgb(38, 64, 146);
+    display: block;
+    text-align: center;
+
+}
+
+.report-date {
+    text-align: right;
+    margin-right: 5%;
+    color: rgb(43, 125, 138);
+}
