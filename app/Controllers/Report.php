@@ -44,7 +44,6 @@ class Report extends BaseController
 
             $mdoReportType = $request->getPost('mdoReportType');
 
-
             $role = $session->get('role');
 
             $home = new Home();
@@ -165,7 +164,6 @@ class Report extends BaseController
                         $data['reportTitle'] = 'User-wise course enrolment/completion count for organisation - "' . $orgName . '"';
 
                     }
-
                 return view('header_view')
                     . view('report_result', $data)
                     . view('footer_view');
@@ -173,7 +171,6 @@ class Report extends BaseController
         } catch (\Exception $e) {
             throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
-
     }
 
     public function getReport()
@@ -656,7 +653,6 @@ class Report extends BaseController
         } catch (\Exception $e) {
             throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
-
     }
 
     public function getRoleReport()

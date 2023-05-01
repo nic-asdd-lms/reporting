@@ -47,7 +47,6 @@ class MasterUserModel extends Model
     }
 
 
-
     public function getMDOAdminList($orgName, $limit, $offset, $search, $orderBy, $orderDir)
     {
         try {
