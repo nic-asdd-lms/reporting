@@ -45,15 +45,25 @@ class MasterCourseModel extends Model
     //    return $result;
     }
 
-    public function getMonthWiseCourses() {
+    public function getMonthWiseCourses($limit, $offset, $search, $orderBy, $orderDir) {
         try {
-            $table = new \CodeIgniter\View\Table();
+            if ($search != '') {
+                $likeQuery = " AND (publishedmmyy LIKE '%" . strtolower($search) . "%' OR publishedmmyy LIKE '%" . strtoupper($search) . "%' OR publishedmmyy LIKE '%" . ucfirst($search) . "%' ) ";
 
+            } else {
+                $likeQuery = '';
+            }
+            if ($limit != -1) {
+                $limitQuery = ' limit ' . $limit . ' offset ' . $offset;
+            } else
+                $limitQuery = '';
+
+            
             $query = $this->db->query('	select concat(split_part(publishedmmyy::TEXT,\'/\', 2),\'/\', split_part(publishedmmyy::TEXT,\'/\', 1) ) as published_month, count(*) as Live_course 
             from master_course 
-            where status=\'Live\' 
+            where status=\'Live\' '.$likeQuery.'
             group by published_month  
-            order by published_month desc');
+             order by '. (int) $orderBy+1 . ' '.$orderDir.$limitQuery);
             return $query;
         }
         catch (\Exception $e) {

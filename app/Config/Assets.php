@@ -1,80 +1,64 @@
-<?php
-
+<?php  
 namespace Config;
+/**
+ * Sekati CodeIgniter Asset Helper
+ *
+ * @package		Sekati
+ * @author		Jason M Horwitz
+ * @copyright	Copyright (c) 2013, Sekati LLC.
+ * @license		http://www.opensource.org/licenses/mit-license.php
+ * @link		http://sekati.com
+ * @version		v1.2.7
+ * @filesource
+ *
+ * @usage 		$autoload['config'] = array('asset');
+ * 				$autoload['helper'] = array('asset');
+ * @example		<img src="<?=asset_url();?>imgs/photo.jpg" />
+ * @example		<?=img('photo.jpg')?>
+ *
+ * @install		Copy config/asset.php to your CI application/config directory
+ *				& helpers/asset_helper.php to your application/helpers/ directory.
+ * 				Then add both files as autoloads in application/autoload.php:
+ *
+ *				$autoload['config'] = array('asset');
+ * 				$autoload['helper'] = array('asset');
+ *
+ *				Autoload CodeIgniter's url_helper in `application/config/autoload.php`:
+ *				$autoload['helper'] = array('url');
+ *
+ * @notes		Organized assets in the top level of your CodeIgniter 2.x app:
+ *					- assets/
+ *						-- css/
+ *						-- download/
+ *						-- img/
+ *						-- js/
+ *						-- less/
+ *						-- swf/
+ *						-- upload/
+ *						-- xml/
+ *					- application/
+ * 						-- config/asset.php
+ * 						-- helpers/asset_helper.php
+ */
 
 /*
-*
-* This file contains example values to override or augment default library behavior.
-* Recommended usage:
-*	1. Copy the file to app/Config/Assets.php
-*	2. Set any override variables
-*	3. Add additional route-specific assets to $routes
-*	4. Remove any lines to fallback to defaults
-*
+|--------------------------------------------------------------------------
+| Custom Asset Paths for asset_helper.php
+|--------------------------------------------------------------------------
+|
+| URL Paths to static assets library
+|
 */
 
-use Tatter\Assets\Config\Assets as AssetsConfig;
+$config['asset_path'] 		= 'assets/';
+$config['css_path'] 		= 'assets/css/';
+$config['download_path'] 	= 'assets/download/';
+$config['less_path'] 		= 'assets/less/';
+$config['js_path'] 			= 'assets/scripts/';
+$config['img_path'] 		= 'assets/images/';
+$config['swf_path'] 		= 'assets/swf/';
+$config['upload_path'] 		= 'assets/upload/';
+$config['xml_path'] 		= 'assets/xml/';
 
-class Assets extends AssetsConfig
-{
-    //--------------------------------------------------------------------
-    // Library Behavior
-    //--------------------------------------------------------------------
 
-    /**
-     * Asset URI base, relative to baseURL.
-     */
-    public string $uri = 'assets/';
-
-    /**
-     * Asset storage location in the filesystem.
-     * Must be somewhere web accessible.
-     */
-    public string $directory = FCPATH . 'assets/';
-
-    /**
-     * Path for third-party published Assets. The path is relative to
-     * both $directory and $uri. Recommended to add the resulting file
-     * path to .gitignore so published vendor assets will not be tracked.
-     */
-    public string $vendor = 'vendor/';
-
-    /**
-     * Whether to append file modification timestamps on asset tags.
-     * Makes it less likely for modified assets to remain cached.
-     */
-    // public bool $useTimestamps = true;
-
-    /**
-     * Whether to cache bundles for faster route responses.
-     */
-    public bool $useCache = ENVIRONMENT === 'production';
-
-    //--------------------------------------------------------------------
-    // Route Assets
-    //--------------------------------------------------------------------
-
-    /**
-     * Assets to apply to each route. Routes may use * as a wildcard to
-     * allow any valid character, similar to URL Helper's url_is().
-     * Keys are routes; values are an array of any of the following:
-     *   - Bundle class names
-     *   - File paths (relative to $directory)
-     *   - URLs
-     *
-     * Example:
-     *     $routes = [
-     *         '*' => [
-     *             'https://pagecdn.io/lib/cleave/1.6.0/cleave.min.js',
-     *             \App\Bundles\Bootstrap::class,
-     *          ],
-     *         'admin/*' => [
-     *             \Tatter\Frontend\Bundles\AdminLTE::class,
-     *             'admin/login.js',
-     *         ],
-     *     ];
-     *
-     * @var array<string,string[]>
-     */
-    public array $routes = ['assets/images/karmayogiLogo.svg' => ['images/karmayogiLogo.svg']];
-}
+/* End of file asset.php */
