@@ -26,9 +26,22 @@ function enable_disable_mdo(value) {
     dept = document.getElementById('dept');
     org = document.getElementById('org');
 
-    mdo.style.display = value.value == "mdoUserCount" ? "none" : "block";
-    dept.style.display = value.value == "ministryUserEnrolment" ? "none" : "block";
-    org.style.display = value.value == "ministryUserEnrolment" ? "none" : "block";
+    if (value.value == "mdoUserCount" || value.value == "orgList")
+        mdo.style.display = "none"
+
+    else
+        mdo.style.display = "block";
+
+    if (value.value == "ministryUserEnrolment" || value.value == "orgHierarchy") {
+        dept.style.display = "none";
+        org.style.display = "none";
+    }
+
+    else {
+        dept.style.display = "block";
+        org.style.display = "block";
+    }
+
 }
 
 function enable_disable_course(value) {
@@ -66,7 +79,7 @@ function getSuggestions(value) {
             action: action
         },
         dataType: "JSON",
-        success: function(data) {
+        success: function (data) {
             html = '<ul>';
             for (var count = 0; count < data.length; count++) {
 

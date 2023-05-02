@@ -14,12 +14,12 @@ public function __construct() {
 
 // Read data using username and password
 
-public function login($data) {
+public function login($email) {
     
     $builder = $this->db->table('user_account');
     $builder->select('*');
-    $builder->where('username', $data['username']);
-    $builder->where('password',$data['password']);
+    $builder->where('username', $email);
+    
     $query = $builder->get();
 
 // $condition = "username =" . "'" . $data['username'] . "' AND " . "password =" . "'" . $data['password']."'" ;
@@ -46,7 +46,6 @@ public function read_user_information($username) {
     $builder->select('*');
     $builder->where('username', $username);
     $query = $builder->get();
-
 
 
 if ($query->getNumRows() == 1) {

@@ -9,75 +9,68 @@ use App\Config\Assets;
 
 class Login extends BaseController
 {
-	
+
 	protected $helpers = ['form'];
 
-	public function checkIgotUser(){  // First Check if the user is logged in or not
+	public function checkIgotUser()
+	{ // First Check if the user is logged in or not
 		//$data['userID'] = $this->input->get('email');  
 		return view('keyCloakLogin');
 	}
 
 	public function index()
 	{
-		try{
+		try {
 
-		$validation = \Config\Services::validation();
+			// IN $_COOKIE we are getting uid which is user ID now we have to hit user read API and get Appropriate data and manage role 
+			$this->getRoles($_COOKIE['uid']);
+
+		} catch (\Exception $e) {
+			throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+		}
+	}
+
+	public function getRoles($userId)
+	{
 		
-        	echo "<pre>" ; 
-        	print_r($_COOKIE);                
-            die ; 
-            // IN cookie we are getting uid which is user ID now we have to hit user read API and get Appropriate data and manage role 
-           
+		$headers[] = "x-authenticated-user-token: " . $_COOKIE['token'];
+		$headers[] = 'Content-Type: application/json';
+		$headers[] = "Authorization: " . $GLOBALS['API_KEY'];
+		// API URL
+		$profileUrl = $GLOBALS['IGOT_URL'] . 'api/user/v2/read/' . $userId;
+		// Create a new cURL resource
+		$ch = curl_init($profileUrl);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		
+		$userInfo = curl_exec($ch);
 
-    
-		if (!$this->request->is('post')) {
-			return view('header_view') . view('login_view') . view('footer_view');
-		}
+		$users = json_decode($userInfo);
+		// Close cURL resource
+		curl_close($ch);
+		
+		$email = $users->result->response->profileDetails->personalDetails->primaryEmail;
+		
+		$this->user_login_process($email);
+		
 
-		$rules = [
-			'username' => 'required',
-			'password' => 'required'
-		];
-
-		if (!$this->validate($rules)) {
-			return view('header_view') . view('login_view') . view('footer_view');
-		}
 	}
-	catch (\Exception $e) {
-		throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);	}
-	}
-
-	public function user_login_process()
+	public function user_login_process($email)
 	{
 		try {
-		$request = service('request');
-		if (!$this->request->is('post')) {
 
-			return view('header_view') . view('login_view') . view('footer_view');
-		}
-		$rules = [
-			'username' => 'required',
-			'password' => 'required'
-		];
+			$request = service('request');
 
-		if (!$this->validate($rules)) {
-
-			return view('header_view') . view('login_view') . view('footer_view');
-		} else {
-	
-			$data = array(
-				'username' => $request->getPost('username'),
-				'password' => $request->getPost('password')
-			);
 
 			$user = new UserMasterModel();
-			$result = $user->login($data);
-			
+			$result = $user->login($email);
+
 			if ($result == TRUE) {
 
-				$username = $request->getPost('username');
-				$result = $user->read_user_information($username);
-				
+				// $username = $request->getPost('username');
+				$result = $user->read_user_information($email);
+
 				if ($result != false) {
 
 					$session_data = [
@@ -145,19 +138,17 @@ class Login extends BaseController
 					}
 					return $this->response->redirect(base_url('/home'));
 				} else {
-					$data = array(
-						'error_message' => 'Invalid Username or Password'
-					);
-
-					return view('header_view').view('login_view', $data).view('footer_view');
+					return view('header_view') . view('unauthorized_view') . view('footer_view');
 				}
+			} else {
+				print_r($email);
+				return $this->response->redirect(base_url('/unauthorized'));
 			}
+
+		} catch (\Exception $e) {
+			throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
 		}
-	}
-	
-	catch (\Exception $e) {
-		throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);	}
-	
+
 	}
 	// Logout from admin page
 
@@ -166,22 +157,44 @@ class Login extends BaseController
 		// Removing session data
 		try {
 
-		
-		$session = \Config\Services::session();
-		$sess_array = array(
-			'username' => '',
-			'role' => '',
-			'password' => '',
-			'logged_in' => false
-		);
-		$session->remove($sess_array);
-		$_SESSION['logged_in'] = false;
-		$data['message_display'] = 'Successfully Logout';
 
-		//$red = $this->config->item('base_url_other').'/login/index';
-		return view('header_view') . view('login_view', $data) . view('footer_view');
+			$session = \Config\Services::session();
+			$user = $session->get('username');
+			$sess_array = array(
+				'username' => '',
+				'role' => '',
+				'ministry' => '',
+				'department' => '',
+				'organisation' => '',
+				'password' => '',
+				'logged_in' => false
+			);
+			$session->remove($sess_array);
+			$_SESSION['logged_in'] = false;
+			if (isset($_COOKIE['token'])) {
+				unset($_COOKIE['uid']);
+				unset($_COOKIE['token']);
+				setcookie('uid', null, -1, '/');
+				setcookie('token', null, -1, '/');
+				return $this->response->redirect(base_url('/logout'));
+			}
+			// else {
+			// 	return false;
+			// }
+			// $data['message_display'] = 'Successfully Logout';
+			// setcookie($_COOKIE['uid'], "", time() - 3600);
+			// print_r($_COOKIE);
+			// die;
+			// return $this->response->redirect(base_url('/checkIgotUser'));
+			//$red = $this->config->item('base_url_other').'/login/index';
+			return view('header_view') . view('logged_out') . view('footer_view');
+		} catch (\Exception $e) {
+			throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+		}
 	}
-	catch (\Exception $e) {
-		throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);	}
+	public function unauthorized()
+	{ // First Check if the user is logged in or not
+		//$data['userID'] = $this->input->get('email');  
+		return view('header_view') . view('unauthorized_view') . view('footer_view');
 	}
 }

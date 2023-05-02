@@ -57,6 +57,32 @@ class MasterOrganizationModel extends Model
         
     }
 
+    public function getOrgList($limit, $offset, $search, $orderBy, $orderDir) {
+        try{
+            $builder = $this->db->table('master_organization');
+            $builder->select('org_name');
+            if ($search != '') {
+
+                $builder->like('org_name', strtolower($search));
+                $builder->orLike('org_name', strtoupper($search));
+                $builder->orLike('org_name', ucfirst($search));
+            }
+
+            $builder->orderBy((int) $orderBy + 1, $orderDir);
+            if ($limit != -1)
+                $builder->limit($limit, $offset);
+            $query = $builder->get();
+            
+           // echo $org_id,json_encode($query);
+           
+
+            return $query;
+        }
+        
+        catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        } 
+    }
     
 }
 

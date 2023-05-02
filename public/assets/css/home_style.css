@@ -18,6 +18,10 @@ body {
     background-color: #f7f8f9;
 }
 
+.required:after {
+    content:" *";
+    color: red;
+}
 .lbl-reporttype {
     font-family: Lato;
     font-weight: 600;

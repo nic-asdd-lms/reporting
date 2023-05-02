@@ -66,6 +66,7 @@
                 }
 
                 $('#tbl-result').DataTable({
+                    autoWidth: true,
                     processing: true,
                     serverSide: true,
                     ajax: '<?php echo base_url('/getReport') ?>' + '/' + reportType,

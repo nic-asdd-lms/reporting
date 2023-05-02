@@ -109,6 +109,32 @@ class MasterStructureModel extends Model
       
     }
 
+    public function getHierarchy($ministry,$limit, $offset, $search, $orderBy, $orderDir) {
+      try {
+        $builder =$this->db->table('master_org_hierarchy');
+        $builder->select('dept_name, org_name');
+        $builder->where('ms_id',$ministry);
+        if ($search != '') {
+          $builder->where("(org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%'
+          OR dept_name LIKE '%" . strtolower($search) . "%' OR dept_name LIKE '%" . strtoupper($search) . "%' OR dept_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
+
+          
+      }
+
+      $builder->orderBy((int) $orderBy + 1, $orderDir);
+      if ($limit != -1)
+          $builder->limit($limit, $offset);
+      $builder->distinct();
+        
+        return $builder->get();
+      }
+      catch (\Exception $e) {
+          throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+      } 
+     
+      
+    }
+
 
 }
 ?>
