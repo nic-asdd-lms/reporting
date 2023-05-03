@@ -55,10 +55,9 @@ class Home extends BaseController
 
             if ($this->request->getVar('action')) {
                 $action = $this->request->getVar('action');
-
+                    
                 if ($action == 'get_ministry') {
                     $ministryModel = new MasterStructureModel();
-
                     if ($this->request->getVar('ms') == 'ministry') {
                         $msdata = $ministryModel->getMinistry();
                     } else if ($this->request->getVar('ms') == 'state') {
@@ -73,6 +72,11 @@ class Home extends BaseController
                 } else if ($action == 'get_org') {
                     $orgModel = new MasterStructureModel();
                     $orgdata = $orgModel->getOrganisation($this->request->getVar('dept'));
+
+                    echo json_encode($orgdata);
+                } else if ($action == 'get_orgname') {
+                    $orgModel = new MasterOrganizationModel();
+                    $orgdata = $orgModel->getOrgName($this->request->getVar('org'));
 
                     echo json_encode($orgdata);
                 } else if ($action == 'get_course') {
@@ -103,7 +107,7 @@ class Home extends BaseController
                 }
             }
         } catch (\Exception $e) {
-            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+            return view('header_view') . view('error_general').view('footer_view');
         }
 
     }

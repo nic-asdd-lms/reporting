@@ -184,3 +184,11 @@ label {
     display: grid;
     padding: 30px;
 }
+
+.error {
+    font-weight: 400;
+    vertical-align: middle;
+    font-size:18px;
+    font-family: Lato;
+    color: red;
+}

@@ -34,260 +34,273 @@ class Report extends BaseController
     }
 
 
-    
+
     public function getReport()
     {
 
-        $request = $this->request->getVar();
-        $limit = (int) $request['length'];
-        $offset = (int) $request['start'];
-        $search = $request['search']['value'];
-        $orderBy = $request['order'][0]['column'];
-        $orderDir = $request['order'][0]['dir'];
-
-        $session = \Config\Services::session();
-        $user = new MasterUserModel();
-        $enrolment = new UserEnrolmentCourse();
-        $enrolmentProgram = new UserEnrolmentProgram();
-        $org_hierarchy = new MasterStructureModel();
-        $lastUpdate = new DataUpdateModel();
-        $orgModel = new MasterOrganizationModel();
-        $course = new MasterCourseModel();
-
-        $reportType = $this->request->uri->getSegments()[1];
-
-
-        // Set report-specific inputs
-        if ($reportType == 'mdoUserList' || $reportType == 'moUserCount' || $reportType == 'mdoUserEnrolment' || $reportType == 'ministryUserEnrolment' || $reportType == 'userWiseCount') {
-            $ministry = $session->getTempdata('ministry');
-            $dept = $session->getTempdata('dept');
-            $org = $session->getTempdata('org');
-
-            if ($ministry != "notSelected") {
-                $ministryName = $org_hierarchy->getMinistryStateName($ministry);
-            }
-            if ($dept != "notSelected") {
-                $deptName = $org_hierarchy->getDeptName($dept);
-
-            }
-
-            if ($org != "notSelected") {
-                $orgName = $orgModel->getOrgName($org);
-
-            } else if ($dept != "notSelected") {
-                $org = $dept;
-                $orgName = $org_hierarchy->getDeptName($dept);
-            } else if ($ministry != "notSelected") {
-                $org = $ministry;
-                $orgName = $org_hierarchy->getMinistryStateName($ministry);
-            }
-        } else if ($reportType == 'courseEnrolmentReport' || $reportType == 'courseEnrolmentCount' || $reportType == 'collectionEnrolmentCount' || $reportType == 'programEnrolmentReport' || $reportType == 'programEnrolmentCount' || $reportType == 'collectionEnrolmentReport' || $reportType == 'courseMinistrySummary') {
-            $course = $session->getTempdata('course');
-            if ($session->get('role') == 'MDO_ADMIN') {
-                $org = $session->get('organisation');
-            } else
-                $org = '';
-
-        } else if ($reportType == 'roleWiseCount' || $reportType == 'monthWiseMDOAdminCount' || $reportType == 'cbpAdminList' || $reportType == 'mdoAdminList' || $reportType == 'creatorList' || $reportType == 'reviewerList' || $reportType == 'publisherList' || $reportType == 'editorList' || $reportType == 'fracAdminList' || $reportType == 'fracCompetencyMember' || $reportType == 'fracL1List' || $reportType == 'fracL2List' || $reportType == 'ifuMemberList' || $reportType == 'publicList' || $reportType == 'spvAdminList' || $reportType == 'stateAdminList' || $reportType == 'watMemberList') {
-            if ($session->get('role') == 'MDO_ADMIN') {
-                $org = $session->get('organisation');
-                $orgName = $orgModel->getOrgName($org);
-            } else {
-                $org = '';
-                $orgName = '';
-            }
-
-        }else if ($reportType == 'orgHierarchy' ) {
-            if ($session->get('role') == 'MDO_ADMIN') {
-                $ministry = $session->get('organisation');
-            } else
+        try
+        {
+            $request = $this->request->getVar();
+            $limit = (int) $request['length'];
+            $offset = (int) $request['start'];
+            $search = $request['search']['value'];
+            $orderBy = $request['order'][0]['column'];
+            $orderDir = $request['order'][0]['dir'];
+    
+            $session = \Config\Services::session();
+            $user = new MasterUserModel();
+            $enrolment = new UserEnrolmentCourse();
+            $enrolmentProgram = new UserEnrolmentProgram();
+            $org_hierarchy = new MasterStructureModel();
+            $lastUpdate = new DataUpdateModel();
+            $orgModel = new MasterOrganizationModel();
+            $course = new MasterCourseModel();
+    
+            $reportType = $this->request->uri->getSegments()[1];
+    
+    
+            // Set report-specific inputs
+            if ($reportType == 'mdoUserList' || $reportType == 'moUserCount' || $reportType == 'mdoUserEnrolment' || $reportType == 'ministryUserEnrolment' || $reportType == 'userWiseCount') {
                 $ministry = $session->getTempdata('ministry');
-
-        } 
-
-
-        if ($reportType == 'mdoUserList') {
-            $result = $user->getUserByOrg($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $user->getUserByOrg($orgName, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $user->getUserByOrg($orgName, -1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'mdoUserCount') {
-            $result = $user->getUserCountByOrg($limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $user->getUserCountByOrg(-1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $user->getUserCountByOrg(-1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'mdoUserEnrolment') {
-            $result = $enrolment->getEnrolmentByOrg($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $enrolment->getEnrolmentByOrg($orgName, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $enrolment->getEnrolmentByOrg($orgName, -1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'ministryUserEnrolment') {
-            $result = $user->getUserByMinistry($ministryName, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $user->getUserByMinistry($ministryName, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $user->getUserByMinistry($ministryName, -1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'userWiseCount') {
-            $result = $enrolment->getUserEnrolmentCountByMDO($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $enrolment->getUserEnrolmentCountByMDO($orgName, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $enrolment->getUserEnrolmentCountByMDO($orgName, -1, 0, $search, $orderBy, $orderDir);
-        } else if ($reportType == 'orgList') {
-            $result = $orgModel->getOrgList($limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $orgModel->getOrgList( -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $orgModel->getOrgList( -1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'orgHierarchy') {
-            $result = $org_hierarchy->getHierarchy($ministry, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $org_hierarchy->getHierarchy($ministry, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $org_hierarchy->getHierarchy($ministry, -1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'courseEnrolmentReport') {
-            $result = $enrolment->getCourseWiseEnrolmentReport($course, $org, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $enrolment->getCourseWiseEnrolmentReport($course, $org, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $enrolment->getCourseWiseEnrolmentReport($course, $org, -1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'courseEnrolmentCount') {
-            $result = $enrolment->getCourseWiseEnrolmentCount($org, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $enrolment->getCourseWiseEnrolmentCount($org, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $enrolment->getCourseWiseEnrolmentCount($org, -1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'programEnrolmentReport') {
-            $result = $enrolmentProgram->getProgramWiseEnrolmentReport($course, $org, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $enrolmentProgram->getProgramWiseEnrolmentReport($course, $org, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $enrolmentProgram->getProgramWiseEnrolmentReport($course, $org, -1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'programEnrolmentCount') {
-            $result = $enrolmentProgram->getProgramWiseEnrolmentCount($org, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $enrolmentProgram->getProgramWiseEnrolmentCount($org, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $enrolmentProgram->getProgramWiseEnrolmentCount($org, -1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'collectionEnrolmentReport') {
-            $result = $enrolment->getCollectionWiseEnrolmentReport($course, $org, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $enrolment->getCollectionWiseEnrolmentReport($course, $org, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $enrolment->getCollectionWiseEnrolmentReport($course, $org, -1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'collectionEnrolmentCount') {
-            $result = $enrolment->getCollectionWiseEnrolmentCount($course, $org, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $enrolment->getCollectionWiseEnrolmentCount($course, $org, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $enrolment->getCollectionWiseEnrolmentCount($course, $org, -1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'courseMinistrySummary') {
-            $result = $enrolment->getUserEnrolmentCountByMDO($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $enrolment->getUserEnrolmentCountByMDO($orgName, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $enrolment->getUserEnrolmentCountByMDO($orgName, -1, 0, $search, $orderBy, $orderDir);
-        } else if ($reportType == 'roleWiseCount') {
-            $result = $user->getRoleWiseCount($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $user->getRoleWiseCount($orgName, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $user->getRoleWiseCount($orgName, -1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'monthWiseMDOAdminCount') {
-            $result = $user->getMonthWiseMDOAdminCount($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $user->getMonthWiseMDOAdminCount($orgName, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $user->getMonthWiseMDOAdminCount($orgName, -1, 0, $search, $orderBy, $orderDir);
-        } else if ($reportType == 'cbpAdminList') {
-            $result = $user->getCBPAdminList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $user->getCBPAdminList($orgName, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $user->getCBPAdminList($orgName, -1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'mdoAdminList') {
-            $result = $user->getMDOAdminList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $user->getMDOAdminList($orgName, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $user->getMDOAdminList($orgName, -1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'creatorList') {
-            $result = $user->getCreatorList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $user->getCreatorList($orgName, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $user->getCreatorList($orgName, -1, 0, $search, $orderBy, $orderDir);
-        } else if ($reportType == 'reviewerList') {
-            $result = $user->getReviewerList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $user->getReviewerList($orgName, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $user->getReviewerList($orgName, -1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'publisherList') {
-            $result = $user->getPublisherList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $user->getPublisherList($orgName, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $user->getPublisherList($orgName, -1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'editorList') {
-            $result = $user->getEditorList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $user->getEditorList($orgName, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $user->getEditorList($orgName, -1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'fracAdminList') {
-            $result = $user->getFracAdminList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $user->getFracAdminList($orgName, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $user->getFracAdminList($orgName, -1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'fracCompetencyMember') {
-            $result = $user->getFracCompetencyMemberList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $user->getFracCompetencyMemberList($orgName, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $user->getFracCompetencyMemberList($orgName, -1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'fracL1List') {
-            $result = $user->getFRACL1List($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $user->getFRACL1List($orgName, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $user->getFRACL1List($orgName, -1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'fracL2List') {
-            $result = $user->getFRACL2List($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $user->getFRACL2List($orgName, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $user->getFRACL2List($orgName, -1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'ifuMemberList') {
-            $result = $user->getIFUMemberList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $user->getIFUMemberList($orgName, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $user->getIFUMemberList($orgName, -1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'publicList') {
-            $result = $user->getPublicList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $user->getPublicList($orgName, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $user->getPublicList($orgName, -1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'spvAdminList') {
-            $result = $user->getSPVAdminList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $user->getRoleWigetSPVAdminListseCount($orgName, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $user->getSPVAdminList($orgName, -1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'stateAdminList') {
-            $result = $user->getStateAdminList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $user->getStateAdminList($orgName, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $user->getStateAdminList($orgName, -1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'watMemberList') {
-            $result = $user->getWATMemberList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $user->getWATMemberList($orgName, -1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $user->getWATMemberList($orgName, -1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'dayWiseUserOnboarding') {
-            $result = $user->getDayWiseUserOnboarding($limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $user->getDayWiseUserOnboarding(-1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $user->getDayWiseUserOnboarding(-1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'monthWiseUserOnboarding') {
-            $result = $user->getMonthWiseUserOnboarding($limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $user->getMonthWiseUserOnboarding(-1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $user->getMonthWiseUserOnboarding(-1, 0, $search, $orderBy, $orderDir);
-
-        } else if ($reportType == 'monthWiseCourses') {
-            $result = $course->getMonthWiseCourses($limit, $offset, $search, $orderBy, $orderDir);
-            $fullResult = $course->getMonthWiseCourses(-1, 0, '', $orderBy, $orderDir);
-            $resultFiltered = $course->getMonthWiseCourses(-1, 0, $search, $orderBy, $orderDir);
-
+                $dept = $session->getTempdata('dept');
+                $org = $session->getTempdata('org');
+    
+                if ($ministry != "notSelected") {
+                    $ministryName = $org_hierarchy->getMinistryStateName($ministry);
+                }
+                if ($dept != "notSelected") {
+                    $deptName = $org_hierarchy->getDeptName($dept);
+    
+                }
+    
+                if ($org != "notSelected") {
+                    $orgName = $orgModel->getOrgName($org)->org_name;
+    
+                } else if ($dept != "notSelected") {
+                    $org = $dept;
+                    $orgName = $org_hierarchy->getDeptName($dept);
+                } else if ($ministry != "notSelected") {
+                    $org = $ministry;
+                    $orgName = $org_hierarchy->getMinistryStateName($ministry);
+                }
+            } else if ($reportType == 'courseEnrolmentReport' || $reportType == 'courseEnrolmentCount' || $reportType == 'collectionEnrolmentCount' || $reportType == 'programEnrolmentReport' || $reportType == 'programEnrolmentCount' || $reportType == 'collectionEnrolmentReport' || $reportType == 'courseMinistrySummary') {
+                $course = $session->getTempdata('course');
+                if ($session->get('role') == 'MDO_ADMIN') {
+                    $org = $session->get('organisation');
+                } else
+                    $org = '';
+    
+            } else if ($reportType == 'roleWiseCount' || $reportType == 'monthWiseMDOAdminCount' || $reportType == 'cbpAdminList' || $reportType == 'mdoAdminList' || $reportType == 'creatorList' || $reportType == 'reviewerList' || $reportType == 'publisherList' || $reportType == 'editorList' || $reportType == 'fracAdminList' || $reportType == 'fracCompetencyMember' || $reportType == 'fracL1List' || $reportType == 'fracL2List' || $reportType == 'ifuMemberList' || $reportType == 'publicList' || $reportType == 'spvAdminList' || $reportType == 'stateAdminList' || $reportType == 'watMemberList') {
+                if ($session->get('role') == 'MDO_ADMIN') {
+                    $org = $session->get('organisation');
+                    $orgName = $orgModel->getOrgName($org)->org_name;
+                } else {
+                    $org = '';
+                    $orgName = '';
+                }
+    
+            } else if ($reportType == 'orgHierarchy') {
+                if ($session->get('role') == 'MDO_ADMIN') {
+                    $ministry = $session->get('organisation');
+                } else
+                    $ministry = $session->getTempdata('ministry');
+    
+            }
+    
+    
+            if ($reportType == 'mdoUserList') {
+                $result = $user->getUserByOrg($orgName, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $user->getUserByOrg($orgName, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $user->getUserByOrg($orgName, -1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'mdoUserCount') {
+                $result = $user->getUserCountByOrg($limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $user->getUserCountByOrg(-1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $user->getUserCountByOrg(-1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'mdoUserEnrolment') {
+                $result = $enrolment->getEnrolmentByOrg($orgName, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $enrolment->getEnrolmentByOrg($orgName, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $enrolment->getEnrolmentByOrg($orgName, -1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'ministryUserEnrolment') {
+                $result = $user->getUserByMinistry($ministryName, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $user->getUserByMinistry($ministryName, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $user->getUserByMinistry($ministryName, -1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'userWiseCount') {
+                $result = $enrolment->getUserEnrolmentCountByMDO($orgName, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $enrolment->getUserEnrolmentCountByMDO($orgName, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $enrolment->getUserEnrolmentCountByMDO($orgName, -1, 0, $search, $orderBy, $orderDir);
+            } else if ($reportType == 'orgList') {
+                $result = $orgModel->getOrgList($limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $orgModel->getOrgList(-1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $orgModel->getOrgList(-1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'orgHierarchy') {
+                $result = $org_hierarchy->getHierarchy($ministry, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $org_hierarchy->getHierarchy($ministry, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $org_hierarchy->getHierarchy($ministry, -1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'courseEnrolmentReport') {
+                $result = $enrolment->getCourseWiseEnrolmentReport($course, $org, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $enrolment->getCourseWiseEnrolmentReport($course, $org, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $enrolment->getCourseWiseEnrolmentReport($course, $org, -1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'courseEnrolmentCount') {
+                $result = $enrolment->getCourseWiseEnrolmentCount($org, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $enrolment->getCourseWiseEnrolmentCount($org, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $enrolment->getCourseWiseEnrolmentCount($org, -1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'programEnrolmentReport') {
+                $result = $enrolmentProgram->getProgramWiseEnrolmentReport($course, $org, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $enrolmentProgram->getProgramWiseEnrolmentReport($course, $org, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $enrolmentProgram->getProgramWiseEnrolmentReport($course, $org, -1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'programEnrolmentCount') {
+                $result = $enrolmentProgram->getProgramWiseEnrolmentCount($org, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $enrolmentProgram->getProgramWiseEnrolmentCount($org, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $enrolmentProgram->getProgramWiseEnrolmentCount($org, -1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'collectionEnrolmentReport') {
+                $result = $enrolment->getCollectionWiseEnrolmentReport($course, $org, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $enrolment->getCollectionWiseEnrolmentReport($course, $org, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $enrolment->getCollectionWiseEnrolmentReport($course, $org, -1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'collectionEnrolmentCount') {
+                $result = $enrolment->getCollectionWiseEnrolmentCount($course, $org, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $enrolment->getCollectionWiseEnrolmentCount($course, $org, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $enrolment->getCollectionWiseEnrolmentCount($course, $org, -1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'courseMinistrySummary') {
+                $result = $enrolment->getUserEnrolmentCountByMDO($orgName, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $enrolment->getUserEnrolmentCountByMDO($orgName, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $enrolment->getUserEnrolmentCountByMDO($orgName, -1, 0, $search, $orderBy, $orderDir);
+            } else if ($reportType == 'roleWiseCount') {
+                $result = $user->getRoleWiseCount($orgName, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $user->getRoleWiseCount($orgName, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $user->getRoleWiseCount($orgName, -1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'monthWiseMDOAdminCount') {
+                $result = $user->getMonthWiseMDOAdminCount($orgName, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $user->getMonthWiseMDOAdminCount($orgName, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $user->getMonthWiseMDOAdminCount($orgName, -1, 0, $search, $orderBy, $orderDir);
+            } else if ($reportType == 'cbpAdminList') {
+                $result = $user->getCBPAdminList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $user->getCBPAdminList($orgName, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $user->getCBPAdminList($orgName, -1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'mdoAdminList') {
+                $result = $user->getMDOAdminList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $user->getMDOAdminList($orgName, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $user->getMDOAdminList($orgName, -1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'creatorList') {
+                $result = $user->getCreatorList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $user->getCreatorList($orgName, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $user->getCreatorList($orgName, -1, 0, $search, $orderBy, $orderDir);
+            } else if ($reportType == 'reviewerList') {
+                $result = $user->getReviewerList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $user->getReviewerList($orgName, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $user->getReviewerList($orgName, -1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'publisherList') {
+                $result = $user->getPublisherList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $user->getPublisherList($orgName, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $user->getPublisherList($orgName, -1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'editorList') {
+                $result = $user->getEditorList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $user->getEditorList($orgName, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $user->getEditorList($orgName, -1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'fracAdminList') {
+                $result = $user->getFracAdminList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $user->getFracAdminList($orgName, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $user->getFracAdminList($orgName, -1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'fracCompetencyMember') {
+                $result = $user->getFracCompetencyMemberList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $user->getFracCompetencyMemberList($orgName, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $user->getFracCompetencyMemberList($orgName, -1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'fracL1List') {
+                $result = $user->getFRACL1List($orgName, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $user->getFRACL1List($orgName, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $user->getFRACL1List($orgName, -1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'fracL2List') {
+                $result = $user->getFRACL2List($orgName, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $user->getFRACL2List($orgName, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $user->getFRACL2List($orgName, -1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'ifuMemberList') {
+                $result = $user->getIFUMemberList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $user->getIFUMemberList($orgName, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $user->getIFUMemberList($orgName, -1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'publicList') {
+                $result = $user->getPublicList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $user->getPublicList($orgName, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $user->getPublicList($orgName, -1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'spvAdminList') {
+                $result = $user->getSPVAdminList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $user->getRoleWigetSPVAdminListseCount($orgName, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $user->getSPVAdminList($orgName, -1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'stateAdminList') {
+                $result = $user->getStateAdminList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $user->getStateAdminList($orgName, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $user->getStateAdminList($orgName, -1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'watMemberList') {
+                $result = $user->getWATMemberList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $user->getWATMemberList($orgName, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $user->getWATMemberList($orgName, -1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'dayWiseUserOnboarding') {
+                $result = $user->getDayWiseUserOnboarding($limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $user->getDayWiseUserOnboarding(-1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $user->getDayWiseUserOnboarding(-1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'monthWiseUserOnboarding') {
+                $result = $user->getMonthWiseUserOnboarding($limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $user->getMonthWiseUserOnboarding(-1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $user->getMonthWiseUserOnboarding(-1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'monthWiseCourses') {
+                $result = $course->getMonthWiseCourses($limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $course->getMonthWiseCourses(-1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $course->getMonthWiseCourses(-1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'atiWiseOverview') {
+                $result = $enrolmentProgram->getATIWiseCount($limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $enrolmentProgram->getATIWiseCount(-1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $enrolmentProgram->getATIWiseCount(-1, 0, $search, $orderBy, $orderDir);
+    
+            }
+    
+            $session->remove('resultArray');
+            $session->remove('filteredResultArray');
+    
+            $session->setTempdata('resultArray', $fullResult->getResultArray(), 300);
+            $session->setTempdata('filteredResultArray', $resultFiltered->getResultArray(), 300);
+    
+            $response = array(
+                "draw" => intval($request['draw']),
+                "recordsTotal" => $fullResult->getNumRows(),
+                "recordsFiltered" => $resultFiltered->getNumRows(),
+                "data" => $result->getResultArray()
+            );
+    
+            return $this->response->setJSON($response);
         }
-
-        $session->remove('resultArray');
-        $session->remove('filteredResultArray');
+        catch (\Exception $e) {
+			// throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+			return view('header_view') . view('error_general').view('footer_view');
+		}
         
-        $session->setTempdata('resultArray', $fullResult->getResultArray(), 300);
-        $session->setTempdata('filteredResultArray', $resultFiltered->getResultArray(), 300);
-        // print_r($session->getTempdata('filteredResultArray'));die;
-        $response = array(
-            "draw" => intval($request['draw']),
-            "recordsTotal" => $fullResult->getNumRows(),
-            "recordsFiltered" => $resultFiltered->getNumRows(),
-            "data" => $result->getResultArray()
-        );
-
-        return $this->response->setJSON($response);
 
     }
     public function getMDOReport()
@@ -299,7 +312,7 @@ class Report extends BaseController
             $table->setTemplate($GLOBALS['tableTemplate']);
 
             $segments = $request->uri->getSegments();
-            //echo json_encode($segments);
+
             $reportType = $request->getPost('mdoReportType') ? $request->getPost('mdoReportType') : $segments[1];
 
 
@@ -318,120 +331,121 @@ class Report extends BaseController
             $orgModel = new MasterOrganizationModel();
 
 
-            if ($reportType == 'notSelected') {
-                echo '<script>alert("Please select report type!");</script>';
-                return view('header_view')
-                    . view('footer_view');
-            } else {
-                $data['lastUpdated'] = '[Report as on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
+            $data['lastUpdated'] = '[Report as on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
 
-                if ($role == 'SPV_ADMIN') {
-                    $ministry = $request->getPost('ministry') ? $request->getPost('ministry') : $session->setTempdata('ministry');
-                    $dept = $request->getPost('dept') ? $request->getPost('dept') : $session->setTempdata('dept');
-                    $org = $request->getPost('org') ? $request->getPost('org') : $session->setTempdata('org');
-                } else if ($role == 'MDO_ADMIN') {
-                    $ministry = $session->get('ministry');
-                    $dept = $session->get('department');
-                    $org = $session->get('organisation');
-                }
+            if ($role == 'SPV_ADMIN') { // SPV_ADMIN => ministry, department, organisation = values selected from dropdown
 
-                if ($ministry != "notSelected") {
-                    $ministryName = $org_hierarchy->getMinistryStateName($ministry);
-                }
-                if ($dept != "notSelected") {
-                    $deptName = $org_hierarchy->getDeptName($dept);
+                $ministry = $request->getPost('ministry') ? $request->getPost('ministry') : $session->setTempdata('ministry');
+                $dept = $request->getPost('dept') ? $request->getPost('dept') : $session->setTempdata('dept');
+                $org = $request->getPost('org') ? $request->getPost('org') : $session->setTempdata('org');
 
-                }
+            } else if ($role == 'MDO_ADMIN') { // MDO_ADMIN => ministry, department, organisation = values from session (MDO of the particular user)
 
-                if ($org != "notSelected") {
-                    $orgName = $orgModel->getOrgName($org);
-                    if ($orgName == null) {
-                        return view('header_view')
-
-                            . view('footer_view');
-                    }
-
-                } else if ($dept != "notSelected") {
-                    $org = $dept;
-                    $orgName = $org_hierarchy->getDeptName($dept);
-                } else if ($ministry != "notSelected") {
-                    $org = $ministry;
-                    $orgName = $org_hierarchy->getMinistryStateName($ministry);
-                }
-
-                if ($reportType == 'mdoUserList') {
-                    $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Contact No.', 'Created Date', 'Roles', 'Profile Update Status');
-
-                    $session->setTempdata('fileName', $orgName . '_UserList', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Users onboarded from organisation - "' . $orgName . '"';
-
-                } else if ($reportType == 'mdoUserCount') {
-                    $table->setHeading('Organisation', 'User Count');
-
-                    $session->setTempdata('fileName', 'MDOWiseUserCount', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'MDO-wise user count ';
-
-                } else if ($reportType == 'mdoUserEnrolment') {
-                    $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Course', 'Status', 'Completion Percentage', 'Completed On');
-
-                    $session->setTempdata('fileName', $orgName . '_UserEnrolmentReport', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Users Enrolment Report for organisation - "' . $orgName . '"';
-
-                } else if ($reportType == 'ministryUserEnrolment') {
-                    $table->setHeading('Name', 'Email', 'Ministry', 'Department', 'Organization', 'Designation', 'Contact No.', 'Created Date', 'Roles');
-
-                    $session->setTempdata('fileName', $ministryName . '_UserList', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Users list for all organisations under ministry/state - "' . $ministryName . '"';
-
-                } else if ($reportType == 'userWiseCount') {
-
-                    $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Course', 'Status', 'Completion Percentage', 'Completed On');
-
-                    $session->setTempdata('fileName', $orgName . '_UserList', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'User-wise course enrolment/completion count for organisation - "' . $orgName . '"';
-
-                } else if ($reportType == 'orgList') {
-
-                    $table->setHeading('Organisation');
-
-                    $session->setTempdata('fileName', 'OrgList', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Organisations Onboarded';
-
-                } else if ($reportType == 'orgHierarchy') {
-
-                    $table->setHeading('Department',  'Organisation');
-
-                    $session->setTempdata('fileName', $ministryName . '_Hierarchy', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Organisation Hierarchy - "'.$ministryName. '"';
-
-                }
-                $data['reportType'] = $reportType;
-                $data['ministry'] = $ministry;
-                $data['dept'] = $dept;
-                $data['org'] = $org;
-
-                //return $this->response->setJSON($data);
-                return view('header_view')
-                    . view('report_result', $data)
-                    . view('footer_view');
+                $ministry = $session->get('ministry');
+                $dept = $session->get('department');
+                $org = $session->get('organisation');
             }
+
+            if ($ministry != "notSelected") {
+                $ministryName = $org_hierarchy->getMinistryStateName($ministry);
+            }
+            if ($dept != "notSelected") {
+                $deptName = $org_hierarchy->getDeptName($dept);
+
+            }
+
+
+            /*  For reports 'MDO-wise User List' and 'MDO-wise user Enrolment', only Ministry/State name is mandatory. Set orgName accordingly.
+                If org is not selected, org = dept. If dept is also not selected, org = ministry */
+
+            if ($org != "notSelected") {
+                $orgName = $orgModel->getOrgName($org)->org_name;
+                
+            } else if ($dept != "notSelected") {
+                $org = $dept;
+                $orgName = $orgModel->getOrgName($dept)->org_name;
+            } else if ($ministry != "notSelected") {
+                $org = $ministry;
+                $orgName = $orgModel->getOrgName($ministry)->org_name;
+            }
+
+
+            /* Set table header, filename and report tilte based on report type */
+
+            if ($reportType == 'mdoUserList') {
+                $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Contact No.', 'Created Date', 'Roles', 'Profile Update Status');
+
+                $session->setTempdata('fileName', $orgName . '_UserList', 300);
+
+                $data['resultHTML'] = $table->generate();
+                $data['reportTitle'] = 'Users onboarded from organisation - "' . $orgName . '"';
+
+            } else if ($reportType == 'mdoUserCount') {
+                $table->setHeading('Organisation', 'User Count');
+
+                $session->setTempdata('fileName', 'MDOWiseUserCount', 300);
+
+                $data['resultHTML'] = $table->generate();
+                $data['reportTitle'] = 'MDO-wise user count ';
+
+            } else if ($reportType == 'mdoUserEnrolment') {
+                $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Course', 'Status', 'Completion Percentage', 'Completed On');
+
+                $session->setTempdata('fileName', $orgName . '_UserEnrolmentReport', 300);
+
+                $data['resultHTML'] = $table->generate();
+                $data['reportTitle'] = 'Users Enrolment Report for organisation - "' . $orgName . '"';
+
+            } else if ($reportType == 'ministryUserEnrolment') {
+                $table->setHeading('Name', 'Email', 'Ministry', 'Department', 'Organization', 'Designation', 'Contact No.', 'Created Date', 'Roles');
+
+                $session->setTempdata('fileName', $ministryName . '_UserList', 300);
+
+                $data['resultHTML'] = $table->generate();
+                $data['reportTitle'] = 'Users list for all organisations under ministry/state - "' . $ministryName . '"';
+
+            } else if ($reportType == 'userWiseCount') {
+
+                $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Course', 'Status', 'Completion Percentage', 'Completed On');
+
+                $session->setTempdata('fileName', $orgName . '_UserList', 300);
+
+                $data['resultHTML'] = $table->generate();
+                $data['reportTitle'] = 'User-wise course enrolment/completion count for organisation - "' . $orgName . '"';
+
+            } else if ($reportType == 'orgList') {
+
+                $table->setHeading('Organisation');
+
+                $session->setTempdata('fileName', 'OrgList', 300);
+
+                $data['resultHTML'] = $table->generate();
+                $data['reportTitle'] = 'Organisations Onboarded';
+
+            } else if ($reportType == 'orgHierarchy') {
+
+                $table->setHeading('Department', 'Organisation');
+
+                $session->setTempdata('fileName', $ministryName . '_Hierarchy', 300);
+
+                $data['resultHTML'] = $table->generate();
+                $data['reportTitle'] = 'Organisation Hierarchy - "' . $ministryName . '"';
+
+            }
+
+            $data['reportType'] = $reportType;
+            $data['ministry'] = $ministry;
+            $data['dept'] = $dept;
+            $data['org'] = $org;
+
+            return view('header_view')
+                . view('report_result', $data)
+                . view('footer_view');
+
         } catch (\Exception $e) {
-            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
-        }
+			// throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+			return view('header_view') . view('error_general').view('footer_view');
+		}
 
     }
 
@@ -540,8 +554,9 @@ class Report extends BaseController
                     . view('footer_view');
             }
         } catch (\Exception $e) {
-            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
-        }
+			// throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+			return view('header_view') . view('error_general').view('footer_view');
+		}
     }
 
     public function getRoleReport()
@@ -731,8 +746,9 @@ class Report extends BaseController
                     . view('footer_view');
             }
         } catch (\Exception $e) {
-            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
-        }
+			// throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+			return view('header_view') . view('error_general').view('footer_view');
+		}
 
     }
 
@@ -810,8 +826,9 @@ class Report extends BaseController
                     . view('footer_view');
             }
         } catch (\Exception $e) {
-            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
-        }
+			// throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+			return view('header_view') . view('error_general').view('footer_view');
+		}
 
     }
 
@@ -848,13 +865,9 @@ class Report extends BaseController
                 if ($doptReportType == 'atiWiseOverview') {
                     $table->setHeading('Program Name', 'Institute', 'Enrolled', 'Not Started', 'In Progress', 'Completed');
 
-                    $result = $user->getATIWiseCount();
-
-                    $session->setTempdata('resultArray', $result->getResultArray(), 300);
                     $session->setTempdata('fileName', 'ATI-wise Overview', 300);
 
-                    $data['resultHTML'] = $table->generate($result);
-                    ;
+                    $data['resultHTML'] = $table->generate();
                     $data['reportTitle'] = 'ATI-wise Overview';
                 }
 
@@ -863,8 +876,9 @@ class Report extends BaseController
                     . view('footer_view');
             }
         } catch (\Exception $e) {
-            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
-        }
+			// throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+			return view('header_view') . view('error_general').view('footer_view');
+		}
 
     }
 
@@ -882,8 +896,6 @@ class Report extends BaseController
                 $report = $session->getTempdata('resultArray');
             else if ($filtered == 'true')
                 $report = $session->getTempdata('filteredResultArray');
-
-                // print_r($session->getTempdata('filteredResultArray'));die;
 
             $fileName = $session->getTempdata('fileName') . '.xls';
 
@@ -931,8 +943,9 @@ class Report extends BaseController
 
             die;
         } catch (\Exception $e) {
-            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
-        }
+			// throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+			return view('header_view') . view('error_general').view('footer_view');
+		}
 
 
     }

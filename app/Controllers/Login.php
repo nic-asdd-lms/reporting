@@ -26,33 +26,40 @@ class Login extends BaseController
 			$this->getRoles($_COOKIE['uid']);
 
 		} catch (\Exception $e) {
-			throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+			// throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+			return view('header_view') . view('error_general').view('footer_view');
 		}
 	}
 
 	public function getRoles($userId)
 	{
+		try {
+			$headers[] = "x-authenticated-user-token: " . $_COOKIE['token'];
+			$headers[] = 'Content-Type: application/json';
+			$headers[] = "Authorization: " . $GLOBALS['API_KEY'];
+			// API URL
+			$profileUrl = $GLOBALS['IGOT_URL'] . 'api/user/v2/read/' . $userId;
+			// Create a new cURL resource
+			$ch = curl_init($profileUrl);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			
+			$userInfo = curl_exec($ch);
+	
+			$users = json_decode($userInfo);
+			// Close cURL resource
+			curl_close($ch);
+			
+			$email = $users->result->response->profileDetails->personalDetails->primaryEmail;
+			
+			$this->user_login_process($email);
+		}
+		catch (\Exception $e) {
+			// throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+			return view('header_view') . view('error_general').view('footer_view');
+		}
 		
-		$headers[] = "x-authenticated-user-token: " . $_COOKIE['token'];
-		$headers[] = 'Content-Type: application/json';
-		$headers[] = "Authorization: " . $GLOBALS['API_KEY'];
-		// API URL
-		$profileUrl = $GLOBALS['IGOT_URL'] . 'api/user/v2/read/' . $userId;
-		// Create a new cURL resource
-		$ch = curl_init($profileUrl);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		
-		$userInfo = curl_exec($ch);
-
-		$users = json_decode($userInfo);
-		// Close cURL resource
-		curl_close($ch);
-		
-		$email = $users->result->response->profileDetails->personalDetails->primaryEmail;
-		
-		$this->user_login_process($email);
 		
 
 	}
@@ -145,7 +152,8 @@ class Login extends BaseController
 			}
 
 		} catch (\Exception $e) {
-			throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+			// throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+			return view('header_view') . view('error_general').view('footer_view');
 		}
 
 	}
@@ -189,7 +197,8 @@ class Login extends BaseController
 			//$red = $this->config->item('base_url_other').'/login/index';
 			return view('header_view') . view('logged_out') . view('footer_view');
 		} catch (\Exception $e) {
-			throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+			// throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+			return view('header_view') . view('error_general').view('footer_view');
 		}
 	}
 	public function unauthorized()

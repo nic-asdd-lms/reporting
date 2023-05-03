@@ -27,12 +27,7 @@ class MasterOrganizationModel extends Model
             $query = $builder->get();
             
            // echo $org_id,json_encode($query);
-           if($query->getRow() == null){
-            echo '<script>alert("Organization not yet onboarded!");</script>';
-                return null;
-           }
-
-            return $query->getRow()->org_name;
+            return $query->getRow();
         }
         
         catch (\Exception $e) {

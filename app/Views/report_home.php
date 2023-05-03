@@ -50,9 +50,13 @@
                 {
                     return true;
                 }
-                else if (mdoReportType == 'mdoUserList' || mdoReportType == 'orgHierarchy')                //  Report type 2nd option validation 
+                else if (mdoReportType == 'mdoUserList' || mdoReportType == 'mdoUserEnrolment')                //  Report type 2nd option validation 
                 {
                     var ms = $('#ms_type').val();
+                    var ministry = $('#ministry').val();
+                    var dept = $('#dept').val();
+                    var org = $('#org').val();
+
                     if (ms == 'notSelected') {
                         Swal.fire({
                             title: 'Error!',
@@ -63,7 +67,7 @@
                         return false;
                     }
                     else if (ms == 'ministry') {
-                        var ministry = $('#ministry').val();
+
                         if (ministry == 'notSelected') {
                             Swal.fire({
                                 title: 'Error!',
@@ -73,8 +77,101 @@
                             });
                             return false;
                         }
-                        else {
-                            return true;
+                        else {              // Check whether the selected organisation is onboarded (if onboarded, organisation record will be present in master_organization table)
+                            if (org != 'notSelected') {
+                                var action = 'get_orgname';
+
+                                $.ajax({
+                                    url: "<?php echo base_url('/action'); ?>",
+                                    method: "POST",
+                                    data: {
+                                        org: org,
+                                        action: action
+                                    },
+                                    dataType: "JSON",
+                                    error: function (data) {
+                                        if (data.org_name == null) {
+                                            Swal.fire({
+                                                title: 'Error!',
+                                                text: 'Selected Organisation is not onboarded!',
+                                                icon: 'error',
+                                                confirmButtonText: 'OK'
+                                            });
+                                            return false;
+                                        }
+                                        
+                                    },
+                                    success: function (data) {
+                                        if (data.org_name != null) {
+                                            return true;
+                                        }
+
+                                    }
+
+                                });
+                            }
+                            else if (dept != 'notSelected') {   // if Organisation is not selected, check whether selected Department is onboarded
+                                var action = 'get_orgname';
+
+                                $.ajax({
+                                    url: "<?php echo base_url('/action'); ?>",
+                                    method: "POST",
+                                    data: {
+                                        org: dept,
+                                        action: action
+                                    },
+                                    dataType: "JSON",
+                                    error: function (data) {
+                                        if (data.org_name == null) {
+                                            Swal.fire({
+                                                title: 'Error!',
+                                                text: 'Selected Department is not onboarded!',
+                                                icon: 'error',
+                                                confirmButtonText: 'OK'
+                                            });
+                                            return false;
+                                        }
+
+                                    },
+                                    success: function (data) {
+                                        if (data.org_name != null) {
+                                            return true;
+                                        }
+
+                                    }
+                                });
+                            }
+                            else if (ministry != 'notSelected') {       // If org and dept are not selected, check whether selected Ministry is onboarded
+                                var action = 'get_orgname'; 
+
+                                $.ajax({
+                                    url: "<?php echo base_url('/action'); ?>",
+                                    method: "POST",
+                                    data: {
+                                        org: ministry,
+                                        action: action
+                                    },
+                                    dataType: "JSON",
+                                    error: function (data) {
+                                        if (data.org_name == null) {
+                                            Swal.fire({
+                                                title: 'Error!',
+                                                text: 'Selected Ministry is not onboarded!',
+                                                icon: 'error',
+                                                confirmButtonText: 'OK'
+                                            });
+                                            return false;
+                                        }
+
+                                    },
+                                    success: function (data) {
+                                        if (data.org_name != null) {
+                                            return true;
+                                        }
+
+                                    }
+                                });
+                            }
                         }
                     }
                     else if (ms == 'state') {
@@ -89,11 +186,107 @@
                             return false;
                         }
                         else {
-                            return true;
+                            if (org != 'notSelected') {
+                                var action = 'get_orgname';
+
+                                $.ajax({
+                                    url: "<?php echo base_url('/action'); ?>",
+                                    method: "POST",
+                                    data: {
+                                        org: org,
+                                        action: action
+                                    },
+                                    dataType: "JSON",
+                                    error: function (data) {
+                                        if (data.org_name == null) {
+                                            Swal.fire({
+                                                title: 'Error!',
+                                                text: 'Selected Organisation is not onboarded!',
+                                                icon: 'error',
+                                                confirmButtonText: 'OK'
+                                            });
+                                            return false;
+                                        }
+
+                                    },
+                                    success: function (data) {
+                                        if (data.org_name != null) {
+                                            return true;
+                                        }
+
+                                    }
+
+                                });
+                            }
+                            else if (dept != 'notSelected') {
+                                var action = 'get_orgname';
+
+                                $.ajax({
+                                    url: "<?php echo base_url('/action'); ?>",
+                                    method: "POST",
+                                    data: {
+                                        org: dept,
+                                        action: action
+                                    },
+                                    dataType: "JSON",
+                                    error: function (data) {
+                                        if (data.org_name == null) {
+                                            Swal.fire({
+                                                title: 'Error!',
+                                                text: 'Selected Department is not onboarded!',
+                                                icon: 'error',
+                                                confirmButtonText: 'OK'
+                                            });
+                                            return false;
+                                        }
+
+                                    },
+                                    success: function (data) {
+                                        if (data.org_name != null) {
+                                            return true;
+                                        }
+
+                                    }
+                                });
+                            }
+                            else if (ministry != 'notSelected') {
+                                var action = 'get_orgname';
+
+                                $.ajax({
+                                    url: "<?php echo base_url('/action'); ?>",
+                                    method: "POST",
+                                    data: {
+                                        org: ministry,
+                                        action: action
+                                    },
+                                    dataType: "JSON",
+                                    error: function (data) {
+                                        if (data.org_name == null) {
+                                            Swal.fire({
+                                                title: 'Error!',
+                                                text: 'Selected State is not onboarded!',
+                                                icon: 'error',
+                                                confirmButtonText: 'OK'
+                                            });
+                                            return false;
+                                        }
+
+                                    },
+                                    success: function (data) {
+                                        if (data.org_name != null) {
+                                            return true;
+                                        }
+
+                                    }
+                                });
+                            }
                         }
                     }
+
+
+
                 }
-                else if (mdoReportType == 'mdoUserEnrolment')             //Report type 3rd option validation  
+                else if (mdoReportType == 'orgHierarchy')             //Report type 3rd option validation  
                 {
                     var ms = $('#ms_type').val();
                     if (ms == 'notSelected') {
@@ -700,7 +893,8 @@
             <div id="ATI" class="tabcontent">
 
 
-                <form class="form-horizontal login_form" action="<?php echo base_url('/getAtiReport'); ?>" method="post">
+                <form class="form-horizontal login_form" action="<?php echo base_url('/getAtiReport'); ?>"
+                    method="post">
 
                     <div class="report-type">
                         <label for="doptReportType" class="lbl-reporttype">Report type:</label>
