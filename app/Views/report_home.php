@@ -50,7 +50,7 @@
                 {
                     return true;
                 }
-                else if (mdoReportType == 'mdoUserList')                //  Report type 2nd option validation 
+                else if (mdoReportType == 'mdoUserList' || mdoReportType == 'orgHierarchy')                //  Report type 2nd option validation 
                 {
                     var ms = $('#ms_type').val();
                     if (ms == 'notSelected') {

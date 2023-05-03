@@ -15,4 +15,4 @@
 ## Deployment on server
 1. In `.env` file, change the value of `CI_ENVIRONMENT` to `production`
 1. Update database details in `app/Config/Database.php` 
-
+1. In `app/Config/Constants.php`, update the values `$GLOBALS['IGOT_URL']` and `$GLOBALS['API_KEY']`

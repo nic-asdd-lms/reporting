@@ -15,7 +15,7 @@ class Login extends BaseController
 	public function checkIgotUser()
 	{ // First Check if the user is logged in or not
 		//$data['userID'] = $this->input->get('email');  
-		return view('keyCloakLogin');
+			return view('keyCloakLogin');
 	}
 
 	public function index()
@@ -61,7 +61,6 @@ class Login extends BaseController
 		try {
 
 			$request = service('request');
-
 
 			$user = new UserMasterModel();
 			$result = $user->login($email);
@@ -171,12 +170,13 @@ class Login extends BaseController
 			);
 			$session->remove($sess_array);
 			$_SESSION['logged_in'] = false;
+				
 			if (isset($_COOKIE['token'])) {
 				unset($_COOKIE['uid']);
 				unset($_COOKIE['token']);
 				setcookie('uid', null, -1, '/');
 				setcookie('token', null, -1, '/');
-				return $this->response->redirect(base_url('/logout'));
+				return $this->response->redirect(base_url('/'));
 			}
 			// else {
 			// 	return false;

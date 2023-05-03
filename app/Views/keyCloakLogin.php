@@ -17,9 +17,9 @@
                         var subject = keycloak.subject ; 
                         
                         myarr = subject.split(":");
-                       
                         Cookies.set('uid', myarr[2]);
                         Cookies.set('token',keycloak.token);
+                        //alert(keycloak.token);
                         // Cookies.set('role', 'SPV_ADMIN');
                         //Cookies.set('callback',JSON.stringify(keycloak.tokenParsed.resource_access.php_service.permission));
                         if(authenticated){

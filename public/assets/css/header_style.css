@@ -113,11 +113,12 @@ header .heroe h2 {
     font-size: 1.5rem;
     font-weight: 300;
 }
-.title {
+.header-title {
     font-family: Lato;
-    font-size: 40px;
+    font-size: 36px;
     font-weight: 1000;
     padding: 1rem;
+    
 }
 @media (max-width: 629px) {
     header ul {
@@ -162,10 +163,12 @@ header .heroe h2 {
 }
 .app-title {
     font-family: Lato;
-    font-size: 40px;
+    font-size: 36px;
     font-weight: 1000;
     color: rgb(38, 64, 146);
     vertical-align: middle;
+    font-variant-caps: all-petite-caps;
+    margin:0;
 }
 .div-title {
     font-family: Lato;

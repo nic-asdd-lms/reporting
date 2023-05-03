@@ -48,9 +48,9 @@
 	<div class='row'>
 		<div class='col-md-8 col-md-offset-2 imgcontainer ' >
 			<label class="error" >You are not auhorized to access this page..! </label>
-            <!-- <div>
-                <a href = "/checkIgotUser"> Click here </a> <label> to login with</label>
-</div> -->
+            <div>
+                <a href = "/logout"> Click here </a> <label> to login with valid credentials</label>
+</div>
 		</div>
 	</div>
 </div>

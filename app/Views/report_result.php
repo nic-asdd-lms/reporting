@@ -102,8 +102,9 @@
 <div class="div-button">
             <!-- <label class="subtitle"><?php //echo $lastUpdated ?></label> -->
             <?php
-            echo '<a class="btn btn-success download-button" href="' . base_url('/getExcelReport') . '?filter=false" target="_blank" > Download Full Result </a>';
-            echo '<a class="btn btn-success download-button" href="' . base_url('/getExcelReport') . '?filter=true" target="_blank" > Download Filtered Result </a>';
+            echo '<a class="btn btn-info back-button" href="' . base_url('/home') . '"  > <span class="glyphicon glyphicon-arrow-left"></span> </a>';
+            echo '<a class="btn btn-success download-button" href="' . base_url('/getExcelReport') . '?filter=false" target="_blank" > <span class="glyphicon glyphicon-download-alt"></span> Download Full Result </a>';
+            echo '<a class="btn btn-success download-button" href="' . base_url('/getExcelReport') . '?filter=true" target="_blank" > <span class="glyphicon glyphicon-download-alt"></span> Download Filtered Result </a>';
             
             ?>
 </div>

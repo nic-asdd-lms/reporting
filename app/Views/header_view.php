@@ -27,13 +27,13 @@
     <ul>
         <li class="logo">
         
-            <div class="title">
+            <div class="header-title">
                 <img  src="<?php echo base_url('assets/images/karmayogiLogo.svg');?>" alt="iGOT Reporting"/> 
             </div>
         </li>
         <li class="logo">
         
-            <div class="title">
+            <div class="header-title">
                 <label class="app-title">iGOT REPORTING</label> 
             </div>
         </li>

@@ -34,145 +34,7 @@ class Report extends BaseController
     }
 
 
-    public function getMDOReportClientSide()
-    {
-        try {
-            $request = service('request');
-            $session = \Config\Services::session();
-            $table = new \CodeIgniter\View\Table();
-            $table->setTemplate($GLOBALS['tableTemplate']);
-
-            $mdoReportType = $request->getPost('mdoReportType');
-
-            $role = $session->get('role');
-
-            $home = new Home();
-            $user = new MasterUserModel();
-            $enrolment = new UserEnrolmentCourse();
-            $org_hierarchy = new MasterStructureModel();
-            $lastUpdate = new DataUpdateModel();
-            $orgModel = new MasterOrganizationModel();
-
-            if ($mdoReportType == 'notSelected') {
-                echo '<script>alert("Please select report type!");</script>';
-                return view('header_view')
-                    . view('footer_view');
-            } else {
-                $data['lastUpdated'] = '[Report as on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
-
-                if ($role == 'SPV_ADMIN') {
-                    $ministry = $request->getPost('ministry');
-                    $dept = $request->getPost('dept');
-                    $org = $request->getPost('org');
-                } else if ($role == 'MDO_ADMIN') {
-                    $ministry = $session->get('ministry');
-                    $dept = $session->get('department');
-                    $org = $session->get('organisation');
-                }
-
-                if ($ministry != "notSelected") {
-                    $ministryName = $org_hierarchy->getMinistryStateName($ministry);
-                }
-                if ($dept != "notSelected") {
-                    $deptName = $org_hierarchy->getDeptName($dept);
-
-                }
-
-                if ($org != "notSelected") {
-                    $orgName = $orgModel->getOrgName($org);
-                    if ($orgName == null) {
-                        return view('header_view')
-
-                            . view('footer_view');
-                    }
-
-                } else if ($dept != "notSelected") {
-                    $org = $dept;
-                    $orgName = $org_hierarchy->getDeptName($dept);
-                } else if ($ministry != "notSelected") {
-                    $org = $ministry;
-                    $orgName = $org_hierarchy->getMinistryStateName($ministry);
-                }
-
-                if ($mdoReportType == 'mdoUserList') {
-
-                    if ($ministry == "notSelected") {
-                        echo '<script>alert("Please select ministry!");</script>';
-                        return view('header_view')
-                            . view('footer_view');
-                    } else {
-                        $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Contact No.', 'Created Date', 'Roles', 'Profile Update Status');
-
-                        $result = $user->getUserByOrg($orgName);
-
-                        $session->setTempdata('resultArray', $result->getResultArray(), 300);
-                        $session->setTempdata('fileName', $orgName . '_UserList', 300);
-
-                        $data['resultHTML'] = $table->generate($result);
-                        ;
-                        $data['reportTitle'] = 'Users onboarded from organisation - "' . $orgName . '"';
-
-                    }
-
-                } else
-                    if ($mdoReportType == 'mdoUserCount') {
-                        $table->setHeading('Organisation', 'User Count');
-
-                        $result = $user->getUserCountByOrg();
-
-                        $session->setTempdata('resultArray', $result->getResultArray(), 300);
-                        $session->setTempdata('fileName', 'MDOWiseUserCount', 300);
-
-                        $data['resultHTML'] = $table->generate($result);
-                        ;
-                        $data['reportTitle'] = 'MDO-wise user count ';
-
-                    } else if ($mdoReportType == 'mdoUserEnrolment') {
-                        $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Course', 'Status', 'Completion Percentage', 'Completed On');
-
-                        $result = $enrolment->getEnrolmentByOrg($orgName);
-
-                        $session->setTempdata('resultArray', $result->getResultArray(), 300);
-                        $session->setTempdata('fileName', $orgName . '_UserEnrolmentReport', 300);
-
-                        $data['resultHTML'] = $table->generate($result);
-                        ;
-                        $data['reportTitle'] = 'Users Enrolment Report for organisation - "' . $orgName . '"';
-
-                    } else if ($mdoReportType == 'ministryUserEnrolment') {
-                        $table->setHeading('Name', 'Email', 'Ministry', 'Department', 'Organization', 'Designation', 'Contact No.', 'Created Date', 'Roles');
-
-                        $result = $user->getUserByMinistry($ministryName);
-
-                        $session->setTempdata('resultArray', $result->getResultArray(), 300);
-                        $session->setTempdata('fileName', $ministryName . '_UserList', 300);
-
-                        $data['resultHTML'] = $table->generate($result);
-                        $data['reportTitle'] = 'Users list for all organisations under ministry/state - "' . $ministryName . '"';
-
-                    } else if ($mdoReportType == 'userWiseCount') {
-
-                        $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Course', 'Status', 'Completion Percentage', 'Completed On');
-
-                        $result = $enrolment->getUserEnrolmentCountByMDO($orgName);
-
-                        $session->setTempdata('resultArray', $result->getResultArray(), 300);
-                        $session->setTempdata('fileName', $orgName . '_UserList', 300);
-
-                        $data['resultHTML'] = $table->generate($result);
-                        ;
-                        $data['reportTitle'] = 'User-wise course enrolment/completion count for organisation - "' . $orgName . '"';
-
-                    }
-                return view('header_view')
-                    . view('report_result', $data)
-                    . view('footer_view');
-            }
-        } catch (\Exception $e) {
-            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
-        }
-    }
-
+    
     public function getReport()
     {
 
@@ -412,9 +274,12 @@ class Report extends BaseController
 
         }
 
+        $session->remove('resultArray');
+        $session->remove('filteredResultArray');
+        
         $session->setTempdata('resultArray', $fullResult->getResultArray(), 300);
         $session->setTempdata('filteredResultArray', $resultFiltered->getResultArray(), 300);
-
+        // print_r($session->getTempdata('filteredResultArray'));die;
         $response = array(
             "draw" => intval($request['draw']),
             "recordsTotal" => $fullResult->getNumRows(),
@@ -542,7 +407,7 @@ class Report extends BaseController
                     $session->setTempdata('fileName', 'OrgList', 300);
 
                     $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'MDO List';
+                    $data['reportTitle'] = 'Organisations Onboarded';
 
                 } else if ($reportType == 'orgHierarchy') {
 
@@ -551,7 +416,7 @@ class Report extends BaseController
                     $session->setTempdata('fileName', $ministryName . '_Hierarchy', 300);
 
                     $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Organisation Hierarchy of '.$ministryName;
+                    $data['reportTitle'] = 'Organisation Hierarchy - "'.$ministryName. '"';
 
                 }
                 $data['reportType'] = $reportType;
@@ -1018,6 +883,7 @@ class Report extends BaseController
             else if ($filtered == 'true')
                 $report = $session->getTempdata('filteredResultArray');
 
+                // print_r($session->getTempdata('filteredResultArray'));die;
 
             $fileName = $session->getTempdata('fileName') . '.xls';
 

@@ -44,6 +44,15 @@ h2 {
     margin: 1%;
 }
 
+.back-button {
+    font-family: Lato;
+    float: left;
+    display: block;
+    margin: 1%;
+    margin-left:0;
+    width: 60px;
+}
+
 .div-button {
     margin-right: 5%;
 
