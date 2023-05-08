@@ -2,10 +2,8 @@
 
 namespace Config;
 
-
 // Create a new instance of our RouteCollection class.
 $routes = Services::routes();
-
 /*
  * --------------------------------------------------------------------
  * Router Setup
@@ -21,13 +19,11 @@ $routes->set404Override();
 // If you don't want to define all routes, please use the Auto Routing (Improved).
 // Set `$autoRoutesImproved` to true in `app/Config/Feature.php` and set the following to true.
  $routes->setAutoRoute(true);
-
 /*
  * --------------------------------------------------------------------
  * Route Definitions
  * --------------------------------------------------------------------
  */
-
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/home', 'Home::index');
@@ -56,7 +52,6 @@ $routes->get('/getReport/(:alpha)', 'Report::getReport/$1');
 //$routes->get('/assets/images/karmayogiLogo.svg' , 'assets\images\karmayogiLogo.svg');
 // $routes->resource('/reporting/assets/images',['controller' => 'App\Assets\Images']);
 //$routes->get('/reporting/assets/images/karmayogiLogo.svg' , 'assets\images\karmayogiLogo.svg');
-
 /*
  * --------------------------------------------------------------------
  * Additional Routing
