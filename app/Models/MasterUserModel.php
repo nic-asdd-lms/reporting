@@ -15,6 +15,36 @@ class MasterUserModel extends Model
 
     }
 
+
+    public function getAllUsers( $limit, $offset, $search, $orderBy, $orderDir)
+    {
+        try {
+            $table = new \CodeIgniter\View\Table();
+
+            $builder = $this->db->table('master_user');
+            $builder->select('concat(first_name,\' \',last_name) as name, email, master_organization.org_name, designation, phone,created_date, roles, profile_update_status');
+            $builder->join('master_organization', 'master_organization.root_org_id = master_user.root_org_id');
+            
+            if ($search != '')
+                $builder->where("(first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%'
+                            OR last_name LIKE '%" . strtolower($search) . "%' OR last_name LIKE '%" . strtoupper($search) . "%' OR last_name LIKE '%" . ucfirst($search) . "%'
+                            OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
+                            OR designation LIKE '%" . strtolower($search) . "%' OR designation LIKE '%" . strtoupper($search) . "%' OR designation LIKE '%" . ucfirst($search) . "%'
+                            OR roles LIKE '%" . strtolower($search) . "%' OR roles LIKE '%" . strtoupper($search) . "%' OR roles LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
+
+
+            $builder->orderBy((int) $orderBy + 1, $orderDir);
+            if ($limit != -1)
+                $builder->limit($limit, $offset);
+            $query = $builder->get();
+            // print_r($builder);
+            return $query;
+
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+
+    }
     public function getUserByOrg($org, $limit, $offset, $search, $orderBy, $orderDir)
     {
         try {

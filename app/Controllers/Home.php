@@ -67,12 +67,12 @@ class Home extends BaseController
                 } else if ($action == 'get_dept') {
                     $deptModel = new MasterStructureModel();
                     $deptdata = $deptModel->getDepartment($this->request->getVar('ministry'));
-
+                    
                     echo json_encode($deptdata);
                 } else if ($action == 'get_org') {
                     $orgModel = new MasterStructureModel();
                     $orgdata = $orgModel->getOrganisation($this->request->getVar('dept'));
-
+                    
                     echo json_encode($orgdata);
                 } else if ($action == 'get_orgname') {
                     $orgModel = new MasterOrganizationModel();
@@ -96,15 +96,22 @@ class Home extends BaseController
                     echo json_encode($collectionData);
                 } else if ($action == 'search') {
                     //Search box value assigning to $Name variable.
-                    $search_key = $_GET['term'];
+                    $search_key = $this->request->getVar('search_key');
                     //Search query.
                     $orgModel = new MasterOrganizationModel();
                     $orgdata = $orgModel->searchOrg($search_key);
+                    
+                    echo json_encode($orgdata);
 
                     //Query execution
 
                     //Creating unordered list to display result.
-                }
+                } else if ($action == 'get_hierarchy') {
+                    $orgModel = new MasterStructureModel();
+                    $orgdata = $orgModel->getMDOHierarchy($this->request->getVar('org'));
+                    
+                    echo json_encode($orgdata);
+                } 
             }
         } catch (\Exception $e) {
             return view('header_view') . view('error_general').view('footer_view');

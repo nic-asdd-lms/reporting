@@ -1,6 +1,6 @@
 <html>
 <head>
-        <script type="text/javascript" src="<?php echo base_url('/assets/keycloak_client_adaptor/dist/keycloak.js');?>"></script>
+        <script type="text/javascript" src="<?php echo ASSETS_URL.'keycloak_client_adaptor/dist/keycloak.js'?>"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
         <script>
        

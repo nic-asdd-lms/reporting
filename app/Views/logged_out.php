@@ -23,7 +23,7 @@
 
     
     <!-- ASSETS -->
-  <link href="<?php echo base_url('/assets/css/login_style.css');?>" rel="stylesheet" type="text/css">
+  <link href="<?php echo ASSETS_URL.'css/login_style.css' ?>" rel="stylesheet" type="text/css">
 
 </head>
 

@@ -26,7 +26,7 @@ function enable_disable_mdo(value) {
     dept = document.getElementById('dept');
     org = document.getElementById('org');
 
-    if (value.value == "mdoUserCount" || value.value == "orgList")
+    if (value.value == "mdoUserCount" || value.value == "orgList" || value.value == "userList")
         mdo.style.display = "none"
 
     else
@@ -46,7 +46,7 @@ function enable_disable_mdo(value) {
 
 function enable_disable_course(value) {
     course = document.getElementById("tbl-course");
-    if (value.value == "courseEnrolmentCount" || value.value == "programEnrolmentCount") {
+    if (value.value == "courseEnrolmentCount" || value.value == "programEnrolmentCount" || value.value == "liveCourses" || value.value == "underPublishCourses" || value.value == "underReviewCourses" || value.value == "draftCourses" ) {
         course.style.display = "none";
     } else {
         course.style.display = "block";
@@ -63,6 +63,9 @@ function enable_disable_program(value) {
     }
 
 }
+
+
+
 
 
 function getSuggestions(value) {
@@ -91,6 +94,11 @@ function getSuggestions(value) {
         }
     });
 
+
+}
+
+
+function getOrgName(org) {
 
 }
 

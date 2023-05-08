@@ -18,8 +18,8 @@
     <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato">
     <!-- ASSETS -->
-    <link rel="shortcut icon" type="image/jpg" href="<?php echo base_url('assets/images/karmayogiLogo_thumbnail.jpg');?>">
-    <link href="<?php echo base_url('/assets/css/header_style.css');?>" rel="stylesheet" type="text/css">
+    <link rel="shortcut icon" type="image/jpg" href="<?php echo  ASSETS_URL.'images/karmayogiLogo_thumbnail.jpg';?>">
+    <link href="<?php echo ASSETS_URL.'css/header_style.css'?>" rel="stylesheet" type="text/css">
 </head>
     <header>
     
@@ -28,7 +28,7 @@
         <li class="logo">
         
             <div class="header-title">
-                <img  src="<?php echo base_url('assets/images/karmayogiLogo.svg');?>" alt="iGOT Reporting"/> 
+                <img  src="<?php echo  ASSETS_URL.'images/karmayogiLogo.svg';?>"/> 
             </div>
         </li>
         <li class="logo">

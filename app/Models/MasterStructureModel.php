@@ -135,6 +135,46 @@ class MasterStructureModel extends Model
       
     }
 
+    public function getM_D_O($org) {
+      $builder =$this->db->table('master_org_hierarchy');
+        $builder->select('ms_type, ms_id, ms_name, dept_id, dept_name, org_id, org_name');
+        $builder->where('org_name', $org);
+        $builder->distinct();
+        return $builder->get()->getResult();
+    }
+
+    public function getMDOHierarchy($org) {
+                    
+      try {
+        $builder =$this->db->table('master_org_hierarchy');
+        $builder->select('ms_type,ms_id, ms_name, dept_id, dept_name, org_id, org_name');
+        $builder->where('org_name', $org);
+        $builder->distinct();
+        return $builder->get()->getResult();
+        if($builder->get()->getNumRows() == 0)
+        {
+         
+          $builder->select('ms_id, ms_name, dept_id, dept_name');
+          $builder->where('dept_name', $org);
+          $builder->distinct();
+          if($builder->get()->getResultArray() == 0)
+          {
+            
+            $builder->select('ms_id, ms_name');
+            $builder->where('ms_name', $org);
+            $builder->distinct();
+          
+          }
+        }
+        return $builder->get()->getResult();
+      }
+      catch (\Exception $e) {
+          throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+      } 
+     
+      
+    }
+
 
 }
 ?>

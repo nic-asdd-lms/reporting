@@ -4,6 +4,7 @@
 1. Install XAMPP 8.2.4 (PHP 8.2.4)
 1. Install PostgreSQL 15.2 with pgAdmin 4
 1. Create database named "igot_reporting" and restore the database backup
+1. Execute query `CREATE EXTENSION pg_trgm;` 
 1. Edit file app/Config/Database.php to update the database name
 1. Install Composer
 1. In php.ini uncomment "extension=intl", "extension=gd", "extension=pgsql", "extension=pdo_pgsql", "extension=zip" and restart XAMPP
@@ -15,4 +16,7 @@
 ## Deployment on server
 1. In `.env` file, change the value of `CI_ENVIRONMENT` to `production`
 1. Update database details in `app/Config/Database.php` 
-1. In `app/Config/Constants.php`, update the values `$GLOBALS['IGOT_URL']` and `$GLOBALS['API_KEY']`
+1. Update the values `$GLOBALS['IGOT_URL']` and `$GLOBALS['API_KEY']` in `app/Config/Constants.php`
+1. Update the values of `BASE_URL` and `ASSETS_URL` in `app/Config/Constants.php`
+1. Execute query `CREATE EXTENSION pg_trgm;` in Postgres
+

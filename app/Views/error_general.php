@@ -23,7 +23,8 @@
 
 
     <!-- ASSETS -->
-    <link href="<?php echo base_url('/assets/css/login_style.css'); ?>" rel="stylesheet" type="text/css">
+    <link href="<?php echo  ASSETS_URL.'css/debug.css' ?>" rel="stylesheet" type="text/css">
+    <!-- <link href="<?php //echo base_url('/assets/css/login_style.css'); ?>" rel="stylesheet" type="text/css"> -->
 
 </head>
 
@@ -34,10 +35,16 @@
     <!-- CONTENT -->
 
     <section>
+    <div  class="container text-center">
+
+<h1 class="headline">Sorry!</h1>
+
+<h1 class="lead">Something went wrong... </h1>
+
+</div>
 
 
-
-        <div id="body" style="display: grid">
+        <!-- <div id="body" style="display: grid">
             <div class='login-container'>
                 <div class='row'>
                     <div class='col-md-8 col-md-offset-2'>
@@ -47,7 +54,7 @@
                 </div>
                 <div class='row'>
                     <div class='col-md-8 col-md-offset-2 imgcontainer '>
-                        <label class="error">Something went wrong.. Please try again! </label>
+                        <label class="lead">Something went wrong.. Please try again! </label>
 
                     </div>
                 </div>
@@ -55,7 +62,7 @@
 
 
         </div>
-        </div>
+        </div> -->
 
 
     </section>

@@ -126,7 +126,7 @@ section svg {
     padding: 6px 12px;
     border: 1px solid #c6562f08;
     border-top: none;
-    background-color: #ef951e0f;
+    background-color: #f7ede1;
     color: rgb(38, 64, 146);
 }
 
@@ -155,3 +155,6 @@ section svg {
 
 }
 
+datalist {
+    display:block;
+}

@@ -108,7 +108,12 @@ class Report extends BaseController
             }
     
     
-            if ($reportType == 'mdoUserList') {
+            if ($reportType == 'userList') {
+                $result = $user->getAllUsers( $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $user->getAllUsers( -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $user->getAllUsers( -1, 0, $search, $orderBy, $orderDir);
+    
+            } else if ($reportType == 'mdoUserList') {
                 $result = $user->getUserByOrg($orgName, $limit, $offset, $search, $orderBy, $orderDir);
                 $fullResult = $user->getUserByOrg($orgName, -1, 0, '', $orderBy, $orderDir);
                 $resultFiltered = $user->getUserByOrg($orgName, -1, 0, $search, $orderBy, $orderDir);
@@ -142,7 +147,27 @@ class Report extends BaseController
                 $fullResult = $org_hierarchy->getHierarchy($ministry, -1, 0, '', $orderBy, $orderDir);
                 $resultFiltered = $org_hierarchy->getHierarchy($ministry, -1, 0, $search, $orderBy, $orderDir);
     
-            } else if ($reportType == 'courseEnrolmentReport') {
+            } else if ($reportType == 'liveCourses') {
+                $result = $course->getLiveCourses( $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $course->getLiveCourses( -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $course->getLiveCourses( -1, 0, $search, $orderBy, $orderDir);
+    
+            }  else if ($reportType == 'underPublishCourses') {
+                $result = $course->getCoursesUnderPublish( $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $course->getCoursesUnderPublish( -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $course->getCoursesUnderPublish( -1, 0, $search, $orderBy, $orderDir);
+    
+            }  else if ($reportType == 'underReviewCourses') {
+                $result = $course->getCoursesUnderReview( $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $course->getCoursesUnderReview( -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $course->getCoursesUnderReview( -1, 0, $search, $orderBy, $orderDir);
+    
+            }  else if ($reportType == 'draftCourses') {
+                $result = $course->getDraftCourses( $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $course->getDraftCourses( -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $course->getDraftCourses( -1, 0, $search, $orderBy, $orderDir);
+    
+            }  else if ($reportType == 'courseEnrolmentReport') {
                 $result = $enrolment->getCourseWiseEnrolmentReport($course, $org, $limit, $offset, $search, $orderBy, $orderDir);
                 $fullResult = $enrolment->getCourseWiseEnrolmentReport($course, $org, -1, 0, '', $orderBy, $orderDir);
                 $resultFiltered = $enrolment->getCourseWiseEnrolmentReport($course, $org, -1, 0, $search, $orderBy, $orderDir);
@@ -330,15 +355,31 @@ class Report extends BaseController
             $lastUpdate = new DataUpdateModel();
             $orgModel = new MasterOrganizationModel();
 
+                
 
+            
             $data['lastUpdated'] = '[Report as on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
 
-            if ($role == 'SPV_ADMIN') { // SPV_ADMIN => ministry, department, organisation = values selected from dropdown
+            if ($role == 'SPV_ADMIN') { // SPV_ADMIN => ministry, department, organisation = values selected from dropdown or searchbox
 
-                $ministry = $request->getPost('ministry') ? $request->getPost('ministry') : $session->setTempdata('ministry');
-                $dept = $request->getPost('dept') ? $request->getPost('dept') : $session->setTempdata('dept');
-                $org = $request->getPost('org') ? $request->getPost('org') : $session->setTempdata('org');
-
+                // print_r('ministry'.$request->getPost('ministry_search'));
+                if($request->getPost('ministry_search') != '')                    //  MDO selected from search box
+                    $ministry = $request->getPost('ministry_search');
+                else                                                            //  MDO selected from dropdown
+                    $ministry = $request->getPost('ministry');
+            
+                if($request->getPost('dept_search') != '')                        
+                    $dept = $request->getPost('dept_search');
+                else         
+                    $dept = $request->getPost('dept');
+                
+                if($request->getPost('search-result') != '')                        
+                    $org = $request->getPost('search-result');
+                else                                                            
+                    $org = $request->getPost('org');
+                
+                    print_r('org'.$org);
+                
             } else if ($role == 'MDO_ADMIN') { // MDO_ADMIN => ministry, department, organisation = values from session (MDO of the particular user)
 
                 $ministry = $session->get('ministry');
@@ -372,7 +413,15 @@ class Report extends BaseController
 
             /* Set table header, filename and report tilte based on report type */
 
-            if ($reportType == 'mdoUserList') {
+            if ($reportType == 'userList') {
+                $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Contact No.', 'Created Date', 'Roles', 'Profile Update Status');
+
+                $session->setTempdata('fileName',  'UserList', 300);
+
+                $data['resultHTML'] = $table->generate();
+                $data['reportTitle'] = 'Users onboarded on iGOT';
+
+            } else if ($reportType == 'mdoUserList') {
                 $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Contact No.', 'Created Date', 'Roles', 'Profile Update Status');
 
                 $session->setTempdata('fileName', $orgName . '_UserList', 300);
@@ -443,8 +492,8 @@ class Report extends BaseController
                 . view('footer_view');
 
         } catch (\Exception $e) {
-			// throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
-			return view('header_view') . view('error_general').view('footer_view');
+			throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+			// return view('header_view') . view('error_general').view('footer_view');
 		}
 
     }
@@ -476,11 +525,7 @@ class Report extends BaseController
             $enrolmentProgram = new UserEnrolmentProgram();
             $lastUpdate = new DataUpdateModel();
 
-            if ($courseReportType == 'notSelected') {
-                echo '<script>alert("Please select report type!");</script>';
-                return view('header_view')
-                    . view('footer_view');
-            } else {
+             
 
                 $data['lastUpdated'] = '[Report as on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
 
@@ -488,7 +533,43 @@ class Report extends BaseController
                 if ($role == 'MDO_ADMIN') {
                     $org = $session->get('organisation');
                 }
-                if ($courseReportType == 'courseEnrolmentReport') {
+                if ($courseReportType == 'liveCourses') {
+                    $table->setHeading('Course Name', 'Organisation', 'Duration (HH:MM:SS)', 'Published Date', 'No. of Ratings', 'Average Rating');
+
+                    $session->setTempdata('fileName', 'LiveCourses', 300);
+
+                    $data['resultHTML'] = $table->generate();
+                    $data['reportTitle'] = 'Live Courses';
+
+
+                } else if ($courseReportType == 'underPublishCourses') {
+                    $table->setHeading('Course Name', 'Organisation');
+
+                    $session->setTempdata('fileName', 'CoursesUnderPublish', 300);
+
+                    $data['resultHTML'] = $table->generate();
+                    $data['reportTitle'] = 'Courses under Publish';
+
+
+                } else if ($courseReportType == 'underReviewCourses') {
+                    $table->setHeading('Course Name', 'Organisation');
+
+                    $session->setTempdata('fileName', 'CoursesUnderReview', 300);
+
+                    $data['resultHTML'] = $table->generate();
+                    $data['reportTitle'] = 'Courses under review';
+
+
+                } else if ($courseReportType == 'draftCourses') {
+                    $table->setHeading('Course Name', 'Organisation');
+
+                    $session->setTempdata('fileName', 'DraftCourses', 300);
+
+                    $data['resultHTML'] = $table->generate();
+                    $data['reportTitle'] = 'Courses in draft';
+
+
+                } else if ($courseReportType == 'courseEnrolmentReport') {
                     $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Course Name', 'Completion Status', 'Completion Percentage', 'Completed On');
 
                     $session->setTempdata('fileName', $course . '_EnrolmentReport', 300);
@@ -498,7 +579,7 @@ class Report extends BaseController
 
 
                 } else if ($courseReportType == 'courseEnrolmentCount') {
-                    $table->setHeading('Course Name', 'Published Date', 'Duration (HH:MM:SS)', 'Enrollment Count', 'Completion Count', 'Average Rating');
+                    $table->setHeading('Course Name','Organisation', 'Published Date', 'Duration (HH:MM:SS)', 'Enrollmed', 'Not Started','In Progress', 'Completed', 'Average Rating');
 
                     $session->setTempdata('fileName', 'Course-wiseSummary', 300);
 
@@ -552,7 +633,7 @@ class Report extends BaseController
                 return view('header_view')
                     . view('report_result', $data)
                     . view('footer_view');
-            }
+            
         } catch (\Exception $e) {
 			// throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
 			return view('header_view') . view('error_general').view('footer_view');

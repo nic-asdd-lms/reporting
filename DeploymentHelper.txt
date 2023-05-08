@@ -1,9 +1,5 @@
 Files changed after previous deployment:
 
-1. app/Controllers/Report.php
-2. public/assets/css/*
-3. app/Views/*
-4. app/Controller/Home.php
-5. app/Config/Routes.php
-6. app/Models/*
-7. app/Config/Constants.php
+1. app/Views/report-home.php
+2. app/Controller/Login.php
+3. app/Views/keyCloakLogin.php

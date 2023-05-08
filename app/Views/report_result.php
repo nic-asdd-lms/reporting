@@ -41,7 +41,7 @@
 
     <!-- ASSETS -->
 
-    <link href="<?php echo base_url('/assets/css/result_style.css'); ?>" rel="stylesheet" type="text/css">
+    <link href="<?php echo ASSETS_URL.'css/result_style.css' ?>" rel="stylesheet" type="text/css">
 
 </head>
 
@@ -54,7 +54,7 @@
         
         $.ajax({
             
-            url: "<?php echo base_url('/getReport') ?>" + '/' + reportType + '?length=10&start=0&draw=1&search[value]=&order[0][column]=&order[0][dir]=',
+            url: "<?php echo base_url('/getReport') ?>" + '/' + reportType + '?length=1&start=0&draw=1&search[value]=&order[0][column]=&order[0][dir]=',
             success: function (data) {
                 tableData = JSON.parse(JSON.stringify(data));
                 columnNames = Object.keys(tableData.data[0]);

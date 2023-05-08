@@ -22,13 +22,13 @@ class UserEnrolmentCourse extends Model
         $builder->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id ');
         $builder->where('user_course_enrolment.course_id', $course);
         if ($search != '')
-                $builder->where("(first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%'
+            $builder->where("(first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%'
                             OR last_name LIKE '%" . strtolower($search) . "%' OR last_name LIKE '%" . strtoupper($search) . "%' OR last_name LIKE '%" . ucfirst($search) . "%'
                             OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
                             OR designation LIKE '%" . strtolower($search) . "%' OR designation LIKE '%" . strtoupper($search) . "%' OR designation LIKE '%" . ucfirst($search) . "%'
                             OR master_organization.org_name LIKE '%" . strtolower($search) . "%' OR master_organization.org_name LIKE '%" . strtoupper($search) . "%' OR master_organization.org_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
 
-if ($org != '') {
+        if ($org != '') {
             $builder->where('master_user.root_org_id', $org);
         }
         $builder->orderBy((int) $orderBy + 1, $orderDir);
@@ -54,23 +54,27 @@ if ($org != '') {
             $limitQuery = '';
 
         if ($org == '') {
-            $query = $this->db->query('SELECT course_name, to_date(published_date,\'DD-MM-YYYY\'), durationhms,COUNT(*) AS enrolled_count
-            ,SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count, avg_rating
+            $query = $this->db->query('SELECT course_name, master_course.org_name, to_date(published_date,\'DD-MM-YYYY\'), durationhms,COUNT(*) AS enrolled_count,
+            SUM(CASE WHEN user_course_enrolment.completion_status =\'Not Started\' THEN 1 ELSE 0 END) AS not_started,
+            SUM(CASE WHEN user_course_enrolment.completion_status =\'In-Progress\' THEN 1 ELSE 0 END) AS in_progress, 
+            SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count, avg_rating
             FROM user_course_enrolment
             INNER JOIN  master_course ON user_course_enrolment.course_id = master_course.course_id
             WHERE master_course.status=\'Live\'' . $likeQuery . '
-            GROUP BY course_name,published_date, durationhms,avg_rating
-            ORDER BY ' . (int) $orderBy+1 . ' ' . $orderDir . $limitQuery);
+            GROUP BY course_name,master_course.org_name,published_date, durationhms,avg_rating
+            ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
         } else {
-            $query = $this->db->query('SELECT course_name, to_date(published_date,\'DD-MM-YYYY\'), durationhms,COUNT(*) AS enrolled_count
-            ,SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count, avg_rating
+            $query = $this->db->query('SELECT course_name, master_course.org_name,  to_date(published_date,\'DD-MM-YYYY\'), durationhms,COUNT(*) AS enrolled_count,
+            SUM(CASE WHEN user_course_enrolment.completion_status =\'Not Started\' THEN 1 ELSE 0 END) AS not_started,
+            SUM(CASE WHEN user_course_enrolment.completion_status =\'In-Progress\' THEN 1 ELSE 0 END) AS in_progress, 
+            SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count, avg_rating
             FROM user_course_enrolment
             INNER JOIN  master_course ON user_course_enrolment.course_id = master_course.course_id
             INNER JOIN  master_user ON master_user.user_id =user_course_enrolment.user_id
             WHERE master_user.root_org_id=\'' . $org . '\'
             AND master_course.status=\'Live\'' . $likeQuery . '
-            GROUP BY course_name,published_date, durationhms,avg_rating
-            ORDER BY ' . (int) $orderBy+1 . ' ' . $orderDir . $limitQuery);
+            GROUP BY course_name,master_course.org_name,published_date, durationhms,avg_rating
+            ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
         }
 
         return $query;
@@ -173,15 +177,13 @@ if ($org != '') {
         SELECT DISTINCT concat(first_name, \' \', last_name) as name, "email", "master_organization"."org_name", "designation", "course_name", "completion_status", 
         "completion_percentage", "completed_on" 
         FROM "user_course_enrolment" 
-        JOIN "master_user" ON "master_user"."user_id" = "user_course_enrolment"."user_id" 
+		JOIN "master_user" ON "master_user"."user_id" = "user_course_enrolment"."user_id" 
         JOIN "master_organization" ON "master_user"."root_org_id" = "master_organization"."root_org_id" 
-        JOIN "course_curated" ON "course_curated"."course_id" = "user_course_enrolment"."course_id" 
         JOIN "master_course" ON "master_course"."course_id" = "user_course_enrolment"."course_id" 
-        JOIN "master_curated_collection" a ON "course_curated"."curated_id" = "a"."curated_id" 
+		JOIN "course_curated" a ON "a"."course_id" = "user_course_enrolment"."course_id" 
         JOIN "course_curated" b ON "a"."curated_id" = "b"."course_id" 
-        WHERE "a"."curated_id" = \'' . $collection . '\'  
-        
-        AND "course_curated"."type" = \'CuratedCollections\' ' . $likeQuery . '
+        WHERE "b"."curated_id" = \'' . $collection . '\'  
+        AND "b"."type" = \'CuratedCollections\' ' . $likeQuery . '
         ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
 
 
@@ -229,7 +231,8 @@ if ($org != '') {
             $query = $this->db->query('SELECT  course_name,  COUNT(*) AS enrolled_count
       ,SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count
             FROM user_course_enrolment, master_curated_collection, course_curated, master_user, master_course
-            WHERE user_course_enrolment.course_id = course_curated.course_id
+            WHERE master_curated_collection.curated_id=\'' . $course . '\'
+			AND user_course_enrolment.course_id = course_curated.course_id
             AND master_curated_collection.curated_id = course_curated.curated_id
             AND master_user.user_id = user_course_enrolment.user_id
             AND master_course.course_id = user_course_enrolment.course_id 
@@ -241,11 +244,12 @@ if ($org != '') {
             SELECT  course_name,  COUNT(*) AS enrolled_count
       ,SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count
             FROM user_course_enrolment, master_curated_collection, course_curated a, course_curated b, master_user, master_course
-            WHERE user_course_enrolment.course_id = a.course_id
+            WHERE  master_curated_collection.curated_id=\'' . $course . '\'
+			AND user_course_enrolment.course_id = b.course_id
             AND master_curated_collection.curated_id = a.curated_id
             AND master_user.user_id = user_course_enrolment.user_id
             AND master_course.course_id = user_course_enrolment.course_id 
-            AND "a"."curated_id" = b.course_id  
+            AND "b"."curated_id" = a.course_id  
         
         AND "a"."type" = \'CuratedCollections\' ' . $likeQuery . '
         GROUP BY  course_name
@@ -254,32 +258,34 @@ if ($org != '') {
             $query = $this->db->query('SELECT  course_name,  COUNT(*) AS enrolled_count
             ,SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count
                   FROM user_course_enrolment, master_curated_collection, course_curated, master_user, master_course
-                  WHERE user_course_enrolment.course_id = course_curated.course_id
+                  WHERE master_curated_collection.curated_id=\'' . $course . '\'
+                  AND user_course_enrolment.course_id = course_curated.course_id
                   AND master_curated_collection.curated_id = course_curated.curated_id
                   AND master_user.user_id = user_course_enrolment.user_id
                   AND master_course.course_id = user_course_enrolment.course_id 
                   AND master_user.root_org_id=\'' . $org . '\'
-                AND "course_curated"."type" = \'Course\' ' . $likeQuery . '
+                    AND "course_curated"."type" = \'Course\' ' . $likeQuery . '
                   GROUP BY  course_name
               
                   UNION
               
                   SELECT  course_name,  COUNT(*) AS enrolled_count
-            ,SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count
-                  FROM user_course_enrolment, master_curated_collection, course_curated a, course_curated b, master_user, master_course
-                  WHERE user_course_enrolment.course_id = a.course_id
-                  AND master_curated_collection.curated_id = a.curated_id
-                  AND master_user.user_id = user_course_enrolment.user_id
-                  AND master_course.course_id = user_course_enrolment.course_id 
-                  AND master_user.root_org_id=\'' . $org . '\'
-                AND "a"."curated_id" = b.course_id  
-              
-              AND "a"."type" = \'CuratedCollections\' ' . $likeQuery . '
-              GROUP BY  course_name
-                  ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
-                
-                
-                
+                    ,SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count
+                    FROM user_course_enrolment, master_curated_collection, course_curated a, course_curated b, master_user, master_course
+                    WHERE  master_curated_collection.curated_id=\'' . $course . '\'
+                    AND user_course_enrolment.course_id = b.course_id
+                    AND master_curated_collection.curated_id = a.curated_id
+                    AND master_user.user_id = user_course_enrolment.user_id
+                    AND master_course.course_id = user_course_enrolment.course_id 
+                    AND "b"."curated_id" = a.course_id 
+                    AND master_user.root_org_id=\'' . $org . '\'
+                    AND "a"."curated_id" = b.course_id  
+                    AND "a"."type" = \'CuratedCollections\' ' . $likeQuery . '
+                    GROUP BY  course_name
+                    ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
+
+
+
         }
         return $query;
 
@@ -296,7 +302,8 @@ if ($org != '') {
         $builder->join('master_course', 'master_course.course_id = user_course_enrolment.course_id ');
         $builder->where('master_organization.org_name', $org);
         $builder->where('master_course.status', 'Live');
-        $builder->where("(first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%' 
+        if ($search != '')
+            $builder->where("(first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%' 
                             OR last_name LIKE '%" . strtolower($search) . "%' OR last_name LIKE '%" . strtoupper($search) . "%' OR last_name LIKE '%" . ucfirst($search) . "%'
                             OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
                             OR designation LIKE '%" . strtolower($search) . "%' OR designation LIKE '%" . strtoupper($search) . "%' OR designation LIKE '%" . ucfirst($search) . "%'

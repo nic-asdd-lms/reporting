@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato">
     
     <!-- ASSETS -->
-    <link href="<?php echo base_url('/assets/css/footer_style.css');?>" rel="stylesheet" type="text/css">
+    <link href="<?php echo ASSETS_URL.'css/footer_style.css'?>" rel="stylesheet" type="text/css">
 </head>
 <footer>
         <!-- <div class="environment">

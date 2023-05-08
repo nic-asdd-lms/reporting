@@ -93,6 +93,8 @@ define('EVENT_PRIORITY_NORMAL', 100);
  */
 define('EVENT_PRIORITY_HIGH', 10);
 
+define('BASE_URL', "http://localhost:8080/");
+define('ASSETS_URL', BASE_URL."assets/");
 
 
 $GLOBALS['tableTemplate'] = [

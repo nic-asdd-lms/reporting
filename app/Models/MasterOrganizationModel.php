@@ -39,12 +39,13 @@ class MasterOrganizationModel extends Model
         try {
             $builder = $this->db->table('master_organization');
         $builder->select('org_name');
-        $builder->where('root_org_id', $search_key);
+        $builder->where("(SIMILARITY(org_name,'.$search_key.') > 0.1)", NULL, FALSE);
+        $builder->orderBy('SIMILARITY(org_name,\''.$search_key.'\') desc');
         $query = $builder->get();
         
-        $result = $this->db->query('SELECT org_name FROM master_organization WHERE SIMILARITY(org_name,\''.$search_key.'\') > 0.4 ;')->getResultObject();
-        echo $search_key,json_encode($query);
-        return $result;
+        // $result = $this->db->query('SELECT org_name FROM master_organization WHERE SIMILARITY(org_name,\''.$search_key.'\') > 0.4 ;');
+        // echo $search_key,json_encode($query);
+        return $query->getResult();
         }
         catch (\Exception $e) {
             throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
