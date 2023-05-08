@@ -102,13 +102,3 @@ $GLOBALS['tableTemplate'] = [
 
 ];
 
-// PROD URL and API Key
-
-// $GLOBALS['IGOT_URL'] = 'https://portal.igotkarmayogi.gov.in/';
-// $GLOBALS['API_KEY'] = 'Bearer  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI5a04xTW1TcGVuVTAyam8zVHg1U2p0amhTOFVXeGVSUiJ9.LWAgFust4e0wntxqY8_MQjf5WQ9RSD6Hg45jX_NoCXY';
-
-
-// BM URL and API Key
-
-$GLOBALS['IGOT_URL'] = 'https://portal.karmayogibm.nic.in/';
-$GLOBALS['API_KEY'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJJdHlZeDZnWm5pdFVmRUJ6cm0xQWxsSnQwQ3NZN2w4byJ9.XZN6QhXoB-Ld8nA0kf2p51pxpuzfSA2gFlLZIjfuNj8';
