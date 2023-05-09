@@ -1,5 +1,7 @@
 Files changed after previous deployment:
 
-1. app/Views/report-home.php
-2. app/Controller/Login.php
-3. app/Views/keyCloakLogin.php
+1. app/Views/report-home.php                ->      search box
+2. app/Controller/Login.php                 ->      Keycloak authentication
+3. app/Views/keyCloakLogin.php              ->      Keycloak authentication
+4. app/Models/UserProgramEnrolment.php      ->      Added column Batch ID
+5. app/Controllers/Report.php               ->      Added column Batch ID for Program Report, File format Xls

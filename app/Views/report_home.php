@@ -1049,25 +1049,38 @@
 
     <script>
 
-        function initKeycloak() {
+function initKeycloak() { 
             const keycloak = Keycloak('/assets/keycloak.json');
             const initOptions = {
                 responseMode: 'fragment',
                 flow: 'standard',
                 onLoad: 'login-required'
             };
-            keycloak.init(initOptions).success(function (authenticated) {
-                //alert(authenticated ? 'authenticated' : 'not authenticated');
-                if (authenticated) {
-                    window.location.replace("/");
-                }
-                else {
-                    alert('Show error page');
-                }
-            }).catch(function () {
-                alert('failed to initialize');
-            });
-        }
+            keycloak.init(initOptions).success(function(authenticated) {
+                        //  alert(keycloak);
+
+                        var subject = keycloak.subject ; 
+                        
+                        myarr = subject.split(":");
+                        Cookies.set('uid', myarr[2]);
+                        Cookies.set('token',keycloak.token);
+                        Cookies.set('refreshToken',keycloak.refreshToken);
+                        //alert(keycloak.token);
+                        // Cookies.set('role', 'SPV_ADMIN');
+                        //Cookies.set('callback',JSON.stringify(keycloak.tokenParsed.resource_access.php_service.permission));
+                        if(authenticated){
+                            //document.getElementById("test").innerHTML = Cookies.get('uid');
+                            console.log('Init Success (' + (authenticated ? 'Authenticated token : '+JSON.stringify(keycloak) : 'Not Authenticated') + ')');
+                            window.location.replace("/home");
+                        }
+                        else 
+                        {
+                            window.location.replace("/unauthorized");
+                        }
+                }).catch(function() {
+                    alert('failed to initialize');
+             });
+            }
 
         document.getElementById("defaultOpen").click();
 

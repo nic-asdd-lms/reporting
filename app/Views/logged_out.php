@@ -44,7 +44,7 @@
 			<br/> <br/>
       <div class='row'>
 		<div class='col-md-8 col-md-offset-2 imgcontainer ' >
-			<label class="">You have logged out..! </label><a href = "/checkIgotUser"> Click here </a> <label> to login again</label>
+			<label class="">You have been logged out..! </label><a href = "/checkIgotUser"> Click here </a> <label> to login again</label>
 		</div>
 	</div>
 </div>

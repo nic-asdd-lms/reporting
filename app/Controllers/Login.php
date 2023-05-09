@@ -152,8 +152,8 @@ class Login extends BaseController
 			}
 
 		} catch (\Exception $e) {
-			// throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
-			return view('header_view') . view('error_general').view('footer_view');
+			throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+			// return view('header_view') . view('error_general').view('footer_view');
 		}
 
 	}
@@ -163,7 +163,7 @@ class Login extends BaseController
 	{
 		// Removing session data
 		try {
-
+			
 
 			$session = \Config\Services::session();
 			$user = $session->get('username');
@@ -179,26 +179,41 @@ class Login extends BaseController
 			$session->remove($sess_array);
 			$_SESSION['logged_in'] = false;
 				
-			if (isset($_COOKIE['token'])) {
-				unset($_COOKIE['uid']);
-				unset($_COOKIE['token']);
-				setcookie('uid', null, -1, '/');
-				setcookie('token', null, -1, '/');
+
+			if (isset($_SERVER['HTTP_COOKIE'])) {
+				$cookies = explode(';', $_SERVER['HTTP_COOKIE']);
+				foreach($cookies as $cookie) {
+					$parts = explode('=', $cookie);
+					$name = trim($parts[0]);
+					setcookie($name, '', time()-1000);
+					
+				}
+				$headers[] = "x-authenticated-user-token: " . $_COOKIE['token'];
+			$headers[] = 'Content-Type: application/x-www-form-urlencoded';
+			$headers[] = "Authorization: " . $GLOBALS['API_KEY'];
+			
+				$logoutUrl = $GLOBALS['IGOT_URL'] . 'auth/realms/sunbird/protocol/openid-connect/logout' ;
+			// Create a new cURL resource
+			$ch = curl_init($logoutUrl);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_POST,           1 );
+			curl_setopt($ch, CURLOPT_POSTFIELDS,     "client_id=portal&refresh_token=".$_COOKIE['refreshToken'] ); 
+
+			$userInfo = curl_exec($ch);
+	
+			$users = json_decode($userInfo);
+			// Close cURL resource
+			curl_close($ch);
+			
 				return $this->response->redirect(base_url('/'));
 			}
-			// else {
-			// 	return false;
-			// }
-			// $data['message_display'] = 'Successfully Logout';
-			// setcookie($_COOKIE['uid'], "", time() - 3600);
-			// print_r($_COOKIE);
-			// die;
-			// return $this->response->redirect(base_url('/checkIgotUser'));
-			//$red = $this->config->item('base_url_other').'/login/index';
+			
 			return view('header_view') . view('logged_out') . view('footer_view');
 		} catch (\Exception $e) {
-			// throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
-			return view('header_view') . view('error_general').view('footer_view');
+			throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+			// return view('header_view') . view('error_general').view('footer_view');
 		}
 	}
 	public function unauthorized()

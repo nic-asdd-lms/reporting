@@ -1,3 +1,4 @@
 writable/*
 *.log
 vendor/*
+app/Config/Constants.php

@@ -20,7 +20,7 @@ use App\Models\DataUpdateModel;
 use PHPExcel_IOFactory;
 use PHPExcel_Reader_HTML;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use CodeIgniter\Config\Services;
 
 class Report extends BaseController
@@ -322,8 +322,8 @@ class Report extends BaseController
             return $this->response->setJSON($response);
         }
         catch (\Exception $e) {
-			// throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
-			return view('header_view') . view('error_general').view('footer_view');
+			throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+			// return view('header_view') . view('error_general').view('footer_view');
 		}
         
 
@@ -378,7 +378,7 @@ class Report extends BaseController
                 else                                                            
                     $org = $request->getPost('org');
                 
-                    print_r('org'.$org);
+                    // print_r('org'.$org);
                 
             } else if ($role == 'MDO_ADMIN') { // MDO_ADMIN => ministry, department, organisation = values from session (MDO of the particular user)
 
@@ -414,7 +414,7 @@ class Report extends BaseController
             /* Set table header, filename and report tilte based on report type */
 
             if ($reportType == 'userList') {
-                $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Contact No.', 'Created Date', 'Roles', 'Profile Update Status');
+                $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Contact No.', 'Created Date',  'Roles', 'Profile Update Status');
 
                 $session->setTempdata('fileName',  'UserList', 300);
 
@@ -587,7 +587,7 @@ class Report extends BaseController
                     $data['reportTitle'] = 'Course-wise  Summary';
 
                 } else if ($courseReportType == 'programEnrolmentReport') {
-                    $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Status', 'Completed On');
+                    $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation','Batch ID', 'Status', 'Completed On');
 
                     $session->setTempdata('fileName', $course . '_EnrolmentReport', 300);
 
@@ -967,8 +967,8 @@ class Report extends BaseController
     {
         try {
 
-            $session = \Config\Services::session();
-
+           $session = \Config\Services::session();
+            
             helper('array');
             $query_param = current_url(true)->getQuery();
             $filtered = explode('=', $query_param)[1];
@@ -977,6 +977,7 @@ class Report extends BaseController
                 $report = $session->getTempdata('resultArray');
             else if ($filtered == 'true')
                 $report = $session->getTempdata('filteredResultArray');
+            
 
             $fileName = $session->getTempdata('fileName') . '.xls';
 
@@ -1015,11 +1016,12 @@ class Report extends BaseController
 
             ob_end_clean();
             header("Content-Type: application/vnd.ms-excel");
+            // header("Content-Type: text/csv");
             header("Content-Disposition: attachment; filename=" . $fileName);
-            header("Cache-Control: max-age=0");
+            // header("Cache-Control: max-age=0");
             // ob_end_clean();
 
-            $writer = new Xlsx($spreadsheet);
+            $writer = new Xls($spreadsheet);
             $writer->save('php://output');
 
             die;
