@@ -26,8 +26,8 @@ class Login extends BaseController
 			$this->getRoles($_COOKIE['uid']);
 
 		} catch (\Exception $e) {
-			// throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
-			return view('header_view') . view('error_general').view('footer_view');
+			throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+			// return view('header_view') . view('error_general').view('footer_view');
 		}
 	}
 
@@ -56,8 +56,8 @@ class Login extends BaseController
 			$this->user_login_process($email);
 		}
 		catch (\Exception $e) {
-			// throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
-			return view('header_view') . view('error_general').view('footer_view');
+			throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+			// return view('header_view') . view('error_general').view('footer_view');
 		}
 		
 		

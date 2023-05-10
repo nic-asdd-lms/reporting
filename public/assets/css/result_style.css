@@ -244,3 +244,10 @@ table.dataTable tbody tr {
     border: 0px solid #c7d4fd;
     background-color: #85caec;
 }
+
+.error {
+    font-size: 20px;
+text-align: center;
+color: red;
+margin: 50px;
+}

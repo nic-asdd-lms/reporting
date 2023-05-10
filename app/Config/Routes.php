@@ -50,6 +50,9 @@ $routes->post('/orgSearch', 'Home::orgSearch');
 $routes->get('/getExcelReport', 'Report::downloadExcel');
 $routes->post('/result', 'Home::result');
 $routes->get('/getReport/(:alpha)', 'Report::getReport/$1');
+$routes->get('/checkOrgOnboarded', 'Home::checkOrgOnboarded');
+
+
 //$routes->get('/assets/images/karmayogiLogo.svg' , 'assets\images\karmayogiLogo.svg');
 // $routes->resource('/reporting/assets/images',['controller' => 'App\Assets\Images']);
 //$routes->get('/reporting/assets/images/karmayogiLogo.svg' , 'assets\images\karmayogiLogo.svg');

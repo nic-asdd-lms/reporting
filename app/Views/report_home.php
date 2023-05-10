@@ -33,7 +33,33 @@
     </style>
 
     <script>
+
         $(document).ready(function () {
+
+            function functABC() {
+                return new Promise(function (resolve, reject) {
+                    //alert('ok') ; 
+                    var org = $('#org').val();
+
+                    $.get('<?php echo base_url('/checkOrgOnboarded'); ?>', { org: org }, function (data) {
+                        //alert(data) ; 
+                    });
+
+                    // $.get({
+                    //     url: "<?php //echo base_url('/checkOrgOnboarded'); ?>",
+                    //     data: { org: org },
+                    //     success: function (data) {
+                    //         alert(data);
+                    //         resolve(data) // Resolve promise and go to then()
+                    //     },
+                    //     error: function (err) {
+                    //         alert(data);
+                    //         reject(err) // Reject the promise and go to catch()
+                    //     }
+                    // });
+                });
+            }
+
             $("#mdowisereportform").submit(function (event) {
                 var mdoReportType = $('#mdoReportType').val();
                 if (mdoReportType == 'notSelected') {
@@ -54,8 +80,9 @@
                     var ms = $('#ms_type').val();
                     var ministry = $('#ministry').val();
                     var dept = $('#dept').val();
+                    var org = $('#org').val();
 
-                    if (document.getElementById('ms_type').style.display !="none" && ms == 'notSelected') {
+                    if (document.getElementById('ms_type').style.display != "none" && ms == 'notSelected') {
                         Swal.fire({
                             title: 'Error!',
                             text: 'Please Select Ministry/State!',
@@ -75,114 +102,7 @@
                             });
                             return false;
                         }
-                        else if (org != 'notSelected') {
-                            var action = 'get_orgname';
 
-                            $.ajax({
-                                url: "<?php echo base_url('/action'); ?>",
-                                method: "POST",
-                                data: {
-                                    org: org,
-                                    action: action
-                                },
-                                dataType: "JSON",
-                                error: function (data) {
-                                    if (data.org_name == null) {
-                                        Swal.fire({
-                                            title: 'Error!',
-                                            text: 'Selected Organisation is not onboarded!',
-                                            icon: 'error',
-                                            confirmButtonText: 'OK'
-                                        });
-                                        return false;
-                                    }
-
-                                },
-                                success: function (data) {
-                                    if (data.org_name == null) {
-                                        Swal.fire({
-                                            title: 'Error!',
-                                            text: 'Selected Organisation is not onboarded!',
-                                            icon: 'error',
-                                            confirmButtonText: 'OK'
-                                        });
-                                        return false;
-                                    } else {
-                                        return true;
-                                    }
-
-                                }
-
-                            });
-                        }
-                        else if (dept != 'notSelected') {   // if Organisation is not selected, check whether selected Department is onboarded
-                            var action = 'get_orgname';
-
-                            $.ajax({
-                                url: "<?php echo base_url('/action'); ?>",
-                                method: "POST",
-                                data: {
-                                    org: dept,
-                                    action: action
-                                },
-                                dataType: "JSON",
-                                error: function (data) {
-                                    if (data.org_name == null) {
-                                        Swal.fire({
-                                            title: 'Error!',
-                                            text: 'Selected Department is not onboarded!',
-                                            icon: 'error',
-                                            confirmButtonText: 'OK'
-                                        });
-                                        return false;
-                                    }
-
-                                },
-                                success: function (data) {
-                                    if (data.org_name == null) {
-                                        return false;
-                                    }
-                                    else {
-                                        return true;
-                                    }
-
-                                }
-                            });
-                        }
-                        else if (ministry != 'notSelected') {       // If org and dept are not selected, check whether selected Ministry is onboarded
-                            var action = 'get_orgname';
-
-                            $.ajax({
-                                url: "<?php echo base_url('/action'); ?>",
-                                method: "POST",
-                                data: {
-                                    org: ministry,
-                                    action: action
-                                },
-                                dataType: "JSON",
-                                error: function (data) {
-                                    if (data.org_name == null) {
-                                        Swal.fire({
-                                            title: 'Error!',
-                                            text: 'Selected Ministry is not onboarded!',
-                                            icon: 'error',
-                                            confirmButtonText: 'OK'
-                                        });
-                                        return false;
-                                    }
-
-                                },
-                                success: function (data) {
-                                    if (data.org_name == null) {
-                                        return false;
-                                    }
-                                    else {
-                                        return true;
-                                    }
-
-                                }
-                            });
-                        }
                     }
                     else if (ms == 'state') {
                         var state = $('#ministry').val();
@@ -476,7 +396,7 @@
                     $('input#ministry_search').val(data.ms_id);
                     $('input#dept_search').val(data.dept_id);
                     $('input#org_search').val(data.org_id);
-                    
+
                     ms.style.display = "none";
                     ministry.style.display = "none";
                     dept.style.display = "none";
@@ -485,14 +405,14 @@
 
                     //setMDO(data[0]);
                     // $('#ms_type').val(data.ms_type).trigger("change");
-            // $('select[id^="ministry"] option:selected').attr("selected", null);
-            // $('select[id^="ministry"] option[value="' + data.ms_id + '"]').prop("selected", "selected");
-            // $('#ministry').find('option[value="' + data[0].ms_id + '"]').prop('selected', true).trigger("change");
-            // $('#ministry').find('option[value="' + data.ms_id + '"]').trigger("change");
-            // console.log($("#ministry option:selected").text());
-            
-            // $('#dept').val(data.dept_id).trigger("change");
-            // $('#org').val(data.org_id);
+                    // $('select[id^="ministry"] option:selected').attr("selected", null);
+                    // $('select[id^="ministry"] option[value="' + data.ms_id + '"]').prop("selected", "selected");
+                    // $('#ministry').find('option[value="' + data[0].ms_id + '"]').prop('selected', true).trigger("change");
+                    // $('#ministry').find('option[value="' + data.ms_id + '"]').trigger("change");
+                    // console.log($("#ministry option:selected").text());
+
+                    // $('#dept').val(data.dept_id).trigger("change");
+                    // $('#org').val(data.org_id);
 
                 }
 
@@ -624,12 +544,12 @@
                                     //         <input type="hidden"  id="ministry_search"  name="ministry_search" value="" />
                                     //         <input type="hidden"  id="dept_search"  name="dept_search" value="" />
                                     //         <input type="hidden"  id="organisation_search"  name="org_search" value="" />
-                                                
+                                
                                     // </div>
                                 
                                     // </td>
                                     // </tr>
-                                    
+                                
                                     echo '
                                     <tr>
                                     <td style="width:1%"><label class="required" ></label></td>
@@ -719,12 +639,13 @@
                             <option value="programEnrolmentCount">Program-wise summary</option>
                             <option value="collectionEnrolmentReport">Curated Collection-wise enrolment report</option>
                             <option value="collectionEnrolmentCount">Curated Collection-wise summary</option>
+                            <option value="cbpProviderWiseCourseCount">CBP Provider-wise course count</option>
                             <?php
-                            $session = \Config\Services::session();
+                            // $session = \Config\Services::session();
 
-                            if ($session->get('role') == 'SPV_ADMIN') {
-                                echo '<option value="courseMinistrySummary">Ministry-wise summary for course</option>';
-                            } ?>
+                            // if ($session->get('role') == 'SPV_ADMIN') {
+                            //     echo '<option value="courseMinistrySummary">Ministry-wise summary for course</option>';
+                            // } ?>
                         </select>
 
                     </div>
@@ -1049,38 +970,37 @@
 
     <script>
 
-function initKeycloak() { 
+        function initKeycloak() {
             const keycloak = Keycloak('/assets/keycloak.json');
             const initOptions = {
                 responseMode: 'fragment',
                 flow: 'standard',
                 onLoad: 'login-required'
             };
-            keycloak.init(initOptions).success(function(authenticated) {
-                        //  alert(keycloak);
+            keycloak.init(initOptions).success(function (authenticated) {
+                //  alert(keycloak);
 
-                        var subject = keycloak.subject ; 
-                        
-                        myarr = subject.split(":");
-                        Cookies.set('uid', myarr[2]);
-                        Cookies.set('token',keycloak.token);
-                        Cookies.set('refreshToken',keycloak.refreshToken);
-                        //alert(keycloak.token);
-                        // Cookies.set('role', 'SPV_ADMIN');
-                        //Cookies.set('callback',JSON.stringify(keycloak.tokenParsed.resource_access.php_service.permission));
-                        if(authenticated){
-                            //document.getElementById("test").innerHTML = Cookies.get('uid');
-                            console.log('Init Success (' + (authenticated ? 'Authenticated token : '+JSON.stringify(keycloak) : 'Not Authenticated') + ')');
-                            window.location.replace("/home");
-                        }
-                        else 
-                        {
-                            window.location.replace("/unauthorized");
-                        }
-                }).catch(function() {
-                    alert('failed to initialize');
-             });
-            }
+                var subject = keycloak.subject;
+
+                myarr = subject.split(":");
+                Cookies.set('uid', myarr[2]);
+                Cookies.set('token', keycloak.token);
+                Cookies.set('refreshToken', keycloak.refreshToken);
+                //alert(keycloak.token);
+                // Cookies.set('role', 'SPV_ADMIN');
+                //Cookies.set('callback',JSON.stringify(keycloak.tokenParsed.resource_access.php_service.permission));
+                if (authenticated) {
+                    //document.getElementById("test").innerHTML = Cookies.get('uid');
+                    console.log('Init Success (' + (authenticated ? 'Authenticated token : ' + JSON.stringify(keycloak) : 'Not Authenticated') + ')');
+                    window.location.replace("/home");
+                }
+                else {
+                    window.location.replace("/unauthorized");
+                }
+            }).catch(function () {
+                alert('failed to initialize');
+            });
+        }
 
         document.getElementById("defaultOpen").click();
 

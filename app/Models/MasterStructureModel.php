@@ -109,6 +109,20 @@ class MasterStructureModel extends Model
       
     }
 
+    public function getOrganisationName($org_id) {
+      try {
+        $builder =$this->db->table('master_org_hierarchy');
+        $builder->select('org_name');
+        $builder->where('org_id',$org_id);
+        return $builder->get()->getRow()->org_name;
+      }
+      catch (\Exception $e) {
+          throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+      } 
+     
+      
+    }
+
     public function getHierarchy($ministry,$limit, $offset, $search, $orderBy, $orderDir) {
       try {
         $builder =$this->db->table('master_org_hierarchy');

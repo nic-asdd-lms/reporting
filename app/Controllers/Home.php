@@ -48,6 +48,21 @@ class Home extends BaseController
 
     }
 
+    public function checkOrgOnboarded() {
+        echo $this->request->getVar('org');
+        // die ; 
+        $orgModel = new MasterOrganizationModel();
+                    $orgdata = $orgModel->getOrgName($this->request->getVar('org'));
+                    echo "<pre>org"; 
+                    if(isset($orgdata)){
+                        $response = "{'status':'1','orgdata':".$orgdata->org_name."}";
+                    }
+                    else {
+                        $response = "{'status':'0','orgdata':''}";
+                    }
+                    echo "working ".$response ;
+                    echo json_encode($response);
+    }
     public function action()
     {
         try {
@@ -77,7 +92,9 @@ class Home extends BaseController
                 } else if ($action == 'get_orgname') {
                     $orgModel = new MasterOrganizationModel();
                     $orgdata = $orgModel->getOrgName($this->request->getVar('org'));
-
+                    echo "<pre>"; 
+                    print_r($orgdata);
+                    die;
                     echo json_encode($orgdata);
                 } else if ($action == 'get_course') {
                     $courseModel = new MasterCourseModel();
@@ -101,6 +118,7 @@ class Home extends BaseController
                     $orgModel = new MasterOrganizationModel();
                     $orgdata = $orgModel->searchOrg($search_key);
                     
+
                     echo json_encode($orgdata);
 
                     //Query execution
@@ -114,7 +132,7 @@ class Home extends BaseController
                 } 
             }
         } catch (\Exception $e) {
-            return view('header_view') . view('error_general').view('footer_view');
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
 
     }

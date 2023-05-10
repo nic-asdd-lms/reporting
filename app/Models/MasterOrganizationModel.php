@@ -64,6 +64,7 @@ class MasterOrganizationModel extends Model
                 $builder->orLike('org_name', ucfirst($search));
             }
 
+            $builder->distinct();
             $builder->orderBy((int) $orderBy + 1, $orderDir);
             if ($limit != -1)
                 $builder->limit($limit, $offset);

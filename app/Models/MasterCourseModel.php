@@ -178,7 +178,32 @@ class MasterCourseModel extends Model
 
     }
 
+    public function getCourseCountByCBPProvider($limit, $offset, $search, $orderBy, $orderDir)
+    {
+        try {
+            $table = new \CodeIgniter\View\Table();
 
+            $builder = $this->db->table('master_course');
+            $builder->select(' org_name, count(*)');
+            $builder->groupBy('org_name');
+            if ($search != '') {
+
+                $builder->like('org_name', strtolower($search));
+                $builder->orLike('org_name', strtoupper($search));
+                $builder->orLike('org_name', ucfirst($search));
+            }
+
+            $builder->orderBy((int) $orderBy + 1, $orderDir);
+            if ($limit != -1)
+                $builder->limit($limit, $offset);
+            $query = $builder->get();
+            // print_r($builder);
+            return $query;
+
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
 
 
 }

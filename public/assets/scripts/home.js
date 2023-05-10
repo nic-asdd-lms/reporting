@@ -46,7 +46,7 @@ function enable_disable_mdo(value) {
 
 function enable_disable_course(value) {
     course = document.getElementById("tbl-course");
-    if (value.value == "courseEnrolmentCount" || value.value == "programEnrolmentCount" || value.value == "liveCourses" || value.value == "underPublishCourses" || value.value == "underReviewCourses" || value.value == "draftCourses" ) {
+    if (value.value == "courseEnrolmentCount" || value.value == "programEnrolmentCount" || value.value == "liveCourses" || value.value == "underPublishCourses" || value.value == "underReviewCourses" || value.value == "draftCourses" || value.value == "cbpProviderWiseCourseCount") {
         course.style.display = "none";
     } else {
         course.style.display = "block";
