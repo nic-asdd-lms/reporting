@@ -92,9 +92,7 @@ class Home extends BaseController
                 } else if ($action == 'get_orgname') {
                     $orgModel = new MasterOrganizationModel();
                     $orgdata = $orgModel->getOrgName($this->request->getVar('org'));
-                    echo "<pre>"; 
-                    print_r($orgdata);
-                    die;
+                    
                     echo json_encode($orgdata);
                 } else if ($action == 'get_course') {
                     $courseModel = new MasterCourseModel();

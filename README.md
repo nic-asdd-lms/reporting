@@ -19,4 +19,4 @@
 1. Update the values `$GLOBALS['IGOT_URL']` and `$GLOBALS['API_KEY']` in `app/Config/Constants.php`
 1. Update the values of `BASE_URL` and `ASSETS_URL` in `app/Config/Constants.php`
 1. Execute query `CREATE EXTENSION pg_trgm;` in Postgres
-
+1. In `Views/keyCloakLogin.php`, replace line `const keycloak = Keycloak('/assets/keycloak.json');` with `const keycloak = Keycloak('/reporting/public/assets/keycloak.json');`

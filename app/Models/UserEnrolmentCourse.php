@@ -85,12 +85,7 @@ class UserEnrolmentCourse extends Model
     public function getCourseMinistrySummary($course, $limit, $offset, $search, $orderBy, $orderDir)
     {
         if ($search != '') {
-            $likeQuery = " AND (first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtoupper($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%' 
-                            OR last_name LIKE '%" . strtolower($search) . "%' OR last_name LIKE '%" . strtoupper($search) . "%' OR last_name LIKE '%" . ucfirst($search) . "%'
-                            OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
-                            OR master_organization.org_name LIKE '%" . strtolower($search) . "%' OR master_organization.org_name LIKE '%" . strtoupper($search) . "%' OR master_organization.org_name LIKE '%" . ucfirst($search) . "%'
-                            OR course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtoupper($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%'
-                            OR designation LIKE '%" . strtolower($search) . "%' OR designation LIKE '%" . strtoupper($search) . "%' OR designation LIKE '%" . ucfirst($search) . "%') ";
+            $likeQuery = " WHERE (ministry_name LIKE '%" . strtolower($search) . "%' OR ministry_name LIKE '%" . strtoupper($search) . "%' OR ministry_name LIKE '%" . ucfirst($search) . "%') ";
 
         } else {
             $likeQuery = '';
@@ -100,44 +95,30 @@ class UserEnrolmentCourse extends Model
         } else
             $limitQuery = '';
 
-        $queryString = 'select distinct ms_name,COUNT(distinct user_course_enrolment.user_id) AS enrolled_count ,(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count 
-        from master_org_hierarchy ,user_course_enrolment, master_user  
-        where user_course_enrolment.user_id = master_user.user_id 
-        and ms_id in 
-        (select ms_id from master_org_hierarchy  
-        join master_user on master_user.root_org_id = master_org_hierarchy.ms_id  
-        join user_course_enrolment on master_user.user_id = user_course_enrolment.user_id 
-        where course_id=\'' . $course . '\')' . $likeQuery . '
-        group by ms_name,user_course_enrolment.completion_status
-        union
-        select distinct ms_name,COUNT(distinct user_course_enrolment.user_id) AS enrolled_count ,(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count 
-        from master_org_hierarchy ,user_course_enrolment   , master_user  
-        where user_course_enrolment.user_id = master_user.user_id 
-        and ms_id in 
-        (select ms_id from master_org_hierarchy  
-        join master_user on master_user.root_org_id = master_org_hierarchy.dept_id  
-        join user_course_enrolment on master_user.user_id = user_course_enrolment.user_id 
-        where course_id=\'' . $course . '\')' . $likeQuery . '
-        group by ms_name,user_course_enrolment.completion_status
-        union
-        select distinct ms_name,COUNT(distinct user_course_enrolment.user_id) AS enrolled_count ,(CASE WHEN user_course_enrolment.completion_status =\'Completed\'   THEN 1 ELSE 0 END) AS completed_count 
-        from master_org_hierarchy ,user_course_enrolment , master_user   
-        where user_course_enrolment.user_id = master_user.user_id 
-        and ms_id in 
-        (select ms_id from master_org_hierarchy  
-        join master_user on master_user.root_org_id = master_org_hierarchy.org_id  
-        join user_course_enrolment on master_user.user_id = user_course_enrolment.user_id 
-        where course_id=\'' . $course . '\')' . $likeQuery . '
-        ORDER BY ' . (int) $orderBy . ' ' . $orderDir . $limitQuery . '
-        group by ms_name,user_course_enrolment.completion_status';
+        $queryString = 'with master_ministry as (select distinct(ms_id) as mdo_id, ms_name as mdo_name, ms_name as ministry_name
+        from master_org_hierarchy where ms_id is not null),
+    master_department as (select distinct(dept_id) as mdo_id, dept_name as mdo_name, ms_name as ministry_name
+        from master_org_hierarchy where dept_id is not null),
+    master_organisation as (select distinct(org_id) as mdo_id, org_name as mdo_name, ms_name as ministry_name
+        from master_org_hierarchy where org_id is not null),
+    mdo_master as (select * from master_ministry union select * from master_department union select * from master_organisation),
+    course_user_detail as (select mu.user_id, root_org_id as mdo_id, completion_status
+        from user_course_enrolment as uce, master_user as mu 
+        where uce.user_id = mu.user_id and course_id = \''.$course.'\')
+    select 
+        mm.ministry_name, 
+        count(cud.user_id)  as enrolled_count,
+        count(cud.user_id) filter (where cud.completion_status = \'Not Started\') as not_started,
+        count(cud.user_id) filter (where cud.completion_status = \'In-Progress\') as in_progress,
+        count(cud.user_id) filter (where cud.completion_status = \'Completed\') as completed_count
+    from mdo_master as mm left outer join course_user_detail as cud
+    on mm.mdo_id = cud.mdo_id '.$likeQuery.'
+    group by mm.ministry_name
+    order by '. (int) $orderBy + 1 . ' ' . $orderDir .$limitQuery;
 
         $query = $this->db->query($queryString);
 
-        $template = [
-            'table_open' => '<table id="tbl-result" class="display dataTable report-table" style="width:90%">'
-
-        ];
-
+         
         return $query;
 
     }

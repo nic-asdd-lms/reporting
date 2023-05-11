@@ -641,11 +641,11 @@
                             <option value="collectionEnrolmentCount">Curated Collection-wise summary</option>
                             <option value="cbpProviderWiseCourseCount">CBP Provider-wise course count</option>
                             <?php
-                            // $session = \Config\Services::session();
+                            $session = \Config\Services::session();
 
-                            // if ($session->get('role') == 'SPV_ADMIN') {
-                            //     echo '<option value="courseMinistrySummary">Ministry-wise summary for course</option>';
-                            // } ?>
+                            if ($session->get('role') == 'SPV_ADMIN') {
+                                echo '<option value="courseMinistrySummary">Ministry-wise summary for course</option>';
+                            } ?>
                         </select>
 
                     </div>

@@ -217,9 +217,9 @@ class Report extends BaseController
                 $resultFiltered = $course->getCourseCountByCBPProvider(-1, 0, $search, $orderBy, $orderDir);
 
             } else if ($reportType == 'courseMinistrySummary') {
-                $result = $enrolment->getUserEnrolmentCountByMDO($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-                $fullResult = $enrolment->getUserEnrolmentCountByMDO($orgName, -1, 0, '', $orderBy, $orderDir);
-                $resultFiltered = $enrolment->getUserEnrolmentCountByMDO($orgName, -1, 0, $search, $orderBy, $orderDir);
+                $result = $enrolment->getCourseMinistrySummary($course, $limit, $offset, $search, $orderBy, $orderDir);
+                $fullResult = $enrolment->getCourseMinistrySummary($course, -1, 0, '', $orderBy, $orderDir);
+                $resultFiltered = $enrolment->getCourseMinistrySummary($course, -1, 0, $search, $orderBy, $orderDir);
             } else if ($reportType == 'roleWiseCount') {
                 $result = $user->getRoleWiseCount($orgName, $limit, $offset, $search, $orderBy, $orderDir);
                 $fullResult = $user->getRoleWiseCount($orgName, -1, 0, '', $orderBy, $orderDir);
@@ -669,7 +669,7 @@ class Report extends BaseController
                 
 
             } else if ($courseReportType == 'courseMinistrySummary') {
-                $table->setHeading('Ministry Name', 'Enrollment Count', 'Completion Count');
+                $table->setHeading('Ministry/State Name', 'Enrolled', 'Not Started','In Progress','Completed');
 
                 $session->setTempdata('fileName', $course . '_MinistrySummary', 300);
 

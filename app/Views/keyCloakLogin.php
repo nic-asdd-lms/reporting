@@ -32,7 +32,7 @@
                         {
                             window.location.replace("/unauthorized");
                         }
-                }).catch(function() {
+                }).error(function() {
                     alert('failed to initialize');
              });
             }
