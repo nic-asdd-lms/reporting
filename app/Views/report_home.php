@@ -644,7 +644,7 @@
                             $session = \Config\Services::session();
 
                             if ($session->get('role') == 'SPV_ADMIN') {
-                                echo '<option value="courseMinistrySummary">Ministry-wise summary for course</option>';
+                                echo '<option value="courseMinistrySummary">Ministry-wise summary for a course</option>';
                             } ?>
                         </select>
 
