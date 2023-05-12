@@ -114,6 +114,15 @@ class Report extends BaseController
                     } else
                         $ministry = $session->getTempdata('ministry');
 
+                } else if ($reportType == 'atiWiseOverview' ) {
+                    if ($session->get('role') == 'ATI_ADMIN') {
+                        $org = $session->get('organisation');
+                        $orgName = $orgModel->getOrgName($org)->org_name;
+                    } else {
+                        $org = '';
+                        $orgName = '';
+                    }
+
                 }
 
 
@@ -322,9 +331,9 @@ class Report extends BaseController
                     $resultFiltered = $course->getMonthWiseCourses(-1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'atiWiseOverview') {
-                    $result = $enrolmentProgram->getATIWiseCount($limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolmentProgram->getATIWiseCount(-1, 0, '', $orderBy, $orderDir);
-                    $resultFiltered = $enrolmentProgram->getATIWiseCount(-1, 0, $search, $orderBy, $orderDir);
+                    $result = $enrolmentProgram->getATIWiseCount($org,$limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolmentProgram->getATIWiseCount($org,-1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolmentProgram->getATIWiseCount($org,-1, 0, $search, $orderBy, $orderDir);
 
                 }
 
@@ -726,6 +735,9 @@ class Report extends BaseController
                 $user = new MasterUserModel();
                 $lastUpdate = new DataUpdateModel();
 
+                $segments = $request->uri->getSegments();
+                $reportType = $request->getPost('courseReportType') ? $request->getPost('courseReportType') : $segments[1];
+
                 if ($roleReportType == 'notSelected') {
                     echo '<script>alert("Please select report type!");</script>';
                     return view('header_view')
@@ -923,6 +935,9 @@ class Report extends BaseController
                 $analyticsReportType = $request->getPost('analyticsReportType');
                 $role = $session->get('role');
 
+                $segments = $request->uri->getSegments();
+                $reportType = $request->getPost('courseReportType') ? $request->getPost('courseReportType') : $segments[1];
+
                 $home = new Home();
                 $user = new MasterUserModel();
                 $course = new MasterCourseModel();
@@ -1009,6 +1024,8 @@ class Report extends BaseController
                 $user = new UserEnrolmentProgram();
                 $lastUpdate = new DataUpdateModel();
 
+                $segments = $request->uri->getSegments();
+                $reportType = $request->getPost('doptReportType') ? $request->getPost('doptReportType') : $segments[1];
 
                 $data['lastUpdated'] = '[Report as on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
 
@@ -1017,21 +1034,23 @@ class Report extends BaseController
                     $org = $session->get('organisation');
                 }
                 $doptReportType = $request->getPost('doptReportType');
-                if ($doptReportType == 'notSelected') {
+                if ($reportType == 'notSelected') {
                     echo '<script>alert("Please select report type!");</script>';
                     return view('header_view')
                         . view('footer_view');
                 } else {
 
                     $ati = $request->getPost('ati');
-                    if ($doptReportType == 'atiWiseOverview') {
-                        $table->setHeading('Program Name', 'Institute', 'Enrolled', 'Not Started', 'In Progress', 'Completed');
+                    if ($reportType == 'atiWiseOverview') {
+                        $table->setHeading('Program Name', 'Batch ID','Institute', 'Enrolled', 'Not Started', 'In Progress', 'Completed');
 
                         $session->setTempdata('fileName', 'ATI-wise Overview', 300);
 
                         $data['resultHTML'] = $table->generate();
                         $data['reportTitle'] = 'ATI-wise Overview';
                     }
+
+                    $data['reportType'] = $reportType;
 
                     return view('header_view')
                         . view('report_result', $data)

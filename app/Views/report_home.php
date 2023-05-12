@@ -904,7 +904,7 @@
             <div id="ATI" class="tabcontent">
 
 
-                <form class="form-horizontal login_form" action="<?php echo base_url('/getAtiReport'); ?>"
+                <form class="form-horizontal login_form" action="<?php echo base_url('/getDoptReport'); ?>"
                     method="post">
 
                     <div class="report-type">
