@@ -85,7 +85,7 @@ class MasterUserModel extends Model
             $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
             $builder->like('roles', 'MDO_ADMIN');
             if ($orgName != '') {
-                $builder->where('org_name', $orgName);
+                $builder->where('master_organization.org_name', $orgName);
 
             }
             if ($search != '')
@@ -423,7 +423,7 @@ class MasterUserModel extends Model
             $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
             $builder->like('roles', 'CBP_ADMIN');
             if ($orgName != '') {
-                $builder->where('org_name', $orgName);
+                $builder->where('master_organization.org_name', $orgName);
 
             }
             if ($search != '')
@@ -456,7 +456,7 @@ class MasterUserModel extends Model
             $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
             $builder->like('roles', 'CONTENT_CREATOR');
             if ($orgName != '') {
-                $builder->where('org_name', $orgName);
+                $builder->where('master_organization.org_name', $orgName);
             }
             if ($search != '')
                 $builder->where("(first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%'
@@ -488,7 +488,7 @@ class MasterUserModel extends Model
             $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
             $builder->like('roles', 'CONTENT_REVIEWER');
             if ($orgName != '') {
-                $builder->where('org_name', $orgName);
+                $builder->where('master_organization.org_name', $orgName);
             }
             if ($search != '')
                 $builder->where("(first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%'
@@ -520,7 +520,7 @@ class MasterUserModel extends Model
             $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
             $builder->like('roles', 'CONTENT_PUBLISHER');
             if ($orgName != '') {
-                $builder->where('org_name', $orgName);
+                $builder->where('master_organization.org_name', $orgName);
             }
             if ($search != '')
                 $builder->where("(first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%'
@@ -553,7 +553,7 @@ class MasterUserModel extends Model
             $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
             $builder->like('roles', 'EDITOR');
             if ($orgName != '') {
-                $builder->where('org_name', $orgName);
+                $builder->where('master_organization.org_name', $orgName);
             }
             if ($search != '')
                 $builder->where("(first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%'
@@ -586,7 +586,7 @@ class MasterUserModel extends Model
             $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
             $builder->like('roles', 'FRAC_ADMIN');
             if ($orgName != '') {
-                $builder->where('org_name', $orgName);
+                $builder->where('master_organization.org_name', $orgName);
             }
             if ($search != '')
                 $builder->where("(first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%'
@@ -617,7 +617,7 @@ class MasterUserModel extends Model
             $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
             $builder->like('roles', 'FRAC_COMPETENCY_MEMBER');
             if ($orgName != '') {
-                $builder->where('org_name', $orgName);
+                $builder->where('master_organization.org_name', $orgName);
             }
             if ($search != '')
                 $builder->where("(first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%'
@@ -648,7 +648,7 @@ class MasterUserModel extends Model
             $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
             $builder->like('roles', 'FRAC_REVIEWER_L1');
             if ($orgName != '') {
-                $builder->where('org_name', $orgName);
+                $builder->where('master_organization.org_name', $orgName);
             }
             if ($search != '')
                 $builder->where("(first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%'
@@ -678,7 +678,7 @@ class MasterUserModel extends Model
         $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
         $builder->like('roles', 'FRAC_REVIEWER_L2');
         if ($orgName != '') {
-            $builder->where('org_name', $orgName);
+            $builder->where('master_organization.org_name', $orgName);
         }
         if ($search != '')
             $builder->where("(first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%'
@@ -705,7 +705,7 @@ class MasterUserModel extends Model
         $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
         $builder->like('roles', 'IFU_MEMBER');
         if ($orgName != '') {
-            $builder->where('org_name', $orgName);
+            $builder->where('master_organization.org_name', $orgName);
         }
         if ($search != '')
             $builder->where("(first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%'
@@ -732,7 +732,7 @@ class MasterUserModel extends Model
         $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
         $builder->like('roles', 'PUBLIC');
         if ($orgName != '') {
-            $builder->where('org_name', $orgName);
+            $builder->where('master_organization.org_name', $orgName);
         }
         if ($search != '')
             $builder->where("(first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%'
@@ -759,7 +759,7 @@ class MasterUserModel extends Model
         $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
         $builder->like('roles', 'SPV_ADMIN');
         if ($orgName != '') {
-            $builder->where('org_name', $orgName);
+            $builder->where('master_organization.org_name', $orgName);
         }
         if ($search != '')
             $builder->where("(first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%'
@@ -786,7 +786,7 @@ class MasterUserModel extends Model
         $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
         $builder->like('roles', 'STATE_ADMIN');
         if ($orgName != '') {
-            $builder->where('org_name', $orgName);
+            $builder->where('master_organization.org_name', $orgName);
         }
         if ($search != '')
             $builder->where("(first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%'
@@ -813,7 +813,7 @@ class MasterUserModel extends Model
         $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
         $builder->like('roles', 'WAT_MEMBER');
         if ($orgName != '') {
-            $builder->where('org_name', $orgName);
+            $builder->where('master_organization.org_name', $orgName);
         }
         if ($search != '')
             $builder->where("(first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%'

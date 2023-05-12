@@ -43,7 +43,7 @@ class UserEnrolmentCourse extends Model
     public function getCourseWiseEnrolmentCount($org, $limit, $offset, $search, $orderBy, $orderDir)
     {
         if ($search != '') {
-            $likeQuery = " AND  course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtoupper($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%' ";
+            $likeQuery = " AND  (course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtoupper($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%' )";
 
         } else {
             $likeQuery = '';
@@ -54,7 +54,7 @@ class UserEnrolmentCourse extends Model
             $limitQuery = '';
 
         if ($org == '') {
-            $query = $this->db->query('SELECT course_name, master_course.org_name, to_date(published_date,\'DD-MM-YYYY\'), durationhms,COUNT(*) AS enrolled_count,
+            $query = $this->db->query('SELECT course_name, master_course.org_name, to_date(published_date,\'DD-MM-YYYY\'), durationhms,COUNT(distinct user_course_enrolment.user_id) AS enrolled_count,
             SUM(CASE WHEN user_course_enrolment.completion_status =\'Not Started\' THEN 1 ELSE 0 END) AS not_started,
             SUM(CASE WHEN user_course_enrolment.completion_status =\'In-Progress\' THEN 1 ELSE 0 END) AS in_progress, 
             SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count, avg_rating
@@ -64,7 +64,7 @@ class UserEnrolmentCourse extends Model
             GROUP BY course_name,master_course.org_name,published_date, durationhms,avg_rating
             ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
         } else {
-            $query = $this->db->query('SELECT course_name, master_course.org_name,  to_date(published_date,\'DD-MM-YYYY\'), durationhms,COUNT(*) AS enrolled_count,
+            $query = $this->db->query('SELECT course_name, master_course.org_name,  to_date(published_date,\'DD-MM-YYYY\'), durationhms,COUNT(distinct user_course_enrolment.user_id) AS enrolled_count,
             SUM(CASE WHEN user_course_enrolment.completion_status =\'Not Started\' THEN 1 ELSE 0 END) AS not_started,
             SUM(CASE WHEN user_course_enrolment.completion_status =\'In-Progress\' THEN 1 ELSE 0 END) AS in_progress, 
             SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count, avg_rating
@@ -104,7 +104,7 @@ class UserEnrolmentCourse extends Model
     mdo_master as (select * from master_ministry union select * from master_department union select * from master_organisation),
     course_user_detail as (select mu.user_id, root_org_id as mdo_id, completion_status
         from user_course_enrolment as uce, master_user as mu 
-        where uce.user_id = mu.user_id and course_id = \''.$course.'\')
+        where uce.user_id = mu.user_id and course_id = \'' . $course . '\')
     select 
         mm.ministry_name, 
         count(cud.user_id)  as enrolled_count,
@@ -112,13 +112,13 @@ class UserEnrolmentCourse extends Model
         count(cud.user_id) filter (where cud.completion_status = \'In-Progress\') as in_progress,
         count(cud.user_id) filter (where cud.completion_status = \'Completed\') as completed_count
     from mdo_master as mm left outer join course_user_detail as cud
-    on mm.mdo_id = cud.mdo_id '.$likeQuery.'
+    on mm.mdo_id = cud.mdo_id ' . $likeQuery . '
     group by mm.ministry_name
-    order by '. (int) $orderBy + 1 . ' ' . $orderDir .$limitQuery;
+    order by ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery;
 
         $query = $this->db->query($queryString);
 
-         
+
         return $query;
 
     }
@@ -142,6 +142,11 @@ class UserEnrolmentCourse extends Model
         } else
             $limitQuery = '';
 
+        if ($org == '')
+            $whereOrg = '';
+        else
+            $whereOrg = 'AND master_user.root_org_id = \'' . $org . '\'';
+
         $query = $this->db->query('SELECT DISTINCT concat(first_name, \' \', last_name) as name, "email", "master_organization"."org_name", "designation", "course_name", "completion_status", 
         "completion_percentage", "completed_on" 
         FROM "user_course_enrolment" 
@@ -151,7 +156,7 @@ class UserEnrolmentCourse extends Model
         JOIN "master_course" ON "master_course"."course_id" = "user_course_enrolment"."course_id" 
         JOIN "master_curated_collection" ON "course_curated"."curated_id" = "master_curated_collection"."curated_id" 
         WHERE "master_curated_collection"."curated_id" = \'' . $collection . '\' 
-        AND "course_curated"."type" = \'Course\' ' . $likeQuery . '
+        AND "course_curated"."type" = \'Course\' ' . $likeQuery . $whereOrg. '
         
         UNION
         
@@ -164,7 +169,7 @@ class UserEnrolmentCourse extends Model
 		JOIN "course_curated" a ON "a"."course_id" = "user_course_enrolment"."course_id" 
         JOIN "course_curated" b ON "a"."curated_id" = "b"."course_id" 
         WHERE "b"."curated_id" = \'' . $collection . '\'  
-        AND "b"."type" = \'CuratedCollections\' ' . $likeQuery . '
+        AND "b"."type" = \'CuratedCollections\' ' . $likeQuery . $whereOrg.'
         ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
 
 
@@ -193,12 +198,7 @@ class UserEnrolmentCourse extends Model
     public function getCollectionWiseEnrolmentCount($course, $org, $limit, $offset, $search, $orderBy, $orderDir)
     {
         if ($search != '') {
-            $likeQuery = " AND (first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtoupper($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%' 
-                            OR last_name LIKE '%" . strtolower($search) . "%' OR last_name LIKE '%" . strtoupper($search) . "%' OR last_name LIKE '%" . ucfirst($search) . "%'
-                            OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
-                            OR master_organization.org_name LIKE '%" . strtolower($search) . "%' OR master_organization.org_name LIKE '%" . strtoupper($search) . "%' OR master_organization.org_name LIKE '%" . ucfirst($search) . "%'
-                            OR course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtoupper($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%'
-                            OR designation LIKE '%" . strtolower($search) . "%' OR designation LIKE '%" . strtoupper($search) . "%' OR designation LIKE '%" . ucfirst($search) . "%') ";
+            $likeQuery = " AND (course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtoupper($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%') ";
 
         } else {
             $likeQuery = '';
@@ -330,7 +330,7 @@ class UserEnrolmentCourse extends Model
             FROM  master_user
             WHERE master_user.org_name=\'' . $org . '\' ' . $likeQuery .
             'AND master_user.user_id NOT IN (SELECT DISTINCT user_id from user_course_enrolment)
-            ORDER BY ' . (int) $orderBy . ' ' . $orderDir . $limitQuery);
+            ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
 
 
         return $query;

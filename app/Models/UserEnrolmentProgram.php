@@ -29,6 +29,9 @@ class UserEnrolmentProgram extends Model
                             OR designation LIKE '%" . strtolower($search) . "%' OR designation LIKE '%" . strtoupper($search) . "%' OR designation LIKE '%" . ucfirst($search) . "%'
                             OR batch_id LIKE '%" . strtolower($search) . "%' OR batch_id LIKE '%" . strtoupper($search) . "%' OR batch_id LIKE '%" . ucfirst($search) . "%'
                             OR master_organization.org_name LIKE '%" . strtolower($search) . "%' OR master_organization.org_name LIKE '%" . strtoupper($search) . "%' OR master_organization.org_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
+            if ($org != '') {
+                $builder->where('master_user.root_org_id', $org);
+            }
             $builder->orderBy((int) $orderBy + 1, $orderDir);
             if ($limit != -1)
                 $builder->limit($limit, $offset);
@@ -47,7 +50,7 @@ class UserEnrolmentProgram extends Model
 
 
         if ($search != '') {
-            $likeQuery = " AND  program_name LIKE '%" . strtolower($search) . "%' OR program_name LIKE '%" . strtoupper($search) . "%' OR program_name LIKE '%" . ucfirst($search) . "%' ";
+            $likeQuery = " AND  (program_name LIKE '%" . strtolower($search) . "%' OR program_name LIKE '%" . strtoupper($search) . "%' OR program_name LIKE '%" . ucfirst($search) . "%' )";
 
         } else {
             $likeQuery = '';
@@ -67,8 +70,9 @@ class UserEnrolmentProgram extends Model
         } else {
             $query = $this->db->query('SELECT program_name, batch_id, COUNT(*) AS enrolled_count
       ,SUM(CASE WHEN user_program_enrolment.status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count
-  FROM user_program_enrolment, master_program
+  FROM user_program_enrolment, master_program, master_user
   WHERE user_program_enrolment.program_id = master_program.program_id 
+  AND user_program_enrolment.user_id = master_user.user_id
   AND master_user.root_org_id=\'' . $org . '\'' . $likeQuery . '
   GROUP BY program_name,batch_id
   ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);

@@ -1,7 +1,9 @@
 Files changed after previous deployment:
 
-1. app/Views/report-home.php                ->      search box
-2. app/Controller/Login.php                 ->      Keycloak authentication
-3. app/Views/keyCloakLogin.php              ->      Keycloak authentication
-4. app/Models/UserProgramEnrolment.php      ->      Added column Batch ID
-5. app/Controllers/Report.php               ->      Added column Batch ID for Program Report, File format Xls
+1. app/Views/report-home.php                ->      Reports disabled for MOD Admin
+2. app/Controller/Home.php                  ->      Session Handling
+3. app/Controller/Report.php                ->      Session Handling
+4. app/Models/UserProgramEnrolment.php      ->      MDO Admin reports
+5. app/Models/UserCourseEnrolment.php       ->      MDO Admin reports
+6. app/Helpers/session_helper.php           ->      New
+7. app/Models/MasterUserModel.php           ->      MDO Admin reports
