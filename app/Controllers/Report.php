@@ -160,9 +160,9 @@ class Report extends BaseController
                     $resultFiltered = $user->getUserByMinistry($ministryName, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'userWiseCount') {
-                    $result = $enrolment->getEnrolmentByOrg($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getEnrolmentByOrg($orgName, -1, 0, '', $orderBy, $orderDir);
-                    $resultFiltered = $enrolment->getEnrolmentByOrg($orgName, -1, 0, $search, $orderBy, $orderDir);
+                    $result = $enrolment->getUserEnrolmentCountByMDO($orgName, $limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getUserEnrolmentCountByMDO($orgName, -1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getUserEnrolmentCountByMDO($orgName, -1, 0, $search, $orderBy, $orderDir);
                 } else if ($reportType == 'orgList') {
                     $result = $orgModel->getOrgList($limit, $offset, $search, $orderBy, $orderDir);
                     $fullResult = $orgModel->getOrgList(-1, 0, '', $orderBy, $orderDir);
@@ -515,9 +515,9 @@ class Report extends BaseController
 
                 } else if ($reportType == 'userWiseCount') {
 
-                    $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Course', 'Status', 'Completion Percentage', 'Completed On');
+                    $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'No. of Courses Enrolled', 'No. of Courses Completed');
 
-                    $session->setTempdata('fileName', $orgName . '_UserList', 300);
+                    $session->setTempdata('fileName', $orgName . '_UserWiseSummary', 300);
 
                     $data['resultHTML'] = $table->generate();
                     $data['reportTitle'] = 'User-wise course enrolment/completion count for organisation - "' . $orgName . '"';
