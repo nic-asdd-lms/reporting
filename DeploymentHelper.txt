@@ -1,9 +1,5 @@
 Files changed after previous deployment:
 
-1. app/Views/report-home.php                ->      Reports disabled for MOD Admin
-2. app/Controller/Home.php                  ->      Session Handling
-3. app/Controller/Report.php                ->      Session Handling
-4. app/Models/UserProgramEnrolment.php      ->      MDO Admin reports
-5. app/Models/UserCourseEnrolment.php       ->      MDO Admin reports
-6. app/Helpers/session_helper.php           ->      New
-7. app/Models/MasterUserModel.php           ->      MDO Admin reports
+1. app/Views/report-home.php                ->      ATI reports
+2. app/Controller/Report.php                ->      ATI reports
+3. app/Models/UserProgramEnrolment.php      ->      ATI reports
