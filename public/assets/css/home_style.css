@@ -19,9 +19,10 @@ body {
 }
 
 .required:after {
-    content:" *";
+    content: " *";
     color: red;
 }
+
 .lbl-reporttype {
     font-family: Lato;
     font-weight: 600;
@@ -156,5 +157,47 @@ section svg {
 }
 
 datalist {
-    display:block;
+    display: block;
 }
+
+.datalist-options {
+    display: none;
+}
+
+
+hr {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: 0;
+    border-top-color: currentcolor;
+    border-top-style: none;
+    border-top-width: 0px;
+    border-top: 1px solid #f0dbbe;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+div #tbl{
+    display: none;
+}
+
+datalist {
+    position: absolute;
+    max-height: 20em;
+    border: 0 none;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  
+  datalist option {
+    font-size: 0.8em;
+    padding: 0.3em 1em;
+    background-color: #ccc;
+    cursor: pointer;
+  }
+  
+  datalist option:hover, datalist option:focus {
+    color: #fff;
+    background-color: #036;
+    outline: 0 none;
+  }

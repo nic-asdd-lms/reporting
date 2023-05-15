@@ -42,6 +42,23 @@ catch (\Exception $e) {
         } 
         
     }
+
+    public function collectionSearch($search_key) {
+        try {
+            $builder = $this->db->table('master_curated_collection');
+        $builder->select('curated_id, curated_name');
+        $builder->where('(SIMILARITY(curated_name,\''.$search_key.'\') > 0.1)', NULL, FALSE);
+        $builder->orderBy('SIMILARITY(curated_name,\''.$search_key.'\') desc');
+        $query = $builder->get();
+        
+        return $query->getResult();
+        }
+        catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        } 
+        
+    }
+
     
 
 }

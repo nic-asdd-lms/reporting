@@ -46,24 +46,37 @@
 </head>
 
 <script>
+    $(document).ready(function () {
+        var error =document.getElementById('error');
+        var result_info =document.getElementById('tbl-result_info');
+        
+        // if(result_info == null)
+        //     error.innerHTML = 'No matching records found';
+        // else    
+        //     error.innerHTML = '';
+    });
     
 
     $(document).ready(function () {
         var columns = [];
         reportType = document.getElementById('reportType').value;
+        var error =document.getElementById('error');
         
         $.ajax({
             
             url: "<?php echo base_url('/getReport') ?>" + '/' + reportType + '?length=1&start=0&draw=1&search[value]=&order[0][column]=&order[0][dir]=',
             success: function (data) {
                 tableData = JSON.parse(JSON.stringify(data));
-                columnNames = Object.keys(tableData.data[0]);
-                for (var i in columnNames) {
+                error.innerHTML = '';
+                    columnNames = Object.keys(tableData.data[0]);
+                    for (var i in columnNames) {
                     columns.push({
                         data: columnNames[i],
                         searchable: true
                     });
+                
                 }
+                
 
                 $('#tbl-result').DataTable({
                     autoWidth: true,
@@ -89,7 +102,7 @@
 </script>
 
 
-<body onload="initKeycloak()">
+<body>
     <div>
         <div class="report-date">
             <?php echo $lastUpdated ?>
@@ -124,11 +137,15 @@
 
                     ?>
                     <div class="error">
-                    <label  class="error">
-                        <?php $session = \Config\Services::session();
-                        echo $session->getTempdata('error'); ?>
-                    </label>
-    </div>
+                        <label  class="error" id="error">
+                            <?php
+                            $session = \Config\Services::session();
+                            echo $session->getTempdata('error');
+                            $session->removeTempdata('error');
+                            
+                            ?>
+                        </label>
+                    </div>
 
                 </form>
             </section>

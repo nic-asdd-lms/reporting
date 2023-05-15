@@ -205,6 +205,24 @@ class MasterCourseModel extends Model
         }
     }
 
+    public function courseSearch($search_key) {
+        try {
+            $builder = $this->db->table('master_course');
+        $builder->select('course_id, course_name');
+        $builder->where('(SIMILARITY(course_name,\''.$search_key.'\') > 0.1)', NULL, FALSE);
+        $builder->where('status', 'Live');
+        $builder->orderBy('SIMILARITY(course_name,\''.$search_key.'\') desc');
+        $query = $builder->get();
+        
+        // $result = $this->db->query('SELECT org_name FROM master_organization WHERE SIMILARITY(org_name,\''.$search_key.'\') > 0.4 ;');
+        // echo $search_key,json_encode($query);
+        return $query->getResult();
+        }
+        catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        } 
+        
+    }
 
 }
 

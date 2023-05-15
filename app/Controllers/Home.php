@@ -32,13 +32,7 @@ class Home extends BaseController
             if (session_exists()) {
 
                 helper(['form', 'url']);
-                $masterStructureModel = new MasterStructureModel();
-                $masterOrganizationModel = new MasterOrganizationModel();
-                $masterCourseModel = new MasterCourseModel();
-                $data['mdoReportTypes'] = $this->getMDOReportTypes();
-                $data['ministry'] = $masterStructureModel->getMinistry();
-                $data['org'] = $masterOrganizationModel->getOrganizations();
-                $data['course'] = $masterCourseModel->getCourse();
+                
                 $data['error'] = '';
                 return view('header_view')
                     . view('report_home', $data)
@@ -125,22 +119,31 @@ class Home extends BaseController
                         $collectionData = $collectionModel->getCollection();
 
                         echo json_encode($collectionData);
-                    } else if ($action == 'search') {
-                        //Search box value assigning to $Name variable.
+                    } else if ($action == 'org_search') {
                         $search_key = $this->request->getVar('search_key');
-                        //Search query.
+                        $reportType = $this->request->getVar('reportType');
                         $orgModel = new MasterOrganizationModel();
-                        $orgdata = $orgModel->searchOrg($search_key);
-
+                        $ministryModel = new MasterStructureModel();
+                        
+                        if ($reportType == 'ministryUserEnrolment' || $reportType == 'orgHierarchy')
+                            $orgdata = $ministryModel->getMinistry();
+                        else
+                            $orgdata = $orgModel->getOrganizations();
 
                         echo json_encode($orgdata);
-
-                        //Query execution
-
-                        //Creating unordered list to display result.
                     } else if ($action == 'course_search') {
+                        $search_key = $this->request->getVar('search_key');
                         $courseModel = new MasterCourseModel();
-                        $courseData = $courseModel->getCourse();
+                        $programModel = new MasterProgramModel();
+                        $collectionModel = new MasterCollectionModel();
+                        $reportType = $this->request->getVar('reportType');
+
+                        if ($reportType == 'courseEnrolmentReport' || $reportType == 'courseMinistrySummary' )
+                            $courseData = $courseModel->courseSearch($search_key);
+                        else if ($reportType == 'programEnrolmentReport')
+                            $courseData = $programModel->programSearch($search_key);
+                        else if ($reportType == 'collectionEnrolmentReport')
+                            $courseData = $collectionModel->collectionSearch($search_key);
 
                         echo json_encode($courseData);
                     } else if ($action == 'get_hierarchy') {

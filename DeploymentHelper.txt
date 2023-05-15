@@ -1,5 +1,0 @@
-Files changed after previous deployment:
-
-1. app/Views/report-home.php                ->      ATI reports
-2. app/Controller/Report.php                ->      ATI reports
-3. app/Models/UserProgramEnrolment.php      ->      ATI reports

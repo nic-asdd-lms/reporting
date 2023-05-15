@@ -336,6 +336,32 @@ class UserEnrolmentCourse extends Model
         return $query;
     }
 
+    public function getEnrolmentCountByOrg($org, $limit, $offset, $search, $orderBy, $orderDir)
+    {
+        $table = new \CodeIgniter\View\Table();
+        $builder = $this->db->table('user_course_enrolment');
+        $builder->select('concat(first_name,\' \',last_name) as name, email, master_organization.org_name, designation, course_name, user_course_enrolment.completion_status, completion_percentage, completed_on');
+        $builder->join('master_user', 'master_user.user_id = user_course_enrolment.user_id ');
+        $builder->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id ');
+        $builder->join('master_course', 'master_course.course_id = user_course_enrolment.course_id ');
+        $builder->where('master_organization.org_name', $org);
+        $builder->where('master_course.status', 'Live');
+        if ($search != '')
+            $builder->where("(first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%' 
+                            OR last_name LIKE '%" . strtolower($search) . "%' OR last_name LIKE '%" . strtoupper($search) . "%' OR last_name LIKE '%" . ucfirst($search) . "%'
+                            OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
+                            OR designation LIKE '%" . strtolower($search) . "%' OR designation LIKE '%" . strtoupper($search) . "%' OR designation LIKE '%" . ucfirst($search) . "%'
+                            OR course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtoupper($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
+
+        $builder->orderBy((int) $orderBy + 1, $orderDir);
+
+        if ($limit != -1)
+            $builder->limit($limit, $offset);
+        $query = $builder->get();
+
+        return $query;
+    }
+
 
 
 

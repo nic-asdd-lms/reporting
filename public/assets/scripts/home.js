@@ -23,23 +23,30 @@ function openTab(evt, reprotName) {
 function enable_disable_mdo(value) {
 
     mdo = document.getElementById('tbl');
-    dept = document.getElementById('dept');
-    org = document.getElementById('org');
+    org = document.getElementById('orgname');
 
-    if (value.value == "mdoUserCount" || value.value == "orgList" || value.value == "userList")
-        mdo.style.display = "none"
-
-    else
+    if (value.value == "mdoUserCount" || value.value == "orgList" || value.value == "userList"){
+        mdo.style.display = "none";
+        org.style.display = "none";
+        
+    }
+    else{
         mdo.style.display = "block";
 
+    }
+
     if (value.value == "ministryUserEnrolment" || value.value == "orgHierarchy") {
-        dept.style.display = "none";
-        org.style.display = "none";
+        org.style.display = "block";
+        org.placeholder = "Search Ministry/State";
+        org.value="";
+        
     }
 
     else {
-        dept.style.display = "block";
         org.style.display = "block";
+        org.placeholder = "Search Organisation";
+        org.value="";
+        
     }
 
 }
@@ -48,8 +55,10 @@ function enable_disable_course(value) {
     course = document.getElementById("tbl-course");
     if (value.value == "courseEnrolmentCount" || value.value == "programEnrolmentCount" || value.value == "liveCourses" || value.value == "underPublishCourses" || value.value == "underReviewCourses" || value.value == "draftCourses" || value.value == "cbpProviderWiseCourseCount") {
         course.style.display = "none";
+        course.value="";
     } else {
         course.style.display = "block";
+        course.value="";
     }
 
 }
@@ -58,8 +67,10 @@ function enable_disable_program(value) {
     course = document.getElementById("tbl-program");
     if (value.value == "atiWiseOverview") {
         course.style.display = "none";
+        course.value="";
     } else {
         course.style.display = "block";
+        course.value="";
     }
 
 }

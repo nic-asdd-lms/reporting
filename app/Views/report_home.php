@@ -36,30 +36,6 @@
 
         $(document).ready(function () {
 
-            function functABC() {
-                return new Promise(function (resolve, reject) {
-                    //alert('ok') ; 
-                    var org = $('#org').val();
-
-                    $.get('<?php echo base_url('/checkOrgOnboarded'); ?>', { org: org }, function (data) {
-                        //alert(data) ; 
-                    });
-
-                    // $.get({
-                    //     url: "<?php //echo base_url('/checkOrgOnboarded'); ?>",
-                    //     data: { org: org },
-                    //     success: function (data) {
-                    //         alert(data);
-                    //         resolve(data) // Resolve promise and go to then()
-                    //     },
-                    //     error: function (err) {
-                    //         alert(data);
-                    //         reject(err) // Reject the promise and go to catch()
-                    //     }
-                    // });
-                });
-            }
-
             $("#mdowisereportform").submit(function (event) {
                 var mdoReportType = $('#mdoReportType').val();
                 if (mdoReportType == 'notSelected') {
@@ -77,56 +53,61 @@
                 }
                 else if (mdoReportType == 'mdoUserList' || mdoReportType == 'mdoUserEnrolment')                //  Report type 2nd option validation 
                 {
-                    var ms = $('#ms_type').val();
-                    var ministry = $('#ministry').val();
-                    var dept = $('#dept').val();
+                    // var ms = $('#ms_type').val();
+                    // var ministry = $('#ministry').val();
+                    // var dept = $('#dept').val();
                     var org = $('#org').val();
 
-                    if (document.getElementById('ms_type').style.display != "none" && ms == 'notSelected') {
+                    if (org == '') {
                         Swal.fire({
                             title: 'Error!',
-                            text: 'Please Select Ministry/State!',
+                            text: 'Please Select Organisation!',
                             icon: 'error',
                             confirmButtonText: 'OK'
                         });
                         return false;
                     }
-                    else if (ms == 'ministry') {
-
-                        if (ministry == 'notSelected') {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'Please Select Ministry!',
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
-                            return false;
-                        }
-
-                    }
-                    else if (ms == 'state') {
-                        var state = $('#ministry').val();
-                        if (state == 'notSelected') {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'Please Select State!',
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
-                            return false;
-                        }
-                        else {
+                    else {
                             return true;
                         }
-                    }
+                    // else if (ms == 'ministry') {
+
+                    //     if (ministry == '') {
+                    //         Swal.fire({
+                    //             title: 'Error!',
+                    //             text: 'Please Select Ministry!',
+                    //             icon: 'error',
+                    //             confirmButtonText: 'OK'
+                    //         });
+                    //         return false;
+                    //     }
+
+                    // }
+                    // else if (ms == 'state') {
+                    //     var state = $('#ministry').val();
+                    //     if (state == '') {
+                    //         Swal.fire({
+                    //             title: 'Error!',
+                    //             text: 'Please Select State!',
+                    //             icon: 'error',
+                    //             confirmButtonText: 'OK'
+                    //         });
+                    //         return false;
+                    //     }
+                    //     else {
+                    //         return true;
+                    //     }
+                    // }
 
 
 
                 }
-                else if (mdoReportType == 'orgHierarchy')             //Report type 3rd option validation  
+                else if (mdoReportType == 'orgHierarchy' || mdoReportType == 'ministryUserEnrolment')             //Report type 3rd option validation  
                 {
-                    var ms = $('#ms_type').val();
-                    if (ms == 'notSelected') {
+                    var org = $('#org').val();
+
+                    // var ms = $('#ms_type').val();
+                    if (org == '') {
                         Swal.fire({
                             title: 'Error!',
                             text: 'Please Select Ministry/State!',
@@ -135,80 +116,80 @@
                         });
                         return false;
                     }
-                    else if (ms == 'ministry') {
-                        var ministry = $('#ministry').val();
-                        if (ministry == 'notSelected') {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'Please Select Ministry!',
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
-                            return false;
-                        }
-                        else {
-                            return true;
-                        }
-                    }
-                    else if (ms == 'state') {
-                        var state = $('#ministry').val();
-                        if (state == 'notSelected') {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'Please Select State!',
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
-                            return false;
-                        }
-                        else {
-                            return true;
-                        }
-                    }
+                    // else if (ms == 'ministry') {
+                    //     var ministry = $('#ministry').val();
+                    //     if (ministry == 'notSelected') {
+                    //         Swal.fire({
+                    //             title: 'Error!',
+                    //             text: 'Please Select Ministry!',
+                    //             icon: 'error',
+                    //             confirmButtonText: 'OK'
+                    //         });
+                    //         return false;
+                    //     }
+                    //     else {
+                    //         return true;
+                    //     }
+                    // }
+                    // else if (ms == 'state') {
+                    //     var state = $('#ministry').val();
+                    //     if (state == 'notSelected') {
+                    //         Swal.fire({
+                    //             title: 'Error!',
+                    //             text: 'Please Select State!',
+                    //             icon: 'error',
+                    //             confirmButtonText: 'OK'
+                    //         });
+                    //         return false;
+                    //     }
+                    //     else {
+                    //         return true;
+                    //     }
+                    // }
                 }
-                else if (mdoReportType == 'ministryUserEnrolment')       //  Report type 4th option validation 
-                {
-                    var ms = $('#ms_type').val();
-                    if (ms == 'notSelected') {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'Please Select Ministry/State!',
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        });
-                        return false;
-                    }
-                    else if (ms == 'ministry') {
-                        var ministry = $('#ministry').val();
-                        if (ministry == 'notSelected') {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'Please Select Ministry!',
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
-                            return false;
-                        }
-                        else {
-                            return true;
-                        }
-                    }
-                    else if (ms == 'state') {
-                        var state = $('#ministry').val();
-                        if (state == 'notSelected') {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'Please Select State!',
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
-                            return false;
-                        }
-                        else {
-                            return true;
-                        }
-                    }
-                }
+                // else if (mdoReportType == 'ministryUserEnrolment')       //  Report type 4th option validation 
+                // {
+                //     var ms = $('#ms_type').val();
+                //     if (ms == 'notSelected') {
+                //         Swal.fire({
+                //             title: 'Error!',
+                //             text: 'Please Select Ministry/State!',
+                //             icon: 'error',
+                //             confirmButtonText: 'OK'
+                //         });
+                //         return false;
+                //     }
+                //     else if (ms == 'ministry') {
+                //         var ministry = $('#ministry').val();
+                //         if (ministry == 'notSelected') {
+                //             Swal.fire({
+                //                 title: 'Error!',
+                //                 text: 'Please Select Ministry!',
+                //                 icon: 'error',
+                //                 confirmButtonText: 'OK'
+                //             });
+                //             return false;
+                //         }
+                //         else {
+                //             return true;
+                //         }
+                //     }
+                //     else if (ms == 'state') {
+                //         var state = $('#ministry').val();
+                //         if (state == 'notSelected') {
+                //             Swal.fire({
+                //                 title: 'Error!',
+                //                 text: 'Please Select State!',
+                //                 icon: 'error',
+                //                 confirmButtonText: 'OK'
+                //             });
+                //             return false;
+                //         }
+                //         else {
+                //             return true;
+                //         }
+                //     }
+                // }
             });
 
             $("#coursereportform").submit(function () {                    // Tab 2 Validation 
@@ -234,32 +215,31 @@
 
                 else if (courseReportType == 'courseEnrolmentReport')                //  Report type 1st option validation 
                 {
-                    var course = document.querySelector('#course');
-                    console.log(course.value);
-                    const selectedCourse = document.querySelector(`#course_search_result option[value="${course.value}"]`);;
-                    if (selectedCourse) {
-                        course.value = selectedCourse.value;
-                    }
+                    // var course = document.querySelector('#course');
+                    // const selectedCourse = document.querySelector(`#course_search_result option[value="${course.value}"]`);;
+                    // if (selectedCourse) {
+                    //     course.value = selectedCourse.value;
+                    // }
 
-                    // var course = $('#course').val();
-                    // if (course == 'notSelected') {
-                    //     Swal.fire({
-                    //         title: 'Error!',
-                    //         text: 'Please Select Course',
-                    //         icon: 'error',
-                    //         confirmButtonText: 'OK'
-                    //     });
-                    //     return false;
-                    // }
-                    // else {
-                    //     return true;
-                    // }
+                    var course = $('#course').val();
+                    if (course == '') {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Please Select Course',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                        return false;
+                    }
+                    else {
+                        return true;
+                    }
                 }
 
                 else if (courseReportType == 'programEnrolmentReport')                //  Report type 3rd option validation 
                 {
                     var program = $('#course').val();
-                    if (program == 'notSelected') {
+                    if (program == '') {
                         Swal.fire({
                             title: 'Error!',
                             text: 'Please Select program',
@@ -275,7 +255,7 @@
                 else if (courseReportType == 'collectionEnrolmentReport')                //  Report type 5th option validation 
                 {
                     var curated = $('#course').val();
-                    if (curated == 'notSelected') {
+                    if (curated == '') {
                         Swal.fire({
                             title: 'Error!',
                             text: 'Please Select Curated Collection',
@@ -291,10 +271,10 @@
                 else if (courseReportType == 'collectionEnrolmentCount')                //  Report type 5th option validation 
                 {
                     var collection = $('#course').val();
-                    if (collection == 'notSelected') {
+                    if (collection == '') {
                         Swal.fire({
                             title: 'Error!',
-                            text: 'Please Select Collection',
+                            text: 'Please Select Curated Collection',
                             icon: 'error',
                             confirmButtonText: 'OK'
                         });
@@ -359,95 +339,41 @@
             });
         });
 
-        function setMDO(data) {
-            $('#ms_type').val(data.ms_type).trigger("change");
-            // $('select[id^="ministry"] option:selected').attr("selected", null);
-            // $('select[id^="ministry"] option[value="' + data.ms_id + '"]').prop("selected", "selected");
-            //$('#ministry').find('option[value="' + data[0].ms_id + '"]').prop('selected', true).trigger("change");
-            console.log($("#ministry option:selected").text());
-            $('#ministry').find('option[value="' + data.ms_id + '"]').trigger("change");
+        
 
-            $('#dept').val(data.dept_id).trigger("change");
-            $('#org').val(data.org_id);
-        }
-
-        $(document).on('change', 'input#search-result', function () {
-            var options = $('datalist')[0].options;
-            var val = $(this).val();
-            var action = 'get_hierarchy';
-            var ms = document.getElementById('ms_type');
-            var ministry = document.getElementById('ministry');
-            var dept = document.getElementById('dept');
-            var organisation = document.getElementById('org');
-            var org_search = document.getElementById('org_search');
-
-            for (var i = 0; i < options.length; i++) {
-                if (options[i].value === val) {
-                    var selected = val;
-                    break;
-                }
-            }
-
-            $.ajax({
-
-                url: "<?php echo base_url('/action') ?>",
-                method: "POST",
-                data: {
-                    action: action,
-                    org: selected
-                },
-                async: false,
-                dataType: "JSON",
-                success: function (data) {
-                    $('input#ms_type_search').val(data.ms_type);
-                    $('input#ministry_search').val(data.ms_id);
-                    $('input#dept_search').val(data.dept_id);
-                    $('input#org_search').val(data.org_id);
-
-                    ms.style.display = "none";
-                    ministry.style.display = "none";
-                    dept.style.display = "none";
-                    organisation.style.display = "none";
-                    org_search.value = selected;
-
-                    //setMDO(data[0]);
-                    // $('#ms_type').val(data.ms_type).trigger("change");
-                    // $('select[id^="ministry"] option:selected').attr("selected", null);
-                    // $('select[id^="ministry"] option[value="' + data.ms_id + '"]').prop("selected", "selected");
-                    // $('#ministry').find('option[value="' + data[0].ms_id + '"]').prop('selected', true).trigger("change");
-                    // $('#ministry').find('option[value="' + data.ms_id + '"]').trigger("change");
-                    // console.log($("#ministry option:selected").text());
-
-                    // $('#dept').val(data.dept_id).trigger("change");
-                    // $('#org').val(data.org_id);
-
-                }
-
-            });
-        });
 
 
         $(document).ready(function () {
-            $('#org_search').keyup(function () {
+            $('#orgname').keyup(function () {
                 var orgs = [];
-                var action = 'search';
-                search_key = document.getElementById('org_search').value;
+                var action = 'org_search';
+                search_key = document.getElementById('orgname').value;
+                reportType = document.getElementById('mdoReportType').value;
                 $.ajax({
 
                     url: "<?php echo base_url('/action') ?>",
                     method: "POST",
                     data: {
                         action: action,
-                        search_key: search_key
+                        search_key: search_key,
+                        reportType: reportType
                     },
                     dataType: "JSON",
                     success: function (data) {
                         html = '';
-                        for (var count = 0; count < data.length; count++) {
-                            html += '<option class="options" value="' + data[count].org_name + '">';
+                        if (reportType == "ministryUserEnrolment" || reportType == "orgHierarchy") {    //  Fetch ministry names from DB
+                            for (var count = 0; count < data.length; count++) {
+                                html += '<option class="datalist-options" data-value="' + data[count].ms_id + '">' + data[count].ms_name + '</option>';
+                            }
+                        }
+                        else {
+                            for (var count = 0; count < data.length; count++) {                         //  Fetch org names from DB
+                                html += '<option class="datalist-options" data-value="' + data[count].root_org_id + '">' + data[count].org_name + '</option>';
+                            }
                         }
 
-                        $('#search-result').html(html);
+
+                        $('#org_search_result').html(html);
 
 
                     }
@@ -457,26 +383,59 @@
         });
 
         $(document).ready(function () {
-            $('#course').keyup(function () {
+
+
+            $('input[type=text][name=orgname]').change(function () {
+                var options = $('datalist#org_search_result')[0].options;
+                var val = document.getElementById('orgname').value;
+                var org = document.getElementById('org');
+                for (var i = 0; i < options.length; i++) {
+
+                    if (options[i].value === val) {
+                        org.value = options[i].getAttribute('data-value');
+                        break;
+                    }
+                }
+
+
+
+            });
+        });
+
+        $(document).ready(function () {
+            $('#coursename').keyup(function () {
                 var orgs = [];
                 var action = 'course_search';
-                search_key = document.getElementById('course').value;
+                search_key = document.getElementById('coursename').value;
+                reportType = document.getElementById('courseReportType').value;
                 $.ajax({
 
                     url: "<?php echo base_url('/action') ?>",
                     method: "POST",
                     data: {
                         action: action,
-                        search_key: search_key
+                        search_key: search_key,
+                        reportType: reportType
                     },
                     dataType: "JSON",
                     success: function (data) {
                         html = '';
-                        for (var count = 0; count < data.length; count++) {
-                            html += '<option class="options" value="' + data[count].course_name + '">';
+                        if (reportType == 'courseEnrolmentReport' || reportType == 'courseMinistrySummary') {
+                            for (var count = 0; count < data.length; count++) {
+                                html += '<option class="datalist-options" data-value="' + data[count].course_id + '">' + data[count].course_name + '</option>';
+                            }
+                        } else if (reportType == 'programEnrolmentReport') {
+                            for (var count = 0; count < data.length; count++) {
+                                html += '<option class="datalist-options" data-value="' + data[count].program_id + '">' + data[count].program_name + '</option>';
+                            }
+                        } else if (reportType == 'collectionEnrolmentReport') {
+                            for (var count = 0; count < data.length; count++) {
+                                html += '<option class="datalist-options" data-value="' + data[count].curated_id + '">' + data[count].curated_name + '</option>';
+                            }
                         }
 
-                        $('#course-search-result').html(html);
+
+                        $('#course_search_result').html(html);
 
 
                     }
@@ -485,13 +444,31 @@
             });
         });
 
+        $(document).ready(function () {
 
+
+            $('input[type=text][name=coursename]').change(function () {
+                var options = $('datalist#course_search_result')[0].options;
+                var val = document.getElementById('coursename').value;
+                var course = document.getElementById('course');
+                for (var i = 0; i < options.length; i++) {
+
+                    if (options[i].value === val) {
+                        course.value = options[i].getAttribute('data-value');
+                        break;
+                    }
+                }
+
+
+
+            });
+        });
 
 
     </script>
 </head>
 
-<body onload="initKeycloak()">
+<body>
     <!-- HEADER: MENU + HEROE SECTION -->
     <section>
 
@@ -525,11 +502,10 @@
             <div id="MDO-wise" class="tabcontent">
                 <form id="mdowisereportform" class="form-horizontal login_form"
                     action="<?php echo base_url('/getMDOReport'); ?>" method="post">
-
                     <div class="report-type">
                         <label for="mdoReportType" class="lbl-reporttype required "> Report type: </label>
-                        <select name="mdoReportType" class="form-control report-select"
-                            onchange="enable_disable_mdo(this)" id="mdoReportType">
+                        <select name="mdoReportType" class="form-control report-select" id="mdoReportType"
+                            onchange="enable_disable_mdo(this)">
                             <option value="notSelected">-- Select Report Type --</option>
                             <?php
                             $session = \Config\Services::session();
@@ -557,96 +533,54 @@
                     ';
                             } ?>
 
+
+
+
                         </select>
                     </div>
+
                     <hr />
 
                     <div class="container ">
 
 
-                        <!-- <input type="text" id="search" placeholder="Search" class="form-control" /> -->
                         <div id="tbl">
-
                             <table class="submitbutton" id="tbl-mdo">
                                 <?php
                                 $session = \Config\Services::session();
 
                                 if ($session->get('role') == 'SPV_ADMIN') {
 
-                                    //              <tr>
-                                    //             <td></td>
-                                    //             <td>
-                                    //             <div class="auto-widget" style="position:absolute">
-                                    //             <input type="text" list="search-result" class="form-control" id="org_search" placeholder="Search Organisation" />
-                                    //             <datalist id="search-result" >
-                                    //         </datalist>
-                                    //         <input type="hidden"  id="ms_type_search"  name="ms_type_search" value="" />
-                                    //         <input type="hidden"  id="ministry_search"  name="ministry_search" value="" />
-                                    //         <input type="hidden"  id="dept_search"  name="dept_search" value="" />
-                                    //         <input type="hidden"  id="organisation_search"  name="org_search" value="" />
+                                    echo '             <tr>
+                                    <div id = "org-div">
+                                    <td style="width:1%"><label class="required"></label></td>
+                                    <td>
+                                                <div class="auto-widget">
+                                                <input type="text" list="org_search_result" class="form-control" id="orgname" name = "orgname"  autocomplete="off" />
+                                                <datalist id="org_search_result" >
+                                            </datalist>
+                                            <input type="hidden"  id="org"  name="org"/>
+                                            
                                 
-                                    // </div>
+                                    </div>
+                                    </div>
                                 
-                                    // </td>
-                                    // </tr>
-                                
-                                    echo '
-                                    <tr>
-                                    <td style="width:1%"><label class="required" ></label></td>
-                                    <td  class="submitbutton">
-                                    <select name="ms_type" class="form-control"  id="ms_type">
-                                    <option value="notSelected">    --Ministry/State--  </option>
-                                    <option value="ministry">   Ministry    </option>
-                                    <option value="state">  State   </option>
-                                    </select> 
                                     </td>
                                     </tr>
-                    <tr>
-                    <td style="width:1%"><label class="required" ></label></td>
-                            <td  class="submitbutton">
-                            
-                            <select name="ministry" class="form-control required"  id="ministry">
-                         <option value="notSelected">--Select Ministry/State--</option>';
-                                    //             foreach ($ministry as $row) {
-                                    //                 echo '<option value="' . $row->ms_id . '">' . $row->ms_name . '</option>';
-                                    //             }
-                                    echo
-                                        '	 
-                    </select>
-                      
-                        </td>
-                            </tr>
-                            <tr>
-                            <td style="width:1%"></td>
-                            <td class="submitbutton">
-                                <select name="dept" class="form-control" id="dept">
-                        <option value="notSelected">--Select Department--</option>
-                        </select>
-                            </td>
-                            </tr>
-                            <tr>
-                            <td style="width:1%"></td>
-                            <td class="submitbutton">
-                    <select name = "org" class="form-control" id = "org" >
-                        <option value="notSelected">--Select Organisation--</option>
-                        </select>
-                        
-                            </td>
-                        </tr>';
+
+                                   ';
+
+
+                                    
                                 } ?>
 
 
 
                             </table>
+
                         </div>
 
-                        <!-- <div>
-                            <label class="error">
-                                <?php //if ($error != null) {
-                                //  echo $error;
-                                // } ?>
-                            </label>
-                        </div> -->
+                        
 
                         <div class="col-xs-3 container submitbutton">
                             <button id="mdowisereport" class="btn btn-primary" type="submit" name="Submit"
@@ -702,33 +636,22 @@
                                 </td>
                             </tr>
 
-                            <!-- <tr>
-                                <td></td>
+                            <tr>
+                                <td style="width:1%"><label class="required"></label></td>
                                 <td>
-                                    <div class="auto-widget" style="position:absolute">
-                                        <input type="text" list="course-search-result" class="form-control" id="course"
-                                            placeholder="Search Course" />
-                                        <datalist id="course_search_result">
+                                    <div class="auto-widget">
+                                        <input type="text" list="course_search_result" class="form-control"
+                                            id="coursename" name="coursename" placeholder="Search Course"  autocomplete="off" />
+                                        <datalist id="course_search_result" >
                                         </datalist>
+                                        <input type="hidden" id="course" name="course" />
 
 
                                     </div>
 
                                 </td>
-                            </tr> -->
-                            <tr>
-                                <td style="width:1%"><label class="required"></label></td>
-                                <td class="submitbutton">
-                                    <select name="course" id="course" class="form-control">
-                                        <option value="notSelected">--Select Course--</option>
-                                        <?php
-                                        foreach ($course as $row) {
-                                            echo '<option value="' . $row->course_id . '">' . $row->course_name . '</option>';
-                                        }
-                                        ?>
-                                    </select>
-                                </td>
                             </tr>
+                            
                         </table>
 
                         <div class="col-xs-3 container submitbutton">
@@ -793,7 +716,6 @@
                     <hr />
 
                     <div class="container ">
-                        <!-- <input type="text" id="search" placeholder="Search" class="form-control" /> -->
 
 
 
@@ -823,6 +745,7 @@
                         <option value="notSelected">-- Select Report Type --</option>
                         <option value="dayWiseUserOnboarding">Day-wise User Onboarding</option>
                         <option value="monthWiseUserOnboarding">Month-wise User Onboarding</option>
+                        <option value="monthWiseOrgOnboarding">Month-wise Organisation Onboarding</option>
                         <option value="monthWiseCourses">Month-wise Courses Published</option>
                         </select>';
 
@@ -832,7 +755,6 @@
                     <hr />
 
                     <div class="container ">
-                        <!-- <input type="text" id="search" placeholder="Search" class="form-control" /> -->
 
 
 
@@ -871,21 +793,23 @@
                         <table class="submitbutton" id="tbl-program" style="display:none">
                             <tr>
                                 <td>
-                                    <label for="course">ATI: </label>
+                                    <label for="course">Program: </label>
 
                                 </td>
                             </tr>
                             <tr>
-                                <td class="submitbutton">
-                                    <select name="course" id="course" class="form-control">
-                                        <option value="notSelected">--Select ATI --</option>
-                                        <?php
-                                        foreach ($course as $row) {
-                                            echo '<option value="' . $row->course_id . '">' . $row->course_name . '</option>';
-                                        }
-                                        ?>
+                            <td style="width:1%"><label class="required"></label></td>
+                                <td>
+                                    <div class="auto-widget">
+                                        <input type="text" list="course_search_result" class="form-control"
+                                            id="coursename" name="coursename" placeholder="Search Program"  autocomplete="off" />
+                                        <datalist id="course_search_result" >
+                                        </datalist>
+                                        <input type="hidden" id="course" name="course" />
 
-                                    </select>
+
+                                    </div>
+
                                 </td>
                             </tr>
                         </table>
@@ -931,68 +855,18 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="submitbutton">
-                                    <select name="course" id="course" class="form-control">
-                                        <option value="notSelected">--Select ATI --</option>
-                                        <?php
-                                        foreach ($course as $row) {
-                                            echo '<option value="' . $row->course_id . '">' . $row->course_name . '</option>';
-                                        }
-                                        ?>
-
-                                    </select>
-                                </td>
-                            </tr>
-                        </table>
-
-                        <div class="col-xs-3 container submitbutton">
-                            <button class="btn btn-primary " type="submit" name="Submit" value="Submit"> Submit</button>
-                        </div>
-
-                    </div>
-
-                    <?php echo form_close(); ?>
-                </form>
-            </div>
-
-            <div id="Program-wise" class="tabcontent">
-
-                <form class="form-horizontal login_form" action="<?php echo base_url('/getCourseReport'); ?>"
-                    method="post">
-
-                    <div class="report-type">
-                        <label for="courseReportType" class="lbl-reporttype">Report type:</label>
-
-                        <select name="courseReportType" class="form-control report-select"
-                            onchange="enable_disable_course(this)" id="mdoReportType">
-                            <option value="notSelected">-- Select Report Type --</option>
-                            <option value="courseEnrolmentReport">Course-wise enrolment report</option>
-                            <option value="courseEnrolmentCount">Course-wise enrolment and completion count</option>
-                            <option value="programEnrolmentReport">Program-wise enrolment report</option>
-                            <option value="programEnrolmentCount">Program-wise enrolment and completion count</option>
-                            <option value="collectionEnrolmentReport">Curated Collection-wise enrolment report</option>
-                            <option value="collectionEnrolmentCount">Curated Collection-wise enrolment and completion
-                                count</option>
-                        </select>
-                    </div>
-                    <hr />
-                    <div class="container">
-                        <table class="submitbutton" id="tbl-course">
-                            <tr>
+                            <td style="width:1%"><label class="required"></label></td>
                                 <td>
-                                    <label for="course">Course/Program/Collection: </label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="submitbutton">
-                                    <select name="course" id="course" class="form-control">
-                                        <option value="notSelected">--Select Course / Program / Collection--</option>
-                                        <?php
-                                        foreach ($course as $row) {
-                                            echo '<option value="' . $row->course_id . '">' . $row->course_name . '</option>';
-                                        }
-                                        ?>
-                                    </select>
+                                    <div class="auto-widget">
+                                        <input type="text" list="course_search_result" class="form-control"
+                                            id="coursename" name="coursename" placeholder="Search Program"  autocomplete="off" />
+                                        <datalist id="course_search_result" >
+                                        </datalist>
+                                        <input type="hidden" id="course" name="course" />
+
+
+                                    </div>
+
                                 </td>
                             </tr>
                         </table>
@@ -1006,6 +880,8 @@
                     <?php echo form_close(); ?>
                 </form>
             </div>
+
+            
 
 
 
@@ -1013,477 +889,428 @@
 
 
     </section>
-    <!-- <section>
-        <table id="tbl-result">
-        </table>
-        </section> -->
+    
+
+    <!--SCRIPTS -->
+
+    <script>
+
+
+
+        document.getElementById("defaultOpen").click();
 
 
 
 
-        <!--SCRIPTS -->
-
-            <script>
-
-                function initKeycloak() {
-                    const keycloak = Keycloak('/assets/keycloak.json');
-                    const initOptions = {
-                        responseMode: 'fragment',
-                        flow: 'standard',
-                        onLoad: 'login-required'
+        $('.search').select2({
+            placeholder: 'Search Organisation',
+            ajax: {
+                url: '<?php echo base_url('/search'); ?>',
+                dataType: 'json',
+                processResults: function (data) {
+                    return {
+                        results: data
                     };
-                    keycloak.init(initOptions).success(function (authenticated) {
-                        //  alert(keycloak);
+                },
+                cache: true
+            }
+        });
 
-                        var subject = keycloak.subject;
 
-                        myarr = subject.split(":");
-                        Cookies.set('uid', myarr[2]);
-                        Cookies.set('token', keycloak.token);
-                        Cookies.set('refreshToken', keycloak.refreshToken);
-                        //alert(keycloak.token);
-                        // Cookies.set('role', 'SPV_ADMIN');
-                        //Cookies.set('callback',JSON.stringify(keycloak.tokenParsed.resource_access.php_service.permission));
-                        if (authenticated) {
-                            //document.getElementById("test").innerHTML = Cookies.get('uid');
-                            console.log('Init Success (' + (authenticated ? 'Authenticated token : ' + JSON.stringify(keycloak) : 'Not Authenticated') + ')');
-                            window.location.replace("/home");
+        $(document).ready(function () {
+
+            $('#ms_type').change(function () {
+
+                var ms = $('#ms_type').val();
+
+                var action = 'get_ministry';
+
+                if (ms != 'notSelected') {
+                    $.ajax({
+                        url: "<?php echo base_url('/action'); ?>",
+                        method: "POST",
+                        data: {
+                            ms: ms,
+                            action: action
+                        },
+                        dataType: "JSON",
+                        success: function (data) {
+                            if (ms == 'ministry') {
+                                var html = '<option value="notSelected">--Select Ministry--</option>';
+                            }
+                            else {
+                                var html = '<option value="notSelected">--Select State--</option>';
+                            }
+
+                            for (var count = 0; count < data.length; count++) {
+
+                                html += '<option value="' + data[count].ms_id + '">' + data[count].ms_name + '</option>';
+
+                            }
+
+                            $('#ministry').html(html);
                         }
-                        else {
-                            window.location.replace("/unauthorized");
-                        }
-                    }).catch(function () {
-                        alert('failed to initialize');
                     });
+                } else {
+                    $('#ministry').val('notSelected');
+                }
+                $('#dept').val('notSelected');
+                $('#org').val('notSelected');
+            });
+            $(document).ready(function () {
+
+                $('#ministry').change(function () {
+
+                    var ministry = $('#ministry').val();
+
+                    var action = 'get_dept';
+
+                    if (ministry != 'notSelected') {
+                        $.ajax({
+                            url: "<?php echo base_url('/action'); ?>",
+                            method: "POST",
+                            data: {
+                                ministry: ministry,
+                                action: action
+                            },
+                            dataType: "JSON",
+                            success: function (data) {
+                                var html =
+                                    '<option value="notSelected">--Select Department--</option>';
+
+                                for (var count = 0; count < data.length; count++) {
+
+                                    html += '<option value="' + data[count].dept_id +
+                                        '">' + data[
+                                            count].dept_name + '</option>';
+
+                                }
+
+                                $('#dept').html(html);
+                            }
+                        });
+                    } else {
+                        $('#dept').val('notSelected');
+                    }
+                    $('#org').val('notSelected');
+                });
+
+                $('#dept').change(function () {
+
+                    var dept = $('#dept').val();
+
+
+                    var action = 'get_org';
+
+                    if (dept != 'notSelected') {
+                        $.ajax({
+                            url: "<?php echo base_url('/action'); ?>",
+                            method: "POST",
+                            data: {
+                                dept: dept,
+                                action: action
+                            },
+                            dataType: "JSON",
+                            success: function (data) {
+                                var html =
+                                    '<option value="notSelected">--Select Organisation--</option>';
+
+                                for (var count = 0; count < data.length; count++) {
+                                    html += '<option value="' + data[count].org_id +
+                                        '">' + data[
+                                            count].org_name + '</option>';
+                                }
+
+                                $('#org').html(html);
+                            }
+                        });
+                    } else {
+                        $('#org').val('notSelected');
+                    }
+
+                });
+
+            });
+        });
+
+        $(document).ready(function () {
+
+            $('select[name=courseReportType]').change(function () {
+
+                if (this.value == 'courseEnrolmentReport') {
+                    var action = 'get_course';
+
+                    $.ajax({
+                        url: "<?php echo base_url('/action'); ?>",
+                        method: "POST",
+                        data: {
+                            action: action
+                        },
+                        dataType: "JSON",
+                        success: function (data) {
+                            var html =
+                                '<option value="notSelected">--Select Course--</option>';
+
+                            for (var count = 0; count < data.length; count++) {
+
+                                html += '<option value="' + data[count].course_id + '">' + data[
+                                    count].course_name + '</option>';
+
+                            }
+
+                            $('#course').html(html);
+                        }
+                    });
+
+                } else if (this.value == 'programEnrolmentReport') {
+
+                    var action = 'get_program';
+
+                    $.ajax({
+                        url: "<?php echo base_url('/action'); ?>",
+                        method: "POST",
+                        data: {
+                            action: action
+                        },
+                        dataType: "JSON",
+                        success: function (data) {
+                            var html =
+                                '<option value="notSelected">--Select Program--</option>';
+
+                            for (var count = 0; count < data.length; count++) {
+
+                                html += '<option value="' + data[count].program_id + '">' +
+                                    data[
+                                        count].program_name + '</option>';
+
+                            }
+
+                            $('#course').html(html);
+                        }
+                    });
+
+                } else if (this.value == 'collectionEnrolmentReport' || this.value ==
+                    "collectionEnrolmentCount") {
+
+                    var action = 'get_collection';
+
+                    $.ajax({
+                        url: "<?php echo base_url('/action'); ?>",
+                        method: "POST",
+                        data: {
+                            action: action
+                        },
+                        dataType: "JSON",
+                        success: function (data) {
+                            var html =
+                                '<option value="notSelected">--Select Curated Collection--</option>';
+
+                            for (var count = 0; count < data.length; count++) {
+
+                                html += '<option value="' + data[count].curated_id + '">' +
+                                    data[count].curated_name + '</option>';
+
+                            }
+
+                            $('#course').html(html);
+                        }
+                    });
+
+
                 }
 
-                document.getElementById("defaultOpen").click();
+            });
 
 
 
+        });
 
-                $('.search').select2({
-                    placeholder: 'Search Organisation',
-                    ajax: {
-                        url: '<?php echo base_url('/search'); ?>',
-                        dataType: 'json',
-                        processResults: function (data) {
-                            return {
-                                results: data
-                            };
+
+        $(document).ready(function () {
+
+
+            $('input[type=radio][name=courseReportType]').change(function () {
+
+                if (this.value == 'courseEnrolmentReport' || this.value == 'courseEnrolmentCount') {
+                    var action = 'get_course';
+
+                    $.ajax({
+                        url: "<?php echo base_url('/action'); ?>",
+                        method: "POST",
+                        data: {
+                            action: action
                         },
-                        cache: true
-                    }
-                });
+                        dataType: "JSON",
+                        success: function (data) {
+                            var html =
+                                '<option value="notSelected">--Select Course--</option>';
 
+                            for (var count = 0; count < data.length; count++) {
 
-                $(document).ready(function () {
+                                html += '<option value="' + data[count].course_id + '">' + data[
+                                    count].course_name + '</option>';
 
-                    $('#ms_type').change(function () {
-
-                        var ms = $('#ms_type').val();
-
-                        var action = 'get_ministry';
-
-                        if (ms != 'notSelected') {
-                            $.ajax({
-                                url: "<?php echo base_url('/action'); ?>",
-                                method: "POST",
-                                data: {
-                                    ms: ms,
-                                    action: action
-                                },
-                                dataType: "JSON",
-                                success: function (data) {
-                                    if (ms == 'ministry') {
-                                        var html = '<option value="notSelected">--Select Ministry--</option>';
-                                    }
-                                    else {
-                                        var html = '<option value="notSelected">--Select State--</option>';
-                                    }
-
-                                    for (var count = 0; count < data.length; count++) {
-
-                                        html += '<option value="' + data[count].ms_id + '">' + data[count].ms_name + '</option>';
-
-                                    }
-
-                                    $('#ministry').html(html);
-                                }
-                            });
-                        } else {
-                            $('#ministry').val('notSelected');
-                        }
-                        $('#dept').val('notSelected');
-                        $('#org').val('notSelected');
-                    });
-                    $(document).ready(function () {
-
-                        $('#ministry').change(function () {
-
-                            var ministry = $('#ministry').val();
-
-                            var action = 'get_dept';
-
-                            if (ministry != 'notSelected') {
-                                $.ajax({
-                                    url: "<?php echo base_url('/action'); ?>",
-                                    method: "POST",
-                                    data: {
-                                        ministry: ministry,
-                                        action: action
-                                    },
-                                    dataType: "JSON",
-                                    success: function (data) {
-                                        var html =
-                                            '<option value="notSelected">--Select Department--</option>';
-
-                                        for (var count = 0; count < data.length; count++) {
-
-                                            html += '<option value="' + data[count].dept_id +
-                                                '">' + data[
-                                                    count].dept_name + '</option>';
-
-                                        }
-
-                                        $('#dept').html(html);
-                                    }
-                                });
-                            } else {
-                                $('#dept').val('notSelected');
-                            }
-                            $('#org').val('notSelected');
-                        });
-
-                        $('#dept').change(function () {
-
-                            var dept = $('#dept').val();
-
-
-                            var action = 'get_org';
-
-                            if (dept != 'notSelected') {
-                                $.ajax({
-                                    url: "<?php echo base_url('/action'); ?>",
-                                    method: "POST",
-                                    data: {
-                                        dept: dept,
-                                        action: action
-                                    },
-                                    dataType: "JSON",
-                                    success: function (data) {
-                                        var html =
-                                            '<option value="notSelected">--Select Organisation--</option>';
-
-                                        for (var count = 0; count < data.length; count++) {
-                                            html += '<option value="' + data[count].org_id +
-                                                '">' + data[
-                                                    count].org_name + '</option>';
-                                        }
-
-                                        $('#org').html(html);
-                                    }
-                                });
-                            } else {
-                                $('#org').val('notSelected');
                             }
 
-                        });
-
-                    });
-                });
-
-                $(document).ready(function () {
-
-                    $('select[name=courseReportType]').change(function () {
-
-                        if (this.value == 'courseEnrolmentReport') {
-                            var action = 'get_course';
-
-                            $.ajax({
-                                url: "<?php echo base_url('/action'); ?>",
-                                method: "POST",
-                                data: {
-                                    action: action
-                                },
-                                dataType: "JSON",
-                                success: function (data) {
-                                    var html =
-                                        '<option value="notSelected">--Select Course--</option>';
-
-                                    for (var count = 0; count < data.length; count++) {
-
-                                        html += '<option value="' + data[count].course_id + '">' + data[
-                                            count].course_name + '</option>';
-
-                                    }
-
-                                    $('#course').html(html);
-                                }
-                            });
-
-                        } else if (this.value == 'programEnrolmentReport') {
-
-                            var action = 'get_program';
-
-                            $.ajax({
-                                url: "<?php echo base_url('/action'); ?>",
-                                method: "POST",
-                                data: {
-                                    action: action
-                                },
-                                dataType: "JSON",
-                                success: function (data) {
-                                    var html =
-                                        '<option value="notSelected">--Select Program--</option>';
-
-                                    for (var count = 0; count < data.length; count++) {
-
-                                        html += '<option value="' + data[count].program_id + '">' +
-                                            data[
-                                                count].program_name + '</option>';
-
-                                    }
-
-                                    $('#course').html(html);
-                                }
-                            });
-
-                        } else if (this.value == 'collectionEnrolmentReport' || this.value ==
-                            "collectionEnrolmentCount") {
-
-                            var action = 'get_collection';
-
-                            $.ajax({
-                                url: "<?php echo base_url('/action'); ?>",
-                                method: "POST",
-                                data: {
-                                    action: action
-                                },
-                                dataType: "JSON",
-                                success: function (data) {
-                                    var html =
-                                        '<option value="notSelected">--Select Curated Collection--</option>';
-
-                                    for (var count = 0; count < data.length; count++) {
-
-                                        html += '<option value="' + data[count].curated_id + '">' +
-                                            data[count].curated_name + '</option>';
-
-                                    }
-
-                                    $('#course').html(html);
-                                }
-                            });
-
-
-                        }
-
-                    });
-
-
-
-                });
-
-
-                $(function () {
-                    $("#org_search").autocomplete({
-                        source: "<?php echo base_url('/search'); ?>",
-                        select: function (event, ui) {
-                            event.preventDefault();
-                            $("#org_search").val(ui.item.id);
+                            $('#course').html(html);
                         }
                     });
-                });
 
+                } else if (this.value == 'programEnrolmentReport' || this.value == 'programEnrolmentCount') {
 
+                    var action = 'get_program';
 
+                    $.ajax({
+                        url: "<?php echo base_url('/action'); ?>",
+                        method: "POST",
+                        data: {
+                            action: action
+                        },
+                        dataType: "JSON",
+                        success: function (data) {
+                            var html =
+                                '<option value="notSelected">--Select Program--</option>';
 
-                $(document).ready(function () {
+                            for (var count = 0; count < data.length; count++) {
 
+                                html += '<option value="' + data[count].program_id + '">' +
+                                    data[
+                                        count].program_name + '</option>';
 
-                    $('input[type=radio][name=courseReportType]').change(function () {
+                            }
 
-                        if (this.value == 'courseEnrolmentReport' || this.value == 'courseEnrolmentCount') {
-                            var action = 'get_course';
-
-                            $.ajax({
-                                url: "<?php echo base_url('/action'); ?>",
-                                method: "POST",
-                                data: {
-                                    action: action
-                                },
-                                dataType: "JSON",
-                                success: function (data) {
-                                    var html =
-                                        '<option value="notSelected">--Select Course--</option>';
-
-                                    for (var count = 0; count < data.length; count++) {
-
-                                        html += '<option value="' + data[count].course_id + '">' + data[
-                                            count].course_name + '</option>';
-
-                                    }
-
-                                    $('#course').html(html);
-                                }
-                            });
-
-                        } else if (this.value == 'programEnrolmentReport' || this.value == 'programEnrolmentCount') {
-
-                            var action = 'get_program';
-
-                            $.ajax({
-                                url: "<?php echo base_url('/action'); ?>",
-                                method: "POST",
-                                data: {
-                                    action: action
-                                },
-                                dataType: "JSON",
-                                success: function (data) {
-                                    var html =
-                                        '<option value="notSelected">--Select Program--</option>';
-
-                                    for (var count = 0; count < data.length; count++) {
-
-                                        html += '<option value="' + data[count].program_id + '">' +
-                                            data[
-                                                count].program_name + '</option>';
-
-                                    }
-
-                                    $('#course').html(html);
-                                }
-                            });
-
-                        } else if (this.value == 'collectionEnrolmentReport' || this.value == 'collectionEnrolmentCount') {
-
-                            var action = 'get_collection';
-
-                            $.ajax({
-                                url: "<?php echo base_url('/action'); ?>",
-                                method: "POST",
-                                data: {
-                                    action: action
-                                },
-                                dataType: "JSON",
-                                success: function (data) {
-                                    var html =
-                                        '<option value="notSelected">--Select Curated Collection--</option>';
-
-                                    for (var count = 0; count < data.length; count++) {
-
-                                        html += '<option value="' + data[count].curated_id + '">' + data[count].curated_name + '</option>';
-
-                                    }
-
-                                    $('#course').html(html);
-                                }
-                            });
-
+                            $('#course').html(html);
                         }
-
                     });
 
+                } else if (this.value == 'collectionEnrolmentReport' || this.value == 'collectionEnrolmentCount') {
 
+                    var action = 'get_collection';
 
-                });
+                    $.ajax({
+                        url: "<?php echo base_url('/action'); ?>",
+                        method: "POST",
+                        data: {
+                            action: action
+                        },
+                        dataType: "JSON",
+                        success: function (data) {
+                            var html =
+                                '<option value="notSelected">--Select Curated Collection--</option>';
 
+                            for (var count = 0; count < data.length; count++) {
 
-                $(document).ready(function () {
+                                html += '<option value="' + data[count].curated_id + '">' + data[count].curated_name + '</option>';
 
+                            }
 
-
-                    $('input[type=radio][name=mdoReportType]').change(function () {
-
-                        if (this.value == 'mdoUserCount') {
-                            var action = 'get_course';
-
-                            $.ajax({
-                                url: "<?php echo base_url('/action'); ?>",
-                                method: "POST",
-                                data: {
-                                    action: action
-                                },
-                                dataType: "JSON",
-                                success: function (data) {
-                                    var html =
-                                        '<option value="notSelected">--Select Course--</option>';
-
-                                    for (var count = 0; count < data.length; count++) {
-
-                                        html += '<option value="' + data[count].course_id + '">' + data[
-                                            count].course_name + '</option>';
-
-                                    }
-
-                                    $('#course').html(html);
-                                }
-                            });
-
-                        } else if (this.value == 'programEnrolmentReport' || this.value ==
-                            'programEnrolmentCount') {
-
-                            var action = 'get_program';
-
-                            $.ajax({
-                                url: "<?php echo base_url('/action'); ?>",
-                                method: "POST",
-                                data: {
-                                    action: action
-                                },
-                                dataType: "JSON",
-                                success: function (data) {
-                                    var html =
-                                        '<option value="notSelected">--Select Program--</option>';
-
-                                    for (var count = 0; count < data.length; count++) {
-
-                                        html += '<option value="' + data[count].program_id + '">' +
-                                            data[
-                                                count].program_name + '</option>';
-
-                                    }
-
-                                    $('#course').html(html);
-                                }
-                            });
-
-                        } else if (this.value == 'collectionEnrolmentReport' || this.value ==
-                            'collectionEnrolmentCount') {
-
-                            var action = 'get_collection';
-
-                            $.ajax({
-                                url: "<?php echo base_url('/action'); ?>",
-                                method: "POST",
-                                data: {
-                                    action: action
-                                },
-                                dataType: "JSON",
-                                success: function (data) {
-                                    var html =
-                                        '<option value="notSelected">--Select Curated Collection--</option>';
-
-                                    for (var count = 0; count < data.length; count++) {
-
-                                        html += '<option value="' + data[count].program_id + '">' +
-                                            data[
-                                                count].program_name + '</option>';
-
-                                    }
-
-                                    $('#course').html(html);
-                                }
-                            });
-
+                            $('#course').html(html);
                         }
-
                     });
-                });
-            </script>
 
-            <!-- -->
+                }
+
+            });
+
+
+
+        });
+
+
+        $(document).ready(function () {
+
+
+
+            $('input[type=radio][name=mdoReportType]').change(function () {
+
+                if (this.value == 'mdoUserCount') {
+                    var action = 'get_course';
+
+                    $.ajax({
+                        url: "<?php echo base_url('/action'); ?>",
+                        method: "POST",
+                        data: {
+                            action: action
+                        },
+                        dataType: "JSON",
+                        success: function (data) {
+                            var html =
+                                '<option value="notSelected">--Select Course--</option>';
+
+                            for (var count = 0; count < data.length; count++) {
+
+                                html += '<option value="' + data[count].course_id + '">' + data[
+                                    count].course_name + '</option>';
+
+                            }
+
+                            $('#course').html(html);
+                        }
+                    });
+
+                } else if (this.value == 'programEnrolmentReport' || this.value ==
+                    'programEnrolmentCount') {
+
+                    var action = 'get_program';
+
+                    $.ajax({
+                        url: "<?php echo base_url('/action'); ?>",
+                        method: "POST",
+                        data: {
+                            action: action
+                        },
+                        dataType: "JSON",
+                        success: function (data) {
+                            var html =
+                                '<option value="notSelected">--Select Program--</option>';
+
+                            for (var count = 0; count < data.length; count++) {
+
+                                html += '<option value="' + data[count].program_id + '">' +
+                                    data[
+                                        count].program_name + '</option>';
+
+                            }
+
+                            $('#course').html(html);
+                        }
+                    });
+
+                } else if (this.value == 'collectionEnrolmentReport' || this.value ==
+                    'collectionEnrolmentCount') {
+
+                    var action = 'get_collection';
+
+                    $.ajax({
+                        url: "<?php echo base_url('/action'); ?>",
+                        method: "POST",
+                        data: {
+                            action: action
+                        },
+                        dataType: "JSON",
+                        success: function (data) {
+                            var html =
+                                '<option value="notSelected">--Select Curated Collection--</option>';
+
+                            for (var count = 0; count < data.length; count++) {
+
+                                html += '<option value="' + data[count].program_id + '">' +
+                                    data[
+                                        count].program_name + '</option>';
+
+                            }
+
+                            $('#course').html(html);
+                        }
+                    });
+
+                }
+
+            });
+        });
+    </script>
+
+    <!-- -->
 
 </body>
 

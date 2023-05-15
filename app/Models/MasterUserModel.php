@@ -46,7 +46,6 @@ class MasterUserModel extends Model
     public function getUserByOrg($org, $limit, $offset, $search, $orderBy, $orderDir)
     {
         try {
-            $table = new \CodeIgniter\View\Table();
 
             $builder = $this->db->table('master_user');
             $builder->select('concat(first_name,\' \',last_name) as name, email, master_organization.org_name, designation, phone,created_date, roles, profile_update_status');
@@ -64,8 +63,9 @@ class MasterUserModel extends Model
             $builder->orderBy((int) $orderBy + 1, $orderDir);
             if ($limit != -1)
                 $builder->limit($limit, $offset);
+                
             $query = $builder->get();
-            // print_r($builder);
+            // 
             return $query;
 
         } catch (\Exception $e) {
