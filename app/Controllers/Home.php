@@ -142,7 +142,7 @@ class Home extends BaseController
                             $courseData = $courseModel->courseSearch($search_key);
                         else if ($reportType == 'programEnrolmentReport')
                             $courseData = $programModel->programSearch($search_key);
-                        else if ($reportType == 'collectionEnrolmentReport')
+                        else if ($reportType == 'collectionEnrolmentReport' || $reportType == 'collectionEnrolmentCount')
                             $courseData = $collectionModel->collectionSearch($search_key);
 
                         echo json_encode($courseData);
