@@ -428,7 +428,7 @@
                             for (var count = 0; count < data.length; count++) {
                                 html += '<option class="datalist-options" data-value="' + data[count].program_id + '">' + data[count].program_name + '</option>';
                             }
-                        } else if (reportType == 'collectionEnrolmentReport') {
+                        } else if (reportType == 'collectionEnrolmentReport' || reportType == 'collectionEnrolmentCount') {
                             for (var count = 0; count < data.length; count++) {
                                 html += '<option class="datalist-options" data-value="' + data[count].curated_id + '">' + data[count].curated_name + '</option>';
                             }
