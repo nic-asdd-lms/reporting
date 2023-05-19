@@ -63,7 +63,7 @@ class Report extends BaseController
                 $session->setTempdata('error', '');
                 $course = $session->getTempdata('course');
                 $topCount = $session->getTempdata('topCount');
-                
+
 
 
 
@@ -113,7 +113,7 @@ class Report extends BaseController
                     }
 
                 }
-                
+
 
 
                 if ($reportType == 'userList') {
@@ -323,8 +323,8 @@ class Report extends BaseController
                     $resultFiltered = $enrolmentProgram->getATIWiseCount($org, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topUserEnrolment') {
-                    $result = $enrolment->getTopUserEnrolment($topCount,$limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getTopUserEnrolment($topCount,-1, 0, '', $orderBy, $orderDir);
+                    $result = $enrolment->getTopUserEnrolment($topCount, $limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getTopUserEnrolment($topCount, -1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getTopUserEnrolment($topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topUserCompletion') {
@@ -338,19 +338,19 @@ class Report extends BaseController
                     $resultFiltered = $enrolment->getTopUserNotStarted($topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topUserInProgress') {
-                    $result = $enrolment->getTopUserInProgress($topCount,$limit, $offset, $search, $orderBy, $orderDir);
+                    $result = $enrolment->getTopUserInProgress($topCount, $limit, $offset, $search, $orderBy, $orderDir);
                     $fullResult = $enrolment->getTopUserInProgress($topCount, -1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getTopUserInProgress($topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topOrgOnboarding') {
-                    $result = $user->getTopOrgOnboarding($topCount,$limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getTopOrgOnboarding($topCount,-1, 0, '', $orderBy, $orderDir);
+                    $result = $user->getTopOrgOnboarding($topCount, $limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $user->getTopOrgOnboarding($topCount, -1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getTopOrgOnboarding($topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topOrgEnrolment') {
                     $result = $enrolment->getTopOrgEnrolment($topCount, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getTopOrgEnrolment($topCount,-1, 0, '', $orderBy, $orderDir);
-                    $resultFiltered = $enrolment->getTopOrgEnrolment( $topCount,-1, 0, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getTopOrgEnrolment($topCount, -1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getTopOrgEnrolment($topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topOrgCompletion') {
                     $result = $enrolment->getTopOrgCompletion($topCount, $limit, $offset, $search, $orderBy, $orderDir);
@@ -358,17 +358,17 @@ class Report extends BaseController
                     $resultFiltered = $enrolment->getTopOrgCompletion($topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topOrgMdoAdmin') {
-                    $result = $user->getTopOrgMdoAdmin($topCount,$limit, $offset, $search, $orderBy, $orderDir);
+                    $result = $user->getTopOrgMdoAdmin($topCount, $limit, $offset, $search, $orderBy, $orderDir);
                     $fullResult = $user->getTopOrgMdoAdmin($topCount, -1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getTopOrgMdoAdmin($topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topCbpLiveCourses') {
                     $result = $courseModel->getTopCbpLiveCourses($topCount, $limit, $offset, $search, $orderBy, $orderDir);
                     $fullResult = $courseModel->getTopCbpLiveCourses($topCount, -1, 0, '', $orderBy, $orderDir);
-                    $resultFiltered = $courseModel->getTopCbpLiveCourses($topCount,-1, 0, $search, $orderBy, $orderDir);
+                    $resultFiltered = $courseModel->getTopCbpLiveCourses($topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topCbpUnderPublish') {
-                    $result = $courseModel->getTopCbpUnderPublish($topCount,$limit, $offset, $search, $orderBy, $orderDir);
+                    $result = $courseModel->getTopCbpUnderPublish($topCount, $limit, $offset, $search, $orderBy, $orderDir);
                     $fullResult = $courseModel->getTopCbpUnderPublish($topCount, -1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $courseModel->getTopCbpUnderPublish($topCount, -1, 0, $search, $orderBy, $orderDir);
 
@@ -388,29 +388,29 @@ class Report extends BaseController
                     $resultFiltered = $enrolment->getTopCourseEnrolment($topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topCourseCompletion') {
-                    $result = $enrolment->getTopCourseCompletion($topCount,$limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getTopCourseCompletion($topCount,-1, 0, '', $orderBy, $orderDir);
-                    $resultFiltered = $enrolment->getTopCourseCompletion($topCount,-1, 0, $search, $orderBy, $orderDir);
+                    $result = $enrolment->getTopCourseCompletion($topCount, $limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getTopCourseCompletion($topCount, -1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getTopCourseCompletion($topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topCourseRating') {
-                    $result = $courseModel->getTopCourseRating($topCount,$limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $courseModel->getTopCourseRating($topCount,-1, 0, '', $orderBy, $orderDir);
-                    $resultFiltered = $courseModel->getTopCourseRating($topCount,-1, 0, $search, $orderBy, $orderDir);
+                    $result = $courseModel->getTopCourseRating($topCount, $limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $courseModel->getTopCourseRating($topCount, -1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $courseModel->getTopCourseRating($topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topOrgCourseWise') {
-                    $result = $enrolment->getTopOrgCourseWise($course,$topCount,$limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getTopOrgCourseWise($course,$topCount,-1, 0, '', $orderBy, $orderDir);
-                    $resultFiltered = $enrolment->getTopOrgCourseWise($course,$topCount,-1, 0, $search, $orderBy, $orderDir);
+                    $result = $enrolment->getTopOrgCourseWise($course, $topCount, $limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getTopOrgCourseWise($course, $topCount, -1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getTopOrgCourseWise($course, $topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topOrgProgramWise') {
-                    $result = $enrolmentProgram->getTopOrgProgramWise($course,$topCount,$limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolmentProgram->getTopOrgProgramWise($course,$topCount,-1, 0, '', $orderBy, $orderDir);
-                    $resultFiltered = $enrolmentProgram->getTopOrgProgramWise($course,$topCount,-1, 0, $search, $orderBy, $orderDir);
+                    $result = $enrolmentProgram->getTopOrgProgramWise($course, $topCount, $limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolmentProgram->getTopOrgProgramWise($course, $topCount, -1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolmentProgram->getTopOrgProgramWise($course, $topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topOrgCollectionWise') {
-                    $result = $enrolment->getTopOrgCollectionWise($course,$topCount, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getTopOrgCollectionWise($course,$topCount, -1, 0, '', $orderBy, $orderDir);
-                    $resultFiltered = $enrolment->getTopOrgCollectionWise($course,$topCount, -1, 0, $search, $orderBy, $orderDir);
+                    $result = $enrolment->getTopOrgCollectionWise($course, $topCount, $limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getTopOrgCollectionWise($course, $topCount, -1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getTopOrgCollectionWise($course, $topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 }
 
@@ -420,11 +420,11 @@ class Report extends BaseController
 
                 $session->setTempdata('resultArray', $fullResult->getResultArray(), 300);
                 $session->setTempdata('filteredResultArray', $resultFiltered->getResultArray(), 300);
-                
-                if($fullResult->getNumRows() == 0)
-                    $session->setTempdata('error','No matching records found' , 300);
-               
-                
+
+                if ($fullResult->getNumRows() == 0)
+                    $session->setTempdata('error', 'No matching records found', 300);
+
+
                 $response = array(
                     "draw" => intval($request['draw']),
                     "recordsTotal" => $fullResult->getNumRows(),
@@ -506,74 +506,54 @@ class Report extends BaseController
                 /* Set table header, filename and report tilte based on report type */
 
                 if ($reportType == 'userList') {
-                    $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Contact No.', 'Created Date', 'Roles', 'Profile Update Status');
-
+                    $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Contact No.', 'Created Date', 'Roles', 'Profile Update Status'];
                     $session->setTempdata('fileName', 'UserList', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Users onboarded on iGOT';
+                    $reportTitle = 'Users onboarded on iGOT';
 
                 } else if ($reportType == 'mdoUserList') {
-                    $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Contact No.', 'Created Date', 'Roles', 'Profile Update Status');
-
+                    $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Contact No.', 'Created Date', 'Roles', 'Profile Update Status'];
                     $session->setTempdata('fileName', $orgName . '_UserList', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Users onboarded from organisation - "' . $orgName . '"';
+                    $reportTitle = 'Users onboarded from organisation - "' . $orgName . '"';
 
                 } else if ($reportType == 'mdoUserCount') {
-                    $table->setHeading('Organisation', 'User Count');
-
+                    $header = ['Organisation', 'User Count'];
                     $session->setTempdata('fileName', 'MDOWiseUserCount', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'MDO-wise user count ';
+                    $reportTitle = 'MDO-wise user count ';
 
                 } else if ($reportType == 'mdoUserEnrolment') {
-                    $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Course', 'Status', 'Completion Percentage', 'Completed On');
-
+                    $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Course', 'Status', 'Completion Percentage', 'Completed On'];
                     $session->setTempdata('fileName', $orgName . '_UserEnrolmentReport', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Users Enrolment Report for organisation - "' . $orgName . '"';
+                    $reportTitle = 'Users Enrolment Report for organisation - "' . $orgName . '"';
 
                 } else if ($reportType == 'ministryUserEnrolment') {
-                    $table->setHeading('Name', 'Email', 'Ministry', 'Department', 'Organization', 'Designation', 'Contact No.', 'Created Date', 'Roles');
-
+                    $header = ['Name', 'Email', 'Ministry', 'Department', 'Organization', 'Designation', 'Contact No.', 'Created Date', 'Roles'];
                     $session->setTempdata('fileName', $orgName . '_UserList', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Users list for all organisations under ministry/state - "' . $orgName . '"';
+                    $reportTitle = 'Users list for all organisations under ministry/state - "' . $orgName . '"';
 
                 } else if ($reportType == 'userWiseCount') {
-
-                    $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'No. of Courses Enrolled', 'No. of Courses Completed');
-
+                    $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'No. of Courses Enrolled', 'No. of Courses Completed'];
                     $session->setTempdata('fileName', $orgName . '_UserWiseSummary', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'User-wise course enrolment/completion count for organisation - "' . $orgName . '"';
+                    $reportTitle = 'User-wise course enrolment/completion count for organisation - "' . $orgName . '"';
 
                 } else if ($reportType == 'orgList') {
-
-                    $table->setHeading('Organisation');
-
+                    $header = ['Organisation'];
                     $session->setTempdata('fileName', 'OrgList', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Organisations Onboarded';
+                    $reportTitle = 'Organisations Onboarded';
 
                 } else if ($reportType == 'orgHierarchy') {
-
-                    $table->setHeading('Department', 'Organisation');
-
+                    $header = ['Department', 'Organisation'];
                     $session->setTempdata('fileName', $orgName . '_Hierarchy', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Organisation Hierarchy - "' . $orgName . '"';
+                    $reportTitle = 'Organisation Hierarchy - "' . $orgName . '"';
 
                 }
 
+                $table->setHeading($header);
+
+                $session->setTempdata('reportHeader', $header);
+                $session->setTempdata('reportTitle', $reportTitle);
+
+                $data['reportTitle'] = $reportTitle;
+                $data['resultHTML'] = $table->generate();
                 $data['reportType'] = $reportType;
                 $data['org'] = $org;
 
@@ -630,109 +610,79 @@ class Report extends BaseController
                     $org = $session->get('organisation');
                 }
                 if ($courseReportType == 'liveCourses') {
-                    $table->setHeading('Course Name', 'Course Provider', 'Duration (HH:MM:SS)', 'Published Date', 'No. of Ratings', 'Average Rating');
-
+                    $header = ['Course Name', 'Course Provider', 'Duration (HH:MM:SS)', 'Published Date', 'No. of Ratings', 'Average Rating'];
                     $session->setTempdata('fileName', 'LiveCourses', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Live Courses';
-
+                    $reportTitle = 'Live Courses';
 
                 } else if ($courseReportType == 'underPublishCourses') {
-                    $table->setHeading('Course Name', 'Course Provider');
-
+                    $header = ['Course Name', 'Course Provider'];
                     $session->setTempdata('fileName', 'CoursesUnderPublish', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Courses under Publish';
+                    $reportTitle = 'Courses under Publish';
 
 
                 } else if ($courseReportType == 'underReviewCourses') {
-                    $table->setHeading('Course Name', 'Course Provider');
-
+                    $header = ['Course Name', 'Course Provider'];
                     $session->setTempdata('fileName', 'CoursesUnderReview', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Courses under review';
+                    $reportTitle = 'Courses under review';
 
 
                 } else if ($courseReportType == 'draftCourses') {
-                    $table->setHeading('Course Name', 'Course Provider');
-
+                    $header = ['Course Name', 'Course Provider'];
                     $session->setTempdata('fileName', 'DraftCourses', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Courses in draft';
+                    $reportTitle = 'Courses in draft';
 
 
                 } else if ($courseReportType == 'courseEnrolmentReport') {
-                    $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Course Name', 'Course Provider','Completion Status', 'Completion Percentage', 'Completed On');
-
+                    $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Course Name', 'Course Provider', 'Completion Status', 'Completion Percentage', 'Completed On'];
                     $session->setTempdata('fileName', $course . '_EnrolmentReport', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'User Enrolment Report for Course - "' . $home->getCourseName($course) . '"';
+                    $reportTitle = 'User Enrolment Report for Course - "' . $home->getCourseName($course) . '"';
 
 
                 } else if ($courseReportType == 'courseEnrolmentCount') {
-                    $table->setHeading('Course Name', 'Course Provider', 'Published Date', 'Duration (HH:MM:SS)', 'Enrolled', 'Not Started', 'In Progress', 'Completed', 'Average Rating');
-
+                    $header = ['Course Name', 'Course Provider', 'Published Date', 'Duration (HH:MM:SS)', 'Enrolled', 'Not Started', 'In Progress', 'Completed', 'Average Rating'];
                     $session->setTempdata('fileName', 'Course-wiseSummary', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Course-wise  Summary';
+                    $reportTitle = 'Course-wise  Summary';
 
                 } else if ($courseReportType == 'programEnrolmentReport') {
-                    $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Batch ID', 'Status', 'Completed On');
-
+                    $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Batch ID', 'Status', 'Completed On'];
                     $session->setTempdata('fileName', $course . '_EnrolmentReport', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'User Enrolment Report for Program - "' . $home->getProgramName($course) . '"';
+                    $reportTitle = 'User Enrolment Report for Program - "' . $home->getProgramName($course) . '"';
 
                 } else if ($courseReportType == 'programEnrolmentCount') {
-                    $table->setHeading('Program Name', 'Batch ID', 'Enrollment Count', 'Completion Count');
-
+                    $header = ['Program Name', 'Batch ID', 'Enrollment Count', 'Completion Count'];
                     $session->setTempdata('fileName', 'Program-wiseSummary', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Program-wise Summary';
+                    $reportTitle = 'Program-wise Summary';
 
                 } else if ($courseReportType == 'collectionEnrolmentReport') {
-                    $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Course Name', 'Status', 'Completion Percentage', 'Completed On');
-
+                    $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Course Name', 'Status', 'Completion Percentage', 'Completed On'];
                     $session->setTempdata('fileName', $course . '_EnrolmentReport', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'User Enrolment Report for Curated Collection - "' . $home->getCollectionName($course) . '"';
+                    $reportTitle = 'User Enrolment Report for Curated Collection - "' . $home->getCollectionName($course) . '"';
 
                 } else if ($courseReportType == 'collectionEnrolmentCount') {
-                    $table->setHeading('Course Name', 'Enrolment Count', 'Completion Count');
-
+                    $header = ['Course Name', 'Enrolment Count', 'Completion Count'];
                     $session->setTempdata('fileName', $course . '_Summary', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Curated collection summary - "' . $home->getCollectionName($course) . '"';
+                    $reportTitle = 'Curated collection summary - "' . $home->getCollectionName($course) . '"';
 
 
                 } else if ($courseReportType == 'cbpProviderWiseCourseCount') {
-                    $table->setHeading('CBP Provider Name', 'Course Count');
-
+                    $header = ['CBP Provider Name', 'Course Count'];
                     $session->setTempdata('fileName', 'CBPProviderSummary', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'CBP Provider-wise course count';
+                    $reportTitle = 'CBP Provider-wise course count';
 
 
                 } else if ($courseReportType == 'courseMinistrySummary') {
-                    $table->setHeading('Ministry/State Name', 'Enrolled', 'Not Started', 'In Progress', 'Completed');
-
+                    $header = ['Ministry/State Name', 'Enrolled', 'Not Started', 'In Progress', 'Completed'];
                     $session->setTempdata('fileName', $course . '_MinistrySummary', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Ministry-wise Summary for course - "' . $home->getCourseName($course) . '"';
+                    $reportTitle = 'Ministry-wise Summary for course - "' . $home->getCourseName($course) . '"';
 
                 }
+                $table->setHeading($header);
+
+                $session->setTempdata('reportHeader', $header);
+                $session->setTempdata('reportTitle', $reportTitle);
+
+                $data['reportTitle'] = $reportTitle;
+                $data['resultHTML'] = $table->generate();
                 $data['reportType'] = $reportType;
 
                 return view('header_view')
@@ -788,147 +738,99 @@ class Report extends BaseController
                 }
 
                 if ($roleReportType == 'roleWiseCount') {
-                    $table->setHeading('Role', 'Count');
-
+                    $header = ['Role', 'Count'];
                     $session->setTempdata('fileName', 'Role-wise count', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Role-wise count';
+                    $reportTitle = 'Role-wise count';
 
                 } else if ($roleReportType == 'monthWiseMDOAdminCount') {
-                    $table->setHeading('Month', 'Count');
-
+                    $header = ['Month', 'Count'];
                     $session->setTempdata('fileName', 'Month-wise MDO Admin Creation Count', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Month-wise MDO Admin Creation Count';
+                    $reportTitle = 'Month-wise MDO Admin Creation Count';
 
                 } else if ($roleReportType == 'cbpAdminList') {
-                    $table->setHeading('Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles');
-
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of CBP Admins', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'List of CBP Admins';
+                    $reportTitle = 'List of CBP Admins';
 
                 } else if ($roleReportType == 'mdoAdminList') {
-                    $table->setHeading('Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles');
-
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of MDO Admins', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'List of MDO Admins';
+                    $reportTitle = 'List of MDO Admins';
 
                 } else if ($roleReportType == 'creatorList') {
-                    $table->setHeading('Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles');
-
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of Content Creators', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'List of Content Creators';
+                    $reportTitle = 'List of Content Creators';
 
                 } else if ($roleReportType == 'reviewerList') {
-                    $table->setHeading('Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles');
-
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of Content Reviewers', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'List of Content Reviewers';
+                    $reportTitle = 'List of Content Reviewers';
 
                 } else if ($roleReportType == 'publisherList') {
-                    $table->setHeading('Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles');
-
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of Content Publishers', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'List of Content Publishers';
+                    $reportTitle = 'List of Content Publishers';
 
                 } else if ($roleReportType == 'editorList') {
-                    $table->setHeading('Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles');
-
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of Editors', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'List of Editors';
+                    $reportTitle = 'List of Editors';
 
                 } else if ($roleReportType == 'fracAdminList') {
-                    $table->setHeading('Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles');
-
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of FRAC Admins', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'List of FRAC Admins';
-
+                    $reportTitle = 'List of FRAC Admins';
 
                 } else if ($roleReportType == 'fracCompetencyMember') {
-                    $table->setHeading('Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles');
-
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of FRAC Competency Members', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'List of FRAC Competency Members';
-
+                    $reportTitle = 'List of FRAC Competency Members';
 
                 } else if ($roleReportType == 'fracL1List') {
-                    $table->setHeading('Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles');
-
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of FRAC_Reviewer_L1', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'List of FRAC_Reviewer_L1';
+                    $reportTitle = 'List of FRAC_Reviewer_L1';
 
                 } else if ($roleReportType == 'fracL2List') {
-                    $table->setHeading('Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles');
-
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of FRAC_Reviewer_L2', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'List of FRAC_Reviewer_L2';
-
+                    $reportTitle = 'List of FRAC_Reviewer_L2';
 
                 } else if ($roleReportType == 'ifuMemberList') {
-                    $table->setHeading('Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles');
-
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of IFU Members', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'List of IFU Members';
+                    $reportTitle = 'List of IFU Members';
 
                 } else if ($roleReportType == 'publicList') {
-                    $table->setHeading('Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles');
-
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of CBP Admins', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'List of Public users';
+                    $reportTitle = 'List of Public users';
 
                 } else if ($roleReportType == 'spvAdminList') {
-                    $table->setHeading('Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles');
-
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of SPV Admins', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'List of SPV Admins';
+                    $reportTitle = 'List of SPV Admins';
 
                 } else if ($roleReportType == 'stateAdminList') {
-                    $table->setHeading('Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles');
-
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of State Admins', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'List of State Admins';
-
+                    $reportTitle = 'List of State Admins';
 
                 } else if ($roleReportType == 'watMemberList') {
-                    $table->setHeading('Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles');
-
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of WAT Members', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'List of WAT Members';
+                    $reportTitle = 'List of WAT Members';
 
                 }
-                $data['reportType'] = $roleReportType;
+                $table->setHeading($header);
+
+                $session->setTempdata('reportHeader', $header);
+                $session->setTempdata('reportTitle', $reportTitle);
+
+                $data['reportTitle'] = $reportTitle;
+                $data['resultHTML'] = $table->generate();
+                $data['reportType'] = $reportType;
 
                 return view('header_view')
                     . view('report_result', $data)
@@ -987,40 +889,35 @@ class Report extends BaseController
                 }
 
                 if ($analyticsReportType == 'dayWiseUserOnboarding') {
-                    $table->setHeading('Date', 'No. of Users Onboarded');
-
+                    $header = ['Date', 'No. of Users Onboarded'];
                     $session->setTempdata('fileName', 'Day-wise User Onboarding', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Day-wise User Onboarding';
+                    $reportTitle = 'Day-wise User Onboarding';
 
                 } else if ($analyticsReportType == 'monthWiseUserOnboarding') {
-                    $table->setHeading('Month', 'No. of Users Onboarded');
-
+                    $header = ['Month', 'No. of Users Onboarded'];
                     $session->setTempdata('fileName', 'Month-wise User Onboarding', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Month-wise User Onboarding';
+                    $reportTitle = 'Month-wise User Onboarding';
 
                 } else if ($analyticsReportType == 'monthWiseOrgOnboarding') {
-                    $table->setHeading('Month', 'No. of Organisations Onboarded');
-
+                    $header = ['Month', 'No. of Organisations Onboarded'];
                     $session->setTempdata('fileName', 'Month-wise Org Onboarding', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Month-wise Organisation Onboarding';
+                    $reportTitle = 'Month-wise Organisation Onboarding';
 
                 } else if ($analyticsReportType == 'monthWiseCourses') {
-                    $table->setHeading('Month', 'No. of Courses Published');
-
+                    $header = ['Month', 'No. of Courses Published'];
                     $session->setTempdata('fileName', 'Month-wise Courses Published', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Month-wise Courses Published';
+                    $reportTitle = 'Month-wise Courses Published';
 
                 }
 
-                $data['reportType'] = $analyticsReportType;
+                $table->setHeading($header);
+
+                $session->setTempdata('reportHeader', $header);
+                $session->setTempdata('reportTitle', $reportTitle);
+
+                $data['reportTitle'] = $reportTitle;
+                $data['resultHTML'] = $table->generate();
+                $data['reportType'] = $reportType;
 
                 return view('header_view')
                     . view('report_result', $data)
@@ -1070,153 +967,106 @@ class Report extends BaseController
                 $data['lastUpdated'] = '[Report as on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
                 $session->setTempdata('error', '');
 
-                
+
                 if ($reportType == 'topUserEnrolment') {
-                    $table->setHeading('Name', 'Email ID','Organisation', 'No. of Courses Enrolled');
-
+                    $header = ['Name', 'Email ID', 'Organisation', 'No. of Courses Enrolled'];
                     $session->setTempdata('fileName', 'TopUsers_Enrolment', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Top '.$topCount . ' users based on enrolment in courses';
+                    $reportTitle = 'Top ' . $topCount . ' users based on enrolment in courses';
 
                 } else if ($reportType == 'topUserCompletion') {
-                    $table->setHeading('Name', 'Email ID', 'Organisation', 'No. of Courses Completed');
-
+                    $header = ['Name', 'Email ID', 'Organisation', 'No. of Courses Completed'];
                     $session->setTempdata('fileName', 'TopUsers_Completion', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Top '.$topCount . ' users based on course completion';
+                    $reportTitle = 'Top ' . $topCount . ' users based on course completion';
 
                 } else if ($reportType == 'topUserNotStarted') {
-                    $table->setHeading('Name', 'Email ID', 'Organisation', 'No. of Courses Enrolled and Not Started');
-
+                    $header = ['Name', 'Email ID', 'Organisation', 'No. of Courses Enrolled and Not Started'];
                     $session->setTempdata('fileName', 'TopUsers_NotStarted', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Users with highest no. of courses enrolled and not started';
+                    $reportTitle = 'Users with highest no. of courses enrolled and not started';
 
                 } else if ($reportType == 'topUserInProgress') {
-                    $table->setHeading('Name', 'Email ID', 'Organisation', 'No. of Courses In Progress');
-
+                    $header = ['Name', 'Email ID', 'Organisation', 'No. of Courses In Progress'];
                     $session->setTempdata('fileName', 'TopUsers_InProgress', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Users with highest no. of courses in progress';
+                    $reportTitle = 'Users with highest no. of courses in progress';
 
                 } else if ($reportType == 'topOrgOnboarding') {
-                    $table->setHeading('Organisation', 'No. of Users Onboarded');
-
+                    $header = ['Organisation', 'No. of Users Onboarded'];
                     $session->setTempdata('fileName', 'TopOrg_Onboarding', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Top '.$topCount.' organisations based on user onboarding';
+                    $reportTitle = 'Top ' . $topCount . ' organisations based on user onboarding';
 
                 } else if ($reportType == 'topOrgEnrolment') {
-                    $table->setHeading('Organisation', 'No. of Course Enrolments');
-
+                    $header = ['Organisation', 'No. of Course Enrolments'];
                     $session->setTempdata('fileName', 'TopOrg_Enrolment', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Top '.$topCount.' organisations based on course enrolment';
+                    $reportTitle = 'Top ' . $topCount . ' organisations based on course enrolment';
 
                 } else if ($reportType == 'topOrgCompletion') {
-                    $table->setHeading('Organisation', 'No. of Course Completions');
-
+                    $header = ['Organisation', 'No. of Course Completions'];
                     $session->setTempdata('fileName', 'TopOrg_Completion', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Top '.$topCount.' organisations based on course completion';
+                    $reportTitle = 'Top ' . $topCount . ' organisations based on course completion';
 
                 } else if ($reportType == 'topOrgMdoAdmin') {
-                    $table->setHeading('Organisation', 'No. of MDO Admins');
-
+                    $header = ['Organisation', 'No. of MDO Admins'];
                     $session->setTempdata('fileName', 'TopOrg_MDOAdmin', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Top '.$topCount.' organisations based on MDO Admin count';
+                    $reportTitle = 'Top ' . $topCount . ' organisations based on MDO Admin count';
 
                 } else if ($reportType == 'topCbpLiveCourses') {
-                    $table->setHeading('CBP Provider', 'No. of Courses Published');
-
+                    $header = ['CBP Provider', 'No. of Courses Published'];
                     $session->setTempdata('fileName', 'TopCBP_LiveCourses', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Top '.$topCount.' Course Publishers';
+                    $reportTitle = 'Top ' . $topCount . ' Course Publishers';
 
                 } else if ($reportType == 'topCbpUnderPublish') {
-                    $table->setHeading('CBP Provider', 'No. of Courses Under Publish');
-
+                    $header = ['CBP Provider', 'No. of Courses  Under Publish'];
                     $session->setTempdata('fileName', 'TopCBP_UnderPublish', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'CBP Providers with highest no. of courses under publish';
+                    $reportTitle = 'CBP Providers with highest no. of courses under publish';
 
                 } else if ($reportType == 'topCbpUnderReview') {
-                    $table->setHeading('CBP Provider', 'No. of Courses Under Review');
-
+                    $header = ['CBP Provider', 'No. of Courses  Under Review'];
                     $session->setTempdata('fileName', 'TopCBP_UnderReview', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'CBP Providers with highest no. of courses in progress';
+                    $reportTitle = 'CBP Providers with highest no. of courses in progress';
 
                 } else if ($reportType == 'topCbpDraftCourses') {
-                    $table->setHeading('CBP Provider', 'No. of Courses In Draft');
-
+                    $header = ['CBP Provider', 'No. of Courses In Draft'];
                     $session->setTempdata('fileName', 'TopCBP_DraftCourses', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'CBP Providers with highest no. of draft courses';
+                    $reportTitle = 'CBP Providers with highest no. of draft courses';
 
                 } else if ($reportType == 'topCourseEnrolment') {
-                    $table->setHeading('Course', 'No. of Users Enrolled');
-
+                    $header = ['Course', 'No. of Users Enrolled'];
                     $session->setTempdata('fileName', 'TopCourse_Enrolment', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Top '.$topCount. ' courses based on enrolment';
+                    $reportTitle = 'Top ' . $topCount . ' courses based on enrolment';
 
                 } else if ($reportType == 'topCourseCompletion') {
-                    $table->setHeading('Course', 'No. of Users Completed');
-
+                    $header = ['Course', 'No. of Users Completed'];
                     $session->setTempdata('fileName', 'TopCourse_Completion', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Top '.$topCount. ' courses based on completion';
+                    $reportTitle = 'Top ' . $topCount . ' courses based on completion';
 
                 } else if ($reportType == 'topCourseRating') {
-                    $table->setHeading('Course', 'Average Rating','No. of Ratings');
-
+                    $header = ['Course', 'Average Rating', 'No. of Ratings'];
                     $session->setTempdata('fileName', 'TopCourse_Rating', 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Top '.$topCount. ' courses based on rating';
+                    $reportTitle = 'Top ' . $topCount . ' courses based on rating';
 
                 } else if ($reportType == 'topOrgCourseWise') {
-                    $table->setHeading('Organisation', 'No. of Users Completed');
+                    $header = ['Organisation', 'No. of Users Completed'];
+                    $session->setTempdata('fileName', 'TopOrg_' . $course, 300);
+                    $reportTitle = 'Top ' . $topCount . ' organisations based on completion of course - "' . $courseModel->getCourseName($course) . '"';
 
-                    $session->setTempdata('fileName', 'TopOrg_'.$course, 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Top '.$topCount. ' organisations based on completion of course - "'.$courseModel->getCourseName($course).'"';
-
-                }  else if ($reportType == 'topOrgProgramWise') {
-                    $table->setHeading('Organisation', 'No. of Users Completed');
-
-                    $session->setTempdata('fileName', 'TopOrg_'.$course, 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Top '.$topCount. ' organisations based on completion of program - "'.$programModel->getProgramName($course).'"';
+                } else if ($reportType == 'topOrgProgramWise') {
+                    $header = ['Organisation', 'No. of Users Completed'];
+                    $session->setTempdata('fileName', 'TopOrg_' . $course, 300);
+                    $reportTitle = 'Top ' . $topCount . ' organisations based on completion of program - "' . $programModel->getProgramName($course) . '"';
 
                 } else if ($reportType == 'topOrgCollectionWise') {
-                    $table->setHeading('Organisation', 'No. of Users Completed');
-
-                    $session->setTempdata('fileName', 'TopOrg_'.$course, 300);
-
-                    $data['resultHTML'] = $table->generate();
-                    $data['reportTitle'] = 'Top '.$topCount. ' organisations based on completion of curated collection - "'.$collectionModel->getCollectionName($course).'"';
+                    $header = ['Organisation', 'No. of Users Completed'];
+                    $session->setTempdata('fileName', 'TopOrg_' . $course, 300);
+                    $reportTitle = 'Top ' . $topCount . ' organisations based on completion of curated collection - "' . $collectionModel->getCollectionName($course) . '"';
 
                 }
 
+                $table->setHeading($header);
+
+                $session->setTempdata('reportHeader', $header);
+                $session->setTempdata('reportTitle', $reportTitle);
+
+                $data['reportTitle'] = $reportTitle;
+                $data['resultHTML'] = $table->generate();
                 $data['reportType'] = $reportType;
 
                 return view('header_view')
@@ -1260,24 +1110,26 @@ class Report extends BaseController
                 if ($role == 'ATI_ADMIN') {
                     $org = $session->get('organisation');
                 }
-                $doptReportType = $request->getPost('doptReportType'); {
+                $doptReportType = $request->getPost('doptReportType');
 
-                    $ati = $request->getPost('ati');
-                    if ($reportType == 'atiWiseOverview') {
-                        $table->setHeading('Program Name', 'Batch ID', 'Institute', 'Enrolled', 'Not Started', 'In Progress', 'Completed');
-
-                        $session->setTempdata('fileName', 'ATI-wise Overview', 300);
-
-                        $data['resultHTML'] = $table->generate();
-                        $data['reportTitle'] = 'ATI-wise Overview';
-                    }
-
-                    $data['reportType'] = $reportType;
-
-                    return view('header_view')
-                        . view('report_result', $data)
-                        . view('footer_view');
+                $ati = $request->getPost('ati');
+                if ($reportType == 'atiWiseOverview') {
+                    $header = ['Program Name', 'Batch ID', 'Institute', 'Enrolled', 'Not Started', 'In Progress', 'Completed'];
+                    $session->setTempdata('fileName', 'ATI-wise Overview', 300);
+                    $reportTitle = 'ATI-wise Overview';
                 }
+
+                $table->setHeading($header);
+
+                $session->setTempdata('reportHeader', $header);
+
+                $data['resultHTML'] = $table->generate();
+                $data['reportType'] = $reportType;
+
+                return view('header_view')
+                    . view('report_result', $data)
+                    . view('footer_view');
+
             } else {
                 return $this->response->redirect(base_url('/'));
             }
@@ -1309,24 +1161,74 @@ class Report extends BaseController
 
                 $fileName = $session->getTempdata('fileName') . '.xls';
 
-                $keys = array();
+                // $keys = array();
 
-                foreach ($report[0] as $key => $value) {
-                    array_push($keys, $key);
-                }
+                // foreach ($report[0] as $key => $value) {
+                //     array_push($keys, $key);
+                // }
 
                 $spreadsheet = new Spreadsheet();
 
+                $styleArray = [
+                    'font' => [
+                        'bold' => true,
+                        'size' => 15,
+                        'name' => 'Verdana'
+                    ],
+                    'alignment' => [
+                        'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                        'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                    ],
+                    'fill' => [
+                        'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                        'startColor' => [
+                            'argb' => 'd5d5d5',
+                        ],
+                        'endColor' => [
+                            'argb' => 'd5d5d5',
+                        ],
+                    ],
+                    'borders' => [
+                        'bottom' => [
+                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM,
+                            'color' => [
+                                'argb' => '000000',
+                            ],
+                        ]
+
+                    ],
+                ];
+
+                $keys = $session->getTempdata('reportHeader');
+
+                $noOfColumns = count($keys);
+                $titleColumnsToMerge = ord('A') + ($noOfColumns - 1);
+                $titleColumnsToMerge = chr($titleColumnsToMerge);
 
                 $sheet = $spreadsheet->getActiveSheet();
+
+                $spreadsheet->getDefaultStyle()->getFont()->setSize(11);
+                $spreadsheet->getDefaultStyle()->getFont()->setName('Verdana');
+
+                $sheet->mergeCells('A1:' . $titleColumnsToMerge . '1');
+                $sheet->getStyle('A1:' . $titleColumnsToMerge . '1')->applyFromArray($styleArray);
+                $sheet->setCellValue('A1', $session->getTempdata('reportTitle'));
+                $sheet->getRowDimension('1')->setRowHeight(30);
+                $sheet->getRowDimension('2')->setRowHeight(25);
+
+
                 $column = 'A';
                 foreach ($keys as $key) {
-                    $sheet->setCellValue($column . '1', $key);
+                    $sheet->setCellValue($column . '2', $key);
+                    $sheet->getStyle($column . '2')->getFont()->setName('Verdana');
+                    $sheet->getStyle($column . '2')->getFont()->setSize(11);
+                    $sheet->getStyle($column . '2')->getFont()->setBold(true);
+                    $sheet->getColumnDimension($column)->setWidth(20);
                     $column++;
                 }
 
 
-                $rows = 2;
+                $rows = 3;
 
 
 
