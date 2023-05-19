@@ -35,7 +35,21 @@ class Report extends BaseController
 
 
 
-    public function getReport()
+    /*
+    Function getReport() - perform database query based on report type
+
+    Each query is performed 3 times :
+        1.  $result => parameters - ($limit, $offset, $search, $orderBy, $orderDir)
+            perform query with given limit, offset, search, order
+
+        2.  $fullResult => parameters - (limit = -1, offset = 0, search = '', $orderBy, $orderDir);
+            query to get total no. of rows - to be shown below the table
+        
+        3.  $resultFiltered => parameters - (limit = -1, offset = 0, $search, $orderBy, $orderDir); 
+            query to get count of filtered results when searched with key <$search>; Count will be shown below the table
+
+    */
+    public function getReport()     
     {
 
         try {
@@ -223,6 +237,7 @@ class Report extends BaseController
                     $result = $user->getMonthWiseMDOAdminCount($orgName, $limit, $offset, $search, $orderBy, $orderDir);
                     $fullResult = $user->getMonthWiseMDOAdminCount($orgName, -1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getMonthWiseMDOAdminCount($orgName, -1, 0, $search, $orderBy, $orderDir);
+
                 } else if ($reportType == 'cbpAdminList') {
                     $result = $user->getCBPAdminList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
                     $fullResult = $user->getCBPAdminList($orgName, -1, 0, '', $orderBy, $orderDir);
@@ -237,6 +252,7 @@ class Report extends BaseController
                     $result = $user->getCreatorList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
                     $fullResult = $user->getCreatorList($orgName, -1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getCreatorList($orgName, -1, 0, $search, $orderBy, $orderDir);
+
                 } else if ($reportType == 'reviewerList') {
                     $result = $user->getReviewerList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
                     $fullResult = $user->getReviewerList($orgName, -1, 0, '', $orderBy, $orderDir);
@@ -444,6 +460,21 @@ class Report extends BaseController
 
 
     }
+
+
+    /*
+
+    Functions getMDOReport()/getCourseReport()/... - separate function for each tab
+    
+    Based on report type:
+
+        1. Set table header
+        2. Set report title
+        3. Set excel filename
+        4. Generate HTML Table template, including header (data will be generated in getReport())
+        5. Set Last Update Time
+
+    */
     public function getMDOReport()
     {
         try {
@@ -1140,6 +1171,16 @@ class Report extends BaseController
 
     }
 
+    /*
+
+    Function downloadExcel() - generate and download Excel file
+
+        1.  Data will be in :
+            a.  Temporary session variable 'resultArray' for full report download
+            b.  Temporary session variable 'filteredResultArray' for filtered report download
+        2.  Filename will be in temporary session variable 'fileName'
+        
+    */
     public function downloadExcel()
     {
         try {

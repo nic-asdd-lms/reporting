@@ -66,17 +66,19 @@
             
             url: "<?php echo base_url('/getReport') ?>" + '/' + reportType + '?length=1&start=0&draw=1&search[value]=&order[0][column]=&order[0][dir]=',
             success: function (data) {
-                tableData = JSON.parse(JSON.stringify(data));
+                if (!data.recordsTotal){   
+                    alert("No matching data found");
+                }
+                else{   
+                    tableData = JSON.parse(JSON.stringify(data));
                     columnNames = Object.keys(tableData.data[0]);
                     for (var i in columnNames) {
-                    columns.push({
-                        data: columnNames[i],
-                        searchable: true
-                    });
-                
+                        columns.push({
+                            data: columnNames[i],
+                            searchable: true
+                        });
                 }
                 
-
                 $('#tbl-result').DataTable({
                     autoWidth: true,
                     processing: true,
@@ -84,6 +86,7 @@
                     ajax: '<?php echo base_url('/getReport') ?>' + '/' + reportType,
                     columns: columns
                 });
+                }
             }
         });
     });
@@ -141,7 +144,7 @@
                             $session = \Config\Services::session();
                             echo $session->getTempdata('error');
                             $session->removeTempdata('error');
-                            
+
                             ?>
                         </label>
                     </div>
