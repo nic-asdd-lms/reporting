@@ -337,7 +337,48 @@
                     return true;
                 }
             });
+
+            $("#topreportform").submit(function () {                    // Tab 4 Validation 
+                var topReportType = $('#topReportType').val();
+                var topCount = $('#topCount').val();
+                var topCourse = $('#topcoursename').val();
+                if (topReportType == 'notSelected') {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Please Select Analytics Report Type !',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                    return false;
+                }
+                else if (topReportType == 'topOrgCourseWise' || topReportType == 'topOrgProgramWise' || topReportType == 'topOrgCollectionWise') {
+                    if (topCourse == '') {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Please Select Course !',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                        return false;
+                    }
+                }
+                else if (topCount == '') {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Please Select No. of Records to be shown !',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                    return false;
+                }                                                          // If report type is not selected then do not submit the form
+                else                                                        // Only one option is there no need to check sub dropdowns
+                {
+                    return true;
+                }
+            });
         });
+
+
 
 
 
@@ -493,8 +534,8 @@
                             for (var count = 0; count < data.length; count++) {
                                 html += '<option class="datalist-options" data-value="' + data[count].curated_id + '">' + data[count].curated_name + '</option>';
                             }
-                        } 
-                            $('#top_course_search_result').html(html);
+                        }
+                        $('#top_course_search_result').html(html);
 
 
                     }
@@ -687,7 +728,7 @@
                     <hr />
 
                     <div class="container">
-                        <table  class="tbl-input"  id="tbl-course">
+                        <table class="tbl-input" id="tbl-course">
                             <!-- <tr>
 
                                 <td colspan="2">
@@ -863,13 +904,14 @@
                     <div class="container">
                         <table class="tbl-topcount">
                             <tr>
-                            <td><label for="top" class="topcountlabel required">No. of Top records to be displayed:</label></td>
-                            <td><input type="text" class="form-control topcount" id="topCount" name="topCount"
-                                autocomplete="off" /></td>
-                    </tr>
-                    </table>
-                        
-                        <table class="submitbutton" id="tbl-top-course" style="display:none">
+                                <td><label for="topCount" class="topcountlabel required">No. of Top records to be
+                                        displayed:</label></td>
+                                <td><input type="text" class="form-control topcount" id="topCount" name="topCount"
+                                        autocomplete="off" /></td>
+                            </tr>
+                        </table>
+
+                        <table class="tbl-input" id="tbl-top-course" style="display:none">
 
 
                             <tr>

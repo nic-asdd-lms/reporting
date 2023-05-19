@@ -25,12 +25,12 @@ function enable_disable_mdo(value) {
     mdo = document.getElementById('tbl');
     org = document.getElementById('orgname');
 
-    if (value.value == "mdoUserCount" || value.value == "orgList" || value.value == "userList"){
+    if (value.value == "mdoUserCount" || value.value == "orgList" || value.value == "userList") {
         mdo.style.display = "none";
         org.style.display = "none";
-        
+
     }
-    else{
+    else {
         mdo.style.display = "block";
 
     }
@@ -38,27 +38,40 @@ function enable_disable_mdo(value) {
     if (value.value == "ministryUserEnrolment" || value.value == "orgHierarchy") {
         org.style.display = "block";
         org.placeholder = "Search Ministry/State";
-        org.value="";
-        
+        org.value = "";
+
     }
 
     else {
         org.style.display = "block";
         org.placeholder = "Search Organisation";
-        org.value="";
-        
+        org.value = "";
+
     }
 
 }
 
 function enable_disable_course(value) {
     course = document.getElementById("tbl-course");
+    coursename = document.getElementById("coursename");
     if (value.value == "courseEnrolmentCount" || value.value == "programEnrolmentCount" || value.value == "liveCourses" || value.value == "underPublishCourses" || value.value == "underReviewCourses" || value.value == "draftCourses" || value.value == "cbpProviderWiseCourseCount") {
         course.style.display = "none";
-        course.value="";
+        course.value = "";
+    } else if (value.value == "courseEnrolmentReport" || value.value == "courseMinistrySummary") {
+        course.style.display = "block";
+        coursename.placeholder = "Search Course";
+        coursename.value = "";
+    } else if (value.value == "programEnrolmentReport") {
+        course.style.display = "block";
+        coursename.placeholder = "Search Program";
+        coursename.value = "";
+    } else if (value.value == "collectionEnrolmentReport" || value.value == "collectionEnrolmentCount") {
+        course.style.display = "block";
+        coursename.placeholder = "Search Curated Collection";
+        coursename.value = "";
     } else {
         course.style.display = "block";
-        course.value="";
+        coursename.value = "";
     }
 
 }
@@ -68,10 +81,10 @@ function enable_disable_program(value) {
     course = document.getElementById("tbl-program");
     if (value.value == "atiWiseOverview") {
         course.style.display = "none";
-        course.value="";
+        course.value = "";
     } else {
         course.style.display = "block";
-        course.value="";
+        course.value = "";
     }
 
 }
@@ -79,12 +92,22 @@ function enable_disable_program(value) {
 
 function enable_disable_top(value) {
     course = document.getElementById("tbl-top-course");
-    if (value.value == "topOrgCourseWise" || value.value == "topOrgProgramWise" || value.value == "topOrgCollectionWise" ) {
+    coursename = document.getElementById("topcoursename");
+    if (value.value == "topOrgCourseWise") {
         course.style.display = "block";
-        
+        coursename.placeholder = "Search Course";
+        coursename.value = "";
+    } else if (value.value == "topOrgProgramWise") {
+        course.style.display = "block";
+        coursename.placeholder = "Search Program";
+        coursename.value = "";
+    } else if (value.value == "topOrgCollectionWise") {
+        course.style.display = "block";
+        coursename.placeholder = "Search Curated Collection";
+        coursename.value = "";
     } else {
         course.style.display = "none";
-        
+
     }
 
 }
