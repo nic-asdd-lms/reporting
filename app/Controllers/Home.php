@@ -132,17 +132,17 @@ class Home extends BaseController
 
                         echo json_encode($orgdata);
                     } else if ($action == 'course_search') {
-                        $search_key = $this->request->getVar('search_key');
+                        $search_key =  $this->request->getVar('search_key')  ;
                         $courseModel = new MasterCourseModel();
                         $programModel = new MasterProgramModel();
                         $collectionModel = new MasterCollectionModel();
-                        $reportType = $this->request->getVar('reportType');
+                        $reportType = $this->request->getVar('reportType')  ;
 
-                        if ($reportType == 'courseEnrolmentReport' || $reportType == 'courseMinistrySummary' )
+                        if ($reportType == 'courseEnrolmentReport' || $reportType == 'courseMinistrySummary' || $reportType == 'topOrgCourseWise' )
                             $courseData = $courseModel->courseSearch($search_key);
-                        else if ($reportType == 'programEnrolmentReport')
+                        else if ($reportType == 'programEnrolmentReport'|| $reportType == 'topOrgProgramWise')
                             $courseData = $programModel->programSearch($search_key);
-                        else if ($reportType == 'collectionEnrolmentReport' || $reportType == 'collectionEnrolmentCount')
+                        else if ($reportType == 'collectionEnrolmentReport' || $reportType == 'collectionEnrolmentCount'|| $reportType == 'topOrgCollectionWise')
                             $courseData = $collectionModel->collectionSearch($search_key);
 
                         echo json_encode($courseData);

@@ -68,8 +68,8 @@
                         return false;
                     }
                     else {
-                            return true;
-                        }
+                        return true;
+                    }
                     // else if (ms == 'ministry') {
 
                     //     if (ministry == '') {
@@ -339,7 +339,7 @@
             });
         });
 
-        
+
 
 
 
@@ -434,9 +434,7 @@
                             }
                         }
 
-
                         $('#course_search_result').html(html);
-
 
                     }
 
@@ -451,6 +449,67 @@
                 var options = $('datalist#course_search_result')[0].options;
                 var val = document.getElementById('coursename').value;
                 var course = document.getElementById('course');
+                for (var i = 0; i < options.length; i++) {
+
+                    if (options[i].value === val) {
+                        course.value = options[i].getAttribute('data-value');
+                        break;
+                    }
+                }
+
+
+
+            });
+        });
+
+
+        $(document).ready(function () {
+            $('#topcoursename').keyup(function () {
+                var orgs = [];
+                var action = 'course_search';
+                search_key = document.getElementById('topcoursename').value;
+                reportType = document.getElementById('topReportType').value;
+                $.ajax({
+
+                    url: "<?php echo base_url('/action') ?>",
+                    method: "POST",
+                    data: {
+                        action: action,
+                        search_key: search_key,
+                        reportType: reportType
+                    },
+                    dataType: "JSON",
+                    success: function (data) {
+                        html = '';
+                        if (reportType == 'topOrgCourseWise') {
+                            for (var count = 0; count < data.length; count++) {
+                                html += '<option class="datalist-options" data-value="' + data[count].course_id + '">' + data[count].course_name + '</option>';
+                            }
+                        } else if (reportType == 'topOrgProgramWise') {
+                            for (var count = 0; count < data.length; count++) {
+                                html += '<option class="datalist-options" data-value="' + data[count].program_id + '">' + data[count].program_name + '</option>';
+                            }
+                        } else if (reportType == 'topOrgCollectionWise') {
+                            for (var count = 0; count < data.length; count++) {
+                                html += '<option class="datalist-options" data-value="' + data[count].curated_id + '">' + data[count].curated_name + '</option>';
+                            }
+                        } 
+                            $('#top_course_search_result').html(html);
+
+
+                    }
+
+                });
+            });
+        });
+
+        $(document).ready(function () {
+
+
+            $('input[type=text][name=topcoursename]').change(function () {
+                var options = $('datalist#top_course_search_result')[0].options;
+                var val = document.getElementById('topcoursename').value;
+                var course = document.getElementById('topcourse');
                 for (var i = 0; i < options.length; i++) {
 
                     if (options[i].value === val) {
@@ -483,6 +542,7 @@
                 <button class="tablinks" onclick="openTab(event, \'Course-wise\')">Course-wise Reports</button>
                 <button class="tablinks" onclick="openTab(event, \'Role-wise\')">Role-wise Reports</button>
                 <button class="tablinks" onclick="openTab(event, \'Analytics\')">Analytics</button>
+                <button class="tablinks" onclick="openTab(event, \'Top-Performers\')">Top Performers</button>
                 ';
                 } else if ($session->get('role') == 'MDO_ADMIN') {
                     echo '<button class="tablinks" onclick="openTab(event, \'MDO-wise\')" id="defaultOpen">MDO-wise Reports</button>
@@ -545,14 +605,13 @@
 
 
                         <div id="tbl">
-                            <table class="submitbutton" id="tbl-mdo">
+                            <table class="tbl-input" id="tbl-mdo">
                                 <?php
                                 $session = \Config\Services::session();
 
                                 if ($session->get('role') == 'SPV_ADMIN') {
 
                                     echo '             <tr>
-                                    <div id = "org-div">
                                     <td style="width:1%"><label class="required"></label></td>
                                     <td>
                                                 <div class="auto-widget">
@@ -563,7 +622,7 @@
                                             
                                 
                                     </div>
-                                    </div>
+                                    
                                 
                                     </td>
                                     </tr>
@@ -571,7 +630,7 @@
                                    ';
 
 
-                                    
+
                                 } ?>
 
 
@@ -580,7 +639,7 @@
 
                         </div>
 
-                        
+
 
                         <div class="col-xs-3 container submitbutton">
                             <button id="mdowisereport" class="btn btn-primary" type="submit" name="Submit"
@@ -628,21 +687,22 @@
                     <hr />
 
                     <div class="container">
-                        <table class="submitbutton" id="tbl-course">
-                            <tr>
+                        <table  class="tbl-input"  id="tbl-course">
+                            <!-- <tr>
 
                                 <td colspan="2">
                                     <label for="course">Course/Program/Collection: </label>
                                 </td>
-                            </tr>
+                            </tr> -->
 
                             <tr>
                                 <td style="width:1%"><label class="required"></label></td>
                                 <td>
                                     <div class="auto-widget">
                                         <input type="text" list="course_search_result" class="form-control"
-                                            id="coursename" name="coursename" placeholder="Search Course"  autocomplete="off" />
-                                        <datalist id="course_search_result" >
+                                            id="coursename" name="coursename" placeholder="Search Course"
+                                            autocomplete="off" />
+                                        <datalist id="course_search_result">
                                         </datalist>
                                         <input type="hidden" id="course" name="course" />
 
@@ -651,7 +711,7 @@
 
                                 </td>
                             </tr>
-                            
+
                         </table>
 
                         <div class="col-xs-3 container submitbutton">
@@ -769,6 +829,79 @@
 
             </div>
 
+            <div id="Top-Performers" class="tabcontent">
+                <form id="topreportform" class="form-horizontal login_form"
+                    action="<?php echo base_url('/getTopPerformers'); ?>" method="post">
+                    <div class="report-type">
+                        <label for="topReportType" class="lbl-reporttype required">Report type:</label>
+                        <select name="topReportType" class="form-control report-select" id="topReportType"
+                            onchange="enable_disable_top(this)">
+                            <option value="notSelected">-- Select Report Type --</option>
+                            <option value="topUserEnrolment">Top Users based on course enrolments</option>
+                            <option value="topUserCompletion">Top Users based on course completions</option>
+                            <option value="topUserNotStarted">Users having courses enrolled, but not started</option>
+                            <option value="topUserInProgress">Users having courses in progress</option>
+                            <option value="topOrgOnboarding">Top Organisations based on user onboarding</option>
+                            <option value="topOrgEnrolment">Top Organisations based on course enrolments</option>
+                            <option value="topOrgCompletion">Top Organisations based on course completions</option>
+                            <option value="topOrgMdoAdmin">Top Organisations based on MDO Admin count</option>
+                            <option value="topCbpLiveCourses">Top CBP Providers based on no. of live courses</option>
+                            <option value="topCbpUnderPublish">CBP Providers whose courses are under publish</option>
+                            <option value="topCbpUnderReview">CBP Providers whose courses are under review</option>
+                            <option value="topCbpDraftCourses">CBP Providers whose courses are in draft</option>
+                            <option value="topCourseEnrolment">Top Courses based on enrolment</option>
+                            <option value="topCourseCompletion">Top Courses based on completion</option>
+                            <option value="topCourseRating">Top Courses based on rating</option>
+                            <option value="topOrgCourseWise">Top performing organisations course-wise</option>
+                            <option value="topOrgProgramWise">Top performing organisations program-wise</option>
+                            <option value="topOrgCollectionWise">Top performing organisations curated collection-wise
+                            </option>
+                        </select>
+                    </div>
+                    <hr />
+
+                    <div class="container">
+                        <table class="tbl-topcount">
+                            <tr>
+                            <td><label for="top" class="topcountlabel required">No. of Top records to be displayed:</label></td>
+                            <td><input type="text" class="form-control topcount" id="topCount" name="topCount"
+                                autocomplete="off" /></td>
+                    </tr>
+                    </table>
+                        
+                        <table class="submitbutton" id="tbl-top-course" style="display:none">
+
+
+                            <tr>
+                                <td style="width:1%"><label class="required"></label></td>
+                                <td colspan="2">
+                                    <div class="auto-widget" id="top-course">
+                                        <input type="text" list="top_course_search_result" class="form-control"
+                                            id="topcoursename" name="topcoursename" placeholder="Search Course"
+                                            autocomplete="off" />
+                                        <datalist id="top_course_search_result">
+                                        </datalist>
+                                        <input type="hidden" id="topcourse" name="topcourse" />
+
+
+                                    </div>
+
+                                </td>
+                            </tr>
+
+                        </table>
+
+                        <div class="col-xs-3 container submitbutton">
+                            <button class="btn btn-primary " type="submit" name="Submit" value="Submit"> Submit</button>
+                        </div>
+
+                    </div>
+
+                    <?php echo form_close(); ?>
+                </form>
+
+            </div>
+
             <div id="Dopt" class="tabcontent">
 
 
@@ -798,12 +931,13 @@
                                 </td>
                             </tr>
                             <tr>
-                            <td style="width:1%"><label class="required"></label></td>
+                                <td style="width:1%"><label class="required"></label></td>
                                 <td>
                                     <div class="auto-widget">
                                         <input type="text" list="course_search_result" class="form-control"
-                                            id="coursename" name="coursename" placeholder="Search Program"  autocomplete="off" />
-                                        <datalist id="course_search_result" >
+                                            id="coursename" name="coursename" placeholder="Search Program"
+                                            autocomplete="off" />
+                                        <datalist id="course_search_result">
                                         </datalist>
                                         <input type="hidden" id="course" name="course" />
 
@@ -855,12 +989,13 @@
                                 </td>
                             </tr>
                             <tr>
-                            <td style="width:1%"><label class="required"></label></td>
+                                <td style="width:1%"><label class="required"></label></td>
                                 <td>
                                     <div class="auto-widget">
                                         <input type="text" list="course_search_result" class="form-control"
-                                            id="coursename" name="coursename" placeholder="Search Program"  autocomplete="off" />
-                                        <datalist id="course_search_result" >
+                                            id="coursename" name="coursename" placeholder="Search Program"
+                                            autocomplete="off" />
+                                        <datalist id="course_search_result">
                                         </datalist>
                                         <input type="hidden" id="course" name="course" />
 
@@ -881,7 +1016,7 @@
                 </form>
             </div>
 
-            
+
 
 
 
@@ -889,7 +1024,7 @@
 
 
     </section>
-    
+
 
     <!--SCRIPTS -->
 

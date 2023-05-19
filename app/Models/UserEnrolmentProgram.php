@@ -80,7 +80,7 @@ class UserEnrolmentProgram extends Model
         return $query;
     }
 
-    public function getATIWiseCount($org,$limit, $offset, $search, $orderBy, $orderDir)
+    public function getATIWiseCount($org, $limit, $offset, $search, $orderBy, $orderDir)
     {
         try {
             if ($search != '') {
@@ -95,10 +95,10 @@ class UserEnrolmentProgram extends Model
             } else
                 $limitQuery = '';
 
-                if($org == '')
-                    $whereOrg = '';
-                else 
-                    $whereOrg = ' AND master_organization.root_org_id = \''.$org.'\' ' ;
+            if ($org == '')
+                $whereOrg = '';
+            else
+                $whereOrg = ' AND master_organization.root_org_id = \'' . $org . '\' ';
 
             $query = $this->db->query('SELECT distinct program_name,batch_id,master_organization.org_name,  COUNT(*) AS enrolled_count
                                         ,SUM(CASE WHEN user_program_enrolment.status =\'Not Started\' THEN 1 ELSE 0 END) AS Not_Started,
@@ -107,11 +107,49 @@ class UserEnrolmentProgram extends Model
                                         FROM user_program_enrolment, master_program, master_organization
                                         WHERE user_program_enrolment.program_id = master_program.program_id
                                         AND master_program.root_org_id=master_organization.root_org_id
-                                        AND is_ati=true ' .$whereOrg . $likeQuery . '
+                                        AND is_ati=true ' . $whereOrg . $likeQuery . '
                                         GROUP BY program_name,master_organization.org_name,batch_id
                                         ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
 
             return $query;
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    public function getTopOrgProgramWise($course, $topCount, $limit, $offset, $search, $orderBy, $orderDir)
+    {
+        try {
+
+            $builder = $this->db->table('user_program_enrolment');
+            $builder->join('master_user', 'master_user.user_id = user_program_enrolment.user_id');
+            $builder->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id ');
+            $builder->join('master_program', 'master_program.program_id = user_program_enrolment.program_id ');
+            $builder->select('master_organization.org_name, SUM(CASE WHEN user_program_enrolment.status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count');
+            $builder->where('user_program_enrolment.program_id', $course);
+            $builder->where('master_program.program_status', 'Live');
+            $builder->where('user_program_enrolment.status', 'Completed');
+            $builder->groupBy('master_organization.org_name');
+            $builder->orderBy('completed_count', 'desc');
+
+            if ($search != '') {
+
+                $builder->like('master_organization.org_name', strtolower($search));
+                $builder->orLike('master_organization.org_name', strtoupper($search));
+                $builder->orLike('master_organization.org_name', ucfirst($search));
+            }
+
+            $builder->groupBy('master_organization.org_name');
+            $builder->orderBy('completed_count', 'desc');
+            if ($limit != -1)
+                $builder->limit(min($topCount - $offset, $limit), $offset);
+            else
+                $builder->limit($topCount - $offset, $offset);
+
+            $query = $builder->get();
+
+            return $query;
+
         } catch (\Exception $e) {
             throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
         }

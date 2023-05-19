@@ -63,6 +63,7 @@ function enable_disable_course(value) {
 
 }
 
+
 function enable_disable_program(value) {
     course = document.getElementById("tbl-program");
     if (value.value == "atiWiseOverview") {
@@ -76,6 +77,17 @@ function enable_disable_program(value) {
 }
 
 
+function enable_disable_top(value) {
+    course = document.getElementById("tbl-top-course");
+    if (value.value == "topOrgCourseWise" || value.value == "topOrgProgramWise" || value.value == "topOrgCollectionWise" ) {
+        course.style.display = "block";
+        
+    } else {
+        course.style.display = "none";
+        
+    }
+
+}
 
 
 

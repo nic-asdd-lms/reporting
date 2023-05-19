@@ -67,7 +67,6 @@
             url: "<?php echo base_url('/getReport') ?>" + '/' + reportType + '?length=1&start=0&draw=1&search[value]=&order[0][column]=&order[0][dir]=',
             success: function (data) {
                 tableData = JSON.parse(JSON.stringify(data));
-                error.innerHTML = '';
                     columnNames = Object.keys(tableData.data[0]);
                     for (var i in columnNames) {
                     columns.push({

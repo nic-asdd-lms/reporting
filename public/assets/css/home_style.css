@@ -180,6 +180,9 @@ hr {
 div #tbl{
     display: none;
 }
+div #tbl-course{
+    display: none;
+}
 
 datalist {
     position: absolute;
@@ -201,3 +204,26 @@ datalist {
     background-color: #036;
     outline: 0 none;
   }
+
+  .topcount {
+    width: 50px;
+  }
+  .topcountlabel {
+    text-align: left;
+    display: block;
+    padding: 10px;
+    font-weight: 100;
+  }
+
+  .tbl-topcount {
+    width: 50%;
+    align-self: center;
+    display: flex;
+    margin: 0 300px 0 300px;
+  }
+  .tbl-input {
+    display: block;
+margin: 0 100px 0 100px;
+padding: 20px;
+  }
+  

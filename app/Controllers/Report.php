@@ -62,6 +62,8 @@ class Report extends BaseController
                 $data['error'] = '';
                 $session->setTempdata('error', '');
                 $course = $session->getTempdata('course');
+                $topCount = $session->getTempdata('topCount');
+                
 
 
 
@@ -111,6 +113,7 @@ class Report extends BaseController
                     }
 
                 }
+                
 
 
                 if ($reportType == 'userList') {
@@ -281,7 +284,7 @@ class Report extends BaseController
 
                 } else if ($reportType == 'spvAdminList') {
                     $result = $user->getSPVAdminList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getRoleWigetSPVAdminListseCount($orgName, -1, 0, '', $orderBy, $orderDir);
+                    $fullResult = $user->getSPVAdminList($orgName, -1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getSPVAdminList($orgName, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'stateAdminList') {
@@ -319,7 +322,98 @@ class Report extends BaseController
                     $fullResult = $enrolmentProgram->getATIWiseCount($org, -1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolmentProgram->getATIWiseCount($org, -1, 0, $search, $orderBy, $orderDir);
 
+                } else if ($reportType == 'topUserEnrolment') {
+                    $result = $enrolment->getTopUserEnrolment($topCount,$limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getTopUserEnrolment($topCount,-1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getTopUserEnrolment($topCount, -1, 0, $search, $orderBy, $orderDir);
+
+                } else if ($reportType == 'topUserCompletion') {
+                    $result = $enrolment->getTopUserCompletion($topCount, $limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getTopUserCompletion($topCount, -1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getTopUserCompletion($topCount, -1, 0, $search, $orderBy, $orderDir);
+
+                } else if ($reportType == 'topUserNotStarted') {
+                    $result = $enrolment->getTopUserNotStarted($topCount, $limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getTopUserNotStarted($topCount, -1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getTopUserNotStarted($topCount, -1, 0, $search, $orderBy, $orderDir);
+
+                } else if ($reportType == 'topUserInProgress') {
+                    $result = $enrolment->getTopUserInProgress($topCount,$limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getTopUserInProgress($topCount, -1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getTopUserInProgress($topCount, -1, 0, $search, $orderBy, $orderDir);
+
+                } else if ($reportType == 'topOrgOnboarding') {
+                    $result = $user->getTopOrgOnboarding($topCount,$limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $user->getTopOrgOnboarding($topCount,-1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $user->getTopOrgOnboarding($topCount, -1, 0, $search, $orderBy, $orderDir);
+
+                } else if ($reportType == 'topOrgEnrolment') {
+                    $result = $enrolment->getTopOrgEnrolment($topCount, $limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getTopOrgEnrolment($topCount,-1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getTopOrgEnrolment( $topCount,-1, 0, $search, $orderBy, $orderDir);
+
+                } else if ($reportType == 'topOrgCompletion') {
+                    $result = $enrolment->getTopOrgCompletion($topCount, $limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getTopOrgCompletion($topCount, -1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getTopOrgCompletion($topCount, -1, 0, $search, $orderBy, $orderDir);
+
+                } else if ($reportType == 'topOrgMdoAdmin') {
+                    $result = $user->getTopOrgMdoAdmin($topCount,$limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $user->getTopOrgMdoAdmin($topCount, -1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $user->getTopOrgMdoAdmin($topCount, -1, 0, $search, $orderBy, $orderDir);
+
+                } else if ($reportType == 'topCbpLiveCourses') {
+                    $result = $courseModel->getTopCbpLiveCourses($topCount, $limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $courseModel->getTopCbpLiveCourses($topCount, -1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $courseModel->getTopCbpLiveCourses($topCount,-1, 0, $search, $orderBy, $orderDir);
+
+                } else if ($reportType == 'topCbpUnderPublish') {
+                    $result = $courseModel->getTopCbpUnderPublish($topCount,$limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $courseModel->getTopCbpUnderPublish($topCount, -1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $courseModel->getTopCbpUnderPublish($topCount, -1, 0, $search, $orderBy, $orderDir);
+
+                } else if ($reportType == 'topCbpUnderReview') {
+                    $result = $courseModel->getTopCbpUnderReview($topCount, $limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $courseModel->getTopCbpUnderReview($topCount, -1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $courseModel->getTopCbpUnderReview($topCount, -1, 0, $search, $orderBy, $orderDir);
+
+                } else if ($reportType == 'topCbpDraftCourses') {
+                    $result = $courseModel->getTopCbpDraftCourses($topCount, $limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $courseModel->getTopCbpDraftCourses($topCount, -1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $courseModel->getTopCbpDraftCourses($topCount, -1, 0, $search, $orderBy, $orderDir);
+
+                } else if ($reportType == 'topCourseEnrolment') {
+                    $result = $enrolment->getTopCourseEnrolment($topCount, $limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getTopCourseEnrolment($topCount, -1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getTopCourseEnrolment($topCount, -1, 0, $search, $orderBy, $orderDir);
+
+                } else if ($reportType == 'topCourseCompletion') {
+                    $result = $enrolment->getTopCourseCompletion($topCount,$limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getTopCourseCompletion($topCount,-1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getTopCourseCompletion($topCount,-1, 0, $search, $orderBy, $orderDir);
+
+                } else if ($reportType == 'topCourseRating') {
+                    $result = $courseModel->getTopCourseRating($topCount,$limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $courseModel->getTopCourseRating($topCount,-1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $courseModel->getTopCourseRating($topCount,-1, 0, $search, $orderBy, $orderDir);
+
+                } else if ($reportType == 'topOrgCourseWise') {
+                    $result = $enrolment->getTopOrgCourseWise($course,$topCount,$limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getTopOrgCourseWise($course,$topCount,-1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getTopOrgCourseWise($course,$topCount,-1, 0, $search, $orderBy, $orderDir);
+
+                } else if ($reportType == 'topOrgProgramWise') {
+                    $result = $enrolmentProgram->getTopOrgProgramWise($course,$topCount,$limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolmentProgram->getTopOrgProgramWise($course,$topCount,-1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolmentProgram->getTopOrgProgramWise($course,$topCount,-1, 0, $search, $orderBy, $orderDir);
+
+                } else if ($reportType == 'topOrgCollectionWise') {
+                    $result = $enrolment->getTopOrgCollectionWise($course,$topCount, $limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getTopOrgCollectionWise($course,$topCount, -1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getTopOrgCollectionWise($course,$topCount, -1, 0, $search, $orderBy, $orderDir);
+
                 }
+
 
                 $session->remove('resultArray');
                 $session->remove('filteredResultArray');
@@ -572,7 +666,7 @@ class Report extends BaseController
 
 
                 } else if ($courseReportType == 'courseEnrolmentReport') {
-                    $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Course Name', 'Completion Status', 'Completion Percentage', 'Completed On');
+                    $table->setHeading('Name', 'Email ID', 'Organisation', 'Designation', 'Course Name', 'Course Provider','Completion Status', 'Completion Percentage', 'Completed On');
 
                     $session->setTempdata('fileName', $course . '_EnrolmentReport', 300);
 
@@ -927,6 +1021,203 @@ class Report extends BaseController
                 }
 
                 $data['reportType'] = $analyticsReportType;
+
+                return view('header_view')
+                    . view('report_result', $data)
+                    . view('footer_view');
+
+            } else {
+                return $this->response->redirect(base_url('/'));
+            }
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+            // return view('header_view') . view('error_general').view('footer_view');
+        }
+
+    }
+
+    public function getTopPerformers()
+    {
+        try {
+            helper('session');
+            if (session_exists()) {
+
+
+                $request = service('request');
+                $session = \Config\Services::session();
+
+                $table = new \CodeIgniter\View\Table();
+                $table->setTemplate($GLOBALS['tableTemplate']);
+
+                $role = $session->get('role');
+
+                $segments = $request->uri->getSegments();
+                $reportType = $request->getPost('topReportType') ? $request->getPost('topReportType') : $segments[1];
+                $course = $request->getPost('course') ? $request->getPost('course') : $request->getPost('topcourse');
+                $topCount = $request->getPost('topCount');
+
+                $session->setTempdata('reportType', $request->getPost('topReportType'), 600);
+                $session->setTempdata('course', $request->getPost('topcourse'), 300);
+                $session->setTempdata('topCount', $request->getPost('topCount'), 300);
+
+                $home = new Home();
+                $user = new MasterUserModel();
+                $courseModel = new MasterCourseModel();
+                $lastUpdate = new DataUpdateModel();
+                $programModel = new MasterProgramModel();
+                $collectionModel = new MasterCollectionModel();
+
+                $data['lastUpdated'] = '[Report as on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
+                $session->setTempdata('error', '');
+
+                
+                if ($reportType == 'topUserEnrolment') {
+                    $table->setHeading('Name', 'Email ID','Organisation', 'No. of Courses Enrolled');
+
+                    $session->setTempdata('fileName', 'TopUsers_Enrolment', 300);
+
+                    $data['resultHTML'] = $table->generate();
+                    $data['reportTitle'] = 'Top '.$topCount . ' users based on enrolment in courses';
+
+                } else if ($reportType == 'topUserCompletion') {
+                    $table->setHeading('Name', 'Email ID', 'Organisation', 'No. of Courses Completed');
+
+                    $session->setTempdata('fileName', 'TopUsers_Completion', 300);
+
+                    $data['resultHTML'] = $table->generate();
+                    $data['reportTitle'] = 'Top '.$topCount . ' users based on course completion';
+
+                } else if ($reportType == 'topUserNotStarted') {
+                    $table->setHeading('Name', 'Email ID', 'Organisation', 'No. of Courses Enrolled and Not Started');
+
+                    $session->setTempdata('fileName', 'TopUsers_NotStarted', 300);
+
+                    $data['resultHTML'] = $table->generate();
+                    $data['reportTitle'] = 'Users with highest no. of courses enrolled and not started';
+
+                } else if ($reportType == 'topUserInProgress') {
+                    $table->setHeading('Name', 'Email ID', 'Organisation', 'No. of Courses In Progress');
+
+                    $session->setTempdata('fileName', 'TopUsers_InProgress', 300);
+
+                    $data['resultHTML'] = $table->generate();
+                    $data['reportTitle'] = 'Users with highest no. of courses in progress';
+
+                } else if ($reportType == 'topOrgOnboarding') {
+                    $table->setHeading('Organisation', 'No. of Users Onboarded');
+
+                    $session->setTempdata('fileName', 'TopOrg_Onboarding', 300);
+
+                    $data['resultHTML'] = $table->generate();
+                    $data['reportTitle'] = 'Top '.$topCount.' organisations based on user onboarding';
+
+                } else if ($reportType == 'topOrgEnrolment') {
+                    $table->setHeading('Organisation', 'No. of Course Enrolments');
+
+                    $session->setTempdata('fileName', 'TopOrg_Enrolment', 300);
+
+                    $data['resultHTML'] = $table->generate();
+                    $data['reportTitle'] = 'Top '.$topCount.' organisations based on course enrolment';
+
+                } else if ($reportType == 'topOrgCompletion') {
+                    $table->setHeading('Organisation', 'No. of Course Completions');
+
+                    $session->setTempdata('fileName', 'TopOrg_Completion', 300);
+
+                    $data['resultHTML'] = $table->generate();
+                    $data['reportTitle'] = 'Top '.$topCount.' organisations based on course completion';
+
+                } else if ($reportType == 'topOrgMdoAdmin') {
+                    $table->setHeading('Organisation', 'No. of MDO Admins');
+
+                    $session->setTempdata('fileName', 'TopOrg_MDOAdmin', 300);
+
+                    $data['resultHTML'] = $table->generate();
+                    $data['reportTitle'] = 'Top '.$topCount.' organisations based on MDO Admin count';
+
+                } else if ($reportType == 'topCbpLiveCourses') {
+                    $table->setHeading('CBP Provider', 'No. of Courses Published');
+
+                    $session->setTempdata('fileName', 'TopCBP_LiveCourses', 300);
+
+                    $data['resultHTML'] = $table->generate();
+                    $data['reportTitle'] = 'Top '.$topCount.' Course Publishers';
+
+                } else if ($reportType == 'topCbpUnderPublish') {
+                    $table->setHeading('CBP Provider', 'No. of Courses Under Publish');
+
+                    $session->setTempdata('fileName', 'TopCBP_UnderPublish', 300);
+
+                    $data['resultHTML'] = $table->generate();
+                    $data['reportTitle'] = 'CBP Providers with highest no. of courses under publish';
+
+                } else if ($reportType == 'topCbpUnderReview') {
+                    $table->setHeading('CBP Provider', 'No. of Courses Under Review');
+
+                    $session->setTempdata('fileName', 'TopCBP_UnderReview', 300);
+
+                    $data['resultHTML'] = $table->generate();
+                    $data['reportTitle'] = 'CBP Providers with highest no. of courses in progress';
+
+                } else if ($reportType == 'topCbpDraftCourses') {
+                    $table->setHeading('CBP Provider', 'No. of Courses In Draft');
+
+                    $session->setTempdata('fileName', 'TopCBP_DraftCourses', 300);
+
+                    $data['resultHTML'] = $table->generate();
+                    $data['reportTitle'] = 'CBP Providers with highest no. of draft courses';
+
+                } else if ($reportType == 'topCourseEnrolment') {
+                    $table->setHeading('Course', 'No. of Users Enrolled');
+
+                    $session->setTempdata('fileName', 'TopCourse_Enrolment', 300);
+
+                    $data['resultHTML'] = $table->generate();
+                    $data['reportTitle'] = 'Top '.$topCount. ' courses based on enrolment';
+
+                } else if ($reportType == 'topCourseCompletion') {
+                    $table->setHeading('Course', 'No. of Users Completed');
+
+                    $session->setTempdata('fileName', 'TopCourse_Completion', 300);
+
+                    $data['resultHTML'] = $table->generate();
+                    $data['reportTitle'] = 'Top '.$topCount. ' courses based on completion';
+
+                } else if ($reportType == 'topCourseRating') {
+                    $table->setHeading('Course', 'Average Rating','No. of Ratings');
+
+                    $session->setTempdata('fileName', 'TopCourse_Rating', 300);
+
+                    $data['resultHTML'] = $table->generate();
+                    $data['reportTitle'] = 'Top '.$topCount. ' courses based on rating';
+
+                } else if ($reportType == 'topOrgCourseWise') {
+                    $table->setHeading('Organisation', 'No. of Users Completed');
+
+                    $session->setTempdata('fileName', 'TopOrg_'.$course, 300);
+
+                    $data['resultHTML'] = $table->generate();
+                    $data['reportTitle'] = 'Top '.$topCount. ' organisations based on completion of course - "'.$courseModel->getCourseName($course).'"';
+
+                }  else if ($reportType == 'topOrgProgramWise') {
+                    $table->setHeading('Organisation', 'No. of Users Completed');
+
+                    $session->setTempdata('fileName', 'TopOrg_'.$course, 300);
+
+                    $data['resultHTML'] = $table->generate();
+                    $data['reportTitle'] = 'Top '.$topCount. ' organisations based on completion of program - "'.$programModel->getProgramName($course).'"';
+
+                } else if ($reportType == 'topOrgCollectionWise') {
+                    $table->setHeading('Organisation', 'No. of Users Completed');
+
+                    $session->setTempdata('fileName', 'TopOrg_'.$course, 300);
+
+                    $data['resultHTML'] = $table->generate();
+                    $data['reportTitle'] = 'Top '.$topCount. ' organisations based on completion of curated collection - "'.$collectionModel->getCollectionName($course).'"';
+
+                }
+
+                $data['reportType'] = $reportType;
 
                 return view('header_view')
                     . view('report_result', $data)
