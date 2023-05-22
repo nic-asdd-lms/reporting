@@ -56,29 +56,33 @@ class UserEnrolmentCourse extends Model
         } else
             $limitQuery = '';
 
-        if ($org == '') {
+        if($org == '') {
+            $orgQuery = 'AND master_user.root_org_id=\'' . $org . '\'';
+        }
+        else
+            $orgQuery = '';
+
+        
             $query = $this->db->query('SELECT course_name, master_course.org_name, to_date(published_date,\'DD-MM-YYYY\'), durationhms,COUNT(distinct user_course_enrolment.user_id) AS enrolled_count,
             SUM(CASE WHEN user_course_enrolment.completion_status =\'Not Started\' THEN 1 ELSE 0 END) AS not_started,
             SUM(CASE WHEN user_course_enrolment.completion_status =\'In-Progress\' THEN 1 ELSE 0 END) AS in_progress, 
             SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count, avg_rating
             FROM user_course_enrolment
             INNER JOIN  master_course ON user_course_enrolment.course_id = master_course.course_id
-            WHERE master_course.status=\'Live\'' . $likeQuery . '
-            GROUP BY course_name,master_course.org_name,published_date, durationhms,avg_rating
-            ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
-        } else {
-            $query = $this->db->query('SELECT course_name, master_course.org_name,  to_date(published_date,\'DD-MM-YYYY\'), durationhms,COUNT(distinct user_course_enrolment.user_id) AS enrolled_count,
-            SUM(CASE WHEN user_course_enrolment.completion_status =\'Not Started\' THEN 1 ELSE 0 END) AS not_started,
-            SUM(CASE WHEN user_course_enrolment.completion_status =\'In-Progress\' THEN 1 ELSE 0 END) AS in_progress, 
-            SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count, avg_rating
-            FROM user_course_enrolment
-            INNER JOIN  master_course ON user_course_enrolment.course_id = master_course.course_id
             INNER JOIN  master_user ON master_user.user_id =user_course_enrolment.user_id
-            WHERE master_user.root_org_id=\'' . $org . '\'
-            AND master_course.status=\'Live\'' . $likeQuery . '
+            WHERE master_course.status=\'Live\'' . $orgQuery . $likeQuery . '
             GROUP BY course_name,master_course.org_name,published_date, durationhms,avg_rating
+            
+            UNION
+
+            SELECT course_name, master_course.org_name, to_date(published_date,\'DD-MM-YYYY\'), durationhms, \'0\' AS enrolled_count, \'0\' AS not_started, \'0\' AS in_progress, 
+            \'0\' AS completed_count, \'0\' AS avg_rating 
+            FROM master_course
+            WHERE status= \'Live\'
+            AND course_id NOT IN ( SELECT course_id FROM user_course_enrolment)
             ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
-        }
+        
+            
 
         return $query;
 

@@ -787,8 +787,8 @@
                         <option value="editorList">EDITOR List</option>
                         <option value="fracAdminList">FRAC ADMIN List</option>
                         <option value="fracCompetencyMember">FRAC COMPETENCY MEMBER List</option>
-                        <option value="fracL1List">FRAC REVIEWER L1 List</option>
-                        <option value="fracL2List">FRAC REVIEWER L2 List</option>
+                        <option value="fracOneList">FRAC REVIEWER L1 List</option>
+                        <option value="fracTwoList">FRAC REVIEWER L2 List</option>
                         <option value="ifuMemberList">IFU MEMBER List</option>
                         <option value="publicList">PUBLIC User List</option>
                         <option value="spvAdminList">SPV ADMIN List</option>

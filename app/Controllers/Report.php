@@ -108,7 +108,7 @@ class Report extends BaseController
                     } else
                         $org = '';
 
-                } else if ($reportType == 'roleWiseCount' || $reportType == 'monthWiseMDOAdminCount' || $reportType == 'cbpAdminList' || $reportType == 'mdoAdminList' || $reportType == 'creatorList' || $reportType == 'reviewerList' || $reportType == 'publisherList' || $reportType == 'editorList' || $reportType == 'fracAdminList' || $reportType == 'fracCompetencyMember' || $reportType == 'fracL1List' || $reportType == 'fracL2List' || $reportType == 'ifuMemberList' || $reportType == 'publicList' || $reportType == 'spvAdminList' || $reportType == 'stateAdminList' || $reportType == 'watMemberList') {
+                } else if ($reportType == 'roleWiseCount' || $reportType == 'monthWiseMDOAdminCount' || $reportType == 'cbpAdminList' || $reportType == 'mdoAdminList' || $reportType == 'creatorList' || $reportType == 'reviewerList' || $reportType == 'publisherList' || $reportType == 'editorList' || $reportType == 'fracAdminList' || $reportType == 'fracCompetencyMember' || $reportType == 'fracOneList' || $reportType == 'fracTwoList' || $reportType == 'ifuMemberList' || $reportType == 'publicList' || $reportType == 'spvAdminList' || $reportType == 'stateAdminList' || $reportType == 'watMemberList') {
                     if ($session->get('role') == 'MDO_ADMIN') {
                         $org = $session->get('organisation');
                         $orgName = $orgModel->getOrgName($org);
@@ -278,12 +278,12 @@ class Report extends BaseController
                     $fullResult = $user->getFracCompetencyMemberList($orgName, -1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getFracCompetencyMemberList($orgName, -1, 0, $search, $orderBy, $orderDir);
 
-                } else if ($reportType == 'fracL1List') {
+                } else if ($reportType == 'fracOneList') {
                     $result = $user->getFRACL1List($orgName, $limit, $offset, $search, $orderBy, $orderDir);
                     $fullResult = $user->getFRACL1List($orgName, -1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getFRACL1List($orgName, -1, 0, $search, $orderBy, $orderDir);
 
-                } else if ($reportType == 'fracL2List') {
+                } else if ($reportType == 'fracTwoList') {
                     $result = $user->getFRACL2List($orgName, $limit, $offset, $search, $orderBy, $orderDir);
                     $fullResult = $user->getFRACL2List($orgName, -1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getFRACL2List($orgName, -1, 0, $search, $orderBy, $orderDir);
@@ -818,12 +818,12 @@ class Report extends BaseController
                     $session->setTempdata('fileName', 'List of FRAC Competency Members', 300);
                     $reportTitle = 'List of FRAC Competency Members';
 
-                } else if ($roleReportType == 'fracL1List') {
+                } else if ($roleReportType == 'fracOneList') {
                     $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of FRAC_Reviewer_L1', 300);
                     $reportTitle = 'List of FRAC_Reviewer_L1';
 
-                } else if ($roleReportType == 'fracL2List') {
+                } else if ($roleReportType == 'fracTwoList') {
                     $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of FRAC_Reviewer_L2', 300);
                     $reportTitle = 'List of FRAC_Reviewer_L2';
