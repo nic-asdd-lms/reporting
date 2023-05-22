@@ -56,7 +56,7 @@ class UserEnrolmentCourse extends Model
         } else
             $limitQuery = '';
 
-        if($org == '') {
+        if($org != '') {
             $orgQuery = 'AND master_user.root_org_id=\'' . $org . '\'';
         }
         else
