@@ -65,7 +65,6 @@ class MasterOrganizationModel extends Model
             }
 
             $builder->where('status','Active');
-            $builder->distinct();
             $builder->orderBy((int) $orderBy + 1, $orderDir);
             if ($limit != -1)
                 $builder->limit($limit, $offset);
