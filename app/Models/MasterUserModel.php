@@ -151,7 +151,9 @@ class MasterUserModel extends Model
                 $builder->orLike('org_name', ucfirst($search));
             }
 
+            $builder->where('status','Active');
             $builder->orderBy((int) $orderBy + 1, $orderDir);
+            
             if ($limit != -1)
                 $builder->limit($limit, $offset);
             $query = $builder->get();
