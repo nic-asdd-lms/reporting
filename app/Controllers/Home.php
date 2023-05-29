@@ -79,6 +79,8 @@ class Home extends BaseController
             if (session_exists()) {
 
                 if ($this->request->getVar('action')) {
+                    $session = \Config\Services::session();
+                
                     $action = $this->request->getVar('action');
 
                     if ($action == 'get_ministry') {
@@ -151,6 +153,18 @@ class Home extends BaseController
                         $orgdata = $orgModel->getMDOHierarchy($this->request->getVar('org'));
 
                         echo json_encode($orgdata);
+                    } else if ($action == 'user_search') {
+                        $search_key =  $this->request->getVar('search_key')  ;
+                        if($session->get('role') == 'MDO_ADMIN')
+                            $org = $session->get('organisation');
+                        else   
+                            $org = '';
+                        
+                        $userModel = new MasterUserModel();
+                        $userData = $userModel->userSearch($search_key, $org);
+                        
+                        echo json_encode($userData);
+                        
                     }
                 }
             } else {

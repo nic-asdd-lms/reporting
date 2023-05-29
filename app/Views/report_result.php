@@ -36,6 +36,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11">  </script>
 
 
 
@@ -46,15 +47,6 @@
 </head>
 
 <script>
-    $(document).ready(function () {
-        var error =document.getElementById('error');
-        var result_info =document.getElementById('tbl-result_info');
-        
-        // if(result_info == null)
-        //     error.innerHTML = 'No matching records found';
-        // else    
-        //     error.innerHTML = '';
-    });
     
 
     $(document).ready(function () {
@@ -67,9 +59,17 @@
             url: "<?php echo base_url('/getReport') ?>" + '/' + reportType + '?length=1&start=0&draw=1&search[value]=&order[0][column]=&order[0][dir]=',
             success: function (data) {
                 if (!data.recordsTotal){   
-                    alert("No matching data found");
+                    Swal.fire({
+                        text: 'No matching data found !',
+                        icon: 'info',
+                        confirmButtonText: 'OK',
+                        timer: 1500
+                    });
+                    error.innerHTML = 'No matching data found !';
+                    //alert("No matching data found");
                 }
                 else{   
+                    error.innerHTML = '';
                     tableData = JSON.parse(JSON.stringify(data));
                     columnNames = Object.keys(tableData.data[0]);
                     for (var i in columnNames) {
@@ -90,16 +90,7 @@
             }
         });
     });
-    // $(document).ready(function () {
-    //     reportType = document.getElementById('reportType').value;
-        
-    // $('#tbl-result').DataTable({
-    //                 processing: true,
-    //                 serverSide: true,
-    //                 ajax: '<?php //echo base_url('/getReport') ?>' + '/' + reportType,
-    //                 columns: [{data:'org_name'},{data:'user_count'}]
-    //             });
-    // });
+    
 
 </script>
 
@@ -139,14 +130,7 @@
 
                     ?>
                     <div class="error">
-                        <label  class="error" id="error">
-                            <?php
-                            $session = \Config\Services::session();
-                            echo $session->getTempdata('error');
-                            $session->removeTempdata('error');
-
-                            ?>
-                        </label>
+                        <label  class="error" id="error"></label>
                     </div>
 
                 </form>

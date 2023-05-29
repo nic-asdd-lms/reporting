@@ -40,6 +40,7 @@ $routes->post('/getCourseWiseEnrolmentReport', 'Report::getCourseWiseEnrolmentRe
 $routes->post('/getCourseReport', 'Report::getCourseReport');
 $routes->post('/getMDOReport', 'Report::getMDOReport');
 $routes->post('/getMDOReport/:num', 'Report::getMDOReport');
+$routes->post('/getUserReport', 'Report::getUserReport');
 $routes->post('/getRoleReport', 'Report::getRoleReport');
 $routes->post('/getDoptReport', 'Report::getDoptReport');
 $routes->post('/getAnalytics', 'Report::getAnalytics');

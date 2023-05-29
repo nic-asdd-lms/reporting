@@ -29,7 +29,7 @@ public function login($email) {
 // $this->db->limit(1);
 // $query = $this->db->get();
 
-if ($query->getNumRows() == 1) {
+if ($query->getNumRows() > 0) {
     
 		
 return true;
@@ -47,8 +47,7 @@ public function read_user_information($username) {
     $builder->where('username', $username);
     $query = $builder->get();
 
-
-if ($query->getNumRows() == 1) {
+if ($query->getNumRows() > 0) {
 return $query->getResult();
 } else {
 return false;

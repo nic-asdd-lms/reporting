@@ -54,7 +54,7 @@ function enable_disable_mdo(value) {
 function enable_disable_course(value) {
     course = document.getElementById("tbl-course");
     coursename = document.getElementById("coursename");
-    if (value.value == "courseEnrolmentCount" || value.value == "programEnrolmentCount" || value.value == "liveCourses" || value.value == "underPublishCourses" || value.value == "underReviewCourses" || value.value == "draftCourses" || value.value == "cbpProviderWiseCourseCount") {
+    if (value.value == "courseEnrolmentCount" || value.value == "programEnrolmentCount" || value.value == "liveCourses" || value.value == "underPublishCourses" || value.value == "underReviewCourses" || value.value == "draftCourses" || value.value == "cbpProviderWiseCourseCount"  || value.value == "rozgarMelaReport"  || value.value == "rozgarMelaSummary") {
         course.style.display = "none";
         course.value = "";
     } else if (value.value == "courseEnrolmentReport" || value.value == "courseMinistrySummary") {
@@ -70,7 +70,7 @@ function enable_disable_course(value) {
         coursename.placeholder = "Search Curated Collection";
         coursename.value = "";
     } else {
-        course.style.display = "block";
+        course.style.display = "none";
         coursename.value = "";
     }
 
@@ -89,6 +89,17 @@ function enable_disable_program(value) {
 
 }
 
+function enable_disable_user(value) {
+    user = document.getElementById("tbl-user");
+    
+    if (value.value == "userList" ||value.value == "userEnrolmentFull") {
+        user.style.display = "none";
+    } else if (value.value == "userProfile" || value.value == "userEnrolment") {
+        user.style.display = "block";
+        
+    }
+
+}
 
 function enable_disable_top(value) {
     course = document.getElementById("tbl-top-course");

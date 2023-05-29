@@ -110,31 +110,7 @@ class MasterUserModel extends Model
     }
 
 
-    public function getUserCountByOrgClientSide()
-    {
-        try {
-            $table = new \CodeIgniter\View\Table();
-
-            $builder = $this->db->table('master_user');
-            $builder->select(' master_organization.org_name, count(*)');
-            $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
-            // $builder->where(' org_name IS NOT NULL');
-            $builder->groupBy('master_organization.org_name');
-            $query = $builder->get();
-
-            return $query;
-            // $template = [
-            //     'table_open' => '<table id="tbl-result" class="display dataTable report-table" style="width:90%">'
-
-            // ];
-            // $table->setTemplate($template);
-            // $table->setHeading('Organisation', 'User Count');
-
-            //    return $table->generate($query);
-        } catch (\Exception $e) {
-            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
-        }
-    }
+    
 
     public function getUserCountByOrg($limit, $offset, $search, $orderBy, $orderDir)
     {
@@ -215,29 +191,29 @@ class MasterUserModel extends Model
                 $limitQuery = '';
 
 
-            $query = $this->db->query('SELECT * FROM 
+            $query = $this->db->query(' 
             (SELECT concat(first_name, \' \', last_name) as name, "email", "master_org_hierarchy"."ms_name", \'-\' as dept_name, \'-\' as org_name, 
              "designation", "phone", "created_date", "roles" 
              FROM "master_user" JOIN "master_organization" ON "master_organization"."root_org_id" = "master_user"."root_org_id" 
              JOIN "master_org_hierarchy" ON "master_org_hierarchy"."ms_id" = "master_user"."root_org_id" 
-             WHERE "master_org_hierarchy"."ms_name" = \'' . $org . '\'' . $likeQuery . ' ) ms 
+             WHERE "master_org_hierarchy"."ms_name" = \'' . $org . '\'' . $likeQuery . ' )  
              UNION 
-             SELECT * FROM 
+             
              (SELECT concat(first_name, \' \', last_name) as name, "email", "master_org_hierarchy"."ms_name", "master_org_hierarchy"."dept_name", \'-\' as org_name, 
               "designation", "phone", "created_date", "roles" 
               FROM "master_user" JOIN "master_organization" ON "master_organization"."root_org_id" = "master_user"."root_org_id" 
               JOIN "master_org_hierarchy" ON "master_org_hierarchy"."dept_id" = "master_user"."root_org_id" 
               WHERE "master_org_hierarchy"."ms_name" = \'' . $org . '\' ' . $likeQuery . '
-              AND "master_org_hierarchy"."dept_id" != "master_org_hierarchy"."ms_id")  dept 
+              AND "master_org_hierarchy"."dept_id" != "master_org_hierarchy"."ms_id")   
               UNION 
-              SELECT * FROM 
+             
               (SELECT concat(first_name, \' \', last_name) as name, "email", "master_org_hierarchy"."ms_name", "master_org_hierarchy"."dept_name", "master_organization"."org_name", 
                "designation", "phone", "created_date", "roles" 
                FROM "master_user" JOIN "master_organization" ON "master_organization"."root_org_id" = "master_user"."root_org_id" 
                JOIN "master_org_hierarchy" ON "master_org_hierarchy"."org_id" = "master_user"."root_org_id" 
                WHERE "master_org_hierarchy"."ms_name" = \'' . $org . '\' ' . $likeQuery . '
                AND "master_org_hierarchy"."dept_id" != "master_org_hierarchy"."org_id" 
-               AND "master_org_hierarchy"."org_id" != "master_org_hierarchy"."ms_id") org order by '. (int) $orderBy+1 . ' '.$orderDir  . $limitQuery);
+               AND "master_org_hierarchy"."org_id" != "master_org_hierarchy"."ms_id")  order by '. (int) $orderBy+1 . ' '.$orderDir  . $limitQuery);
 
 
             // $builder = $this->db->table('master_user');
@@ -850,9 +826,9 @@ class MasterUserModel extends Model
 
             $builder->orderBy('user_count', 'desc');
             if ($limit != -1)
-                $builder->limit(min($topCount,$limit), $offset);
+                $builder->limit(min($topCount-$offset,$limit), $offset);
             else
-                $builder->limit($topCount, $offset);
+                $builder->limit($topCount-$offset, $offset);
             $query = $builder->get();
             // print_r($builder);
             return $query;
@@ -895,6 +871,58 @@ class MasterUserModel extends Model
         }
     }
 
+    public function userSearch($search_key,$org) {
+        try {
+            $builder = $this->db->table('master_user');
+        $builder->select('user_id,  email');
+        $builder->like('email',$search_key);
+        if($org !='')
+            $builder->where('root_org_id',$org);
+        $query = $builder->get();
+        
+        // $result = $this->db->query('SELECT org_name FROM master_organization WHERE SIMILARITY(org_name,\''.$search_key.'\') > 0.4 ;');
+        // echo $search_key,json_encode($query);
+        return $query->getResult();
+        }
+        catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        } 
+        
+    }
+
+    public function getProfile( $email,$orgName,$limit, $offset, $search, $orderBy, $orderDir)
+    {
+        try {
+
+            $builder = $this->db->table('user_list');
+            $builder->select('*');
+            $builder->where('email',$email);
+
+            if($orgName !='')
+                $builder->where('org_name',$orgName);
+            
+            if ($search != '')
+                $builder->where("(name LIKE '%" . strtolower($search) . "%' OR name LIKE '%" . strtoupper($search) . "%' OR name LIKE '%" . ucfirst($search) . "%'
+                            OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%'
+                            OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
+                            OR designation LIKE '%" . strtolower($search) . "%' OR designation LIKE '%" . strtoupper($search) . "%' OR designation LIKE '%" . ucfirst($search) . "%'
+                            OR roles LIKE '%" . strtolower($search) . "%' OR roles LIKE '%" . strtoupper($search) . "%' OR roles LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
+
+
+            $builder->orderBy((int) $orderBy + 1, $orderDir);
+            if ($limit != -1)
+                $builder->limit($limit, $offset);
+
+            
+            $query = $builder->get();
+
+            return $query;
+
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+
+    }
 
 }
 

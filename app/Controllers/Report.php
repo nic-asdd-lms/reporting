@@ -49,7 +49,7 @@ class Report extends BaseController
             query to get count of filtered results when searched with key <$search>; Count will be shown below the table
 
     */
-    public function getReport()     
+    public function getReport()
     {
 
         try {
@@ -94,7 +94,7 @@ class Report extends BaseController
                     $ministryName = $org_hierarchy->getMinistryStateName($ministry);
 
                 } else if ($reportType == 'mdoUserList' || $reportType == 'moUserCount' || $reportType == 'mdoUserEnrolment' || $reportType == 'userWiseCount') {
-                    if ($session->get('role') == 'SPV_ADMIN') { // SPV_ADMIN => ministry, department, organisation = values selected from dropdown or searchbox
+                    if ($session->get('role') == 'SPV_ADMIN'|| $session->get('role') == 'IGOT_TEAM_MEMBER') { // SPV_ADMIN => ministry, department, organisation = values selected from dropdown or searchbox
                         $org = $session->getTempdata('org');
 
                     } else if ($session->get('role') == 'MDO_ADMIN') { // MDO_ADMIN => ministry, department, organisation = values from session (MDO of the particular user)
@@ -126,8 +126,21 @@ class Report extends BaseController
                         $orgName = '';
                     }
 
-                }
+                } else if ($reportType == 'userProfile') {
+                    $email = $session->getTempdata('email');
+                    if ($session->get('role') == 'MDO_ADMIN') {
+                        $org = $session->get('organisation');
+                        $orgName = $orgModel->getOrgName($org);
+                    } else
+                        $orgName = '';
 
+                } else if ($reportType == 'userEnrolment') {
+                    $userId = $session->getTempdata('userid');
+                    if ($session->get('role') == 'MDO_ADMIN')
+                        $org = $session->get('organisation');
+                    else
+                        $org = '';
+                }
 
 
                 if ($reportType == 'userList') {
@@ -228,6 +241,32 @@ class Report extends BaseController
                     $result = $enrolment->getCourseMinistrySummary($course, $limit, $offset, $search, $orderBy, $orderDir);
                     $fullResult = $enrolment->getCourseMinistrySummary($course, -1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getCourseMinistrySummary($course, -1, 0, $search, $orderBy, $orderDir);
+
+                } else if ($reportType == 'rozgarMelaReport') {
+                    $result = $enrolment->getRozgarMelaReport($limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getRozgarMelaReport(-1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getRozgarMelaReport(-1, 0, $search, $orderBy, $orderDir);
+
+                } else if ($reportType == 'rozgarMelaSummary') {
+                    $result = $enrolment->getRozgarMelaSummary($limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getRozgarMelaSummary(-1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getRozgarMelaSummary(-1, 0, $search, $orderBy, $orderDir);
+
+                } else if ($reportType == 'userProfile') {
+                    $result = $user->getProfile($email, $orgName, $limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $user->getProfile($email, $orgName, -1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $user->getProfile($email, $orgName, -1, 0, $search, $orderBy, $orderDir);
+
+                } else if ($reportType == 'userEnrolment') {
+                    $result = $enrolment->getUserWiseEnrolment($userId, $org, $limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getUserWiseEnrolment($userId, $org, -1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getUserWiseEnrolment($userId, $org, -1, 0, $search, $orderBy, $orderDir);
+
+                } else if ($reportType == 'userEnrolmentFull') {
+                    $result = $enrolment->getUserEnrolmentFull($limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getUserEnrolmentFull(-1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getUserEnrolmentFull(-1, 0, $search, $orderBy, $orderDir);
+
                 } else if ($reportType == 'roleWiseCount') {
                     $result = $user->getRoleWiseCount($orgName, $limit, $offset, $search, $orderBy, $orderDir);
                     $fullResult = $user->getRoleWiseCount($orgName, -1, 0, '', $orderBy, $orderDir);
@@ -511,7 +550,7 @@ class Report extends BaseController
                 $data['lastUpdated'] = '[Report as on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
                 $session->setTempdata('error', '');
 
-                if ($role == 'SPV_ADMIN') { // SPV_ADMIN => ministry, department, organisation = values selected from dropdown or searchbox
+                if ($role == 'SPV_ADMIN' || $role == 'IGOT_TEAM_MEMBER' ) { // SPV_ADMIN => ministry, department, organisation = values selected from dropdown or searchbox
                     $org = $request->getPost('org');
 
                 } else if ($role == 'MDO_ADMIN') { // MDO_ADMIN => ministry, department, organisation = values from session (MDO of the particular user)
@@ -536,12 +575,7 @@ class Report extends BaseController
 
                 /* Set table header, filename and report tilte based on report type */
 
-                if ($reportType == 'userList') {
-                    $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Contact No.', 'Created Date', 'Roles', 'Profile Update Status'];
-                    $session->setTempdata('fileName', 'UserList', 300);
-                    $reportTitle = 'Users onboarded on iGOT';
-
-                } else if ($reportType == 'mdoUserList') {
+                if ($reportType == 'mdoUserList') {
                     $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Contact No.', 'Created Date', 'Roles', 'Profile Update Status'];
                     $session->setTempdata('fileName', $orgName . '_UserList', 300);
                     $reportTitle = 'Users onboarded from organisation - "' . $orgName . '"';
@@ -650,24 +684,20 @@ class Report extends BaseController
                     $session->setTempdata('fileName', 'CoursesUnderPublish', 300);
                     $reportTitle = 'Courses under Publish';
 
-
                 } else if ($courseReportType == 'underReviewCourses') {
                     $header = ['Course Name', 'Course Provider'];
                     $session->setTempdata('fileName', 'CoursesUnderReview', 300);
                     $reportTitle = 'Courses under review';
-
 
                 } else if ($courseReportType == 'draftCourses') {
                     $header = ['Course Name', 'Course Provider'];
                     $session->setTempdata('fileName', 'DraftCourses', 300);
                     $reportTitle = 'Courses in draft';
 
-
                 } else if ($courseReportType == 'courseEnrolmentReport') {
                     $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Course Name', 'Course Provider', 'Completion Status', 'Completion Percentage', 'Completed On'];
                     $session->setTempdata('fileName', $course . '_EnrolmentReport', 300);
                     $reportTitle = 'User Enrolment Report for Course - "' . $home->getCourseName($course) . '"';
-
 
                 } else if ($courseReportType == 'courseEnrolmentCount') {
                     $header = ['Course Name', 'Course Provider', 'Published Date', 'Duration (HH:MM:SS)', 'Enrolled', 'Not Started', 'In Progress', 'Completed', 'Average Rating'];
@@ -694,17 +724,96 @@ class Report extends BaseController
                     $session->setTempdata('fileName', $course . '_Summary', 300);
                     $reportTitle = 'Curated collection summary - "' . $home->getCollectionName($course) . '"';
 
-
                 } else if ($courseReportType == 'cbpProviderWiseCourseCount') {
                     $header = ['CBP Provider Name', 'Course Count'];
                     $session->setTempdata('fileName', 'CBPProviderSummary', 300);
                     $reportTitle = 'CBP Provider-wise course count';
 
-
                 } else if ($courseReportType == 'courseMinistrySummary') {
                     $header = ['Ministry/State Name', 'Enrolled', 'Not Started', 'In Progress', 'Completed'];
                     $session->setTempdata('fileName', $course . '_MinistrySummary', 300);
                     $reportTitle = 'Ministry-wise Summary for course - "' . $home->getCourseName($course) . '"';
+
+                } else if ($courseReportType == 'rozgarMelaReport') {
+                    $header = ['Organisation Name', 'No. of Rozgar Mela Users', 'Karmayogi Prarambh Course Enrolments', 'Not Started', 'In Progress', 'Completed'];
+                    $session->setTempdata('fileName', 'RozgarMelaReport', 300);
+                    $reportTitle = 'Organisation-wise Enrolment Summary of Rozgar Mela Users in Karmayogi Prarambh Module';
+
+                } else if ($courseReportType == 'rozgarMelaSummary') {
+                    $header = ['Course Name', 'Enrolled', 'Not Started', 'In Progress', 'Completed'];
+                    $session->setTempdata('fileName', 'RozgarMelaSummary', 300);
+                    $reportTitle = 'Course-wise Enrolment Summary of Rozgar Mela Users in Karmayogi Prarambh Module';
+
+                }
+                $table->setHeading($header);
+
+                $session->setTempdata('reportHeader', $header);
+                $session->setTempdata('reportTitle', $reportTitle);
+
+                $data['reportTitle'] = $reportTitle;
+                $data['resultHTML'] = $table->generate();
+                $data['reportType'] = $reportType;
+
+                return view('header_view')
+                    . view('report_result', $data)
+                    . view('footer_view');
+            } else {
+                return $this->response->redirect(base_url('/'));
+            }
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+            // return view('header_view') . view('error_general').view('footer_view');
+        }
+    }
+
+    public function getUserReport()
+    {
+        try {
+            helper('session');
+            if (session_exists()) {
+
+
+                $request = service('request');
+                $session = \Config\Services::session();
+                $table = new \CodeIgniter\View\Table();
+                $table->setTemplate($GLOBALS['tableTemplate']);
+
+                $segments = $request->uri->getSegments();
+                //echo json_encode($segments);
+                $reportType = $request->getPost('userReportType') ? $request->getPost('userReportType') : $segments[1];
+
+
+                $session->setTempdata('reportType', $request->getPost('userReportType'), 600);
+                $session->setTempdata('email', $request->getPost('email'), 300);
+                $session->setTempdata('userid', $request->getPost('userid'), 300);
+
+                $role = $session->get('role');
+                $reportType = $request->getPost('userReportType');
+                $email = $request->getPost('email');
+
+                $lastUpdate = new DataUpdateModel();
+
+                $data['lastUpdated'] = '[Report as on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
+                $session->setTempdata('error', '');
+
+                if ($reportType == 'userList') {
+                    $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Contact No.', 'Created Date', 'Roles', 'Profile Update Status'];
+                    $session->setTempdata('fileName', 'UserList', 300);
+                    $reportTitle = 'Users onboarded on iGOT';
+
+                } else if ($reportType == 'userProfile') {
+                    $header = ['Name', 'Email', 'Organisation', 'Designation', 'Contact No.', 'Created Date', 'Roles', 'Profile Update Status'];
+                    $session->setTempdata('fileName', 'UserProfile_' . $email, 300);
+                    $reportTitle = 'User Profile of - "' . $email . '"';
+
+                } else if ($reportType == 'userEnrolment') {
+                    $header = ['Course Name', 'Course Provider', 'Completion Status', 'Completion Percentage', 'Completed On'];
+                    $session->setTempdata('fileName', 'UserEnrolment_' . $email, 300);
+                    $reportTitle = 'Enrolment report of - "' . $email . '"';
+                } else if ($reportType == 'userEnrolmentFull') {
+                    $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Course', 'Status', 'Completion Percentage', 'Completed On'];
+                    $session->setTempdata('fileName', 'UserEnrolmentFullReport', 300);
+                    $reportTitle = 'Full Enrolment Report';
 
                 }
                 $table->setHeading($header);
@@ -753,7 +862,7 @@ class Report extends BaseController
                 $session->setTempdata('error', '');
 
                 $role = $session->get('role');
-                if ($role == 'SPV_ADMIN') {
+                if ($role == 'SPV_ADMIN' || $role == 'IGOT_TEAM_MEMBER') {
                     $ministry = '';
                     $dept = '';
                     $org = '';
@@ -904,7 +1013,7 @@ class Report extends BaseController
                 $data['lastUpdated'] = '[Report as on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
                 $session->setTempdata('error', '');
 
-                if ($role == 'SPV_ADMIN') {
+                if ($role == 'SPV_ADMIN' || $role == 'IGOT_TEAM_MEMBER') {
                     $ministry = '';
                     $dept = '';
                     $org = '';
@@ -1202,12 +1311,6 @@ class Report extends BaseController
 
                 $fileName = $session->getTempdata('fileName') . '.xls';
 
-                // $keys = array();
-
-                // foreach ($report[0] as $key => $value) {
-                //     array_push($keys, $key);
-                // }
-
                 $spreadsheet = new Spreadsheet();
 
                 $styleArray = [
@@ -1258,6 +1361,8 @@ class Report extends BaseController
                 $sheet->getRowDimension('2')->setRowHeight(25);
 
 
+                //  Write Header
+                
                 $column = 'A';
                 foreach ($keys as $key) {
                     $sheet->setCellValue($column . '2', $key);
@@ -1269,22 +1374,22 @@ class Report extends BaseController
                 }
 
 
+                //  Write data
+
                 $rows = 3;
-
-
 
                 foreach ($report as $row) {
                     $column = 'A';
                     foreach ($row as $key => $val) {
                         $sheet->setCellValue($column . $rows, $val);
                         $column++;
-
+// print_r($val);
+                
                     }
-
 
                     $rows++;
                 }
-
+                
                 ob_end_clean();
                 header("Content-Type: application/vnd.ms-excel");
                 // header("Content-Type: text/csv");

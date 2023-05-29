@@ -70,37 +70,6 @@
                     else {
                         return true;
                     }
-                    // else if (ms == 'ministry') {
-
-                    //     if (ministry == '') {
-                    //         Swal.fire({
-                    //             title: 'Error!',
-                    //             text: 'Please Select Ministry!',
-                    //             icon: 'error',
-                    //             confirmButtonText: 'OK'
-                    //         });
-                    //         return false;
-                    //     }
-
-                    // }
-                    // else if (ms == 'state') {
-                    //     var state = $('#ministry').val();
-                    //     if (state == '') {
-                    //         Swal.fire({
-                    //             title: 'Error!',
-                    //             text: 'Please Select State!',
-                    //             icon: 'error',
-                    //             confirmButtonText: 'OK'
-                    //         });
-                    //         return false;
-                    //     }
-                    //     else {
-                    //         return true;
-                    //     }
-                    // }
-
-
-
                 }
                 else if (mdoReportType == 'orgHierarchy' || mdoReportType == 'ministryUserEnrolment')             //Report type 3rd option validation  
                 {
@@ -116,80 +85,7 @@
                         });
                         return false;
                     }
-                    // else if (ms == 'ministry') {
-                    //     var ministry = $('#ministry').val();
-                    //     if (ministry == 'notSelected') {
-                    //         Swal.fire({
-                    //             title: 'Error!',
-                    //             text: 'Please Select Ministry!',
-                    //             icon: 'error',
-                    //             confirmButtonText: 'OK'
-                    //         });
-                    //         return false;
-                    //     }
-                    //     else {
-                    //         return true;
-                    //     }
-                    // }
-                    // else if (ms == 'state') {
-                    //     var state = $('#ministry').val();
-                    //     if (state == 'notSelected') {
-                    //         Swal.fire({
-                    //             title: 'Error!',
-                    //             text: 'Please Select State!',
-                    //             icon: 'error',
-                    //             confirmButtonText: 'OK'
-                    //         });
-                    //         return false;
-                    //     }
-                    //     else {
-                    //         return true;
-                    //     }
-                    // }
                 }
-                // else if (mdoReportType == 'ministryUserEnrolment')       //  Report type 4th option validation 
-                // {
-                //     var ms = $('#ms_type').val();
-                //     if (ms == 'notSelected') {
-                //         Swal.fire({
-                //             title: 'Error!',
-                //             text: 'Please Select Ministry/State!',
-                //             icon: 'error',
-                //             confirmButtonText: 'OK'
-                //         });
-                //         return false;
-                //     }
-                //     else if (ms == 'ministry') {
-                //         var ministry = $('#ministry').val();
-                //         if (ministry == 'notSelected') {
-                //             Swal.fire({
-                //                 title: 'Error!',
-                //                 text: 'Please Select Ministry!',
-                //                 icon: 'error',
-                //                 confirmButtonText: 'OK'
-                //             });
-                //             return false;
-                //         }
-                //         else {
-                //             return true;
-                //         }
-                //     }
-                //     else if (ms == 'state') {
-                //         var state = $('#ministry').val();
-                //         if (state == 'notSelected') {
-                //             Swal.fire({
-                //                 title: 'Error!',
-                //                 text: 'Please Select State!',
-                //                 icon: 'error',
-                //                 confirmButtonText: 'OK'
-                //             });
-                //             return false;
-                //         }
-                //         else {
-                //             return true;
-                //         }
-                //     }
-                // }
             });
 
             $("#coursereportform").submit(function () {                    // Tab 2 Validation 
@@ -215,11 +111,6 @@
 
                 else if (courseReportType == 'courseEnrolmentReport')                //  Report type 1st option validation 
                 {
-                    // var course = document.querySelector('#course');
-                    // const selectedCourse = document.querySelector(`#course_search_result option[value="${course.value}"]`);;
-                    // if (selectedCourse) {
-                    //     course.value = selectedCourse.value;
-                    // }
 
                     var course = $('#course').val();
                     if (course == '') {
@@ -564,6 +455,58 @@
             });
         });
 
+        $(document).ready(function () {
+            $('#email').keyup(function () {
+                var orgs = [];
+                var action = 'user_search';
+                search_key = document.getElementById('email').value;
+                reportType = document.getElementById('userReportType').value;
+                $.ajax({
+
+                    url: "<?php echo base_url('/action') ?>",
+                    method: "POST",
+                    data: {
+                        action: action,
+                        search_key: search_key,
+                        reportType: reportType
+                    },
+                    dataType: "JSON",
+                    success: function (data) {
+                        html = '';
+
+                        for (var count = 0; count < data.length; count++) {
+                            html += '<option class="datalist-options" data-value="' + data[count].user_id + '">' + data[count].email + '</option>';
+                        }
+
+                        $('#user_search_result').html(html);
+
+
+                    }
+
+                });
+            });
+        });
+
+        $(document).ready(function () {
+
+
+            $('input[type=text][name=email]').change(function () {
+                var options = $('datalist#user_search_result')[0].options;
+                var val = document.getElementById('email').value;
+                var user = document.getElementById('userid');
+                for (var i = 0; i < options.length; i++) {
+
+                    if (options[i].value === val) {
+                        user.value = options[i].getAttribute('data-value');
+                        break;
+                    }
+                }
+
+
+
+            });
+        });
+
 
     </script>
 </head>
@@ -577,23 +520,26 @@
                 <?php
                 $session = \Config\Services::session();
 
-                if ($session->get('role') == 'SPV_ADMIN') {
+                if ($session->get('role') == 'SPV_ADMIN' || $session->get('role') == 'IGOT_TEAM_MEMBER' ) {
                     echo '
-                <button class="tablinks" onclick="openTab(event, \'MDO-wise\')" id="defaultOpen">MDO-wise Reports</button>
-                <button class="tablinks" onclick="openTab(event, \'Course-wise\')">Course-wise Reports</button>
-                <button class="tablinks" onclick="openTab(event, \'Role-wise\')">Role-wise Reports</button>
-                <button class="tablinks" onclick="openTab(event, \'Analytics\')">Analytics</button>
-                <button class="tablinks" onclick="openTab(event, \'Top-Performers\')">Top Performers</button>
+                        <button class="tablinks" onclick="openTab(event, \'MDO-wise\')" id="defaultOpen">MDO-wise</button>
+                        <button class="tablinks" onclick="openTab(event, \'Course-wise\')">Course-wise</button>
+                        <button class="tablinks" onclick="openTab(event, \'User-wise\')" id="defaultOpen">User-wise</button>
+                        <button class="tablinks" onclick="openTab(event, \'Role-wise\')">Role-wise</button>
+                        <button class="tablinks" onclick="openTab(event, \'Analytics\')">Analytics</button>
+                        <button class="tablinks" onclick="openTab(event, \'Top-Performers\')">Top Performers</button>
                 ';
                 } else if ($session->get('role') == 'MDO_ADMIN') {
-                    echo '<button class="tablinks" onclick="openTab(event, \'MDO-wise\')" id="defaultOpen">MDO-wise Reports</button>
-                    <button class="tablinks" onclick="openTab(event, \'Course-wise\')">Course-wise Reports</button>
-                    <button class="tablinks" onclick="openTab(event, \'Role-wise\')">Role-wise Reports</button>
+                    echo '  
+                        <button class="tablinks" onclick="openTab(event, \'MDO-wise\')" id="defaultOpen">MDO-wise</button>
+                        <button class="tablinks" onclick="openTab(event, \'Course-wise\')">Course-wise</button>
+                        <button class="tablinks" onclick="openTab(event, \'User-wise\')" id="defaultOpen">User-wise</button>
+                        <button class="tablinks" onclick="openTab(event, \'Role-wise\')">Role-wise</button>
                     ';
-                } else if ($session->get('role') == 'DOPT_ADMIN') {
+                } else if ($session->get('role') == 'DOPT_ADMIN' || $session->get('role') == 'IGOT_TEAM_MEMBER' ) {
 
                     echo '<button class="tablinks" onclick="openTab(event, \'Dopt\')" id="defaultOpen">DoPT Reports</button>';
-                } else if ($session->get('role') == 'ATI_ADMIN') {
+                } else if ($session->get('role') == 'ATI_ADMIN' || $session->get('role') == 'IGOT_TEAM_MEMBER' ) {
 
                     echo '<button class="tablinks" onclick="openTab(event, \'ATI\')" id="defaultOpen">ATI Reports</button>';
                 }
@@ -611,12 +557,11 @@
                             <?php
                             $session = \Config\Services::session();
 
-                            if ($session->get('role') == 'SPV_ADMIN') {
+                            if ($session->get('role') == 'SPV_ADMIN' || $session->get('role') == 'IGOT_TEAM_MEMBER' ) {
 
                                 echo
                                     '
 
-                                    <option class="options" value="userList">User list</option>
                                     <option class="options" value="orgList">Organisations onboarded</option>
                                     <option class="options" value="orgHierarchy">Organisation hierarchy</option>
                                     <option class="options" value="mdoUserCount">MDO-wise user count</option>
@@ -650,7 +595,7 @@
                                 <?php
                                 $session = \Config\Services::session();
 
-                                if ($session->get('role') == 'SPV_ADMIN') {
+                                if ($session->get('role') == 'SPV_ADMIN'|| $session->get('role') == 'IGOT_TEAM_MEMBER') {
 
                                     echo '             <tr>
                                     <td style="width:1%"><label class="required"></label></td>
@@ -714,12 +659,18 @@
                             <?php
                             $session = \Config\Services::session();
 
-                            if ($session->get('role') == 'SPV_ADMIN') {
+                            if ($session->get('role') == 'SPV_ADMIN'  || $session->get('role') == 'IGOT_TEAM_MEMBER' ) {
                                 echo '<option value="courseMinistrySummary">Ministry-wise summary for a course</option>';
                                 echo '<option value="underPublishCourses">Courses under publish</option>';
                                 echo '<option value="underReviewCourses">Courses under review </option>';
                                 echo '<option value="draftCourses">Draft courses</option>';
-                            } ?>
+                            }
+                            if ($session->get('role') == 'IGOT_TEAM_MEMBER' ) {
+                                echo '<option value="rozgarMelaReport">Rozgar Mela detailed report</option>';
+                                echo '<option value="rozgarMelaSummary">Rozgar Mela summary</option>';
+                                
+                            }
+                             ?>
                         </select>
 
                     </div>
@@ -765,6 +716,67 @@
                 </form>
             </div>
 
+            <div id="User-wise" class="tabcontent">
+
+
+                <form class="form-horizontal login_form" action="<?php echo base_url('/getUserReport'); ?>"
+                    method="post">
+
+                    <div class="report-type">
+                        <label for="userReportType" class="lbl-reporttype  required">Report type:</label>
+
+                        <select name="userReportType" class="form-control report-select" id="userReportType" onchange="enable_disable_user(this)" >
+                            <option value="notSelected">-- Select Report Type --</option>
+                            <?php
+                            $session = \Config\Services::session();
+
+                            if ($session->get('role') == 'SPV_ADMIN'  || $session->get('role') == 'IGOT_TEAM_MEMBER' ) {
+
+                                echo
+                                    '
+                            <option class="options" value="userList">User list</option>
+                            <option class="options" value="userEnrolmentFull">Full enrolment report</option>';}?>
+
+                            <option value="userProfile">User profile</option>
+                            <option value="userEnrolment">User-wise enrolment report</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <hr />
+
+                    <div class="container">
+                        <table class="tbl-input" id="tbl-user" style="display:none">
+
+                            <tr>
+                                <td style="width:1%"><label class="required"></label></td>
+                                <td>
+                                    <div class="auto-widget">
+                                        <input type="text" list="user_search_result" class="form-control" id="email"
+                                            name="email" placeholder="Search email" autocomplete="off" />
+                                        <datalist id="user_search_result">
+                                        </datalist>
+                                        <input type="hidden" id="userid" name="userid" />
+
+
+                                    </div>
+
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div class="col-xs-3 container submitbutton">
+                            <button class="btn btn-primary " type="submit" name="Submit" value="Submit"> Submit</button>
+                        </div>
+
+                    </div>
+
+                    <?php echo form_close(); ?>
+                </form>
+            </div>
+
             <div id="Role-wise" class="tabcontent">
                 <form id="rolereportform" class="form-horizontal login_form"
                     action="<?php echo base_url('/getRoleReport'); ?>" method="post">
@@ -773,7 +785,7 @@
                         <?php
                         $session = \Config\Services::session();
 
-                        if ($session->get('role') == 'SPV_ADMIN') {
+                        if ($session->get('role') == 'SPV_ADMIN'  || $session->get('role') == 'IGOT_TEAM_MEMBER' ) {
 
                             echo '<select name="roleReportType" class="form-control report-select"  onchange="enable_disable_mdo(this)"  id="roleReportType">
                         <option value="notSelected">-- Select Report Type --</option>
@@ -840,7 +852,7 @@
                         <?php
                         $session = \Config\Services::session();
 
-                        if ($session->get('role') == 'SPV_ADMIN') {
+                        if ($session->get('role') == 'SPV_ADMIN'  || $session->get('role') == 'IGOT_TEAM_MEMBER' ) {
 
                             echo '<select name="analyticsReportType" class="form-control report-select" id="analyticsReportType">
                         <option value="notSelected">-- Select Report Type --</option>
@@ -965,7 +977,7 @@
                     <hr />
 
                     <div class="container">
-                        <table class="submitbutton" id="tbl-program" style="display:none">
+                        <table class="tbl-input"  id="tbl-program" style="display:none">
                             <tr>
                                 <td>
                                     <label for="course">Program: </label>
@@ -1008,7 +1020,7 @@
                     method="post">
 
                     <div class="report-type">
-                        <label for="doptReportType" class="lbl-reporttype">Report type:</label>
+                        <label for="doptReportType" class="lbl-reporttype  required">Report type:</label>
 
                         <select name="doptReportType" class="form-control report-select"
                             onchange="enable_disable_program(this)" id="doptReportType">
@@ -1023,7 +1035,7 @@
                     <hr />
 
                     <div class="container">
-                        <table class="submitbutton" id="tbl-program" style="display:none">
+                        <table class="tbl-input"  id="tbl-program" style="display:none">
                             <tr>
                                 <td>
                                     <label for="course">ATI: </label>
