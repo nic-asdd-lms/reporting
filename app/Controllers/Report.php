@@ -33,8 +33,6 @@ class Report extends BaseController
         $this->pager = Services::pager();
     }
 
-
-
     /*
     Function getReport() - perform database query based on report type
 
@@ -47,8 +45,8 @@ class Report extends BaseController
         
         3.  $resultFiltered => parameters - (limit = -1, offset = 0, $search, $orderBy, $orderDir); 
             query to get count of filtered results when searched with key <$search>; Count will be shown below the table
-
     */
+
     public function getReport()
     {
 
@@ -77,10 +75,6 @@ class Report extends BaseController
                 $session->setTempdata('error', '');
                 $course = $session->getTempdata('course');
                 $topCount = $session->getTempdata('topCount');
-
-
-
-
 
                 // Set report-specific inputs
 
@@ -544,9 +538,6 @@ class Report extends BaseController
                 $lastUpdate = new DataUpdateModel();
                 $orgModel = new MasterOrganizationModel();
 
-
-
-
                 $data['lastUpdated'] = '[Report as on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
                 $session->setTempdata('error', '');
 
@@ -772,7 +763,6 @@ class Report extends BaseController
             helper('session');
             if (session_exists()) {
 
-
                 $request = service('request');
                 $session = \Config\Services::session();
                 $table = new \CodeIgniter\View\Table();
@@ -781,7 +771,6 @@ class Report extends BaseController
                 $segments = $request->uri->getSegments();
                 //echo json_encode($segments);
                 $reportType = $request->getPost('userReportType') ? $request->getPost('userReportType') : $segments[1];
-
 
                 $session->setTempdata('reportType', $request->getPost('userReportType'), 600);
                 $session->setTempdata('email', $request->getPost('email'), 300);
@@ -1281,21 +1270,19 @@ class Report extends BaseController
     }
 
     /*
-
     Function downloadExcel() - generate and download Excel file
 
         1.  Data will be in :
             a.  Temporary session variable 'resultArray' for full report download
             b.  Temporary session variable 'filteredResultArray' for filtered report download
         2.  Filename will be in temporary session variable 'fileName'
-        
     */
+
     public function downloadExcel()
     {
         try {
             helper('session');
             if (session_exists()) {
-
 
                 $session = \Config\Services::session();
 
@@ -1307,7 +1294,6 @@ class Report extends BaseController
                     $report = $session->getTempdata('resultArray');
                 else if ($filtered == 'true')
                     $report = $session->getTempdata('filteredResultArray');
-
 
                 $fileName = $session->getTempdata('fileName') . '.xls';
 
@@ -1409,9 +1395,5 @@ class Report extends BaseController
             // return view('header_view') . view('error_general').view('footer_view');
         }
 
-
     }
-
-
-
 }

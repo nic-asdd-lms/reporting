@@ -9,10 +9,8 @@
     <!-- <link rel="shortcut icon" type="image/jpg" href="/assets/images/karmayogiLogo_thumbnail.jpg"> -->
     <!-- Datatable CSS -->
     <link href='//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
-
     <!-- jQuery Library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
     <!-- Datatable JS -->
     <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -30,7 +28,6 @@
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
-
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -38,17 +35,13 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11">  </script>
 
-
-
     <!-- ASSETS -->
-
     <link href="<?php echo ASSETS_URL . 'css/result_style.css' ?>" rel="stylesheet" type="text/css">
 
 </head>
 
 <script>
     
-
     $(document).ready(function () {
         var columns = [];
         reportType = document.getElementById('reportType').value;
@@ -91,9 +84,7 @@
         });
     });
     
-
 </script>
-
 
 <body>
     <div>
@@ -140,5 +131,4 @@
     </div>
 
 </body>
-
 </html>

@@ -20,11 +20,11 @@ class Database extends Config
      * The default database connection.
      */
     public array $default = [
-        'DSN'      => 'Postgre://postgres:postgres@localhost:5432/igot_reporting_2404?charset=utf8&connect_timeout=5&sslmode=disable',
+        'DSN'      => 'Postgre://postgres:postgres@localhost:5432/igot_reporting?charset=utf8&connect_timeout=5&sslmode=disable',
         'hostname' => 'localhost',
         'username' => 'postgres',
         'password' => 'postgres',
-        'database' => 'igot_reporting_2404',
+        'database' => 'igot_reporting',
         'DBDriver' => 'Postgre',
         'DBPrefix' => '',
         'pConnect' => false,

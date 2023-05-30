@@ -11,10 +11,41 @@ public function __construct() {
     $db = \Config\Database::connect();
 }
 
-
 // Read data using username and password
+ function validAPIUser($username,$password){
+    $builder = $this->db->table('api_users');
+    $builder->select('*');
+    $builder->where('username', $username);
+    $builder->where('password', $password);
+    
+    $query = $builder->get();
 
-public function login($email) {
+    if ($query->getNumRows() > 0) {
+        return true;
+    } 
+    else {
+        return false;
+    }
+}
+
+ function getUserIDbyEmail($email){
+    $builder = $this->db->table('master_user');
+    $builder->select('user_id');
+    $builder->where('email', $email);
+    
+    $query = $builder->get();
+
+    if ($query->getNumRows() > 0) {
+        return $query->getResultArray();
+    } else {
+    return false;
+    }
+}
+
+//SELECT enrolment_id, certificate_status, completed_on, completed_onmmyy, completion_percentage, completion_status, course_id, enrolled_date, enrolled_datemmyy, rating, user_id
+//	FROM public.user_course_enrolment where user_id='0bb26551-dfeb-4fbd-9c37-96016894b843';
+
+ function login($email) {
     
     $builder = $this->db->table('user_account');
     $builder->select('*');
@@ -40,20 +71,18 @@ return false;
 }
 
 // Read data from database to show data in admin page
-public function read_user_information($username) {
+function read_user_information($username) {
 
     $builder = $this->db->table('user_account');
     $builder->select('*');
     $builder->where('username', $username);
     $query = $builder->get();
 
-if ($query->getNumRows() > 0) {
-return $query->getResult();
-} else {
-return false;
+    if ($query->getNumRows() > 0) {
+        return $query->getResult();
+    } else {
+    return false;
+    }
 }
 }
-}
-
-
 ?>

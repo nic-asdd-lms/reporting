@@ -96,9 +96,8 @@ define('EVENT_PRIORITY_HIGH', 10);
 define('BASE_URL', "http://localhost:8080/");
 define('ASSETS_URL', BASE_URL."assets/");
 
-
+$GLOBALS['IGOT_URL'] = 'https://portal.karmayogibm.nic.in/';
+$GLOBALS['API_KEY'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJJdHlZeDZnWm5pdFVmRUJ6cm0xQWxsSnQwQ3NZN2w4byJ9.XZN6QhXoB-Ld8nA0kf2p51pxpuzfSA2gFlLZIjfuNj8';
 $GLOBALS['tableTemplate'] = [
     'table_open' => '<table id="tbl-result" class="display dataTable report-table" style="width:90%">'
-
 ];
-
