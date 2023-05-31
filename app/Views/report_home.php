@@ -664,12 +664,11 @@
                                 echo '<option value="underPublishCourses">Courses under publish</option>';
                                 echo '<option value="underReviewCourses">Courses under review </option>';
                                 echo '<option value="draftCourses">Draft courses</option>';
-                            }
-                            if ($session->get('role') == 'IGOT_TEAM_MEMBER' ) {
                                 echo '<option value="rozgarMelaReport">Rozgar Mela detailed report</option>';
                                 echo '<option value="rozgarMelaSummary">Rozgar Mela summary</option>';
                                 
                             }
+                            
                              ?>
                         </select>
 

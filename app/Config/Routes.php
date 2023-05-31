@@ -53,6 +53,7 @@ $routes->post('/result', 'Home::result');
 $routes->get('/getReport/(:alpha)', 'Report::getReport/$1');
 $routes->get('/checkOrgOnboarded', 'Home::checkOrgOnboarded');
 $routes->post('/getTopPerformers', 'Report::getTopPerformers');
+$routes->get('/dashboard', 'Dashboard::getDashboard');
 
 
 //$routes->get('/assets/images/karmayogiLogo.svg' , 'assets\images\karmayogiLogo.svg');
