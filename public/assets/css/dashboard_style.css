@@ -1,0 +1,200 @@
+.dashboard-summary {
+    background-color: white;
+    background-color: white;
+margin-left: 200px;
+width: 80%;
+padding: 30px;
+margin-bottom: 50px;
+}
+
+.chartjs-render-monitor{
+    height:10%;
+    width: 10%;
+}
+
+.dashboard-table{
+    border-left-style: solid;
+border-left-width: thin;
+border-left-color: #8686865c;
+border-right-style: solid;
+border-right-width: thin;
+border-right-color: #8686865c;
+border-block-start-style: solid;
+border-block-start-width: thin;
+border-block-start-color: #8686865c;
+border-block-end-style: solid;
+border-block-end-width: thin;
+border-block-end-color: #8686865c;
+color: rgb(87, 89, 96);
+width:100%;
+}
+
+.dashboard-column {
+    
+border-block-start-style: solid;
+border-block-start-width: thin;
+border-block-start-color: #8686865c;
+border-block-end-style: solid;
+border-block-end-width: thin;
+border-block-end-color: #8686865c;
+color: rgb(87, 89, 96);
+padding: 10px;;
+font-size: 16px;
+}
+
+
+.dashboard-table-header {
+    background-color: #f9f0f6;
+    border-block-start-style: solid;
+    border-block-start-width: thin;
+    border-block-start-color: #8686865c;
+    border-block-end-style: solid;
+    border-block-end-width: thin;
+    border-block-end-color: #8686865c;
+    color: rgb(87, 89, 96);
+    padding: 10px;;
+    font-size: 16px;
+    }
+
+.further {
+    font-family: Lato;
+    background-color: rgba(247, 248, 249, 1);
+    border-bottom: 1px solid rgba(242, 242, 242, 1);
+    border-top: 1px solid rgba(242, 242, 242, 1);
+    margin-bottom: 100px;
+    padding-bottom: 30px;
+    margin-top: 50px;
+    padding-top: 10px;
+}
+
+.further h2:first-of-type {
+    font-family: Lato;
+    padding-top: 0;
+}
+
+.tab-label {
+    font-family: Lato;
+    font-weight: 50;
+    font-size: 20px;
+    color:#4d6e97;
+}
+
+.table-container{
+    width:100%;
+    
+}
+
+.title {
+    font-family: Lato;
+    color: rgb(43, 125, 138);
+    font-size: 35px;
+    display: block;
+    text-align: center;
+    font-variant-caps: all-petite-caps;
+}
+.dataTables_length label{
+    font-family: Lato;
+    font-weight: 3;
+    font-size: 15px;
+    
+}
+.dataTables_length select {
+    font-family: Lato;
+    font-size: 14px;
+    display: inline;
+    height: 34px;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    color: #fbfcff;
+    border: 0px solid #c7d4fd;
+    background-color: #85caec;
+}
+.dataTable.no-footer {
+    font-family: Lato;
+    border-bottom: 1px solid #f2c498;
+}
+
+.dataTables_filter label {
+    font-family: Lato;
+    font-size: 15px;
+    font-weight: 3;
+    
+}
+
+/* .dataTables_filter {
+    /* margin-right: 5%; 
+} */
+
+.dataTables_filter input {
+    font-family: Lato;
+    font-size: 14px;
+    display: inline;
+    height: 34px;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+}
+
+.dataTables_paginate {
+    /* margin-right: 5%; */
+    color: #19005e;
+    font-family: Lato;
+    font-size: 15px;
+    font-weight: 3;
+}
+
+
+
+
+.dataTables_info {
+    /* margin-left: 5%; */
+    color: #19005e;
+    font-family: Lato;
+    font-size: 15px;
+    font-weight: 3;
+}
+
+.div-button {
+    margin-left: 200px;
+
+}
+h2 {
+    text-align: center;
+    font-family: Lato;
+
+    color: rgb(38, 64, 146);
+    font-size: 30px;
+    font-weight: bold;
+
+}
+
+.back-button {
+    font-family: Lato;
+    float: left;
+    display: block;
+    margin: 1%;
+    margin-left: 200px;
+    width: 60px;
+    font-size: 15px;;
+}
+
+.report-date {
+    text-align: right;
+    margin-right: 5%;
+    color: rgb(43, 125, 138);
+    font-size:15px;
+}

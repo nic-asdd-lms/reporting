@@ -97,6 +97,12 @@ class Login extends BaseController
 
 						//  $red = $config->item('base_url_other');
 						//  redirect($red, 'refresh');
+					} if ($session->get('role') == 'IGOT_TEAM_MEMBER') {
+						$data['role'] = 'IGOT_TEAM_MEMBER';
+						$data['logged_in'] = true;
+
+						//  $red = $config->item('base_url_other');
+						//  redirect($red, 'refresh');
 					} elseif ($session->get('role') == 'MDO_ADMIN') {
 						$data['role'] = 'MDO_ADMIN';
 						$data['logged_in'] = true;
@@ -128,6 +134,7 @@ class Login extends BaseController
 
 						$data['role'] = 'DOPT_ADMIN';
 						$data['logged_in'] = true;
+						return $this->response->redirect(base_url('/dashboard?ati=&program='));
 						// return $this->response->redirect('/home');
 						// $red = $this->config->item('base_url_other').'/Admin/email_data';
 						// redirect($red, 'refresh');
@@ -142,6 +149,7 @@ class Login extends BaseController
 						// $red = $this->config->item('base_url_other').'/Admin/email_data';
 						// redirect($red, 'refresh');
 					}
+
 					return $this->response->redirect(base_url('/home'));
 				} else {
 					return view('header_view') . view('unauthorized_view') . view('footer_view');

@@ -44,9 +44,16 @@
         $session = \Config\Services::session();
 		
        if ($session->get('logged_in') == true) {
+        if($session->get('role' != 'DOPT_ADMIN')) {
             echo "<li class='menu-item '><a href=".base_url('/home').">Home</a></li>
-            <li class='menu-item '>Dashboard</li>
             <li class='menu-item '><a href='".base_url('/logout')."' >Logout</a></li>";
+        }
+        else {
+            echo "<li class='menu-item '><a href=".base_url('/dashboard?ati=&program=').">Home</a></li>
+            <li class='menu-item '><a href='".base_url('/logout')."' >Logout</a></li>";
+            
+        }
+            
         }
         ?>
         

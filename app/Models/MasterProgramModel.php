@@ -37,7 +37,7 @@ try{
     public function programSearch($search_key) {
         try {
             $builder = $this->db->table('master_program');
-        $builder->select('program_id, program_name');
+        $builder->select('program_id, program_name, org_name');
         $builder->where('(SIMILARITY(program_name,\''.$search_key.'\') > 0.1)', NULL, FALSE);
         $builder->where('program_status', 'Live');
         $builder->orderBy('SIMILARITY(program_name,\''.$search_key.'\') desc');

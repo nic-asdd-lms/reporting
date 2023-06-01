@@ -175,10 +175,11 @@
                         return true;
                     }
                 }
-                else if (courseReportType == 'courseMinistrySummary')                //  Report type 5th option validation 
+                else if (courseReportType == 'courseMinistrySummary')                //  Report type 1st option validation 
                 {
-                    var coursemin = $('#course').val();
-                    if (coursemin == 'notSelected') {
+
+                    var course = $('#course').val();
+                    if (course == '') {
                         Swal.fire({
                             title: 'Error!',
                             text: 'Please Select Course',
@@ -192,7 +193,47 @@
                     }
                 }
 
+                
 
+
+            });
+
+            $("#userreportform").submit(function (event) {
+                var userReportType = $('#userReportType').val();
+                if (userReportType == 'notSelected') {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Please Select Report Type !',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                    return false;
+                }                                                   // If report type is not selected then do not submit the form
+                else if (userReportType == 'userList' || userReportType == 'userEnrolmentFull')              // Only one option is there no need to check sub dropdowns
+                {
+                    return true;
+                }
+                else if (userReportType == 'userProfile' || userReportType == 'userEnrolment')                //  Report type 2nd option validation 
+                {
+                    // var ms = $('#ms_type').val();
+                    // var ministry = $('#ministry').val();
+                    // var dept = $('#dept').val();
+                    var org = $('#org').val();
+
+                    if (org == '') {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Please Select User!',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                        return false;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+                
             });
 
             $("#rolereportform").submit(function () {                     // Tab 3 Validation 
@@ -263,6 +304,23 @@
                     return false;
                 }                                                          // If report type is not selected then do not submit the form
                 else                                                        // Only one option is there no need to check sub dropdowns
+                {
+                    return true;
+                }
+            });
+
+            $("#miscreportform").submit(function () {                     // Tab 3 Validation 
+                var miscReportType = $('#miscReportType').val();
+                if (miscReportType == 'notSelected') {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Please Select Report Type !',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                    return false;
+                }                                                       // If report type is not selected then do not submit the form
+                else                                                    // Only one option is there no need to check sub dropdowns
                 {
                     return true;
                 }
@@ -354,11 +412,11 @@
                         html = '';
                         if (reportType == 'courseEnrolmentReport' || reportType == 'courseMinistrySummary') {
                             for (var count = 0; count < data.length; count++) {
-                                html += '<option class="datalist-options" data-value="' + data[count].course_id + '">' + data[count].course_name + '</option>';
+                                html += '<option class="datalist-options" data-value="' + data[count].course_id + '">' + data[count].course_name +' [by '+data[count].org_name+ '] </option>';
                             }
                         } else if (reportType == 'programEnrolmentReport') {
                             for (var count = 0; count < data.length; count++) {
-                                html += '<option class="datalist-options" data-value="' + data[count].program_id + '">' + data[count].program_name + '</option>';
+                                html += '<option class="datalist-options" data-value="' + data[count].program_id + '">' + data[count].program_name +' [by '+data[count].org_name+ ']</option>';
                             }
                         } else if (reportType == 'collectionEnrolmentReport' || reportType == 'collectionEnrolmentCount') {
                             for (var count = 0; count < data.length; count++) {
@@ -528,6 +586,7 @@
                         <button class="tablinks" onclick="openTab(event, \'Role-wise\')">Role-wise</button>
                         <button class="tablinks" onclick="openTab(event, \'Analytics\')">Analytics</button>
                         <button class="tablinks" onclick="openTab(event, \'Top-Performers\')">Top Performers</button>
+                        <button class="tablinks" onclick="openTab(event, \'Miscellaneous\')">Miscellaneous</button>
                 ';
                 } else if ($session->get('role') == 'MDO_ADMIN') {
                     echo '  
@@ -664,12 +723,10 @@
                                 echo '<option value="underPublishCourses">Courses under publish</option>';
                                 echo '<option value="underReviewCourses">Courses under review </option>';
                                 echo '<option value="draftCourses">Draft courses</option>';
-                            }
-                            if ($session->get('role') == 'IGOT_TEAM_MEMBER' ) {
-                                echo '<option value="rozgarMelaReport">Rozgar Mela detailed report</option>';
-                                echo '<option value="rozgarMelaSummary">Rozgar Mela summary</option>';
+                                
                                 
                             }
+                            
                              ?>
                         </select>
 
@@ -719,7 +776,7 @@
             <div id="User-wise" class="tabcontent">
 
 
-                <form class="form-horizontal login_form" action="<?php echo base_url('/getUserReport'); ?>"
+                <form id="userreportform" class="form-horizontal login_form" action="<?php echo base_url('/getUserReport'); ?>"
                     method="post">
 
                     <div class="report-type">
@@ -954,6 +1011,64 @@
                     <?php echo form_close(); ?>
                 </form>
 
+            </div>
+
+            <div id="Miscellaneous" class="tabcontent">
+
+
+                <form id="miscreportform" class="form-horizontal login_form" action="<?php echo base_url('/getMiscReport'); ?>"
+                    method="post">
+
+                    <div class="report-type">
+                        <label for="miscReportType" class="lbl-reporttype  required">Report type:</label>
+
+                        <select name="miscReportType" class="form-control report-select"
+                            onchange="enable_disable_misc(this)" id="miscReportType">
+                            <option value="notSelected">-- Select Report Type --</option>
+                            <!-- <option value="rozgarMelaUserReport">Rozgar Mela detailed report</option> -->
+                            <option value="rozgarMelaReport">Rozgar Mela organisation-wise summary</option>
+                            <option value="rozgarMelaSummary">Rozgar Mela Course-wise summary</option>
+                        </select>
+
+                    </div>
+
+
+                    <hr />
+
+                    <div class="container">
+                        <table class="tbl-input"  id="tbl-program" style="display:none">
+                            <tr>
+                                <td>
+                                    <label for="course">ATI: </label>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:1%"><label class="required"></label></td>
+                                <td>
+                                    <div class="auto-widget">
+                                        <input type="text" list="course_search_result" class="form-control"
+                                            id="coursename" name="coursename" placeholder="Search Program"
+                                            autocomplete="off" />
+                                        <datalist id="course_search_result">
+                                        </datalist>
+                                        <input type="hidden" id="course" name="course" />
+
+
+                                    </div>
+
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div class="col-xs-3 container submitbutton">
+                            <button class="btn btn-primary " type="submit" name="Submit" value="Submit"> Submit</button>
+                        </div>
+
+                    </div>
+
+                    <?php echo form_close(); ?>
+                </form>
             </div>
 
             <div id="Dopt" class="tabcontent">

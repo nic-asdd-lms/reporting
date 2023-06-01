@@ -46,6 +46,8 @@ header li.menu-item a {
     padding: .65rem .65rem;
     font-family: Lato;
     text-align: center;
+    font-size: 15px;
+    
 }
 
 header li.menu-item a:hover,

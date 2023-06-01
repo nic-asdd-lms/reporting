@@ -29,7 +29,9 @@ class Home extends BaseController
     {
         try {
             helper('session');
-            if (session_exists()) {
+            $session = \Config\Services::session();
+                
+            if (session_exists() && $session->get('role') != 'DOPT_ADMIN') {
 
                 helper(['form', 'url']);
                 
@@ -37,7 +39,10 @@ class Home extends BaseController
                 return view('header_view')
                     . view('report_home', $data)
                     . view('footer_view');
-            } else {
+            } else if($session->get('role') != 'DOPT_ADMIN') {
+                return $this->response->redirect(base_url('/dashboard?ati=&program='));
+						
+            }else {
                 return $this->response->redirect(base_url('/'));
             }
 
