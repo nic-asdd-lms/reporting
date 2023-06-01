@@ -43,6 +43,7 @@ $routes->post('/getMDOReport/:num', 'Report::getMDOReport');
 $routes->post('/getUserReport', 'Report::getUserReport');
 $routes->post('/getRoleReport', 'Report::getRoleReport');
 $routes->post('/getDoptReport', 'Report::getDoptReport');
+$routes->post('/getMiscReport', 'Report::getMiscReport');
 $routes->post('/getAnalytics', 'Report::getAnalytics');
 $routes->post('/action', 'Home::action');
 $routes->post("/download-report", "Report::downloadExcel");

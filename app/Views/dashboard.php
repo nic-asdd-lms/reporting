@@ -8,15 +8,15 @@
 
   <!-- Latest CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    
+
   <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
 
   <script src="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"></script>
   <script src="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css"></script>
-  <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato"> -->
-    
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato">
+
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link href="<?php echo ASSETS_URL . 'css/dashboard_style.css' ?>" rel="stylesheet" type="text/css">
 
@@ -25,23 +25,25 @@
 <body>
 
   <div class="further">
-  
 
-<!-- <div class="div-button"> -->
-          <!-- <label class="subtitle"><?php //echo $lastUpdated ?></label> -->
-          <?php
-          if($back) 
-          echo '<a class="btn btn-info back-button" href="' . base_url($backUrl) . '"  > <span class="glyphicon glyphicon-arrow-left"></span> </a>';
-          
-          ?>
-<!-- </div> -->
+  <div class="report-date">
+            <?php echo $lastUpdated ?>
+        </div>
+    <!-- <div class="div-button"> -->
+    <!-- <label class="subtitle"><?php //echo $lastUpdated ?></label> -->
+    <?php
+    if ($back)
+      echo '<a class="btn btn-info back-button" href="' . base_url($backUrl) . '"  > <span class="glyphicon glyphicon-arrow-left"></span> </a>';
 
-  
-            <label class="title">
-                <?php echo $reportTitle ?>
-            </label>
+    ?>
+    <!-- </div> -->
+
+
+    <label class="title">
+      <?php echo $reportTitle ?>
+    </label>
     <div class="dashboard-summary">
-      <label class = "tab-label">Learner Overview</label>
+      <label class="tab-label">Learner Overview</label>
       <hr />
       <table>
         <tr>
@@ -69,7 +71,7 @@
 
     </div>
     <div class="dashboard-summary">
-      <label  class = "tab-label">Current Month Overview</label>
+      <label class="tab-label">Current Month Overview</label>
       <hr />
       <table>
         <tr>
@@ -96,7 +98,7 @@
     </div>
 
     <div class="dashboard-summary">
-      <label  class = "tab-label">Institute Overview</label>
+      <label class="tab-label"><?php echo $title; ?></label>
       <hr />
       <div class="table-container">
         <?php
@@ -267,17 +269,17 @@
 
         },
         animation: {
-      onComplete: () => {
-        delayed = true;
-      },
-      delay: (context) => {
-        let delay = 0;
-        if (context.type === 'data' && context.mode === 'default' && !delayed) {
-          delay = context.dataIndex * 300 + context.datasetIndex * 100;
+          onComplete: () => {
+            delayed = true;
+          },
+          delay: (context) => {
+            let delay = 0;
+            if (context.type === 'data' && context.mode === 'default' && !delayed) {
+              delay = context.dataIndex * 300 + context.datasetIndex * 100;
+            }
+            return delay;
+          },
         }
-        return delay;
-      },
-    }
 
       };
       var monthoptions = {

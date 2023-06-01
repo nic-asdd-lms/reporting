@@ -242,6 +242,11 @@ class Report extends BaseController
                     $fullResult = $enrolment->getCourseMinistrySummary($course, -1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getCourseMinistrySummary($course, -1, 0, $search, $orderBy, $orderDir);
 
+                } else if ($reportType == 'rozgarMelaUserReport') {
+                    $result = $enrolment->getRozgarMelaUserReport($limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getRozgarMelaUserReport(-1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getRozgarMelaUserReport(-1, 0, $search, $orderBy, $orderDir);
+
                 } else if ($reportType == 'rozgarMelaReport') {
                     $result = $enrolment->getRozgarMelaReport($limit, $offset, $search, $orderBy, $orderDir);
                     $fullResult = $enrolment->getRozgarMelaReport(-1, 0, '', $orderBy, $orderDir);
@@ -734,16 +739,6 @@ class Report extends BaseController
                     $session->setTempdata('fileName', $course . '_MinistrySummary', 300);
                     $reportTitle = 'Ministry-wise Summary for course - "' . $home->getCourseName($course) . '"';
 
-                } else if ($courseReportType == 'rozgarMelaReport') {
-                    $header = ['Organisation Name', 'No. of Rozgar Mela Users', 'Karmayogi Prarambh Course Enrolments', 'Not Started', 'In Progress', 'Completed'];
-                    $session->setTempdata('fileName', 'RozgarMelaReport', 300);
-                    $reportTitle = 'Organisation-wise Enrolment Summary of Rozgar Mela Users in Karmayogi Prarambh Module';
-
-                } else if ($courseReportType == 'rozgarMelaSummary') {
-                    $header = ['Course Name', 'Enrolled', 'Not Started', 'In Progress', 'Completed'];
-                    $session->setTempdata('fileName', 'RozgarMelaSummary', 300);
-                    $reportTitle = 'Course-wise Enrolment Summary of Rozgar Mela Users in Karmayogi Prarambh Module';
-
                 }
                 $table->setHeading($header);
 
@@ -1221,6 +1216,82 @@ class Report extends BaseController
             // return view('header_view') . view('error_general').view('footer_view');
         }
 
+    }
+
+    public function getMiscReport()
+    {
+        try {
+            helper('session');
+            if (session_exists()) {
+
+
+                $request = service('request');
+                $session = \Config\Services::session();
+                $table = new \CodeIgniter\View\Table();
+                $table->setTemplate($GLOBALS['tableTemplate']);
+
+                $segments = $request->uri->getSegments();
+                //echo json_encode($segments);
+                $reportType = $request->getPost('miscReportType') ? $request->getPost('miscReportType') : $segments[1];
+
+
+                $session->setTempdata('reportType', $request->getPost('miscReportType'), 600);
+                $session->setTempdata('course', $request->getPost('course'), 300);
+
+                $role = $session->get('role');
+                $courseReportType = $request->getPost('miscReportType');
+                $course = $request->getPost('course');
+
+
+
+                $home = new Home();
+                $enrolment = new UserEnrolmentCourse();
+                $enrolmentProgram = new UserEnrolmentProgram();
+                $lastUpdate = new DataUpdateModel();
+
+
+
+                $data['lastUpdated'] = '[Report as on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
+                $session->setTempdata('error', '');
+                $org = '';
+                if ($role == 'MDO_ADMIN') {
+                    $org = $session->get('organisation');
+                }
+                if ($courseReportType == 'rozgarMelaReport') {
+                    $header = ['Organisation Name', 'No. of Rozgar Mela Users', 'Karmayogi Prarambh Course Enrolments', 'Not Started', 'In Progress', 'Completed'];
+                    $session->setTempdata('fileName', 'RozgarMelaReport', 300);
+                    $reportTitle = 'Organisation-wise Enrolment Summary of Rozgar Mela Users in Karmayogi Prarambh Module';
+
+                } else if ($courseReportType == 'rozgarMelaSummary') {
+                    $header = ['Course Name', 'Enrolled', 'Not Started', 'In Progress', 'Completed'];
+                    $session->setTempdata('fileName', 'RozgarMelaSummary', 300);
+                    $reportTitle = 'Course-wise Enrolment Summary of Rozgar Mela Users in Karmayogi Prarambh Module';
+
+                } else if ($courseReportType == 'rozgarMelaUserReport') {
+                    $header = ['Name', 'Email', 'Organisation', 'Designation', 'Status', 'Completed On'];
+                    $session->setTempdata('fileName', 'RozgarMelaSummary', 300);
+                    $reportTitle = 'Rozgar Mela Detailed user Enrolment Report';
+
+                }
+                $table->setHeading($header);
+
+                $session->setTempdata('reportHeader', $header);
+                $session->setTempdata('reportTitle', $reportTitle);
+
+                $data['reportTitle'] = $reportTitle;
+                $data['resultHTML'] = $table->generate();
+                $data['reportType'] = $reportType;
+
+                return view('header_view')
+                    . view('report_result', $data)
+                    . view('footer_view');
+            } else {
+                return $this->response->redirect(base_url('/'));
+            }
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+            // return view('header_view') . view('error_general').view('footer_view');
+        }
     }
 
     public function getDoptReport()

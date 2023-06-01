@@ -23,7 +23,9 @@ class Dashboard extends BaseController
     {
         try {
             helper('session');
-            if (session_exists()) {
+            $session = \Config\Services::session();
+            
+            if (session_exists() && $session->get('role') == 'DOPT_ADMIN') {
 
                 $request = $this->request->getVar();
                 $ati = $request['ati'] != null ? $request['ati'] : '';
@@ -41,7 +43,9 @@ class Dashboard extends BaseController
                 $enrolment = new UserEnrolmentProgram();
                 $orgModel = new MasterOrganizationModel();
                 $programModel = new MasterProgramModel();
+                $lastUpdate = new DataUpdateModel();
 
+                
                 $learnerTableData = $enrolment->dashboardTable($ati, $program, false);
                 $learnerChartData = $enrolment->dashboardChart($ati, $program, false);
 
@@ -81,7 +85,8 @@ class Dashboard extends BaseController
                     $data['overview'] = $table->generate($instituteData);
                     $data['reportTitle'] = 'Enrolment Summary';
                     $data['back']=false;
-
+                    $data['title'] = 'Institute Overview';
+                    
                 } else if ($program == '') {
                     $header = ['Program ID', 'Program', 'Enrolled', 'Not Started', 'In Progress', 'Completed'];
                     $table->setHeading($header);
@@ -95,8 +100,10 @@ class Dashboard extends BaseController
                     $data['reportTitle'] = 'Enrolment Summary of Programs by "'.$atiName.'"';
                     $data['backUrl']='/dashboard?ati=&program=';
                     $data['back']=true;
+                    $data['title'] = 'Program Overview';
+
                 } else {
-                    $header = ['Name', 'Email', 'Organisation', 'Designation', 'BatchID', 'Status', 'Completed On'];
+                    $header = ['Name', 'Email', 'Organisation', 'Designation', 'BatchID', 'Status','Completed On'];
                     $table->setHeading($header);
                     $userData = $enrolment->getProgramWiseATIWiseReport($program, $ati, -1, 0, '', 1, 'asc')->getResultArray();
                     $atiName = $orgModel->getOrgName($ati);
@@ -105,7 +112,11 @@ class Dashboard extends BaseController
                     $data['reportTitle'] = 'Enrolment Summary of "'.$programName.'" by "'.$atiName.'"';
                     $data['backUrl']='/dashboard?ati='.$ati.'&program=';
                     $data['back']=true;
+                    $data['title'] = 'User List';
+                    
                 }
+                $data['lastUpdated'] = '[Report as on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
+                
                 $learnersarr = $learnerTableData->getResultArray(); 
                 usort($learnersarr, fn($a, $b) => $b['users'] <=> $a['users']);
 
@@ -119,6 +130,14 @@ class Dashboard extends BaseController
                     . view('dashboard', $data)
                     . view('footer_view');
 
+            } else if ($session->get('role') != 'DOPT_ADMIN') {
+
+                helper(['form', 'url']);
+                
+                $data['error'] = '';
+                return view('header_view')
+                    . view('report_home', $data)
+                    . view('footer_view');
             } else {
                 return $this->response->redirect(base_url('/'));
             }

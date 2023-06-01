@@ -36,9 +36,9 @@ class UserEnrolmentCourse extends Model
         if ($limit != -1)
             $builder->limit($limit, $offset);
 
-           
+
         $query = $builder->get();
-        
+
         return $query;
 
     }
@@ -56,14 +56,13 @@ class UserEnrolmentCourse extends Model
         } else
             $limitQuery = '';
 
-        if($org != '') {
+        if ($org != '') {
             $orgQuery = 'AND master_user.root_org_id=\'' . $org . '\'';
-        }
-        else
+        } else
             $orgQuery = '';
 
-        
-            $query = $this->db->query('SELECT course_name, master_course.org_name, to_date(published_date,\'DD-MM-YYYY\'), durationhms,COUNT(distinct user_course_enrolment.user_id) AS enrolled_count,
+
+        $query = $this->db->query('SELECT course_name, master_course.org_name, to_date(published_date,\'DD-MM-YYYY\'), durationhms,COUNT(distinct user_course_enrolment.user_id) AS enrolled_count,
             SUM(CASE WHEN user_course_enrolment.completion_status =\'Not Started\' THEN 1 ELSE 0 END) AS not_started,
             SUM(CASE WHEN user_course_enrolment.completion_status =\'In-Progress\' THEN 1 ELSE 0 END) AS in_progress, 
             SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count, avg_rating
@@ -81,8 +80,8 @@ class UserEnrolmentCourse extends Model
             WHERE status= \'Live\'
             AND course_id NOT IN ( SELECT course_id FROM user_course_enrolment)
             ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
-        
-            
+
+
 
         return $query;
 
@@ -218,12 +217,11 @@ class UserEnrolmentCourse extends Model
 
         if ($org == '') {
             $orgQuery = '';
-        }
-        else {
+        } else {
             $orgQuery = ' AND master_user.root_org_id=\'' . $org . '\' ';
         }
-            
-            $query = $this->db->query('SELECT   course_name,  COUNT(*) AS enrolled_count
+
+        $query = $this->db->query('SELECT   course_name,  COUNT(*) AS enrolled_count
       ,SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count
             FROM user_course_enrolment, master_curated_collection, course_curated, master_user, master_course
             WHERE master_curated_collection.curated_id=\'' . $course . '\'
@@ -249,7 +247,7 @@ class UserEnrolmentCourse extends Model
         AND "a"."type" = \'CuratedCollections\' ' . $orgQuery . $likeQuery . '
         GROUP BY  course_name
             ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
-        
+
         return $query;
 
     }
@@ -510,9 +508,9 @@ class UserEnrolmentCourse extends Model
             $builder->groupBy('master_organization.org_name');
             $builder->orderBy('completed_count', 'desc');
             if ($limit != -1)
-                $builder->limit(min($topCount-$offset, $limit), $offset);
+                $builder->limit(min($topCount - $offset, $limit), $offset);
             else
-                $builder->limit($topCount-$offset, $offset);
+                $builder->limit($topCount - $offset, $offset);
             $query = $builder->get();
             // print_r($builder);
             return $query;
@@ -698,14 +696,14 @@ class UserEnrolmentCourse extends Model
         if ($limit != -1)
             $builder->limit($limit, $offset);
 
-           
+
         $query = $builder->get();
-        
+
         return $query;
 
     }
 
-    public function getUserEnrolmentFull( $limit, $offset, $search, $orderBy, $orderDir)
+    public function getUserEnrolmentFull($limit, $offset, $search, $orderBy, $orderDir)
     {
 
         $builder = $this->db->table('enrolment');
@@ -726,36 +724,95 @@ class UserEnrolmentCourse extends Model
         return $query;
     }
 
-    public function getRozgarMelaReport( $limit, $offset, $search, $orderBy, $orderDir)
+    public function getRozgarMelaReport($limit, $offset, $search, $orderBy, $orderDir)
     {
+        if ($search != '')
+            $searchQuery = " AND (master_organization.org_name LIKE '%" . strtolower($search) . "%' OR master_organization.org_name LIKE '%" . strtoupper($search) . "%' OR master_organization.org_name LIKE '%" . ucfirst($search) . "%')";
+        else
+            $searchQuery = '';
 
-        $builder = $this->db->table('user_course_enrolment');
-        $builder->select('  master_organization.org_name, count(distinct user_course_enrolment.user_id) as rozgarmela_users ,
+        if ($limit != -1) {
+            $limitQuery = ' limit ' . $limit . ' offset ' . $offset;
+        } else
+            $limitQuery = '';
+
+
+        $query = $this->db->query('SELECT master_organization.org_name, count(distinct user_course_enrolment.user_id) as rozgarmela_users ,
                             count(user_course_enrolment.course_id) as kp_course_enrolments,
                             SUM(CASE WHEN user_course_enrolment.completion_status =\'Not Started\' THEN 1 ELSE 0 END) AS not_started,
                             SUM(CASE WHEN user_course_enrolment.completion_status =\'In-Progress\' THEN 1 ELSE 0 END) AS in_progress,
-                            SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count');
-        $builder->join('master_user', 'master_user.user_id = user_course_enrolment.user_id ');
-        $builder->join('course_curated', 'course_curated.course_id = user_course_enrolment.course_id ');
-        $builder->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id ');
-        $builder->where('curated_id', 'do_11367399557473075211');
-        $builder->like('email', '.kb@karmayogi.in');
-        if ($search != '')
-            $builder->where("(master_organization.org_name LIKE '%" . strtolower($search) . "%' OR master_organization.org_name LIKE '%" . strtoupper($search) . "%' OR master_organization.org_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
+                            SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count
+                            FROM user_course_enrolment
+                            JOIN master_user ON master_user.user_id = user_course_enrolment.user_id
+                            JOIN course_curated ON course_curated.course_id = user_course_enrolment.course_id 
+                            JOIN master_organization ON master_user.root_org_id = master_organization.root_org_id 
+                            WHERE curated_id = \'do_11367399557473075211\'
+                            AND email LIKE \'%.kb@karmayogi.in\' ' . $searchQuery . '
+                            GROUP BY master_organization.org_name
 
-        $builder->groupBy('master_organization.org_name');
-        $builder->orderBy((int) $orderBy + 1, $orderDir);
-        if ($limit != -1)
-            $builder->limit($limit, $offset);
+                            UNION
 
-        
-        $query = $builder->get();
-        
+                            SELECT master_organization.org_name, count(distinct user_program_enrolment.user_id) as rozgarmela_users ,
+                            count(*) as kp_course_enrolments,
+                            SUM(CASE WHEN user_program_enrolment.status =\'Not Started\' THEN 1 ELSE 0 END) AS not_started,
+                            SUM(CASE WHEN user_program_enrolment.status =\'In-Progress\' THEN 1 ELSE 0 END) AS in_progress,
+                            SUM(CASE WHEN user_program_enrolment.status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count
+                            FROM user_program_enrolment
+                            JOIN master_user ON master_user.user_id = user_program_enrolment.user_id
+                            JOIN master_organization ON master_user.root_org_id = master_organization.root_org_id 
+                            WHERE program_id = \'do_1137731307613716481132\' ' . $searchQuery . '
+                            GROUP BY master_organization.org_name
+                            ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery
+
+
+        );
+
+        // $builder = $this->db->table('user_course_enrolment');
+        // $builder->select('  master_organization.org_name, count(distinct user_course_enrolment.user_id) as rozgarmela_users ,
+        //                     count(user_course_enrolment.course_id) as kp_course_enrolments,
+        //                     SUM(CASE WHEN user_course_enrolment.completion_status =\'Not Started\' THEN 1 ELSE 0 END) AS not_started,
+        //                     SUM(CASE WHEN user_course_enrolment.completion_status =\'In-Progress\' THEN 1 ELSE 0 END) AS in_progress,
+        //                     SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count');
+        // $builder->join('master_user', 'master_user.user_id = user_course_enrolment.user_id ');
+        // $builder->join('course_curated', 'course_curated.course_id = user_course_enrolment.course_id ');
+        // $builder->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id ');
+        // $builder->where('curated_id', 'do_11367399557473075211');
+        // $builder->like('email', '.kb@karmayogi.in');
+
+        // if ($search != '')
+        //     $builder->where("(master_organization.org_name LIKE '%" . strtolower($search) . "%' OR master_organization.org_name LIKE '%" . strtoupper($search) . "%' OR master_organization.org_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
+
+        // $builder->groupBy('master_organization.org_name');
+
+        // $program = $this->db->table('user_program_enrolment');
+        // $program->select('master_organization.org_name, count(distinct user_program_enrolment.user_id) as rozgarmela_users ,
+        //                     count(*) as kp_course_enrolments,
+        //                     SUM(CASE WHEN user_program_enrolment.status =\'Not Started\' THEN 1 ELSE 0 END) AS not_started,
+        //                     SUM(CASE WHEN user_program_enrolment.status =\'In-Progress\' THEN 1 ELSE 0 END) AS in_progress,
+        //                     SUM(CASE WHEN user_program_enrolment.status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count');
+        // $program->join('master_user', 'master_user.user_id = user_program_enrolment.user_id ');
+        // $program->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id ');
+        // $program->where('user_program_enrolment.program_id', 'do_1137731307613716481132');
+        // if ($search != '')
+        //     $program->where("(master_organization.org_name LIKE '%" . strtolower($search) . "%' OR master_organization.org_name LIKE '%" . strtoupper($search) . "%' OR master_organization.org_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
+
+        // $program->groupBy('master_organization.org_name');
+
+        // $builder->union($program);
+
+
+        // $builder->orderBy((int) $orderBy + 1, $orderDir);
+        // if ($limit != -1)
+        //     $builder->limit($limit, $offset);
+
+
+        // $query = $builder->get();
+
         return $query;
 
     }
 
-    public function getRozgarMelaSummary( $limit, $offset, $search, $orderBy, $orderDir)
+    public function getRozgarMelaSummary($limit, $offset, $search, $orderBy, $orderDir)
     {
         if ($search != '') {
             $likeQuery = " AND (course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtoupper($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%') ";
@@ -768,8 +825,8 @@ class UserEnrolmentCourse extends Model
         } else
             $limitQuery = '';
 
-        
-            $query = $this->db->query('SELECT course_name,  COUNT(*) AS enrolled_count
+
+        $query = $this->db->query('SELECT course_name,  COUNT(*) AS enrolled_count
       ,SUM(CASE WHEN user_course_enrolment.completion_status =\'Not Started\' THEN 1 ELSE 0 END) AS not_started
       ,SUM(CASE WHEN user_course_enrolment.completion_status =\'In-Progress\' THEN 1 ELSE 0 END) AS in_progress
       ,SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count
@@ -782,8 +839,165 @@ class UserEnrolmentCourse extends Model
             AND master_course.course_id = user_course_enrolment.course_id 
             GROUP BY  course_name
             ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
-        
+
         return $query;
+
+    }
+
+    public function getRozgarMelaUserReport($limit, $offset, $search, $orderBy, $orderDir)
+    {
+        if ($search != '') {
+            $likeQuery = " AND (first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtoupper($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%' 
+                            OR last_name LIKE '%" . strtolower($search) . "%' OR last_name LIKE '%" . strtoupper($search) . "%' OR last_name LIKE '%" . ucfirst($search) . "%'
+                            OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
+                            OR master_organization.org_name LIKE '%" . strtolower($search) . "%' OR master_organization.org_name LIKE '%" . strtoupper($search) . "%' OR master_organization.org_name LIKE '%" . ucfirst($search) . "%'
+                            OR course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtoupper($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%'
+                            OR designation LIKE '%" . strtolower($search) . "%' OR designation LIKE '%" . strtoupper($search) . "%' OR designation LIKE '%" . ucfirst($search) . "%') ";
+
+        } else {
+            $likeQuery = '';
+        }
+        if ($limit != -1) {
+            $limitQuery = ' limit ' . $limit . ' offset ' . $offset;
+        } else
+            $limitQuery = '';
+
+        $courseBuilder = $this->db->table('course_curated'); //  Select course_id where type = course
+        $courseBuilder->select('course_id');
+        $courseBuilder->where('curated_id', 'do_11367399557473075211');
+        $courses = $courseBuilder->get()->getResultObject();
+
+
+        $withQuery = 'with completed_users as 
+            (select user_course_enrolment.user_id, user_course_enrolment.course_id,completion_status, completed_on
+             from user_course_enrolment 
+             join master_user on master_user.user_id = user_course_enrolment.user_id 
+             join master_course on master_course.course_id = user_course_enrolment.course_id 
+             
+        WHERE "email" LIKE \'%.kb@karmayogi.in\' 
+        and user_course_enrolment.completion_status=\'Completed\'
+             and master_course.status = \'Live\'
+            ),
+	in_progress_users as 
+            (select user_course_enrolment.user_id, user_course_enrolment.course_id,completion_status, completed_on
+             from user_course_enrolment 
+             join master_user on master_user.user_id = user_course_enrolment.user_id 
+             join master_course on master_course.course_id = user_course_enrolment.course_id 
+             
+             WHERE "email" LIKE \'%.kb@karmayogi.in\' 
+        and user_course_enrolment.completion_status=\'In-Progress\'
+             and master_course.status = \'Live\'
+            ),
+	not_started_users as 
+            (select user_course_enrolment.user_id, user_course_enrolment.course_id,completion_status, completed_on
+             from user_course_enrolment 
+             join master_user on master_user.user_id = user_course_enrolment.user_id 
+             join master_course on master_course.course_id = user_course_enrolment.course_id 
+             
+             WHERE "email" LIKE \'%.kb@karmayogi.in\' 
+        and user_course_enrolment.completion_status=\'Not Started\'
+             and master_course.status = \'Live\'
+            )';
+
+        $completedBuilder = $this->db->table('completed_users a');
+
+        $completedBuilder->select('concat(INITCAP(master_user.first_name),\' \',INITCAP(master_user.last_name)) as name, master_user.email, 
+                                    master_organization.org_name, master_user.designation, \'Completed\' as status, completed_on');
+        $completedBuilder->join('master_user', 'master_user.user_id = a.user_id');
+        $completedBuilder->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id');
+
+        $completedBuilder->distinct();
+        foreach ($courses as $courseId) {
+            $completedBuilder->where('exists (select user_id  from completed_users b  where course_id =\'' . $courseId->course_id . '\'  and a.user_id = b.user_id)');
+
+        }
+
+        $inProgressBuilder = $this->db->table('in_progress_users a');
+        $inProgressBuilder->select('concat(INITCAP(master_user.first_name),\' \',INITCAP(master_user.last_name)) as name, master_user.email, 
+                                    master_organization.org_name, master_user.designation, \'In-Progress\' as status, \'-\' as completed_on');
+        $inProgressBuilder->join('master_user', 'master_user.user_id = a.user_id');
+        $inProgressBuilder->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id');
+
+        $inProgressBuilder->distinct();
+        $courseArr = [];
+        foreach ($courses as $courseId) {
+            array_push($courseArr, $courseId->course_id);
+        }
+        $inProgressBuilder->whereIn('course_id', $courseArr);
+
+        $notStartedBuilder = $this->db->table('not_started_users a');
+
+        $notStartedBuilder->select('concat(INITCAP(master_user.first_name),\' \',INITCAP(master_user.last_name)) as name, master_user.email, 
+                                    master_organization.org_name, master_user.designation, \'Not Started\' as status, \'-\' as completed_on');
+        $notStartedBuilder->join('master_user', 'master_user.user_id = a.user_id');
+        $notStartedBuilder->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id');
+        $notStartedBuilder->distinct();
+        foreach ($courses as $courseId) {
+            $notStartedBuilder->where('exists (select user_id  from not_started_users b  where course_id =\'' . $courseId->course_id . '\'  and a.user_id = b.user_id)');
+
+        }
+
+        $programBuilder = $this->db->table('user_program_enrolment');
+        $programBuilder->select('concat(INITCAP(master_user.first_name),\' \',INITCAP(master_user.last_name)) as name, master_user.email, 
+        master_organization.org_name, master_user.designation, \'Not Started\' as status, \'-\' as completed_on');
+$programBuilder->join('master_user', 'master_user.user_id = user_program_enrolment.user_id');
+$programBuilder->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id');
+$programBuilder->distinct();
+
+        $completedBuilder->union($inProgressBuilder);
+        $completedBuilder->union($notStartedBuilder);
+        $completedBuilder->union($programBuilder);
+
+        
+        $query = $this->db->query($withQuery . " " . $completedBuilder->getCompiledSelect(). ' ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
+
+        return $query;
+
+
+
+        // $query = $this->db->query($withQuery.'select distinct a.user_id, \'Completed\' as status
+        // from completed_users a
+        // where exists (select user_id  from completed_users b  where course_id ='do_11359618144357580811'  and a.user_id = b.user_id)
+        // and exists (select user_id  from completed_users b  where course_id ='do_113569878939262976132'  and a.user_id = b.user_id)
+        // and exists (select user_id  from completed_users b  where course_id ='do_113474579909279744117'  and a.user_id = b.user_id)
+        // and exists (select user_id  from completed_users b  where course_id ='do_113651330692145152128'  and a.user_id = b.user_id)
+        // and exists (select user_id  from completed_users b  where course_id ='do_1134122937914327041177'  and a.user_id = b.user_id)
+        // and exists (select user_id  from completed_users b  where course_id ='do_113473120005832704152'  and a.user_id = b.user_id)
+        // and exists (select user_id  from completed_users b  where course_id ='do_1136364244148060161889'  and a.user_id = b.user_id)
+        // and exists (select user_id  from completed_users b  where course_id ='do_1136364937253437441916'  and a.user_id = b.user_id)
+
+        // Union
+
+        // select distinct a.user_id, 'In-Progress' as status
+        // from in_progress_users a
+        // where course_id in ('do_11359618144357580811'  ,'do_113569878939262976132','do_113474579909279744117','do_113651330692145152128',
+        // 					'do_1134122937914327041177','do_113473120005832704152','do_1136364244148060161889' ,'do_1136364937253437441916')
+
+        // union 
+
+        // select distinct a.user_id, 'Not Started' as status
+        // from not_started_users a
+        // where exists (select user_id  from not_started_users b  where course_id ='do_11359618144357580811'  and a.user_id = b.user_id)
+        // and exists (select user_id  from not_started_users b  where course_id ='do_113569878939262976132'  and a.user_id = b.user_id)
+        // and exists (select user_id  from not_started_users b  where course_id ='do_113474579909279744117'  and a.user_id = b.user_id)
+        // and exists (select user_id  from not_started_users b  where course_id ='do_113651330692145152128'  and a.user_id = b.user_id)
+        // and exists (select user_id  from not_started_users b  where course_id ='do_1134122937914327041177'  and a.user_id = b.user_id)
+        // and exists (select user_id  from not_started_users b  where course_id ='do_113473120005832704152'  and a.user_id = b.user_id)
+        // and exists (select user_id  from not_started_users b  where course_id ='do_1136364244148060161889'  and a.user_id = b.user_id)
+        // and exists (select user_id  from not_started_users b  where course_id ='do_1136364937253437441916'  and a.user_id = b.user_id) ' . $likeQuery . '
+
+        // UNION
+
+        // SELECT DISTINCT concat(INITCAP(master_user.first_name),\' \',INITCAP(master_user.last_name)) as name, 
+        // master_user.email, master_organization.org_name, master_user.designation, "program_name", user_program_enrolment.status, "completed_on" 
+        // FROM "user_program_enrolment" 
+        // JOIN "master_user" ON "master_user"."user_id" = "user_program_enrolment"."user_id" 
+        // JOIN "master_organization" ON "master_user"."root_org_id" = "master_organization"."root_org_id" 
+        // JOIN "master_program" ON "master_program"."program_id" = "user_program_enrolment"."program_id" 
+        // WHERE "master_program"."program_id" = \'do_1137731307613716481132\'  ' . $likeQuery. '
+        // ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
+
+        // return $query;
 
     }
 }

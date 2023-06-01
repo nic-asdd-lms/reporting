@@ -191,3 +191,10 @@ h2 {
     width: 60px;
     font-size: 15px;;
 }
+
+.report-date {
+    text-align: right;
+    margin-right: 5%;
+    color: rgb(43, 125, 138);
+    font-size:15px;
+}
