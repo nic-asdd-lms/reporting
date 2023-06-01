@@ -2,6 +2,7 @@
 namespace App\Controllers;
 
 use App\Models\UserMasterModel;
+use App\Models\UserEnrolmentCourse;
 use App\Config\App;
 use App\Config\Assets;
 
@@ -59,12 +60,53 @@ class Login extends BaseController
 			throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
 			// return view('header_view') . view('error_general').view('footer_view');
 		}
-		
-		
-
 	}
-	public function user_login_process($email)
-	{
+
+	public function getUserCourseList(){
+		try{
+			$request = service('request');
+			$username = $request->getPost('apiusername');
+			$password = $request->getPost('apipassword');
+			$email = $request->getPost('email');
+			$user = new UserMasterModel();
+			$coursedata = ""; 
+			$success = 1 ; 
+			$isValid = $user->validAPIUser($username,$password);
+			if($isValid){
+				$msg = "Valid API user"; 
+				$userdetails = $user->getUserIDbyEmail($email);
+				if($userdetails){
+						$msg = "Email Exists";
+						$userid = $userdetails[0]['user_id'] ;  
+						// get Course Data based on $userID
+						$usercourse = new UserEnrolmentCourse() ; 
+						$org = '' ; 
+						$orderBy = 1 ; 
+						$orderDir = 'asc';
+						$courses = $usercourse->getUserWiseEnrolment($userid, $org, -1, 0, '', $orderBy, $orderDir);
+						$coursedata = $courses->getResultArray() ; 
+						$success = 0;  
+						$msg = "Course List";
+				}
+				else {
+					$msg = "Email Doesn't Exist";
+				}
+				// get Course list by userID and send it in response
+			}
+			else {
+				$msg = "InValid API user";
+				}
+				return response()->setContentType('application/json')                             
+                 ->setStatusCode(200)
+                 ->setJSON(['status'=>$success , 'message' => $msg,'data'=>$coursedata]);
+			}
+			catch (\Exception $e) {
+				throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+				// return view('header_view') . view('error_general').view('footer_view');
+			}		
+	}
+
+	public function user_login_process($email){
 		try {
 
 			$request = service('request');
@@ -163,7 +205,6 @@ class Login extends BaseController
 			throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
 			// return view('header_view') . view('error_general').view('footer_view');
 		}
-
 	}
 	// Logout from admin page
 
@@ -171,8 +212,6 @@ class Login extends BaseController
 	{
 		// Removing session data
 		try {
-			
-
 			$session = \Config\Services::session();
 			$user = $session->get('username');
 			$sess_array = array(
@@ -187,7 +226,6 @@ class Login extends BaseController
 			$session->remove($sess_array);
 			$_SESSION['logged_in'] = false;
 				
-
 			if (isset($_SERVER['HTTP_COOKIE'])) {
 				$cookies = explode(';', $_SERVER['HTTP_COOKIE']);
 				foreach($cookies as $cookie) {

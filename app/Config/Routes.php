@@ -29,6 +29,8 @@ $routes->set404Override();
 $routes->get('/home', 'Home::index');
 $routes->get('/checkIgotUser', 'Login::checkIgotUser');
 $routes->post('/user_login_process', 'Login::user_login_process');
+$routes->post('/getUserCourseList', 'Login::getUserCourseList');
+
 $routes->get('/logout', 'Login::logout');
 $routes->get('/', 'Login::checkIgotUser');
 $routes->get('/login', 'Login::index');

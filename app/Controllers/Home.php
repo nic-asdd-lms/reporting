@@ -20,10 +20,8 @@ use PHPExcel_Reader_HTML;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-
 class Home extends BaseController
 {
-
 
     public function index()
     {

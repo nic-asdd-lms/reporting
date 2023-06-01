@@ -26,10 +26,7 @@ class MasterCourseModel extends Model
         } catch (\Exception $e) {
             throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
-
     }
-
-
 
     public function getCourseName($course_id)
     {

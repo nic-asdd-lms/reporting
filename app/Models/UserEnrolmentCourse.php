@@ -544,7 +544,6 @@ class UserEnrolmentCourse extends Model
         $query = $builder->get();
         // print_r($builder);
         return $query;
-
     }
 
     public function getTopCourseCompletion($topCount, $limit, $offset, $search, $orderBy, $orderDir)
@@ -679,7 +678,7 @@ class UserEnrolmentCourse extends Model
     {
 
         $builder = $this->db->table('user_course_enrolment');
-        $builder->select(' master_course.course_name, master_course.org_name as cbp_provider, user_course_enrolment.completion_status, user_course_enrolment.completion_percentage, user_course_enrolment.completed_on');
+        $builder->select('master_user.user_id,master_course.course_name, master_course.org_name as cbp_provider, user_course_enrolment.course_id , user_course_enrolment.completion_status, user_course_enrolment.completion_percentage, user_course_enrolment.completed_on, user_course_enrolment.enrolled_date, user_course_enrolment.batch_id');
         $builder->join('master_course', 'master_course.course_id = user_course_enrolment.course_id ');
         $builder->join('master_user', 'master_user.user_id = user_course_enrolment.user_id ');
         $builder->where('user_course_enrolment.user_id', $userId);
