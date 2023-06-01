@@ -70,6 +70,7 @@ class Login extends BaseController
 			$email = $request->getPost('email');
 			$user = new UserMasterModel();
 			$coursedata = ""; 
+			$success = 1 ; 
 			$isValid = $user->validAPIUser($username,$password);
 			if($isValid){
 				$msg = "Valid API user"; 
@@ -80,10 +81,11 @@ class Login extends BaseController
 						// get Course Data based on $userID
 						$usercourse = new UserEnrolmentCourse() ; 
 						$org = '' ; 
-						$orderBy = '' ; 
-						$orderDir = '';
+						$orderBy = 1 ; 
+						$orderDir = 'asc';
 						$courses = $usercourse->getUserWiseEnrolment($userid, $org, -1, 0, '', $orderBy, $orderDir);
-						$coursedata = $courses->getResultArray() ;  
+						$coursedata = $courses->getResultArray() ; 
+						$success = 0;  
 						$msg = "Course List";
 				}
 				else {
@@ -96,7 +98,7 @@ class Login extends BaseController
 				}
 				return response()->setContentType('application/json')                             
                  ->setStatusCode(200)
-                 ->setJSON(['message' => $msg,'data'=>$coursedata]);
+                 ->setJSON(['status'=>$success , 'message' => $msg,'data'=>$coursedata]);
 			}
 			catch (\Exception $e) {
 				throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
