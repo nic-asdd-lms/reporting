@@ -36,6 +36,21 @@ class MasterOrganizationModel extends Model
         }
     }
 
+    public function getOrganisationCount()
+    {
+        try {
+            $builder = $this->db->table('master_organization');
+            $builder->select('count(org_name)');
+            $builder->where('status', 'Active');
+            $query = $builder->get();
+
+            // echo $org_id,json_encode($query);
+            return $query;
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
     public function searchOrg($search_key)
     {
         try {

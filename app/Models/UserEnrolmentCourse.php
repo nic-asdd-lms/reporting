@@ -12,6 +12,64 @@ class UserEnrolmentCourse extends Model
         $db = \Config\Database::connect();
     }
 
+    public function getEnrolmentCount()
+    {
+        try {
+            $builder = $this->db->table('user_course_enrolment');
+            $builder->select('count(*)');
+            $query = $builder->get();
+
+            // echo $org_id,json_encode($query);
+            return $query;
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    public function getCompletionCount()
+    {
+        try {
+            $builder = $this->db->table('user_course_enrolment');
+            $builder->select('count(*)');
+            $builder->where('completion_status', 'Completed');
+            $query = $builder->get();
+
+            // echo $org_id,json_encode($query);
+            return $query;
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+    public function getUniqueEnrolmentCount()
+    {
+        try {
+            $builder = $this->db->table('user_course_enrolment');
+            $builder->select('count(distinct user_id)');
+            $query = $builder->get();
+
+            // echo $org_id,json_encode($query);
+            return $query;
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    public function getUniqueCompletionCount()
+    {
+        try {
+            $builder = $this->db->table('user_course_enrolment');
+            $builder->select('count(distinct user_id)');
+            $builder->where('completion_status', 'Completed');
+            $query = $builder->get();
+
+            // echo $org_id,json_encode($query);
+            return $query;
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+
     public function getCourseWiseEnrolmentReport($course, $org, $limit, $offset, $search, $orderBy, $orderDir)
     {
 
@@ -279,6 +337,70 @@ class UserEnrolmentCourse extends Model
         return $query;
     }
 
+    public function getUserEnrolmentByMinistry($org, $limit, $offset, $search, $orderBy, $orderDir)
+    {
+        try {
+            if ($search != '') {
+                $likeQuery = " AND (first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtoupper($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%' 
+                                OR last_name LIKE '%" . strtolower($search) . "%' OR last_name LIKE '%" . strtoupper($search) . "%' OR last_name LIKE '%" . ucfirst($search) . "%'
+                                OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
+                                OR master_organization.org_name LIKE '%" . strtolower($search) . "%' OR master_organization.org_name LIKE '%" . strtoupper($search) . "%' OR master_organization.org_name LIKE '%" . ucfirst($search) . "%'
+                                OR dept_name LIKE '%" . strtolower($search) . "%' OR dept_name LIKE '%" . strtoupper($search) . "%' OR dept_name LIKE '%" . ucfirst($search) . "%'
+                                OR designation LIKE '%" . strtolower($search) . "%' OR designation LIKE '%" . strtoupper($search) . "%' OR designation LIKE '%" . ucfirst($search) . "%') ";
+
+            } else {
+                $likeQuery = '';
+            }
+            if ($limit != -1) {
+                $limitQuery = ' limit ' . $limit . ' offset ' . $offset;
+            } else
+                $limitQuery = '';
+
+
+            $query = $this->db->query(' 
+                (SELECT concat(first_name, \' \', last_name) as name, "email", "master_org_hierarchy"."ms_name", \'-\' as dept_name, \'-\' as org_name, 
+                "designation",  course_name, user_course_enrolment.completion_status, completion_percentage, completed_on 
+                FROM "user_course_enrolment" 
+                JOIN master_user ON master_user.user_id = user_course_enrolment.user_id 
+                JOIN "master_organization" ON "master_organization"."root_org_id" = "master_user"."root_org_id" 
+                JOIN "master_org_hierarchy" ON "master_org_hierarchy"."ms_id" = "master_user"."root_org_id" 
+ 			    JOIN master_course ON master_course.course_id = user_course_enrolment.course_id
+                WHERE "master_org_hierarchy"."ms_name" =  \'' . $org . '\'' . ' AND master_course.status = \'Live\' ' . $likeQuery . ')  
+                UNION 
+             
+                (SELECT concat(first_name, \' \', last_name) as name, "email", "master_org_hierarchy"."ms_name", "master_org_hierarchy"."dept_name", 
+                \'-\' as org_name, "designation",  course_name, user_course_enrolment.completion_status, completion_percentage, completed_on  
+                FROM "user_course_enrolment" 
+                JOIN master_user ON master_user.user_id = user_course_enrolment.user_id 
+                JOIN "master_organization" ON "master_organization"."root_org_id" = "master_user"."root_org_id" 
+                JOIN "master_org_hierarchy" ON "master_org_hierarchy"."dept_id" = "master_user"."root_org_id" 
+                JOIN master_course ON master_course.course_id = user_course_enrolment.course_id
+                WHERE "master_org_hierarchy"."ms_name" = \'' . $org . '\'' . ' AND master_course.status = \'Live\' 
+                AND "master_org_hierarchy"."dept_id" != "master_org_hierarchy"."ms_id"  ' . $likeQuery . '
+                )  
+                UNION 
+             
+                (SELECT concat(first_name, \' \', last_name) as name, "email", "master_org_hierarchy"."ms_name", "master_org_hierarchy"."dept_name", 
+                "master_organization"."org_name", "designation",  course_name, user_course_enrolment.completion_status, completion_percentage, completed_on 
+                FROM "user_course_enrolment" 
+                JOIN master_user ON master_user.user_id = user_course_enrolment.user_id 
+                JOIN "master_organization" ON "master_organization"."root_org_id" = "master_user"."root_org_id" 
+                JOIN "master_org_hierarchy" ON "master_org_hierarchy"."org_id" = "master_user"."root_org_id" 
+                JOIN master_course ON master_course.course_id = user_course_enrolment.course_id
+                WHERE "master_org_hierarchy"."ms_name" = \'' . $org . '\'' . ' AND master_course.status = \'Live\' 
+                AND "master_org_hierarchy"."dept_id" != "master_org_hierarchy"."org_id" 
+                AND "master_org_hierarchy"."org_id" != "master_org_hierarchy"."ms_id" ' . $likeQuery . '
+			    )  
+                order by ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
+
+
+
+            return $query;
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
 
     public function getUserEnrolmentCountByMDO($org, $limit, $offset, $search, $orderBy, $orderDir)
     {
@@ -342,6 +464,32 @@ class UserEnrolmentCourse extends Model
         return $query;
     }
 
+    public function getMonthWiseCourseCompletion($limit, $offset, $search, $orderBy, $orderDir)
+    {
+        try {
+            
+            $builder = $this->db->table('user_course_enrolment');
+            $builder->select('distinct to_char(date_trunc(\'month\',to_date(completed_on,\'DD/MM/YYYY\')),\'YYYY/MM\') as completed_month, count(*) ');
+            $builder->where('completion_status', 'Completed');
+            $builder->where('completed_on != \'\'');
+            
+            if ($search != '')
+                $builder->where("(completed_month LIKE '%" . strtolower($search) . "%' OR completed_month LIKE '%" . strtolower($search) . "%' OR completed_month LIKE '%" . ucfirst($search) . "%' )", NULL, FALSE);
+            if ($limit != -1)
+                $builder->limit($limit, $offset);
+
+            $builder->groupBy('completed_month');
+            $builder->orderBy('completed_month');
+            
+            $query = $builder->get();
+
+            return $query;
+
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+
+    }
     public function getTopUserEnrolment($topCount, $limit, $offset, $search, $orderBy, $orderDir)
     {
         if ($search != '') {
@@ -702,6 +850,34 @@ class UserEnrolmentCourse extends Model
 
     }
 
+    public function getUserWiseEnrolmentReport($userId, $org, $limit, $offset, $search, $orderBy, $orderDir)
+    {
+
+        $builder = $this->db->table('user_course_enrolment');
+        $builder->select('master_course.course_name, master_course.org_name as cbp_provider,  user_course_enrolment.completion_status, user_course_enrolment.completion_percentage, user_course_enrolment.completed_on');
+        $builder->join('master_course', 'master_course.course_id = user_course_enrolment.course_id ');
+        $builder->join('master_user', 'master_user.user_id = user_course_enrolment.user_id ');
+        $builder->where('user_course_enrolment.user_id', $userId);
+        $builder->where('master_course.status', 'Live');
+        if ($search != '')
+            $builder->where(" (course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%'
+                            OR completion_status LIKE '%" . strtolower($search) . "%' OR completion_status LIKE '%" . strtoupper($search) . "%' OR completion_status LIKE '%" . ucfirst($search) . "%'
+                            OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
+
+        if ($org != '') {
+            $builder->where('master_user.root_org_id', $org);
+        }
+        $builder->orderBy((int) $orderBy + 1, $orderDir);
+        if ($limit != -1)
+            $builder->limit($limit, $offset);
+
+
+        $query = $builder->get();
+
+        return $query;
+
+    }
+
     public function getUserEnrolmentFull($limit, $offset, $search, $orderBy, $orderDir)
     {
 
@@ -868,42 +1044,47 @@ class UserEnrolmentCourse extends Model
 
 
         $withQuery = 'with completed_users as 
-            (select user_course_enrolment.user_id, user_course_enrolment.course_id,completion_status, completed_on
-             from user_course_enrolment 
-             join master_user on master_user.user_id = user_course_enrolment.user_id 
-             join master_course on master_course.course_id = user_course_enrolment.course_id 
-             
-        WHERE "email" LIKE \'%.kb@karmayogi.in\' 
-        and user_course_enrolment.completion_status=\'Completed\'
-             and master_course.status = \'Live\'
-            ),
-	in_progress_users as 
-            (select user_course_enrolment.user_id, user_course_enrolment.course_id,completion_status, completed_on
-             from user_course_enrolment 
-             join master_user on master_user.user_id = user_course_enrolment.user_id 
-             join master_course on master_course.course_id = user_course_enrolment.course_id 
-             
-             WHERE "email" LIKE \'%.kb@karmayogi.in\' 
-        and user_course_enrolment.completion_status=\'In-Progress\'
-             and master_course.status = \'Live\'
-            ),
-	not_started_users as 
-            (select user_course_enrolment.user_id, user_course_enrolment.course_id,completion_status, completed_on
-             from user_course_enrolment 
-             join master_user on master_user.user_id = user_course_enrolment.user_id 
-             join master_course on master_course.course_id = user_course_enrolment.course_id 
-             
-             WHERE "email" LIKE \'%.kb@karmayogi.in\' 
-        and user_course_enrolment.completion_status=\'Not Started\'
-             and master_course.status = \'Live\'
-            )';
+        (select user_course_enrolment.user_id, concat(INITCAP(master_user.first_name),\' \',INITCAP(master_user.last_name)) as name, 
+         master_user.email, master_organization.org_name, master_user.designation, user_course_enrolment.course_id,completion_status, completed_on
+         from user_course_enrolment 
+         join master_user on master_user.user_id = user_course_enrolment.user_id 
+         join master_course on master_course.course_id = user_course_enrolment.course_id 
+         join master_organization on master_user.root_org_id = master_organization.root_org_id
+
+    WHERE "email" LIKE \'%.kb@karmayogi.in\' 
+    and user_course_enrolment.completion_status=\'Completed\'
+         and master_course.status = \'Live\'
+        ),
+in_progress_users as 
+        (select user_course_enrolment.user_id, concat(INITCAP(master_user.first_name),\' \',INITCAP(master_user.last_name)) as name, 
+         master_user.email, master_organization.org_name, master_user.designation,user_course_enrolment.course_id,completion_status, completed_on
+         from user_course_enrolment 
+         join master_user on master_user.user_id = user_course_enrolment.user_id 
+         join master_course on master_course.course_id = user_course_enrolment.course_id 
+         join master_organization on master_user.root_org_id = master_organization.root_org_id
+
+         WHERE "email" LIKE \'%.kb@karmayogi.in\' 
+    and user_course_enrolment.completion_status=\'In-Progress\'
+         and master_course.status = \'Live\'
+        ),
+not_started_users as 
+        (select user_course_enrolment.user_id, concat(INITCAP(master_user.first_name),\' \',INITCAP(master_user.last_name)) as name, 
+         master_user.email, master_organization.org_name, master_user.designation,user_course_enrolment.course_id,completion_status, completed_on
+         from user_course_enrolment 
+         join master_user on master_user.user_id = user_course_enrolment.user_id 
+         join master_course on master_course.course_id = user_course_enrolment.course_id 
+         join master_organization on master_user.root_org_id = master_organization.root_org_id
+
+         WHERE "email" LIKE \'%.kb@karmayogi.in\' 
+    and user_course_enrolment.completion_status=\'Not Started\'
+         and master_course.status = \'Live\'
+        )';
 
         $completedBuilder = $this->db->table('completed_users a');
 
-        $completedBuilder->select('concat(INITCAP(master_user.first_name),\' \',INITCAP(master_user.last_name)) as name, master_user.email, 
-                                    master_organization.org_name, master_user.designation, \'Completed\' as status, completed_on');
-        $completedBuilder->join('master_user', 'master_user.user_id = a.user_id');
-        $completedBuilder->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id');
+        $completedBuilder->select('name, email, org_name, designation, \'Completed\' as status');
+        // $completedBuilder->join('master_user', 'master_user.user_id = a.user_id');
+        // $completedBuilder->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id');
 
         $completedBuilder->distinct();
         foreach ($courses as $courseId) {
@@ -912,10 +1093,9 @@ class UserEnrolmentCourse extends Model
         }
 
         $inProgressBuilder = $this->db->table('in_progress_users a');
-        $inProgressBuilder->select('concat(INITCAP(master_user.first_name),\' \',INITCAP(master_user.last_name)) as name, master_user.email, 
-                                    master_organization.org_name, master_user.designation, \'In-Progress\' as status, \'-\' as completed_on');
-        $inProgressBuilder->join('master_user', 'master_user.user_id = a.user_id');
-        $inProgressBuilder->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id');
+        $inProgressBuilder->select('name, email, org_name, designation, \'In-Progress\' as status');
+        // $inProgressBuilder->join('master_user', 'master_user.user_id = a.user_id');
+        // $inProgressBuilder->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id');
 
         $inProgressBuilder->distinct();
         $courseArr = [];
@@ -926,10 +1106,9 @@ class UserEnrolmentCourse extends Model
 
         $notStartedBuilder = $this->db->table('not_started_users a');
 
-        $notStartedBuilder->select('concat(INITCAP(master_user.first_name),\' \',INITCAP(master_user.last_name)) as name, master_user.email, 
-                                    master_organization.org_name, master_user.designation, \'Not Started\' as status, \'-\' as completed_on');
-        $notStartedBuilder->join('master_user', 'master_user.user_id = a.user_id');
-        $notStartedBuilder->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id');
+        $notStartedBuilder->select('name, email, org_name, designation, \'Not Started\' as status');
+        // $notStartedBuilder->join('master_user', 'master_user.user_id = a.user_id');
+        // $notStartedBuilder->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id');
         $notStartedBuilder->distinct();
         foreach ($courses as $courseId) {
             $notStartedBuilder->where('exists (select user_id  from not_started_users b  where course_id =\'' . $courseId->course_id . '\'  and a.user_id = b.user_id)');
@@ -938,17 +1117,19 @@ class UserEnrolmentCourse extends Model
 
         $programBuilder = $this->db->table('user_program_enrolment');
         $programBuilder->select('concat(INITCAP(master_user.first_name),\' \',INITCAP(master_user.last_name)) as name, master_user.email, 
-        master_organization.org_name, master_user.designation, \'Not Started\' as status, \'-\' as completed_on');
-$programBuilder->join('master_user', 'master_user.user_id = user_program_enrolment.user_id');
-$programBuilder->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id');
-$programBuilder->distinct();
+                                master_organization.org_name, master_user.designation, user_program_enrolment.status');
+        $programBuilder->join('master_user', 'master_user.user_id = user_program_enrolment.user_id');
+        $programBuilder->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id');
+        $programBuilder->distinct();
 
         $completedBuilder->union($inProgressBuilder);
         $completedBuilder->union($notStartedBuilder);
         $completedBuilder->union($programBuilder);
 
-        
-        $query = $this->db->query($withQuery . " " . $completedBuilder->getCompiledSelect(). ' ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
+        // print_r($withQuery . " " . $completedBuilder->getCompiledSelect() . ' ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
+        // die;
+
+        $query = $this->db->query($withQuery . " " . $completedBuilder->getCompiledSelect() . ' ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
 
         return $query;
 
@@ -997,6 +1178,124 @@ $programBuilder->distinct();
         // ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
 
         // return $query;
+
+    }
+
+    public function dashboardChart($ati, $program, $isMonthWise)
+    {
+        $builder = $this->db->table('user_course_enrolment');
+
+        $builder->select('completion_status,count(*) as users');
+
+        if ($isMonthWise == true) {
+            $builder->where('to_char(to_date(enrolled_date,\'DD/MM/YYYY\'), \'MONTH YYYY\')  = to_char(current_date, \'MONTH YYYY\')');
+
+        }
+
+        $builder->groupBy('completion_status');
+        $builder->orderBy('completion_status', 'asc');
+
+        return $builder->get();
+
+    }
+
+    public function dashboardTable($ati, $program, $isMonthWise)
+    {
+        $builder = $this->db->table('user_course_enrolment');
+        $enrolled = $this->db->table('user_course_enrolment');
+
+        $builder->select('completion_status,count(*) as users');
+        $enrolled->select('\'Enrolled\',count(*)  as users');
+        if ($isMonthWise == true) {
+            $builder->where('to_char(to_date(enrolled_date,\'DD/MM/YYYY\'), \'MONTH YYYY\')  = to_char(current_date, \'MONTH YYYY\')');
+            $enrolled->where('to_char(to_date(enrolled_date,\'DD/MM/YYYY\'), \'MONTH YYYY\')  = to_char(current_date, \'MONTH YYYY\')');
+
+        }
+
+        $builder->union($enrolled);
+        $builder->groupBy('completion_status');
+        $builder->orderBy('users', 'desc');
+
+        return $builder->get();
+
+    }
+
+    public function getMonthWiseEnrolmentCount()
+    {
+        try {
+            $builder = $this->db->table('user_course_enrolment');
+            $builder->select('distinct to_char(date_trunc(\'month\',to_date(enrolled_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as enrolled_month, 
+            count(*) ');
+            // $builder->where('enrolled_date != \'\'');
+            $builder->groupBy('enrolled_month');
+            $builder->orderBy('enrolled_month');
+            $query = $builder->get();
+
+            return $query;
+
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+
+    }
+
+    public function getMonthWiseCompletionCount()
+    {
+        try {
+            $builder = $this->db->table('user_course_enrolment');
+            $builder->select('distinct to_char(date_trunc(\'month\',to_date(completed_on,\'DD/MM/YYYY\')),\'YYYY/MM\') as completed_month, 
+            count(*) ');
+            $builder->where('completion_status', 'Completed');
+            // $builder->where('completed_on != \'\'');
+            $builder->groupBy('completed_month');
+            $builder->orderBy('completed_month');
+            $query = $builder->get();
+
+            return $query;
+
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+
+    }
+
+    
+    public function getMonthWiseTotalEnrolmentCount()
+    {
+        try {
+            $builder = $this->db->table('user_course_enrolment');
+            $builder->select('distinct to_char(date_trunc(\'month\',to_date(enrolled_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as enrolled_month, 
+            sum(count(*) ) over (order by to_char(date_trunc(\'month\',to_date(enrolled_date,\'DD/MM/YYYY\')),\'YYYY/MM\'))');
+            // $builder->where('enrolled_date != \'\'');
+            $builder->groupBy('enrolled_month');
+            $builder->orderBy('enrolled_month');
+            $query = $builder->get();
+
+            return $query;
+
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+
+    }
+
+    public function getMonthWiseTotalCompletionCount()
+    {
+        try {
+            $builder = $this->db->table('user_course_enrolment');
+            $builder->select('distinct to_char(date_trunc(\'month\',to_date(completed_on,\'DD/MM/YYYY\')),\'YYYY/MM\') as completed_month, 
+            sum(count(*) ) over (order by to_char(date_trunc(\'month\',to_date(completed_on,\'DD/MM/YYYY\')),\'YYYY/MM\'))');
+            $builder->where('completion_status', 'Completed');
+            // $builder->where('completed_on != \'\'');
+            $builder->groupBy('completed_month');
+            $builder->orderBy('completed_month');
+            $query = $builder->get();
+
+            return $query;
+
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
 
     }
 }

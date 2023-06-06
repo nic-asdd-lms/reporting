@@ -43,6 +43,20 @@ class MasterUserModel extends Model
         }
 
     }
+
+    public function getUserCount()
+    {
+        try {
+            $builder = $this->db->table('master_user');
+            $builder->select('count(user_id)');
+            $query = $builder->get();
+
+            // echo $org_id,json_encode($query);
+            return $query;
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
     public function getUserByOrg($org, $limit, $offset, $search, $orderBy, $orderDir)
     {
         try {
@@ -302,6 +316,42 @@ class MasterUserModel extends Model
         }
 
     }
+
+    public function getMonthWiseUserOnboardingChart()
+    {
+        try {
+            $builder = $this->db->table('master_user');
+            $builder->select('to_char(date_trunc(\'MONTH\',to_date(created_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as creation_month, count(*)');
+            $builder->groupBy('creation_month');
+            $builder->orderBy('creation_month');
+            $query = $builder->get();
+
+            return $query;
+            
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+
+    }
+
+    public function getMonthWiseTotalUserChart()
+    {
+        try {
+            $builder = $this->db->table('master_user');
+            $builder->select('distinct to_char(date_trunc(\'month\',to_date(created_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as creation_month, 
+            sum(count(*) ) over (order by to_char(date_trunc(\'month\',to_date(created_date,\'DD/MM/YYYY\')),\'YYYY/MM\'))');
+            $builder->groupBy('creation_month');
+            $builder->orderBy('creation_month');
+            $query = $builder->get();
+
+            return $query;
+            
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+
+    }
+
 
 
 
@@ -921,6 +971,50 @@ class MasterUserModel extends Model
         } catch (\Exception $e) {
             throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
+
+    }
+
+    public function getRozgarMelaUserList( $limit, $offset, $search, $orderBy, $orderDir)
+    {
+        try {
+
+            $builder = $this->db->table('user_list');
+            $builder->select('name, email, org_name, designation');
+            $builder->like('email','.kb@karmayogi.in');
+            if ($search != '')
+                $builder->where("(name LIKE '%" . strtolower($search) . "%' OR name LIKE '%" . strtoupper($search) . "%' OR name LIKE '%" . ucfirst($search) . "%'
+                            OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%'
+                            OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
+                            OR designation LIKE '%" . strtolower($search) . "%' OR designation LIKE '%" . strtoupper($search) . "%' OR designation LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
+
+
+            $builder->orderBy((int) $orderBy + 1, $orderDir);
+            if ($limit != -1)
+                $builder->limit($limit, $offset);
+            $query = $builder->get();
+
+            return $query;
+
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+
+    }
+
+    public function dashboardChart($isMonthWise)
+    {
+        $builder = $this->db->table('master_user');
+        
+        $builder->select('status,count(*) as count');
+
+        
+        if ($isMonthWise == true)
+            $builder->where('to_char(to_date(created_date,\'DD/MM/YYYY\'), \'MONTH YYYY\')  = to_char(current_date, \'MONTH YYYY\')');
+
+        $builder->groupBy('status');
+        $builder->orderBy('count', 'desc');
+
+        return $builder->get();
 
     }
 

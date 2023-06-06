@@ -24,7 +24,7 @@
 
 <body>
 
-  <div class="further">
+  <section>
 
   <div class="report-date">
             <?php echo $lastUpdated ?>
@@ -118,7 +118,7 @@
 
 
 
-  </div>
+  </section>
 
 
   <!-- javascript -->

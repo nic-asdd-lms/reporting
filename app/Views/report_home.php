@@ -215,12 +215,9 @@
                 }
                 else if (userReportType == 'userProfile' || userReportType == 'userEnrolment')                //  Report type 2nd option validation 
                 {
-                    // var ms = $('#ms_type').val();
-                    // var ministry = $('#ministry').val();
-                    // var dept = $('#dept').val();
-                    var org = $('#org').val();
+                    var email = $('#email').val();
 
-                    if (org == '') {
+                    if (email == '') {
                         Swal.fire({
                             title: 'Error!',
                             text: 'Please Select User!',
@@ -626,7 +623,8 @@
                                     <option class="options" value="mdoUserCount">MDO-wise user count</option>
                                     <option class="options" value="mdoUserList">MDO-wise user List</option>
                                     <option class="options" value="mdoUserEnrolment">MDO-wise user enrolment report</option>
-                                    <option class="options" value="ministryUserEnrolment">User List for all organisations under a Ministry/State</option>
+                                    <option class="options" value="ministryUserList">Ministry/State-wise user list</option>
+                                    <option class="options" value="ministryUserEnrolment">Ministry/State-wise user enrolment report</option>
                         ';
                             } else if ($session->get('role') == 'MDO_ADMIN') {
 
@@ -708,6 +706,7 @@
                         <select name="courseReportType" class="form-control report-select"
                             onchange="enable_disable_course(this)" id="courseReportType">
                             <option value="notSelected">-- Select Report Type --</option>
+                            <option value="liveCourseList">List of Live courses</option>
                             <option value="courseEnrolmentCount">Live courses summary</option>
                             <option value="courseEnrolmentReport">Course-wise enrolment report</option>
                             <option value="programEnrolmentReport">Program-wise enrolment report</option>
@@ -917,6 +916,7 @@
                         <option value="monthWiseUserOnboarding">Month-wise User Onboarding</option>
                         <option value="monthWiseOrgOnboarding">Month-wise Organisation Onboarding</option>
                         <option value="monthWiseCourses">Month-wise Courses Published</option>
+                        <option value="monthWiseCompletion">Month-wise Course Completions</option>
                         </select>';
 
                         }
@@ -1025,7 +1025,8 @@
                         <select name="miscReportType" class="form-control report-select"
                             onchange="enable_disable_misc(this)" id="miscReportType">
                             <option value="notSelected">-- Select Report Type --</option>
-                            <!-- <option value="rozgarMelaUserReport">Rozgar Mela detailed report</option> -->
+                            <option value="rozgarMelaUserList">Rozgar Mela user list</option>
+                            <option value="rozgarMelaUserReport">Rozgar Mela user enrolment report</option>
                             <option value="rozgarMelaReport">Rozgar Mela organisation-wise summary</option>
                             <option value="rozgarMelaSummary">Rozgar Mela Course-wise summary</option>
                         </select>

@@ -78,7 +78,7 @@ class Report extends BaseController
 
                 // Set report-specific inputs
 
-                if ($reportType == 'ministryUserEnrolment' || $reportType == 'orgHierarchy') {
+                if ($reportType == 'ministryUserList'||$reportType == 'ministryUserEnrolment' || $reportType == 'orgHierarchy') {
                     if ($session->get('role') == 'MDO_ADMIN') {
                         $ministry = $session->get('organisation');
                     } else {
@@ -157,10 +157,15 @@ class Report extends BaseController
                     $fullResult = $enrolment->getEnrolmentByOrg($orgName, -1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getEnrolmentByOrg($orgName, -1, 0, $search, $orderBy, $orderDir);
 
-                } else if ($reportType == 'ministryUserEnrolment') {
+                } else if ($reportType == 'ministryUserList') {
                     $result = $user->getUserByMinistry($ministryName, $limit, $offset, $search, $orderBy, $orderDir);
                     $fullResult = $user->getUserByMinistry($ministryName, -1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getUserByMinistry($ministryName, -1, 0, $search, $orderBy, $orderDir);
+
+                }  else if ($reportType == 'ministryUserEnrolment') {
+                    $result = $enrolment->getUserEnrolmentByMinistry($ministryName, $limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getUserEnrolmentByMinistry($ministryName, -1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getUserEnrolmentByMinistry($ministryName, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'userWiseCount') {
                     $result = $enrolment->getUserEnrolmentCountByMDO($orgName, $limit, $offset, $search, $orderBy, $orderDir);
@@ -176,7 +181,12 @@ class Report extends BaseController
                     $fullResult = $org_hierarchy->getHierarchy($ministry, -1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $org_hierarchy->getHierarchy($ministry, -1, 0, $search, $orderBy, $orderDir);
 
-                } else if ($reportType == 'liveCourses') {
+                } else if ($reportType == 'liveCourseList') {
+                    $result = $courseModel->getLiveCourseList($limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $courseModel->getLiveCourseList(-1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $courseModel->getLiveCourseList(-1, 0, $search, $orderBy, $orderDir);
+
+                }  else if ($reportType == 'liveCourses') {
                     $result = $courseModel->getLiveCourses($limit, $offset, $search, $orderBy, $orderDir);
                     $fullResult = $courseModel->getLiveCourses(-1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $courseModel->getLiveCourses(-1, 0, $search, $orderBy, $orderDir);
@@ -236,30 +246,15 @@ class Report extends BaseController
                     $fullResult = $enrolment->getCourseMinistrySummary($course, -1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getCourseMinistrySummary($course, -1, 0, $search, $orderBy, $orderDir);
 
-                } else if ($reportType == 'rozgarMelaUserReport') {
-                    $result = $enrolment->getRozgarMelaUserReport($limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getRozgarMelaUserReport(-1, 0, '', $orderBy, $orderDir);
-                    $resultFiltered = $enrolment->getRozgarMelaUserReport(-1, 0, $search, $orderBy, $orderDir);
-
-                } else if ($reportType == 'rozgarMelaReport') {
-                    $result = $enrolment->getRozgarMelaReport($limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getRozgarMelaReport(-1, 0, '', $orderBy, $orderDir);
-                    $resultFiltered = $enrolment->getRozgarMelaReport(-1, 0, $search, $orderBy, $orderDir);
-
-                } else if ($reportType == 'rozgarMelaSummary') {
-                    $result = $enrolment->getRozgarMelaSummary($limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getRozgarMelaSummary(-1, 0, '', $orderBy, $orderDir);
-                    $resultFiltered = $enrolment->getRozgarMelaSummary(-1, 0, $search, $orderBy, $orderDir);
-
                 } else if ($reportType == 'userProfile') {
                     $result = $user->getProfile($email, $orgName, $limit, $offset, $search, $orderBy, $orderDir);
                     $fullResult = $user->getProfile($email, $orgName, -1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getProfile($email, $orgName, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'userEnrolment') {
-                    $result = $enrolment->getUserWiseEnrolment($userId, $org, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getUserWiseEnrolment($userId, $org, -1, 0, '', $orderBy, $orderDir);
-                    $resultFiltered = $enrolment->getUserWiseEnrolment($userId, $org, -1, 0, $search, $orderBy, $orderDir);
+                    $result = $enrolment->getUserWiseEnrolmentReport($userId, $org, $limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getUserWiseEnrolmentReport($userId, $org, -1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getUserWiseEnrolmentReport($userId, $org, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'userEnrolmentFull') {
                     $result = $enrolment->getUserEnrolmentFull($limit, $offset, $search, $orderBy, $orderDir);
@@ -371,6 +366,11 @@ class Report extends BaseController
                     $fullResult = $courseModel->getMonthWiseCourses(-1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $courseModel->getMonthWiseCourses(-1, 0, $search, $orderBy, $orderDir);
 
+                }  else if ($reportType == 'monthWiseCompletion') {
+                    $result = $enrolment->getMonthWiseCourseCompletion($limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getMonthWiseCourseCompletion(-1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getMonthWiseCourseCompletion(-1, 0, $search, $orderBy, $orderDir);
+
                 } else if ($reportType == 'atiWiseOverview') {
                     $result = $enrolmentProgram->getATIWiseCount($org, $limit, $offset, $search, $orderBy, $orderDir);
                     $fullResult = $enrolmentProgram->getATIWiseCount($org, -1, 0, '', $orderBy, $orderDir);
@@ -466,7 +466,29 @@ class Report extends BaseController
                     $fullResult = $enrolment->getTopOrgCollectionWise($course, $topCount, -1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getTopOrgCollectionWise($course, $topCount, -1, 0, $search, $orderBy, $orderDir);
 
-                }
+                } else if ($reportType == 'rozgarMelaUserReport') {
+                    $result = $enrolment->getRozgarMelaUserReport($limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getRozgarMelaUserReport(-1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getRozgarMelaUserReport(-1, 0, $search, $orderBy, $orderDir);
+
+                } else if ($reportType == 'rozgarMelaReport') {
+                    $result = $enrolment->getRozgarMelaReport($limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getRozgarMelaReport(-1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getRozgarMelaReport(-1, 0, $search, $orderBy, $orderDir);
+
+                } else if ($reportType == 'rozgarMelaSummary') {
+                    $result = $enrolment->getRozgarMelaSummary($limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getRozgarMelaSummary(-1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getRozgarMelaSummary(-1, 0, $search, $orderBy, $orderDir);
+
+                }  else if ($reportType == 'rozgarMelaUserList') {
+                    $result = $user->getRozgarMelaUserList($limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $user->getRozgarMelaUserList(-1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $user->getRozgarMelaUserList(-1, 0, $search, $orderBy, $orderDir);
+
+                } 
+
+                
 
 
                 $session->remove('resultArray');
@@ -561,7 +583,7 @@ class Report extends BaseController
                 If org is not selected, org = dept. If dept is also not selected, org = ministry */
 
                 if ($org != "") {
-                    if ($reportType == 'ministryUserEnrolment' || $reportType == 'orgHierarchy')
+                    if ($reportType == 'ministryUserList' || $reportType == 'orgHierarchy' || $reportType == 'ministryUserEnrolment')
                         $orgName = $org_hierarchy->getMinistryStateName($org);
                     else
                         $orgName = $orgModel->getOrgName($org);
@@ -586,10 +608,15 @@ class Report extends BaseController
                     $session->setTempdata('fileName', $orgName . '_UserEnrolmentReport', 300);
                     $reportTitle = 'Users Enrolment Report for organisation - "' . $orgName . '"';
 
-                } else if ($reportType == 'ministryUserEnrolment') {
+                } else if ($reportType == 'ministryUserList') {
                     $header = ['Name', 'Email', 'Ministry', 'Department', 'Organization', 'Designation', 'Contact No.', 'Created Date', 'Roles'];
                     $session->setTempdata('fileName', $orgName . '_UserList', 300);
                     $reportTitle = 'Users list for all organisations under ministry/state - "' . $orgName . '"';
+
+                }  else if ($reportType == 'ministryUserEnrolment') {
+                    $header = ['Name', 'Email', 'Ministry', 'Department', 'Organization', 'Designation','Course', 'Status', 'Completion Percentage', 'Completed On'];
+                    $session->setTempdata('fileName', $orgName . '_UserEnrolment', 300);
+                    $reportTitle = 'Users enrolement report for all organisations under ministry/state - "' . $orgName . '"';
 
                 } else if ($reportType == 'userWiseCount') {
                     $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'No. of Courses Enrolled', 'No. of Courses Completed'];
@@ -662,7 +689,7 @@ class Report extends BaseController
                 $enrolmentProgram = new UserEnrolmentProgram();
                 $lastUpdate = new DataUpdateModel();
 
-
+                
 
                 $data['lastUpdated'] = '[Report as on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
                 $session->setTempdata('error', '');
@@ -670,7 +697,12 @@ class Report extends BaseController
                 if ($role == 'MDO_ADMIN') {
                     $org = $session->get('organisation');
                 }
-                if ($courseReportType == 'liveCourses') {
+                if ($courseReportType == 'liveCourseList') {
+                    $header = ['Course Name'];
+                    $session->setTempdata('fileName', 'LiveCourseList', 300);
+                    $reportTitle = 'Live Courses';
+
+                } else if ($courseReportType == 'liveCourses') {
                     $header = ['Course Name', 'Course Provider', 'Duration (HH:MM:SS)', 'Published Date', 'No. of Ratings', 'Average Rating'];
                     $session->setTempdata('fileName', 'LiveCourses', 300);
                     $reportTitle = 'Live Courses';
@@ -1032,7 +1064,12 @@ class Report extends BaseController
                     $session->setTempdata('fileName', 'Month-wise Courses Published', 300);
                     $reportTitle = 'Month-wise Courses Published';
 
-                }
+                } else if ($analyticsReportType == 'monthWiseCompletion') {
+                    $header = ['Month', 'No. of Course Completions'];
+                    $session->setTempdata('fileName', 'Month-wise Course Completion', 300);
+                    $reportTitle = 'Month-wise Course Completion';
+
+                } 
 
                 $table->setHeading($header);
 
@@ -1228,7 +1265,7 @@ class Report extends BaseController
                 $session->setTempdata('course', $request->getPost('course'), 300);
 
                 $role = $session->get('role');
-                $courseReportType = $request->getPost('miscReportType');
+                $reportType = $request->getPost('miscReportType');
                 $course = $request->getPost('course');
 
 
@@ -1246,20 +1283,25 @@ class Report extends BaseController
                 if ($role == 'MDO_ADMIN') {
                     $org = $session->get('organisation');
                 }
-                if ($courseReportType == 'rozgarMelaReport') {
+                if ($reportType == 'rozgarMelaReport') {
                     $header = ['Organisation Name', 'No. of Rozgar Mela Users', 'Karmayogi Prarambh Course Enrolments', 'Not Started', 'In Progress', 'Completed'];
                     $session->setTempdata('fileName', 'RozgarMelaReport', 300);
                     $reportTitle = 'Organisation-wise Enrolment Summary of Rozgar Mela Users in Karmayogi Prarambh Module';
 
-                } else if ($courseReportType == 'rozgarMelaSummary') {
+                } else if ($reportType == 'rozgarMelaSummary') {
                     $header = ['Course Name', 'Enrolled', 'Not Started', 'In Progress', 'Completed'];
                     $session->setTempdata('fileName', 'RozgarMelaSummary', 300);
                     $reportTitle = 'Course-wise Enrolment Summary of Rozgar Mela Users in Karmayogi Prarambh Module';
 
-                } else if ($courseReportType == 'rozgarMelaUserReport') {
-                    $header = ['Name', 'Email', 'Organisation', 'Designation', 'Status', 'Completed On'];
+                } else if ($reportType == 'rozgarMelaUserReport') {
+                    $header = ['Name', 'Email', 'Organisation', 'Designation', 'Status'];
                     $session->setTempdata('fileName', 'RozgarMelaSummary', 300);
-                    $reportTitle = 'Rozgar Mela Detailed user Enrolment Report';
+                    $reportTitle = 'Rozgar Mela user Enrolment Report';
+
+                } else if ($reportType == 'rozgarMelaUserList') {
+                    $header = ['Name', 'Email', 'Organisation', 'Designation'];
+                    $session->setTempdata('fileName', 'RozgarMelaUserList', 300);
+                    $reportTitle = 'Rozgar Mela User List';
 
                 }
                 $table->setHeading($header);

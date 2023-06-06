@@ -27,7 +27,49 @@ class MasterCourseModel extends Model
             throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
     }
+    public function getCourseCount()
+    {
+        try {
+            $builder = $this->db->table('master_course');
+            $builder->select('count(course_id)');
+            $builder->where('status', 'Live');
+            $query = $builder->get();
 
+            // echo $org_id,json_encode($query);
+            return $query;
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+    public function getProviderCount()
+    {
+        try {
+            $builder = $this->db->table('master_course');
+            $builder->select('count(distinct org_name)');
+            $builder->where('status', 'Live');
+            $query = $builder->get();
+
+            // echo $org_id,json_encode($query);
+            return $query;
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    public function getContentHours()
+    {
+        try {
+            $builder = $this->db->table('master_course');
+            $builder->select('sum(durationh)');
+            $builder->where('status', 'Live');
+            $query = $builder->get();
+
+            // echo $org_id,json_encode($query);
+            return $query;
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
     public function getCourseName($course_id)
     {
         try {
@@ -45,6 +87,29 @@ class MasterCourseModel extends Model
         //    return $result;
     }
 
+    public function getLiveCourseList($limit, $offset, $search, $orderBy, $orderDir)
+    {
+        try {
+
+            $builder = $this->db->table('master_course');
+            $builder->select('course_name');
+            $builder->where('status', 'Live');
+            if ($search != '')
+                $builder->where("(course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%' )", NULL, FALSE);
+
+            $builder->orderBy((int) $orderBy + 1, $orderDir);
+
+            if ($limit != -1)
+                $builder->limit($limit, $offset);
+
+            $query = $builder->get();
+
+            return $query;
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+
+    }
     public function getLiveCourses($limit, $offset, $search, $orderBy, $orderDir)
     {
         try {
@@ -365,6 +430,46 @@ class MasterCourseModel extends Model
         return $query;
 
     }
+
+    public function dashboardChart($isMonthWise)
+    {
+        $builder = $this->db->table('master_course');
+        
+        $builder->select('status,count(*) as count');
+
+        
+        if ($isMonthWise == true)
+            $builder->where('to_char(to_date(created_date,\'DD/MM/YYYY\'), \'MONTH YYYY\')  = to_char(current_date, \'MONTH YYYY\')');
+
+        $builder->groupBy('status');
+        $builder->orderBy('count', 'desc');
+
+        return $builder->get();
+
+    }
+
+    public function dashboardTable($isMonthWise)
+    {
+        $builder = $this->db->table('master_course');
+        
+        
+        $builder->select('status,count(*) as count');
+        
+        if ($isMonthWise == true) {
+            $builder->where('to_char(to_date(created_date,\'DD/MM/YYYY\'), \'MONTH YYYY\')  = to_char(current_date, \'MONTH YYYY\')');
+        }
+
+        $builder->groupBy('status');
+        $builder->orderBy('count', 'desc');
+
+        // echo '<pre>';
+        // print_r($builder);
+        // die;
+
+        return $builder->get();
+
+    }
+
 
 }
 
