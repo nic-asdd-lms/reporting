@@ -83,7 +83,7 @@ class Dashboard extends BaseController
                     $instituteData = $enrolment->getInstituteWiseCount('', -1, 0, '', 1, 'asc')->getResultArray();
 
                     for ($i = 0; $i < sizeof($instituteData); $i++) {
-                        $instituteData[$i]['org_name'] = '<a href="/dashboard/dopt?ati=' . $instituteData[$i]['root_org_id'] . '&program=">' . $instituteData[$i]['org_name'] . '</a>';
+                        $instituteData[$i]['org_name'] = '<a href="'.base_url('/dashboard/dopt?ati=' . $instituteData[$i]['root_org_id'] . '&program=').'">' . $instituteData[$i]['org_name'] . '</a>';
                     }
                     $data['overview'] = $table->generate($instituteData);
                     $data['reportTitle'] = 'Enrolment Summary';
@@ -96,12 +96,12 @@ class Dashboard extends BaseController
                     $programData = $enrolment->getProgramWiseATIWiseCount($ati, -1, 0, '', 1, 'asc')->getResultArray();
 
                     for ($i = 0; $i < sizeof($programData); $i++) {
-                        $programData[$i]['program_name'] = '<a href="/dashboard/dopt?ati=' . $ati . '&program=' . $programData[$i]['program_id'] . '">' . $programData[$i]['program_name'] . '</a>';
+                        $programData[$i]['program_name'] = '<a href="'.base_url('/dashboard/dopt?ati=' . $ati . '&program=' . $programData[$i]['program_id']) . '">' . $programData[$i]['program_name'] . '</a>';
                     }
                     $data['overview'] = $table->generate($programData);
                     $atiName = $orgModel->getOrgName($ati);
                     $data['reportTitle'] = 'Enrolment Summary of Programs by "'.$atiName.'"';
-                    $data['backUrl']='/dashboard/dopt?ati=&program=';
+                    $data['backUrl']=base_url('/dashboard/dopt?ati=&program=');
                     $data['back']=true;
                     $data['title'] = 'Program Overview';
 
@@ -113,7 +113,7 @@ class Dashboard extends BaseController
                     $programName = $programModel->getProgramName($program);
                     $data['overview'] = $table->generate($userData);
                     $data['reportTitle'] = 'Enrolment Summary of "'.$programName.'" by "'.$atiName.'"';
-                    $data['backUrl']='/dashboard/dopt?ati='.$ati.'&program=';
+                    $data['backUrl']=base_url('/dashboard/dopt?ati='.$ati.'&program=');
                     $data['back']=true;
                     $data['title'] = 'User List';
                     
