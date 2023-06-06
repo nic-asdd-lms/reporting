@@ -101,7 +101,7 @@ class Dashboard extends BaseController
                     $data['overview'] = $table->generate($programData);
                     $atiName = $orgModel->getOrgName($ati);
                     $data['reportTitle'] = 'Enrolment Summary of Programs by "'.$atiName.'"';
-                    $data['backUrl']=base_url('/dashboard/dopt?ati=&program=');
+                    $data['backUrl']='dashboard/dopt?ati=&program=';
                     $data['back']=true;
                     $data['title'] = 'Program Overview';
 
@@ -113,7 +113,7 @@ class Dashboard extends BaseController
                     $programName = $programModel->getProgramName($program);
                     $data['overview'] = $table->generate($userData);
                     $data['reportTitle'] = 'Enrolment Summary of "'.$programName.'" by "'.$atiName.'"';
-                    $data['backUrl']=base_url('/dashboard/dopt?ati='.$ati.'&program=');
+                    $data['backUrl']='dashboard/dopt?ati='.$ati.'&program=';
                     $data['back']=true;
                     $data['title'] = 'User List';
                     
