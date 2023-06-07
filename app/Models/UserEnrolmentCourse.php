@@ -1120,6 +1120,7 @@ not_started_users as
                                 master_organization.org_name, master_user.designation, user_program_enrolment.status');
         $programBuilder->join('master_user', 'master_user.user_id = user_program_enrolment.user_id');
         $programBuilder->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id');
+        $programBuilder->where('program_id','do_1137731307613716481132');
         $programBuilder->distinct();
 
         $completedBuilder->union($inProgressBuilder);
