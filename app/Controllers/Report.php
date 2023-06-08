@@ -22,6 +22,7 @@ use PHPExcel_Reader_HTML;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use CodeIgniter\Config\Services;
+use DateTime;
 
 class Report extends BaseController
 {
@@ -75,6 +76,7 @@ class Report extends BaseController
                 $session->setTempdata('error', '');
                 $course = $session->getTempdata('course');
                 $topCount = $session->getTempdata('topCount');
+                $month = $session->getTempdata('monthYear');
 
                 // Set report-specific inputs
 
@@ -465,6 +467,11 @@ class Report extends BaseController
                     $result = $enrolment->getTopOrgCollectionWise($course, $topCount, $limit, $offset, $search, $orderBy, $orderDir);
                     $fullResult = $enrolment->getTopOrgCollectionWise($course, $topCount, -1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getTopOrgCollectionWise($course, $topCount, -1, 0, $search, $orderBy, $orderDir);
+
+                } else if ($reportType == 'topCourseInMonth') {
+                    $result = $enrolment->getTopCourseInMonth($month, $topCount,$limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getTopCourseInMonth($month, $topCount, -1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getTopCourseInMonth($month, $topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'rozgarMelaUserReport') {
                     $result = $enrolment->getRozgarMelaUserReport($limit, $offset, $search, $orderBy, $orderDir);
@@ -1113,10 +1120,18 @@ class Report extends BaseController
                 $reportType = $request->getPost('topReportType') ? $request->getPost('topReportType') : $segments[1];
                 $course = $request->getPost('course') ? $request->getPost('course') : $request->getPost('topcourse');
                 $topCount = $request->getPost('topCount');
+                $month =  $request->getPost('month');
+                
+                $year =  $request->getPost('year');
+                $dateObj   = DateTime::createFromFormat('m', $month);
+                
+$monthName = $dateObj->format('F');
+
 
                 $session->setTempdata('reportType', $request->getPost('topReportType'), 600);
                 $session->setTempdata('course', $request->getPost('topcourse'), 300);
                 $session->setTempdata('topCount', $request->getPost('topCount'), 300);
+                $session->setTempdata('monthYear', $request->getPost('year').'/'.$request->getPost('month'), 300);
 
                 $home = new Home();
                 $user = new MasterUserModel();
@@ -1218,6 +1233,11 @@ class Report extends BaseController
                     $header = ['Organisation', 'No. of Users Completed'];
                     $session->setTempdata('fileName', 'TopOrg_' . $course, 300);
                     $reportTitle = 'Top ' . $topCount . ' organisations based on completion of curated collection - "' . $collectionModel->getCollectionName($course) . '"';
+
+                } else if ($reportType == 'topCourseInMonth') {
+                    $header = ['Course', 'Completion Count'];
+                    $session->setTempdata('fileName', 'TopCourse_' . $month.'_'.$year, 300);
+                    $reportTitle = 'Top ' . $topCount . ' Courses of ' . $monthName .', '.$year. ' based on Completion';
 
                 }
 

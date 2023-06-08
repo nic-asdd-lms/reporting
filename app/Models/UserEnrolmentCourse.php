@@ -1299,6 +1299,69 @@ not_started_users as
         }
 
     }
+
+    public function getCompletionMonth()
+    {
+        try {
+            $builder = $this->db->table('user_course_enrolment');
+            $builder->select('distinct to_char(date_trunc(\'month\',to_date(completed_on,\'DD/MM/YYYY\')),\'MM\') as completed_month');
+            $builder->where('completed_on != \'\'');
+            $builder->orderBy('completed_month');
+            $query = $builder->get();
+
+            return $query;
+
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+
+    }
+
+    public function getCompletionYear()
+    {
+        try {
+            $builder = $this->db->table('user_course_enrolment');
+            $builder->select('distinct to_char(date_trunc(\'month\',to_date(completed_on,\'DD/MM/YYYY\')),\'YYYY\') as completed_year');
+            $builder->where('completed_on != \'\'');
+            $builder->orderBy('completed_year');
+            $query = $builder->get();
+
+            return $query;
+
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+
+    }
+
+    public function getTopCourseInMonth($month, $topCount,$limit, $offset, $search, $orderBy, $orderDir)
+    {
+        try {
+            $builder = $this->db->table('user_course_enrolment');
+            $builder->join('master_course','master_course.course_id = user_course_enrolment.course_id');
+            $builder->select('course_name, count(*) ');
+            $builder->where('to_char(date_trunc(\'month\',to_date(completed_on,\'DD/MM/YYYY\')),\'YYYY/MM\') = \''.$month.'\'');
+            $builder->where('status','Live');
+            $builder->groupBy('course_name');
+            $builder->orderBy('count','desc');
+            if ($limit != -1)
+                $builder->limit(min($topCount - $offset, $limit), $offset);
+            else
+                $builder->limit($topCount - $offset, $offset);
+
+            //     print_r($builder->getCompiledSelect());
+            // die;
+            $query = $builder->get();
+
+            
+            return $query;
+
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+
+    }
+    
 }
 
 ?>

@@ -161,7 +161,7 @@ class UserEnrolmentProgram extends Model
         $builder = $this->db->table('user_program_enrolment');
         $builder->join('master_program','master_program.program_id = user_program_enrolment.program_id');
     
-        $builder->select('status,count(distinct user_id) as users');
+        $builder->select('status,count(*) as users');
 
         if ($ati != '')
             $builder->where('root_org_id', $ati);

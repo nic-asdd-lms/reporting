@@ -193,7 +193,7 @@
                     }
                 }
 
-                
+
 
 
             });
@@ -230,7 +230,7 @@
                         return true;
                     }
                 }
-                
+
             });
 
             $("#rolereportform").submit(function () {                     // Tab 3 Validation 
@@ -409,11 +409,11 @@
                         html = '';
                         if (reportType == 'courseEnrolmentReport' || reportType == 'courseMinistrySummary') {
                             for (var count = 0; count < data.length; count++) {
-                                html += '<option class="datalist-options" data-value="' + data[count].course_id + '">' + data[count].course_name +' [by '+data[count].org_name+ '] </option>';
+                                html += '<option class="datalist-options" data-value="' + data[count].course_id + '">' + data[count].course_name + ' [by ' + data[count].org_name + '] </option>';
                             }
                         } else if (reportType == 'programEnrolmentReport') {
                             for (var count = 0; count < data.length; count++) {
-                                html += '<option class="datalist-options" data-value="' + data[count].program_id + '">' + data[count].program_name +' [by '+data[count].org_name+ ']</option>';
+                                html += '<option class="datalist-options" data-value="' + data[count].program_id + '">' + data[count].program_name + ' [by ' + data[count].org_name + ']</option>';
                             }
                         } else if (reportType == 'collectionEnrolmentReport' || reportType == 'collectionEnrolmentCount') {
                             for (var count = 0; count < data.length; count++) {
@@ -575,7 +575,7 @@
                 <?php
                 $session = \Config\Services::session();
 
-                if ($session->get('role') == 'SPV_ADMIN' || $session->get('role') == 'IGOT_TEAM_MEMBER' ) {
+                if ($session->get('role') == 'SPV_ADMIN' || $session->get('role') == 'IGOT_TEAM_MEMBER') {
                     echo '
                         <button class="tablinks" onclick="openTab(event, \'MDO-wise\')" id="defaultOpen">MDO-wise</button>
                         <button class="tablinks" onclick="openTab(event, \'Course-wise\')">Course-wise</button>
@@ -592,10 +592,10 @@
                         <button class="tablinks" onclick="openTab(event, \'User-wise\')" id="defaultOpen">User-wise</button>
                         <button class="tablinks" onclick="openTab(event, \'Role-wise\')">Role-wise</button>
                     ';
-                } else if ($session->get('role') == 'DOPT_ADMIN' || $session->get('role') == 'IGOT_TEAM_MEMBER' ) {
+                } else if ($session->get('role') == 'DOPT_ADMIN' || $session->get('role') == 'IGOT_TEAM_MEMBER') {
 
                     echo '<button class="tablinks" onclick="openTab(event, \'Dopt\')" id="defaultOpen">DoPT Reports</button>';
-                } else if ($session->get('role') == 'ATI_ADMIN' || $session->get('role') == 'IGOT_TEAM_MEMBER' ) {
+                } else if ($session->get('role') == 'ATI_ADMIN' || $session->get('role') == 'IGOT_TEAM_MEMBER') {
 
                     echo '<button class="tablinks" onclick="openTab(event, \'ATI\')" id="defaultOpen">ATI Reports</button>';
                 }
@@ -613,7 +613,7 @@
                             <?php
                             $session = \Config\Services::session();
 
-                            if ($session->get('role') == 'SPV_ADMIN' || $session->get('role') == 'IGOT_TEAM_MEMBER' ) {
+                            if ($session->get('role') == 'SPV_ADMIN' || $session->get('role') == 'IGOT_TEAM_MEMBER') {
 
                                 echo
                                     '
@@ -652,7 +652,7 @@
                                 <?php
                                 $session = \Config\Services::session();
 
-                                if ($session->get('role') == 'SPV_ADMIN'|| $session->get('role') == 'IGOT_TEAM_MEMBER') {
+                                if ($session->get('role') == 'SPV_ADMIN' || $session->get('role') == 'IGOT_TEAM_MEMBER') {
 
                                     echo '             <tr>
                                     <td style="width:1%"><label class="required"></label></td>
@@ -717,16 +717,16 @@
                             <?php
                             $session = \Config\Services::session();
 
-                            if ($session->get('role') == 'SPV_ADMIN'  || $session->get('role') == 'IGOT_TEAM_MEMBER' ) {
+                            if ($session->get('role') == 'SPV_ADMIN' || $session->get('role') == 'IGOT_TEAM_MEMBER') {
                                 echo '<option value="courseMinistrySummary">Ministry-wise summary for a course</option>';
                                 echo '<option value="underPublishCourses">Courses under publish</option>';
                                 echo '<option value="underReviewCourses">Courses under review </option>';
                                 echo '<option value="draftCourses">Draft courses</option>';
-                                
-                                
+
+
                             }
-                            
-                             ?>
+
+                            ?>
                         </select>
 
                     </div>
@@ -775,23 +775,25 @@
             <div id="User-wise" class="tabcontent">
 
 
-                <form id="userreportform" class="form-horizontal login_form" action="<?php echo base_url('/getUserReport'); ?>"
-                    method="post">
+                <form id="userreportform" class="form-horizontal login_form"
+                    action="<?php echo base_url('/getUserReport'); ?>" method="post">
 
                     <div class="report-type">
                         <label for="userReportType" class="lbl-reporttype  required">Report type:</label>
 
-                        <select name="userReportType" class="form-control report-select" id="userReportType" onchange="enable_disable_user(this)" >
+                        <select name="userReportType" class="form-control report-select" id="userReportType"
+                            onchange="enable_disable_user(this)">
                             <option value="notSelected">-- Select Report Type --</option>
                             <?php
                             $session = \Config\Services::session();
 
-                            if ($session->get('role') == 'SPV_ADMIN'  || $session->get('role') == 'IGOT_TEAM_MEMBER' ) {
+                            if ($session->get('role') == 'SPV_ADMIN' || $session->get('role') == 'IGOT_TEAM_MEMBER') {
 
                                 echo
                                     '
                             <option class="options" value="userList">User list</option>
-                            <option class="options" value="userEnrolmentFull">Full enrolment report</option>';}?>
+                            <option class="options" value="userEnrolmentFull">Full enrolment report</option>';
+                            } ?>
 
                             <option value="userProfile">User profile</option>
                             <option value="userEnrolment">User-wise enrolment report</option>
@@ -841,7 +843,7 @@
                         <?php
                         $session = \Config\Services::session();
 
-                        if ($session->get('role') == 'SPV_ADMIN'  || $session->get('role') == 'IGOT_TEAM_MEMBER' ) {
+                        if ($session->get('role') == 'SPV_ADMIN' || $session->get('role') == 'IGOT_TEAM_MEMBER') {
 
                             echo '<select name="roleReportType" class="form-control report-select"  onchange="enable_disable_mdo(this)"  id="roleReportType">
                         <option value="notSelected">-- Select Report Type --</option>
@@ -908,7 +910,7 @@
                         <?php
                         $session = \Config\Services::session();
 
-                        if ($session->get('role') == 'SPV_ADMIN'  || $session->get('role') == 'IGOT_TEAM_MEMBER' ) {
+                        if ($session->get('role') == 'SPV_ADMIN' || $session->get('role') == 'IGOT_TEAM_MEMBER') {
 
                             echo '<select name="analyticsReportType" class="form-control report-select" id="analyticsReportType">
                         <option value="notSelected">-- Select Report Type --</option>
@@ -966,6 +968,7 @@
                             <option value="topOrgProgramWise">Top performing organisations program-wise</option>
                             <option value="topOrgCollectionWise">Top performing organisations curated collection-wise
                             </option>
+                            <option value="topCourseInMonth">Top courses in a month based on completion</option>
                         </select>
                     </div>
                     <hr />
@@ -1000,6 +1003,42 @@
                                 </td>
                             </tr>
 
+
+
+                        </table>
+                        <table class="tbl-month" id="tbl-top-monthyear" style="display:none">
+
+                            <tr>
+                                <td><label class="topcountlabel required">Month</label></td>
+                                <td>
+                                    <div class="auto-widget" id="top-month">
+                                        <select class="form-control monthyear-select" id = "month" name = "month">
+                                            <?php 
+                                            foreach ($months as $month){
+                                                echo '<option value="'.$month->completed_month.'">'.$month->completed_month.'</option>';
+                                            }
+                                            ?>
+                                        </select>
+
+                                    </div>
+
+                                </td>
+                                <td><label class="topcountlabel required">Year</label></td>
+                                <td>
+                                    <div class="auto-widget" id="top-month">
+                                        <select class="form-control monthyear-select" id = "year" name ="year">
+                                        <?php 
+                                            foreach ($years as $year){
+                                                echo '<option  value="'.$year->completed_year.'">'.$year->completed_year.'</option>';
+                                            }
+                                            ?>
+                                        </select>
+
+                                    </div>
+
+                                </td>
+                            </tr>
+
                         </table>
 
                         <div class="col-xs-3 container submitbutton">
@@ -1016,8 +1055,8 @@
             <div id="Miscellaneous" class="tabcontent">
 
 
-                <form id="miscreportform" class="form-horizontal login_form" action="<?php echo base_url('/getMiscReport'); ?>"
-                    method="post">
+                <form id="miscreportform" class="form-horizontal login_form"
+                    action="<?php echo base_url('/getMiscReport'); ?>" method="post">
 
                     <div class="report-type">
                         <label for="miscReportType" class="lbl-reporttype  required">Report type:</label>
@@ -1037,7 +1076,7 @@
                     <hr />
 
                     <div class="container">
-                        <table class="tbl-input"  id="tbl-program" style="display:none">
+                        <table class="tbl-input" id="tbl-program" style="display:none">
                             <tr>
                                 <td>
                                     <label for="course">ATI: </label>
@@ -1093,7 +1132,7 @@
                     <hr />
 
                     <div class="container">
-                        <table class="tbl-input"  id="tbl-program" style="display:none">
+                        <table class="tbl-input" id="tbl-program" style="display:none">
                             <tr>
                                 <td>
                                     <label for="course">Program: </label>
@@ -1151,7 +1190,7 @@
                     <hr />
 
                     <div class="container">
-                        <table class="tbl-input"  id="tbl-program" style="display:none">
+                        <table class="tbl-input" id="tbl-program" style="display:none">
                             <tr>
                                 <td>
                                     <label for="course">ATI: </label>

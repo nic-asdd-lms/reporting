@@ -226,4 +226,15 @@ datalist {
 margin: 0 100px 0 100px;
 padding: 20px;
   }
+  .tbl-month {
+    width: 50%;
+    align-self: center;
+    display: flex;
+    margin: 0 300px 0 300px;
+  }
+  .monthyear-select {
+    width: 70%;
+    display: inline;
+    margin-right: 40px;
+}
   

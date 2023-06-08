@@ -34,10 +34,12 @@ class Home extends BaseController
                 helper(['form', 'url']);
                 
                 $data['error'] = '';
+                $data['months'] = $this->getMonth();
+                $data['years'] = $this->getYear();
                 return view('header_view')
                     . view('report_home', $data)
                     . view('footer_view');
-            } else if($session->get('role') != 'DOPT_ADMIN') {
+            } else if($session->get('role') == 'DOPT_ADMIN') {
                 return $this->response->redirect(base_url('/dashboard?ati=&program='));
 						
             }else {
@@ -168,7 +170,7 @@ class Home extends BaseController
                         
                         echo json_encode($userData);
                         
-                    }
+                    } 
                 }
             } else {
                 return $this->response->redirect(base_url('/'));
@@ -371,6 +373,41 @@ class Home extends BaseController
                 . view('footer_view');
         } else {
             return $this->response->redirect(base_url('/'));
+        }
+    }
+
+    public function getMonth() 
+    {
+        try {
+            helper('session');
+            if (session_exists()) {
+
+                $enrolment = new UserEnrolmentCourse();
+
+                $month = $enrolment->getCompletionMonth()->getResult();
+                return $month;
+            } else {
+                return $this->response->redirect(base_url('/'));
+            }
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+    public function getYear() 
+    {
+        try {
+            helper('session');
+            if (session_exists()) {
+
+                $enrolment = new UserEnrolmentCourse();
+
+                $year = $enrolment->getCompletionYear()->getResult();
+                return $year;
+            } else {
+                return $this->response->redirect(base_url('/'));
+            }
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
     }
 }

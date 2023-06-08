@@ -232,7 +232,7 @@
               ?>
             </div>
           </td> -->
-          <td colspan="2">
+          <td>
             <div class="chart-container">
 
               <div class="line-chart-container" >
@@ -434,6 +434,7 @@
         options: useroptions
       });
 
+
       //  ENROLMENT OVERVIEW
 
       var enrolmentctx = $("#enrolment-line-chart");
@@ -568,6 +569,23 @@
 
 
 
+    });
+
+    $(document).ready(function () {
+      var className = document.getElementsByClassName('dashboard-item-value');
+   for(var index=0;index < className.length;index++){
+    var value = className[index].value;
+      className[index].innerText = className[index].innerText.toLocaleString('en-IN');
+      // console.log(className[index].innerText);
+   }
+      // // numbers  =document.getElementsByClassName('dashboard-item-value');
+      // // numbers.forEach(number => {
+        
+      
+      // //   number.toLocaleString('en-IN')
+        
+      // });
+      // document.getElementById('result').innerHTML = number.toLocaleString('en-IN');
     });
 
   </script>

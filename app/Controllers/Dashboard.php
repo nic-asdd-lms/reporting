@@ -65,13 +65,13 @@ class Dashboard extends BaseController
 
                 foreach ($learnerChartData->getResult() as $row) {
                     $data['label'][] = $row->status;
-                    $data['data'][] = (int) $row->users;
+                    $data['data'][] = $row->users;
 
                 }
 
                 foreach ($monthChartData->getResult() as $row) {
                     $data['monthlabel'][] = $row->status;
-                    $data['monthdata'][] = (int) $row->users;
+                    $data['monthdata'][] = $row->users;
 
                 }
                 $data['chart_data'] = json_encode($data);
@@ -184,31 +184,31 @@ class Dashboard extends BaseController
                 $lastUpdate = new DataUpdateModel();
 
                 $orgData = $orgModel->getOrganisationCount();
-                $data['orgCount'] = $orgData->getResultArray()[0]['count'];
+                $data['orgCount'] = ($orgData->getResultArray()[0]['count']);
 
                 $userData = $userModel->getUserCount();
-                $data['userCount'] = $userData->getResultArray()[0]['count'];
+                $data['userCount'] = ($userData->getResultArray()[0]['count']);
 
                 $courseData = $courseModel->getCourseCount();
-                $data['courseCount'] = $courseData->getResultArray()[0]['count'];
+                $data['courseCount'] = ($courseData->getResultArray()[0]['count']);
 
                 $providerData = $courseModel->getProviderCount();
-                $data['providerCount'] = $providerData->getResultArray()[0]['count'];
+                $data['providerCount'] = ($providerData->getResultArray()[0]['count']);
 
                 $enrolmentData = $enrolmentCourse->getEnrolmentCount();
-                $data['enrolmentCount'] = $enrolmentData->getResultArray()[0]['count'];
+                $data['enrolmentCount'] = ($enrolmentData->getResultArray()[0]['count']);
 
                 $completionData = $enrolmentCourse->getCompletionCount();
-                $data['completionCount'] = $completionData->getResultArray()[0]['count'];
+                $data['completionCount'] = ($completionData->getResultArray()[0]['count']);
 
                 $uniqueEnrolmentData = $enrolmentCourse->getUniqueEnrolmentCount();
-                $data['uniqueEnrolmentCount'] = $uniqueEnrolmentData->getResultArray()[0]['count'];
+                $data['uniqueEnrolmentCount'] = ($uniqueEnrolmentData->getResultArray()[0]['count']);
 
                 $uniqueCompletionData = $enrolmentCourse->getUniqueCompletionCount();
-                $data['uniqueCompletionCount'] = $uniqueCompletionData->getResultArray()[0]['count'];
+                $data['uniqueCompletionCount'] = ($uniqueCompletionData->getResultArray()[0]['count']);
 
                 $durationtData = $courseModel->getContentHours();
-                $data['contentHours'] = (int) $durationtData->getResultArray()[0]['sum'];
+                $data['contentHours'] = ($durationtData->getResultArray()[0]['sum']);
 
                 $learnerTableData = $enrolmentCourse->dashboardTable('', '', false);
                 $learnerChartData = $enrolmentCourse->dashboardChart('', '', false);
@@ -221,7 +221,7 @@ class Dashboard extends BaseController
 
                 $monthWiseUserOnboarding = $userModel->getMonthWiseUserOnboardingChart();
                 $monthWiseTotalUsers = $userModel->getMonthWiseTotalUserChart();
-                // $userChartData = $userModel->dashboardChart(false);
+                $userRoleChartData = $userModel->roleDashboardChart();
 
 
                 $monthWiseEnrolment = $enrolmentCourse->getMonthWiseEnrolmentCount();
@@ -249,40 +249,44 @@ class Dashboard extends BaseController
                 
                 foreach ($courseChartData->getResult() as $row) {
                     $data['courselabel'][] = $row->status;
-                    $data['coursedata'][] = (int) $row->count;
+                    $data['coursedata'][] = (int) ($row->count);
                 }
 
                 foreach ($monthChartData->getResult() as $row) {
                     $data['monthlabel'][] = $row->status;
-                    $data['monthdata'][] = (int) $row->users;
+                    $data['monthdata'][] = (int)($row->users);
                 }
 
                 foreach ($monthWiseUserOnboarding->getResult() as $row) {
                     $data['onboardingMonth'][] = $row->creation_month;
-                    $data['onboardingCount'][] = $row->count;
+                    $data['onboardingCount'][] = (int)($row->count);
                 }
 
                 foreach ($monthWiseTotalUsers->getResult() as $row) {
                     $data['totalUserMonth'][] = $row->creation_month;
-                    $data['totalUserCount'][] = $row->sum;
+                    $data['totalUserCount'][] = (int)($row->sum);
                 }
 
                 foreach ($monthWiseEnrolment->getResult() as $row) {
                     $data['monthWiseEnrolmentMonth'][] = $row->enrolled_month;
-                    $data['monthWiseEnrolmentCount'][] = $row->count;
+                    $data['monthWiseEnrolmentCount'][] = (int)($row->count);
                 }
                 foreach ($monthWiseCompletion->getResult() as $row) {
                     $data['monthWiseCompletionMonth'][] = $row->completed_month;
-                    $data['monthWiseCompletionCount'][] = $row->count;
+                    $data['monthWiseCompletionCount'][] = (int)($row->count);
                 }
                 
                 foreach ($monthWiseTotalEnrolment->getResult() as $row) {
                     $data['totalEnrolmentMonth'][] = $row->enrolled_month;
-                    $data['totalEnrolmentCount'][] = $row->sum;
+                    $data['totalEnrolmentCount'][] = (int)($row->sum);
                 }
                 foreach ($monthWiseTotalCompletion->getResult() as $row) {
                     $data['totalCompletionMonth'][] = $row->completed_month;
-                    $data['totalCompletionCount'][] = $row->sum;
+                    $data['totalCompletionCount'][] = (int)($row->sum);
+                }
+                foreach ($userRoleChartData->getResult() as $row) {
+                    $data['roleName'][] = $row->role;
+                    $data['roleCount'][] = (int)($row->count);
                 }
                 
                 $data['chart_data'] = json_encode($data);
@@ -368,6 +372,18 @@ class Dashboard extends BaseController
 
     }
 
+    public function format_number($number) 
+    {
+        //123456789 => 12,34,56,789
+        $crores = floor($number / 10000000);
+
+        $lakhs = floor(($number % 10000000)/100000);
+$thousands = $number % 100000;
+
+$formatted = number_format($lakhs) . ','.number_format($lakhs) . ',' . number_format($thousands);
+
+return $formatted;
+    }
     public function getDoptReport()
     {
         try {

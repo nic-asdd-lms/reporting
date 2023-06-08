@@ -1018,6 +1018,19 @@ class MasterUserModel extends Model
 
     }
 
+    public function roleDashboardChart()
+    {
+        $builder = $this->db->table('master_user');
+        
+        $builder->select('unnest(string_to_array(roles,\' / \')) as role, count(*)');
+
+        $builder->groupBy('role');
+        $builder->orderBy('count', 'desc');
+
+        return $builder->get();
+
+    }
+
 }
 
 ?>
