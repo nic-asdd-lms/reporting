@@ -1271,20 +1271,30 @@ not_started_users as
     public function dashboardTable($ati, $program, $isMonthWise)
     {
         $builder = $this->db->table('user_course_enrolment');
-        $enrolled = $this->db->table('user_course_enrolment');
+        // $enrolled = $this->db->table('user_course_enrolment');
 
         $builder->select('completion_status,count(*) as users');
-        $enrolled->select('\'Enrolled\',count(*)  as users');
+        // $enrolled->select('\'Total Enrolments\' as completion_status,count(*)  as users');
         if ($isMonthWise == true) {
             $builder->where('to_char(to_date(enrolled_date,\'DD/MM/YYYY\'), \'MONTH YYYY\')  = to_char(current_date, \'MONTH YYYY\')');
-            $enrolled->where('to_char(to_date(enrolled_date,\'DD/MM/YYYY\'), \'MONTH YYYY\')  = to_char(current_date, \'MONTH YYYY\')');
+            // $enrolled->where('to_char(to_date(enrolled_date,\'DD/MM/YYYY\'), \'MONTH YYYY\')  = to_char(current_date, \'MONTH YYYY\')');
 
         }
 
-        $builder->union($enrolled);
+        // $builder->union($enrolled);
         $builder->groupBy('completion_status');
-        $builder->orderBy('users', 'desc');
+        // $builder->orderBy('array_position(array[\'Not Started\',\'In-Progress\',\'Completed\',\'Total Enrolments\'], completion_status::text)');
 
+        return $builder->get();
+
+    }
+
+    public function learnerDashboardTableFooter()
+    {
+        $builder = $this->db->table('user_course_enrolment');
+        
+        $builder->select('count(*)  as users');
+        
         return $builder->get();
 
     }

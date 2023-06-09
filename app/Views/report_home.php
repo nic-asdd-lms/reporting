@@ -1070,6 +1070,7 @@
                             <!-- <option value="rozgarMelaKpProgram">Rozgar Mela users enrolled in Karmayogi Prarambh Program</option> -->
                             <option value="rozgarMelaReport">Rozgar Mela organisation-wise summary</option>
                             <option value="rozgarMelaSummary">Rozgar Mela Course-wise summary</option>
+                            <option value="designationWiseCount">Designation-wise user count</option>
                         </select>
 
                     </div>

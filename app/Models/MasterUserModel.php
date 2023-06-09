@@ -1001,6 +1001,36 @@ class MasterUserModel extends Model
 
     }
 
+    public function getDesignationWiseUserCount($limit, $offset, $search, $orderBy, $orderDir)
+    {
+        try {
+            $table = new \CodeIgniter\View\Table();
+
+            $builder = $this->db->table('master_user');
+            $builder->select('designation, count(*)');
+            $builder->where('designation IS NOT NULL');
+            if ($search != '') {
+
+                $builder->like('designation', strtolower($search));
+                $builder->orLike('designation', strtoupper($search));
+                $builder->orLike('designation', ucfirst($search));
+            }
+
+            $builder->groupBy('designation');
+            $builder->orderBy((int) $orderBy + 1, $orderDir);
+            
+            if ($limit != -1)
+                $builder->limit($limit, $offset);
+            $query = $builder->get();
+            // print_r($builder);
+            return $query;
+
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+
     public function dashboardChart($isMonthWise)
     {
         $builder = $this->db->table('master_user');

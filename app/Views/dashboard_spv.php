@@ -47,10 +47,10 @@
       <hr />
       <table>
         <tr>
-          <td style="width:25%">
+          <td class="dashboard-summary-item">
             <div class="dashboard-item">
               <div>
-                <label class="dashboard-item-value">
+                <label class="dashboard-item-value numformat">
                   <?php echo $orgCount; ?>
                 </label>
               </div>
@@ -59,10 +59,10 @@
               </div>
             </div>
           </td>
-          <td style="width:25%">
+          <td class="dashboard-summary-item">
             <div class="dashboard-item">
               <div>
-                <label class="dashboard-item-value">
+                <label class="dashboard-item-value numformat">
                   <?php echo $userCount; ?>
                 </label>
               </div>
@@ -71,10 +71,10 @@
               </div>
             </div>
           </td>
-          <td style="width:25%">
+          <td class="dashboard-summary-item">
             <div class="dashboard-item">
               <div>
-                <label class="dashboard-item-value">
+                <label class="dashboard-item-value numformat">
                   <?php echo $courseCount; ?>
                 </label>
               </div>
@@ -83,10 +83,10 @@
               </div>
             </div>
           </td>
-          <td style="width:25%">
+          <td class="dashboard-summary-item">
             <div class="dashboard-item">
               <div>
-                <label class="dashboard-item-value">
+                <label class="dashboard-item-value numformat">
                   <?php echo $providerCount; ?>
                 </label>
               </div>
@@ -95,13 +95,23 @@
               </div>
             </div>
           </td>
+          <td>
+            <div class="dashboard-item">
+              <!-- <hr /> -->
+              <label class="dashboard-item-value numformat">
+                <?php echo $contentHours; ?>
+              </label>
+              <label class="dashboard-item-header">Content Hours</label>
+            </div>
+          </td>
+          
         </tr>
 
         <tr>
           <td>
             <div class="dashboard-item">
               <!-- <hr /> -->
-              <label class="dashboard-item-value">
+              <label class="dashboard-item-value numformat">
                 <?php echo $enrolmentCount; ?>
               </label>
               <label class="dashboard-item-header">Enrolments</label>
@@ -110,7 +120,7 @@
           <td>
             <div class="dashboard-item">
               <!-- <hr /> -->
-              <label class="dashboard-item-value">
+              <label class="dashboard-item-value numformat">
                 <?php echo $completionCount; ?>
               </label>
               <label class="dashboard-item-header">Completions</label>
@@ -119,7 +129,7 @@
           <td>
             <div class="dashboard-item">
               <!-- <hr /> -->
-              <label class="dashboard-item-value">
+              <label class="dashboard-item-value numformat">
                 <?php echo $uniqueEnrolmentCount; ?>
               </label>
               <label class="dashboard-item-header">Unique Users Enrolled</label>
@@ -128,13 +138,22 @@
           <td>
             <div class="dashboard-item">
               <!-- <hr /> -->
-              <label class="dashboard-item-value">
+              <label class="dashboard-item-value numformat">
                 <?php echo $uniqueCompletionCount; ?>
               </label>
               <label class="dashboard-item-header">Unique Users Completed</label>
             </div>
           </td>
-
+          <td>
+            <div class="dashboard-item">
+              <!-- <hr /> -->
+              <label class="dashboard-item-value numformat">
+                <?php echo $learningHours; ?>
+              </label>
+              <label class="dashboard-item-header">Learning Hours</label>
+            </div>
+          </td>
+          
         </tr>
 
 
@@ -572,12 +591,12 @@
     });
 
     $(document).ready(function () {
-      var className = document.getElementsByClassName('dashboard-item-value');
-      for (var index = 0; index < className.length; index++) {
-        var value = className[index].value;
-        className[index].innerText = Number(className[index].innerText).toLocaleString('en-IN');
-      }
-      var className = document.getElementsByClassName('dashboard-column');
+      // var className = document.getElementsByClassName('dashboard-item-value');
+      // for (var index = 0; index < className.length; index++) {
+      //   var value = className[index].value;
+      //   className[index].innerText = Number(className[index].innerText).toLocaleString('en-IN');
+      // }
+      var className = document.getElementsByClassName('numformat');
       for (var index = 0; index < className.length; index++) {
         var value = className[index].value;
         number = Number(className[index].innerText);

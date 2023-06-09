@@ -70,6 +70,22 @@ class MasterCourseModel extends Model
             throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
     }
+    public function getLearningHours()
+    {
+        try {
+            $builder = $this->db->table('master_course');
+            $builder->join('user_course_enrolment','user_course_enrolment.course_id = master_course.course_id');
+            $builder->select('sum(durationh)');
+            $builder->where('status', 'Live');
+            $builder->where('completion_status', 'Completed');
+            $query = $builder->get();
+
+            // echo $org_id,json_encode($query);
+            return $query;
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
     public function getCourseName($course_id)
     {
         try {

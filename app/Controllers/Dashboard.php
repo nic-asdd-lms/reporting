@@ -208,7 +208,10 @@ class Dashboard extends BaseController
                 $data['uniqueCompletionCount'] = ($uniqueCompletionData->getResultArray()[0]['count']);
 
                 $durationtData = $courseModel->getContentHours();
-                $data['contentHours'] = ($durationtData->getResultArray()[0]['sum']);
+                $data['contentHours'] = (int) ($durationtData->getResultArray()[0]['sum']);
+                
+                $learningHoursData = $courseModel->getlearningHours();
+                $data['learningHours'] = (int)($learningHoursData->getResultArray()[0]['sum']);
 
                 $learnerTableData = $enrolmentCourse->dashboardTable('', '', false);
                 $learnerChartData = $enrolmentCourse->dashboardChart('', '', false);
@@ -235,6 +238,7 @@ class Dashboard extends BaseController
 
                 $learnerheader = ['Status', 'Count'];
                 $learnertable->setHeading($learnerheader);
+                // $learnertable->setFooting('Total Enrolments',$enrolmentCourse->learnerDashboardTableFooter()->getResultArray()[0]['users']);
 
                 $courseheader = ['Status', 'Count'];
                 $coursetable->setHeading($courseheader);
@@ -339,7 +343,8 @@ class Dashboard extends BaseController
 
                 $learnersarr = $learnerTableData->getResultArray(); 
                 usort($learnersarr, fn($a, $b) => $b['users'] <=> $a['users']);
-
+                array_push($learnersarr,['Total Enrolments',$enrolmentCourse->learnerDashboardTableFooter()->getResultArray()[0]['users']]);
+                
                 $coursearr = $courseTableData->getResultArray(); 
                 usort($coursearr, fn($a, $b) => $b['count'] <=> $a['count']);
 
