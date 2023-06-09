@@ -134,7 +134,7 @@
               <label class="dashboard-item-header">Unique Users Completed</label>
             </div>
           </td>
-          
+
         </tr>
 
 
@@ -166,7 +166,7 @@
           </td>
         </tr>
         <tr>
-         <td style="width:50%;padding: 70px;  ">
+          <td style="width:50%;padding: 70px;  ">
             <div class="chart-container" style="width:500px">
 
               <div class="line-chart-container" style="width:600px; height:300px">
@@ -235,7 +235,7 @@
           <td>
             <div class="chart-container">
 
-              <div class="line-chart-container" >
+              <div class="line-chart-container">
 
                 <canvas id="user-line-chart" style="width:800px; height:400px"></canvas>
 
@@ -247,10 +247,10 @@
       </table>
     </div>
 
-   
 
 
-</section>
+
+  </section>
 
 
   <!-- javascript -->
@@ -415,17 +415,17 @@
           }
         },
         scales: {
-            xAxes: [{
-               gridLines: {
-                  display: false
-               }
-            }],
-            yAxes: [{
-               gridLines: {
-                  display: false
-               }
-            }]
-       }
+          xAxes: [{
+            gridLines: {
+              display: false
+            }
+          }],
+          yAxes: [{
+            gridLines: {
+              display: false
+            }
+          }]
+        }
       };
 
       var userchart = new Chart(userctx, {
@@ -481,17 +481,17 @@
           }
         },
         scales: {
-            xAxes: [{
-               gridLines: {
-                  display: false
-               }
-            }],
-            yAxes: [{
-               gridLines: {
-                  display: false
-               }
-            }]
-       }
+          xAxes: [{
+            gridLines: {
+              display: false
+            }
+          }],
+          yAxes: [{
+            gridLines: {
+              display: false
+            }
+          }]
+        }
       };
 
       var enrolmentchart = new Chart(enrolmentctx, {
@@ -546,17 +546,17 @@
           }
         },
         scales: {
-            xAxes: [{
-               gridLines: {
-                  display: false
-               }
-            }],
-            yAxes: [{
-               gridLines: {
-                  display: false
-               }
-            }]
-       }
+          xAxes: [{
+            gridLines: {
+              display: false
+            }
+          }],
+          yAxes: [{
+            gridLines: {
+              display: false
+            }
+          }]
+        }
       };
 
       var completionchart = new Chart(completionctx, {
@@ -573,19 +573,18 @@
 
     $(document).ready(function () {
       var className = document.getElementsByClassName('dashboard-item-value');
-   for(var index=0;index < className.length;index++){
-    var value = className[index].value;
-      className[index].innerText = className[index].innerText.toLocaleString('en-IN');
-      // console.log(className[index].innerText);
-   }
-      // // numbers  =document.getElementsByClassName('dashboard-item-value');
-      // // numbers.forEach(number => {
-        
-      
-      // //   number.toLocaleString('en-IN')
-        
-      // });
-      // document.getElementById('result').innerHTML = number.toLocaleString('en-IN');
+      for (var index = 0; index < className.length; index++) {
+        var value = className[index].value;
+        className[index].innerText = Number(className[index].innerText).toLocaleString('en-IN');
+      }
+      var className = document.getElementsByClassName('dashboard-column');
+      for (var index = 0; index < className.length; index++) {
+        var value = className[index].value;
+        number = Number(className[index].innerText);
+        if (!isNaN(number))
+          className[index].innerText = number.toLocaleString('en-IN');
+      }
+
     });
 
   </script>

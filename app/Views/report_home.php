@@ -470,11 +470,11 @@
                         html = '';
                         if (reportType == 'topOrgCourseWise') {
                             for (var count = 0; count < data.length; count++) {
-                                html += '<option class="datalist-options" data-value="' + data[count].course_id + '">' + data[count].course_name + '</option>';
+                                html += '<option class="datalist-options" data-value="' + data[count].course_id + '">' + data[count].course_name  + ' [by ' + data[count].org_name + ']</option>';
                             }
                         } else if (reportType == 'topOrgProgramWise') {
                             for (var count = 0; count < data.length; count++) {
-                                html += '<option class="datalist-options" data-value="' + data[count].program_id + '">' + data[count].program_name + '</option>';
+                                html += '<option class="datalist-options" data-value="' + data[count].program_id + '">' + data[count].program_name  + ' [by ' + data[count].org_name + ']</option>';
                             }
                         } else if (reportType == 'topOrgCollectionWise') {
                             for (var count = 0; count < data.length; count++) {
@@ -1066,6 +1066,8 @@
                             <option value="notSelected">-- Select Report Type --</option>
                             <option value="rozgarMelaUserList">Rozgar Mela user list</option>
                             <option value="rozgarMelaUserReport">Rozgar Mela user enrolment report</option>
+                            <option value="rozgarMelaKpCollection">Rozgar Mela users enrolled in Karmayogi Prarambh Module</option>
+                            <!-- <option value="rozgarMelaKpProgram">Rozgar Mela users enrolled in Karmayogi Prarambh Program</option> -->
                             <option value="rozgarMelaReport">Rozgar Mela organisation-wise summary</option>
                             <option value="rozgarMelaSummary">Rozgar Mela Course-wise summary</option>
                         </select>

@@ -75,6 +75,7 @@ class Login extends BaseController
 			if($isValid){
 				$msg = "Valid API user"; 
 				$userdetails = $user->getUserIDbyEmail($email);
+				
 				if($userdetails){
 						$msg = "Email Exists";
 						$userid = $userdetails[0]['user_id'] ;  

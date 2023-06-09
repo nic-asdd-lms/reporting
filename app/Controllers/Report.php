@@ -474,9 +474,9 @@ class Report extends BaseController
                     $resultFiltered = $enrolment->getTopCourseInMonth($month, $topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'rozgarMelaUserReport') {
-                    $result = $enrolment->getRozgarMelaUserReport($limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getRozgarMelaUserReport(-1, 0, '', $orderBy, $orderDir);
-                    $resultFiltered = $enrolment->getRozgarMelaUserReport(-1, 0, $search, $orderBy, $orderDir);
+                    $result = $enrolment->getRozgarMelaUserEnrolmentReport($limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getRozgarMelaUserEnrolmentReport(-1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getRozgarMelaUserEnrolmentReport(-1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'rozgarMelaReport') {
                     $result = $enrolment->getRozgarMelaReport($limit, $offset, $search, $orderBy, $orderDir);
@@ -492,6 +492,16 @@ class Report extends BaseController
                     $result = $user->getRozgarMelaUserList($limit, $offset, $search, $orderBy, $orderDir);
                     $fullResult = $user->getRozgarMelaUserList(-1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getRozgarMelaUserList(-1, 0, $search, $orderBy, $orderDir);
+
+                }  else if ($reportType == 'rozgarMelaKpCollection') {
+                    $result = $enrolment->getRozgarMelaKpCollectionReport($limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getRozgarMelaKpCollectionReport(-1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getRozgarMelaKpCollectionReport(-1, 0, $search, $orderBy, $orderDir);
+
+                }  else if ($reportType == 'rozgarMelaKpProgram') {
+                    $result = $enrolmentProgram->getRozgarMelaKpProgramReport($limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolmentProgram->getRozgarMelaKpProgramReport(-1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolmentProgram->getRozgarMelaKpProgramReport(-1, 0, $search, $orderBy, $orderDir);
 
                 } 
 
@@ -1314,7 +1324,7 @@ $monthName = $dateObj->format('F');
                     $reportTitle = 'Course-wise Enrolment Summary of Rozgar Mela Users in Karmayogi Prarambh Module';
 
                 } else if ($reportType == 'rozgarMelaUserReport') {
-                    $header = ['Name', 'Email', 'Organisation', 'Designation', 'Status'];
+                    $header = ['Name', 'Email', 'Organisation', 'Designation', 'Enrolled','Not Started', 'In Progress', 'Completed'];
                     $session->setTempdata('fileName', 'RozgarMelaSummary', 300);
                     $reportTitle = 'Rozgar Mela user Enrolment Report';
 
@@ -1322,6 +1332,16 @@ $monthName = $dateObj->format('F');
                     $header = ['Name', 'Email', 'Organisation', 'Designation'];
                     $session->setTempdata('fileName', 'RozgarMelaUserList', 300);
                     $reportTitle = 'Rozgar Mela User List';
+
+                } else if ($reportType == 'rozgarMelaKpCollection') {
+                    $header = ['Name', 'Email', 'Organisation', 'Designation', 'Enrolled','Not Started', 'In Progress', 'Completed'];
+                    $session->setTempdata('fileName', 'RozgarMelaUsers_KarmayogiPrarambhCollectionEnrolmentReport', 300);
+                    $reportTitle = 'Rozgar Mela Users Enrolled in Karmayogi Prarambh Module';
+
+                } else if ($reportType == 'rozgarMelaKpProgram') {
+                    $header = ['Name', 'Email', 'Organisation', 'Designation', 'Batch ID','Status', 'Completed On'];
+                    $session->setTempdata('fileName', 'RozgarMelaUsers_KarmayogiPrarambhProgramEnrolmentReport', 300);
+                    $reportTitle = 'Rozgar Mela User Enrolled in Karmayogi Prarambh Program';
 
                 }
                 $table->setHeading($header);
