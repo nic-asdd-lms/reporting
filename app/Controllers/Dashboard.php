@@ -218,6 +218,9 @@ class Dashboard extends BaseController
 
                 $courseTableData = $courseModel->dashboardTable(false);
                 $courseChartData = $courseModel->dashboardChart(false);
+                $monthWiseCoursePublished = $courseModel->getMonthWiseCoursePublished();
+                $monthWiseTotalCoursePublished = $courseModel->getMonthWiseTotalCoursePublished();
+                
 
                 $monthTableData = $enrolment->dashboardTable('', '', true);
                 $monthChartData = $enrolment->dashboardChart('', '', true);
@@ -233,14 +236,21 @@ class Dashboard extends BaseController
                 $monthWiseTotalEnrolment = $enrolmentCourse->getMonthWiseTotalEnrolmentCount();
                 $monthWiseTotalCompletion = $enrolmentCourse->getMonthWiseTotalCompletionCount();
 
+                $monthWiseLearningHours = $enrolmentCourse->getMonthWiseLearningHours();
+                $monthWiseTotalLearningHours = $enrolmentCourse->getMonthWiseTotalLearningHours();
+
                 
                 // $data = [];
 
-                $learnerheader = ['Status', 'Count'];
+                $learnerheader = ['Status', ['data'=>'Count','class'=>'dashboard-table-header-count']];
                 $learnertable->setHeading($learnerheader);
+                $learnersarr = $learnerTableData->getResultArray(); 
+                usort($learnersarr, fn($a, $b) => $b['users'] <=> $a['users']);
+                // array_push($learnersarr,['Total Enrolments',$enrolmentCourse->learnerDashboardTableFooter()->getResultArray()[0]['users']]);
+                
                 // $learnertable->setFooting('Total Enrolments',$enrolmentCourse->learnerDashboardTableFooter()->getResultArray()[0]['users']);
 
-                $courseheader = ['Status', 'Count'];
+                $courseheader = ['Status', ['data'=>'Count','class'=>'dashboard-table-header-count']];
                 $coursetable->setHeading($courseheader);
 
                 $monthheader = ['Status', 'Count'];
@@ -250,12 +260,37 @@ class Dashboard extends BaseController
                     $data['label'][] = $row->completion_status;
                     $data['data'][] = (int) $row->users;
                 }
+
+                foreach ($learnersarr as $row) {
+                    $keyCell = ['data'=>$row['completion_status'],'class'=>'dashboard-column'];
+                    $valueCell = ['data'=>$row['users'],'class'=>'dashboard-value-column numformat'];
+                    $learnertable->addRow($keyCell,$valueCell);
+                }
+                $keyCell = ['data'=>'Total Enrolments','class'=>'dashboard-footer'];
+                $valueCell = ['data'=>$enrolmentCourse->learnerDashboardTableFooter()->getResultArray()[0]['users'],'class'=>'dashboard-footer dashboard-value-column numformat'];
+                $learnertable->addRow($keyCell,$valueCell);
                 
                 foreach ($courseChartData->getResult() as $row) {
                     $data['courselabel'][] = $row->status;
                     $data['coursedata'][] = (int) ($row->count);
                 }
-
+                $coursearr = $courseTableData->getResultArray(); 
+                usort($coursearr, fn($a, $b) => $b['count'] <=> $a['count']);
+                foreach ($coursearr as $row) {
+                    $keyCell = ['data'=>$row['status'],'class'=>'dashboard-column'];
+                    $valueCell = ['data'=>$row['count'],'class'=>'dashboard-value-column numformat'];
+                    $coursetable->addRow($keyCell,$valueCell);
+                }
+                
+                foreach ($monthWiseCoursePublished->getResult() as $row) {
+                    $data['coursePublishMonth'][] = $row->publish_month;
+                    $data['coursePublishCount'][] = (int)($row->count);
+                }
+                foreach ($monthWiseTotalCoursePublished->getResult() as $row) {
+                    $data['totalCoursePublishMonth'][] = $row->publish_month;
+                    $data['totalCoursePublishCount'][] = (int)($row->sum);
+                }
+                
                 foreach ($monthChartData->getResult() as $row) {
                     $data['monthlabel'][] = $row->status;
                     $data['monthdata'][] = (int)($row->users);
@@ -292,7 +327,15 @@ class Dashboard extends BaseController
                     $data['roleName'][] = $row->role;
                     $data['roleCount'][] = (int)($row->count);
                 }
+                foreach ($monthWiseLearningHours->getResult() as $row) {
+                    $data['learningHoursMonth'][] = $row->month;
+                    $data['monthWiseLearningHours'][] = (int)($row->sum);
+                }
                 
+                foreach ($monthWiseTotalLearningHours->getResult() as $row) {
+                    $data['totalLearningHoursMonth'][] = $row->month;
+                    $data['totalearningHours'][] = (int)($row->sum);
+                }
                 $data['chart_data'] = json_encode($data);
                 
                 $tabledata = [];
@@ -341,18 +384,13 @@ class Dashboard extends BaseController
                 $data['lastUpdated'] = '[Data as on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
                 $data['reportTitle'] = 'Dashboard';
 
-                $learnersarr = $learnerTableData->getResultArray(); 
-                usort($learnersarr, fn($a, $b) => $b['users'] <=> $a['users']);
-                array_push($learnersarr,['Total Enrolments',$enrolmentCourse->learnerDashboardTableFooter()->getResultArray()[0]['users']]);
                 
-                $coursearr = $courseTableData->getResultArray(); 
-                usort($coursearr, fn($a, $b) => $b['count'] <=> $a['count']);
-
+                
                 $montharr = $monthTableData->getResultArray(); 
                 usort($montharr, fn($a, $b) => $b['users'] <=> $a['users']);
 
-                $data['learner_overview'] = $learnertable->generate($learnersarr);
-                $data['course_overview'] = $coursetable->generate($coursearr);
+                $data['learner_overview'] = $learnertable->generate();
+                $data['course_overview'] = $coursetable->generate();
                 $data['month_overview'] = $monthtable->generate($montharr);
 
                 return view('header_view')

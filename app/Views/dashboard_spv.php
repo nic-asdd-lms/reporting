@@ -208,6 +208,30 @@
             </div>
           </td>
         </tr>
+        <tr>
+          <td style="width:50%;padding: 70px;  ">
+            <div class="chart-container" style="width:500px">
+
+              <div class="line-chart-container" style="width:600px; height:300px">
+
+                <canvas id="learninghours-line-chart"></canvas>
+
+              </div>
+
+            </div>
+          </td>
+          <!-- <td style="width:50%;padding: 70px; ">
+            <div class="chart-container" style="width:500px">
+
+              <div class="line-chart-container" style="width:600px; height:300px">
+
+                <canvas id="completion-line-chart"></canvas>
+
+              </div>
+
+            </div>
+          </td> -->
+        </tr>
       </table>
 
     </div>
@@ -230,6 +254,26 @@
               <div class="pie-chart-container">
 
                 <canvas id="course-pie-chart"></canvas>
+
+              </div>
+
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <!-- <td style="width:50%;padding-left: 80px;">
+            <div class="table-container">
+              <?php
+              //echo $course_overview;
+              ?>
+            </div>
+          </td> -->
+          <td  style="width:50%;padding: 70px; ">
+            <div class="chart-container">
+
+              <div class="line-chart-container"  style="width:500px">
+
+                <canvas id="coursePublished-line-chart" style="width:600px; height:350px"></canvas>
 
               </div>
 
@@ -388,6 +432,70 @@
         options: courseoptions
       });
 
+      var coursePublishctx = $("#coursePublished-line-chart");
+      var coursePublishdata = {
+        labels: cData.coursePublishMonth,
+        datasets: [
+          {
+            label: "Courses Published",
+            data: cData.coursePublishCount,
+            borderColor: "#ad99bd",
+            pointBackgroundColor: "#ad99bd",
+            pointBorderColor: "#ad99bd",
+            pointHoverBackgroundColor: "#ad99bd",
+            pointHoverBorderColor: "#ad99bd",
+            pointStyle: 'crossRot'
+          },
+          {
+            label: "Total Courses",
+            data: cData.totalCoursePublishCount,
+            borderColor: "#4bc0c0",
+            pointBackgroundColor: "#4bc0c0",
+            pointBorderColor: "#4bc0c0",
+            pointHoverBackgroundColor: "#4bc0c0",
+            pointHoverBorderColor: "#4bc0c0",
+            pointStyle: 'crossRot'
+          }
+        ]
+      };
+
+      var coursePublishoptions = {
+        responsive: true,
+        title: {
+          display: true,
+          position: "top",
+          text: "Month-wise Courses Published",
+          fontSize: 16,
+          fontColor: "#111"
+        },
+
+        legend: {
+          display: true,
+          position: "bottom",
+          labels: {
+            fontColor: "#333",
+            fontSize: 16
+          }
+        },
+        scales: {
+          xAxes: [{
+            gridLines: {
+              display: false
+            }
+          }],
+          yAxes: [{
+            gridLines: {
+              display: false
+            }
+          }]
+        }
+      };
+
+      var coursePublishchart = new Chart(coursePublishctx, {
+        type: "line",
+        data: coursePublishdata,
+        options: coursePublishoptions
+      });
       //  USER OVERVIEW
 
       var userctx = $("#user-line-chart");
@@ -402,6 +510,7 @@
             pointBorderColor: "#36a2eb",
             pointHoverBackgroundColor: "#36a2eb",
             pointHoverBorderColor: "#36a2eb",
+            pointStyle: 'crossRot'
           },
           {
             label: "Total Users",
@@ -411,6 +520,7 @@
             pointBorderColor: "#ff6384",
             pointHoverBackgroundColor: "#ff6384",
             pointHoverBorderColor: "#ff6384",
+            pointStyle: 'crossRot'
           }
         ]
       };
@@ -468,6 +578,7 @@
             pointBorderColor: "#68bf7c",
             pointHoverBackgroundColor: "#68bf7c",
             pointHoverBorderColor: "#68bf7c",
+            pointStyle: 'crossRot'
           },
           {
             label: "Enrolments in the month",
@@ -477,6 +588,7 @@
             pointBorderColor: "#f4a05a",
             pointHoverBackgroundColor: "#f4a05a",
             pointHoverBorderColor: "#f4a05a",
+            pointStyle: 'crossRot'
           }
         ]
       };
@@ -533,6 +645,7 @@
             pointBorderColor: "#36a2eb",
             pointHoverBackgroundColor: "#36a2eb",
             pointHoverBorderColor: "#36a2eb",
+            pointStyle: 'crossRot'
           },
           {
             label: "Completions in the month",
@@ -542,6 +655,7 @@
             pointBorderColor: "#ff6384",
             pointHoverBackgroundColor: "#ff6384",
             pointHoverBorderColor: "#ff6384",
+            pointStyle: 'crossRot'
           }
         ]
       };
@@ -584,6 +698,72 @@
         options: completionoptions
       });
 
+      // LEARNING HOURS
+
+      var learninghoursctx = $("#learninghours-line-chart");
+      var learninghoursdata = {
+        labels: cData.learningHoursMonth,
+        datasets: [
+          {
+            label: "Total Learning Hours",
+            data: cData.totalearningHours,
+            borderColor: "#5874ce",
+            pointBackgroundColor: "#5874ce",
+            pointBorderColor: "#5874ce",
+            pointHoverBackgroundColor: "#5874ce",
+            pointHoverBorderColor: "#5874ce",
+            pointStyle: 'crossRot'
+          },
+          {
+            label: "Learning Hours in the month",
+            data: cData.monthWiseLearningHours,
+            borderColor: "#a2df95",
+            pointBackgroundColor: "#a2df95",
+            pointBorderColor: "#a2df95",
+            pointHoverBackgroundColor: "#a2df95",
+            pointHoverBorderColor: "#a2df95",
+            pointStyle: 'crossRot'
+          }
+        ]
+      };
+
+      var learninghoursoptions = {
+        responsive: true,
+        title: {
+          display: true,
+          position: "top",
+          text: "Month-wise Learning Hours",
+          fontSize: 16,
+          fontColor: "#111"
+        },
+
+        legend: {
+          display: true,
+          position: "bottom",
+          labels: {
+            fontColor: "#333",
+            fontSize: 16
+          }
+        },
+        scales: {
+          xAxes: [{
+            gridLines: {
+              display: false
+            }
+          }],
+          yAxes: [{
+            gridLines: {
+              display: false
+            }
+          }]
+        }
+      };
+
+      var learninghourschart = new Chart(learninghoursctx, {
+        type: "line",
+        data: learninghoursdata,
+        options: learninghoursoptions
+      });
 
 
 

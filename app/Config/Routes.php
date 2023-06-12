@@ -52,6 +52,7 @@ $routes->post("/download-report", "Report::downloadExcel");
 $routes->post('/search', 'Home::search');
 $routes->post('/orgSearch', 'Home::orgSearch');
 $routes->get('/getExcelReport', 'Report::downloadExcel');
+$routes->get('/getCsvReport', 'Report::getCsvReport');
 $routes->post('/result', 'Home::result');
 $routes->get('/getReport/(:alpha)', 'Report::getReport/$1');
 $routes->get('/checkOrgOnboarded', 'Home::checkOrgOnboarded');

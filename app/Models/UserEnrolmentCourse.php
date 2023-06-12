@@ -858,6 +858,7 @@ class UserEnrolmentCourse extends Model
         $builder->join('master_user', 'master_user.user_id = user_course_enrolment.user_id ');
         $builder->where('user_course_enrolment.user_id', $userId);
         $builder->where('master_course.status', 'Live');
+        $builder->distinct();
         if ($search != '')
             $builder->where(" (course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtoupper($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%'
                             OR completion_status LIKE '%" . strtolower($search) . "%' OR completion_status LIKE '%" . strtoupper($search) . "%' OR completion_status LIKE '%" . ucfirst($search) . "%'
@@ -1372,6 +1373,47 @@ not_started_users as
 
             return $query;
 
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+
+    }
+
+    public function getMonthWiseLearningHours()
+    {
+        try {
+            $builder = $this->db->table('master_course');
+            $builder->join('user_course_enrolment','user_course_enrolment.course_id = master_course.course_id');
+            $builder->select('to_char(date_trunc(\'MONTH\',to_date(completed_on,\'DD/MM/YYYY\')),\'YYYY/MM\') as month, sum(durationh)');
+            $builder->where('status','Live');
+            $builder->where('completion_status', 'Completed');
+            $builder->groupBy('month');
+            $builder->orderBy('month');
+            $query = $builder->get();
+
+            return $query;
+            
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+
+    }
+
+    public function getMonthWiseTotalLearningHours()
+    {
+        try {
+
+            $query = $this->db->query('SELECT month, sum(learninghours) over (order by month ) from (
+                SELECT to_char(date_trunc(\'MONTH\',to_date(completed_on,\'DD/MM/YYYY\')),\'YYYY/MM\') as month, sum(durationh) as learninghours
+                FROM public.user_course_enrolment
+                JOIN master_course on user_course_enrolment.course_id = master_course.course_id
+                WHERE status=\'Live\'
+                AND completion_status=\'Completed\'
+                GROUP BY month) a
+                ORDER BY month;');
+                        
+            return $query;
+            
         } catch (\Exception $e) {
             throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
         }

@@ -940,6 +940,8 @@
                 </form>
 
             </div>
+            
+            
 
             <div id="Top-Performers" class="tabcontent">
                 <form id="topreportform" class="form-horizontal login_form"
@@ -964,11 +966,13 @@
                             <option value="topCourseEnrolment">Top Courses based on enrolment</option>
                             <option value="topCourseCompletion">Top Courses based on completion</option>
                             <option value="topCourseRating">Top Courses based on rating</option>
+                            <option value="topCoursesCompetencyWise">Top Courses based on competencies tagged</option>
                             <option value="topOrgCourseWise">Top performing organisations course-wise</option>
                             <option value="topOrgProgramWise">Top performing organisations program-wise</option>
                             <option value="topOrgCollectionWise">Top performing organisations curated collection-wise
                             </option>
                             <option value="topCourseInMonth">Top courses in a month based on completion</option>
+                            <option value="topCompetency">Top competencies</option>
                         </select>
                     </div>
                     <hr />
@@ -1004,8 +1008,26 @@
                             </tr>
 
 
+                        </table>
+                        <table class="tbl-input" id="tbl-top-competency" style="display:none">
+                        <tr>
+                                <td style="width:1%"><label class="required"></label></td>
+                                <td colspan="2">
+                                <div class="auto-widget" id="top-competency-type">
+                                        <select class="form-control" id = "competencyType" name = "competencyType">
+                                            <option value="notSelected">--Select Competency Type--</option>
+                                            <option value="Domain">Domain</option>
+                                            <option value="Behavioural">Behavioural</option>
+                                            <option value="Functional">Functional</option>
+                                            <option value="All">Select All</option>
+                                        </select>
+
+                                    </div>
+                                </td>
+                            </tr>
 
                         </table>
+
                         <table class="tbl-month" id="tbl-top-monthyear" style="display:none">
 
                             <tr>
@@ -1071,6 +1093,7 @@
                             <option value="rozgarMelaReport">Rozgar Mela organisation-wise summary</option>
                             <option value="rozgarMelaSummary">Rozgar Mela Course-wise summary</option>
                             <option value="designationWiseCount">Designation-wise user count</option>
+                            <option value="competencySummary">Competency Summary</option>
                         </select>
 
                     </div>

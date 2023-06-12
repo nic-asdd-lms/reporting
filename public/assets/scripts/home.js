@@ -105,28 +105,40 @@ function enable_disable_top(value) {
     course = document.getElementById("tbl-top-course");
     month = document.getElementById("tbl-top-monthyear");
     coursename = document.getElementById("topcoursename");
+    competency = document.getElementById("tbl-top-competency");
+
     if (value.value == "topOrgCourseWise") {
         course.style.display = "block";
         month.style.display = "none";
+        competency.style.display = "none";
         coursename.placeholder = "Search Course";
         coursename.value = "";
     } else if (value.value == "topOrgProgramWise") {
         course.style.display = "block";
         month.style.display = "none";
+        competency.style.display = "none";
         coursename.placeholder = "Search Program";
         coursename.value = "";
     } else if (value.value == "topOrgCollectionWise") {
         course.style.display = "block";
         month.style.display = "none";
+        competency.style.display = "none";
         coursename.placeholder = "Search Curated Collection";
         coursename.value = "";
     } else if (value.value == "topCourseInMonth"){
         course.style.display = "none";
         month.style.display = "block";
+        competency.style.display = "none";
+        
+    } else if (value.value == "topCompetency"){
+        course.style.display = "none";
+        month.style.display = "none";
+        competency.style.display = "block";
         
     } else {
         course.style.display = "none";
         month.style.display = "none";
+        competency.style.display = "none";
         
     }
 

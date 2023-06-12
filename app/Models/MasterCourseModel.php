@@ -486,7 +486,42 @@ class MasterCourseModel extends Model
 
     }
 
+    public function getMonthWiseCoursePublished()
+    {
+        try {
+            $builder = $this->db->table('master_course');
+            $builder->select('to_char(date_trunc(\'MONTH\',to_date(published_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as publish_month, count(*)');
+            $builder->where('status','Live');
+            $builder->groupBy('publish_month');
+            $builder->orderBy('publish_month');
+            $query = $builder->get();
 
+            return $query;
+            
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+
+    }
+
+    public function getMonthWiseTotalCoursePublished()
+    {
+        try {
+            $builder = $this->db->table('master_course');
+            $builder->select('distinct to_char(date_trunc(\'month\',to_date(published_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as publish_month, 
+            sum(count(*) ) over (order by to_char(date_trunc(\'month\',to_date(published_date,\'DD/MM/YYYY\')),\'YYYY/MM\'))');
+            $builder->where('status','Live');
+            $builder->groupBy('publish_month');
+            $builder->orderBy('publish_month');
+            $query = $builder->get();
+
+            return $query;
+            
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+
+    }
 }
 
 ?>

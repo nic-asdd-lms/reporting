@@ -91,6 +91,19 @@ body {
   padding: 10px;
   font-size: 16px;
 }
+.dashboard-table-header-count {
+  background-color: #f9f0f6;
+  border-block-start-style: solid;
+  border-block-start-width: thin;
+  border-block-start-color: #8686865c;
+  border-block-end-style: solid;
+  border-block-end-width: thin;
+  border-block-end-color: #8686865c;
+  color: rgb(87, 89, 96);
+  padding: 10px;
+  font-size: 16px;
+  text-align: right;
+}
 
 .dashboard-footer {
   border-block-start-style: solid;
@@ -272,6 +285,8 @@ h2 {
   padding-right: 30px;
   padding-top: 20px;
 }
+
+
 
 .dashboard-summary-item {
     width:20%;

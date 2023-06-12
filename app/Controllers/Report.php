@@ -16,6 +16,7 @@ use App\Models\UserEnrolmentProgram;
 use App\Models\MasterProgramModel;
 use App\Models\MasterCollectionModel;
 use App\Models\DataUpdateModel;
+use App\Models\CourseCompetencyModel;
 
 use PHPExcel_IOFactory;
 use PHPExcel_Reader_HTML;
@@ -70,6 +71,7 @@ class Report extends BaseController
                 $lastUpdate = new DataUpdateModel();
                 $orgModel = new MasterOrganizationModel();
                 $courseModel = new MasterCourseModel();
+                $competencyModel = new CourseCompetencyModel();
 
                 $reportType = $this->request->uri->getSegments()[1];
                 $data['error'] = '';
@@ -77,6 +79,7 @@ class Report extends BaseController
                 $course = $session->getTempdata('course');
                 $topCount = $session->getTempdata('topCount');
                 $month = $session->getTempdata('monthYear');
+                $competencyType = $session->getTempdata('competencyType');
 
                 // Set report-specific inputs
 
@@ -136,6 +139,9 @@ class Report extends BaseController
                         $org = $session->get('organisation');
                     else
                         $org = '';
+                } else if ($reportType == 'topCompetency') {
+                    $competencyType = $session->getTempdata('competencyType');
+
                 }
 
 
@@ -473,6 +479,16 @@ class Report extends BaseController
                     $fullResult = $enrolment->getTopCourseInMonth($month, $topCount, -1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getTopCourseInMonth($month, $topCount, -1, 0, $search, $orderBy, $orderDir);
 
+                } else if ($reportType == 'topCompetency') {
+                    $result = $competencyModel->getTopCompetencies($competencyType, $topCount, $limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $competencyModel->getTopCompetencies($competencyType, $topCount, -1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $competencyModel->getTopCompetencies($competencyType, $topCount, -1, 0, $search, $orderBy, $orderDir);
+
+                } else if ($reportType == 'topCoursesCompetencyWise') {
+                    $result = $competencyModel->getTopCoursesCompetencyWise($topCount, $limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $competencyModel->getTopCoursesCompetencyWise($topCount, -1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $competencyModel->getTopCoursesCompetencyWise($topCount, -1, 0, $search, $orderBy, $orderDir);
+
                 } else if ($reportType == 'rozgarMelaUserReport') {
                     $result = $enrolment->getRozgarMelaUserEnrolmentReport($limit, $offset, $search, $orderBy, $orderDir);
                     $fullResult = $enrolment->getRozgarMelaUserEnrolmentReport(-1, 0, '', $orderBy, $orderDir);
@@ -507,6 +523,11 @@ class Report extends BaseController
                     $result = $user->getDesignationWiseUserCount($limit, $offset, $search, $orderBy, $orderDir);
                     $fullResult = $user->getDesignationWiseUserCount(-1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getDesignationWiseUserCount(-1, 0, $search, $orderBy, $orderDir);
+
+                } else if ($reportType == 'competencySummary') {
+                    $result = $competencyModel->getCompetencySummary($limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $competencyModel->getCompetencySummary(-1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $competencyModel->getCompetencySummary(-1, 0, $search, $orderBy, $orderDir);
 
                 }
 
@@ -1136,6 +1157,7 @@ class Report extends BaseController
                 $course = $request->getPost('course') ? $request->getPost('course') : $request->getPost('topcourse');
                 $topCount = $request->getPost('topCount');
                 $month = $request->getPost('month');
+                $competencyType = $request->getPost('competencyType') == 'All' ? '' : $request->getPost('competencyType');
 
                 $year = $request->getPost('year');
                 $dateObj = DateTime::createFromFormat('m', $month);
@@ -1147,6 +1169,7 @@ class Report extends BaseController
                 $session->setTempdata('course', $request->getPost('topcourse'), 300);
                 $session->setTempdata('topCount', $request->getPost('topCount'), 300);
                 $session->setTempdata('monthYear', $request->getPost('year') . '/' . $request->getPost('month'), 300);
+                $session->setTempdata('competencyType', $request->getPost('competencyType'), 300);
 
                 $home = new Home();
                 $user = new MasterUserModel();
@@ -1254,6 +1277,16 @@ class Report extends BaseController
                     $session->setTempdata('fileName', 'TopCourse_' . $month . '_' . $year, 300);
                     $reportTitle = 'Top ' . $topCount . ' Courses of ' . $monthName . ', ' . $year . ' based on Completion';
 
+                } else if ($reportType == 'topCoursesCompetencyWise') {
+                    $header = ['Course', 'Competency Count'];
+                    $session->setTempdata('fileName', 'TopCourse_Competency', 300);
+                    $reportTitle = 'Top ' . $topCount . ' Courses based on Competencies tagged';
+
+                } else if ($reportType == 'topCompetency') {
+                    $header = ['Competency', 'No. of Courses Tagegd'];
+                    $session->setTempdata('fileName', 'TopCompetencies', 300);
+                    $reportTitle = 'Top ' . $topCount . $competencyType . ' Competencies';
+
                 }
 
                 $table->setHeading($header);
@@ -1352,6 +1385,11 @@ class Report extends BaseController
                     $header = ['Designation', 'User Count'];
                     $session->setTempdata('fileName', 'DesignationWiseUserCount', 300);
                     $reportTitle = 'Designation-wise User Count';
+
+                } else if ($reportType == 'competencySummary') {
+                    $header = ['Competency', 'Competency Type', 'Courses tagged'];
+                    $session->setTempdata('fileName', 'CompetencySummary', 300);
+                    $reportTitle = 'Competency Summary';
 
                 }
                 $table->setHeading($header);
@@ -1558,5 +1596,40 @@ class Report extends BaseController
             // return view('header_view') . view('error_general').view('footer_view');
         }
 
+    }
+
+    public function getCsvReport()
+    {
+        try {
+            helper('session');
+            if (session_exists()) {
+
+                $session = \Config\Services::session();
+
+                helper('array');
+
+                $keys = $session->getTempdata('reportHeader');
+                $report = $session->getTempdata('resultArray');
+                $fileName = $session->getTempdata('fileName') . '.csv';
+
+                // $data[] = array('x'=> $x, 'y'=> $y, 'z'=> $z, 'a'=> $a);
+                header("Content-type: application/csv");
+                header("Content-Disposition: attachment; filename=" . $fileName);
+                header("Pragma: no-cache");
+                header("Expires: 0");
+
+                $handle = fopen('php://output', 'w');
+fputcsv($handle, $keys);
+                foreach ($report as $data_array) {
+                    fputcsv($handle, $data_array);
+                }
+                fclose($handle);
+                exit;
+            }
+        }
+        catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+            // return view('header_view') . view('error_general').view('footer_view');
+        }
     }
 }
