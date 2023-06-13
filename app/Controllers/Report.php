@@ -791,7 +791,7 @@ class Report extends BaseController
                     $reportTitle = 'User Enrolment Report for Curated Collection - "' . $home->getCollectionName($course) . '"';
 
                 } else if ($courseReportType == 'collectionEnrolmentCount') {
-                    $header = ['Course Name', 'Enrolment Count', 'Completion Count'];
+                    $header = ['Course Name', 'Enrolled', 'Not Started', 'In Progress', 'Completed'];
                     $session->setTempdata('fileName', $course . '_Summary', 300);
                     $reportTitle = 'Curated collection summary - "' . $home->getCollectionName($course) . '"';
 

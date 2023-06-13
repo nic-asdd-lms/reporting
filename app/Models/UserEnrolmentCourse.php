@@ -280,7 +280,9 @@ class UserEnrolmentCourse extends Model
         }
 
         $query = $this->db->query('SELECT   course_name,  COUNT(*) AS enrolled_count
-      ,SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count
+            ,SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count
+            ,SUM(CASE WHEN user_course_enrolment.completion_status =\'Not Started\' THEN 1 ELSE 0 END) AS not_started_count
+            ,SUM(CASE WHEN user_course_enrolment.completion_status =\'In-Progress\' THEN 1 ELSE 0 END) AS in_progress_count
             FROM user_course_enrolment, master_curated_collection, course_curated, master_user, master_course
             WHERE master_curated_collection.curated_id=\'' . $course . '\'
 			AND user_course_enrolment.course_id = course_curated.course_id
@@ -293,7 +295,9 @@ class UserEnrolmentCourse extends Model
             UNION
         
             SELECT   course_name,  COUNT(*) AS enrolled_count
-      ,SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count
+            ,SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count
+            ,SUM(CASE WHEN user_course_enrolment.completion_status =\'Not Started\' THEN 1 ELSE 0 END) AS not_started_count
+            ,SUM(CASE WHEN user_course_enrolment.completion_status =\'In-Progress\' THEN 1 ELSE 0 END) AS in_progress_count
             FROM user_course_enrolment, master_curated_collection, course_curated a, course_curated b, master_user, master_course
             WHERE  master_curated_collection.curated_id=\'' . $course . '\'
 			AND user_course_enrolment.course_id = b.course_id

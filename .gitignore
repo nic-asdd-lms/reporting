@@ -1,4 +1,8 @@
 writable/*
 *.log
 vendor/*
+node_modules/*
+.gitignore
 app/Config/Constants.php
+app/Config/Database.php
+
