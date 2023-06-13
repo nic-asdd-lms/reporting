@@ -662,7 +662,7 @@ class Report extends BaseController
                     $reportTitle = 'Users enrolement report for all organisations under ministry/state - "' . $orgName . '"';
 
                 } else if ($reportType == 'userWiseCount') {
-                    $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'No. of Courses Enrolled', 'No. of Courses Completed'];
+                    $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Contact No.','Enrolled','Not started',' In Progress', 'Completed'];
                     $session->setTempdata('fileName', $orgName . '_UserWiseSummary', 300);
                     $reportTitle = 'User-wise course enrolment/completion count for organisation - "' . $orgName . '"';
 

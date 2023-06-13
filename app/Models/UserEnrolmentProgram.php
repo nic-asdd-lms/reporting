@@ -215,28 +215,28 @@ class UserEnrolmentProgram extends Model
         $builder = $this->db->table('user_program_enrolment');
         $builder->join('master_program','master_program.program_id = user_program_enrolment.program_id');
 
-        $enrolled = $this->db->table('user_program_enrolment');
-        $enrolled->join('master_program','master_program.program_id = user_program_enrolment.program_id');
+        // $enrolled = $this->db->table('user_program_enrolment');
+        // $enrolled->join('master_program','master_program.program_id = user_program_enrolment.program_id');
 
         $builder->select('status,count(*) as users');
-        $enrolled->select('\'Enrolled\',count(*)  as users');
+        // $enrolled->select('\'Enrolled\',count(*)  as users');
 
         if ($ati != '') {
             $builder->where('root_org_id', $ati);
-            $enrolled->where('root_org_id', $ati);
+            // $enrolled->where('root_org_id', $ati);
         }
         if ($program != '') {
             $builder->where('user_program_enrolment.program_id', $program);
-            $enrolled->where('user_program_enrolment.program_id', $program);
+            // $enrolled->where('user_program_enrolment.program_id', $program);
         }
         if ($isMonthWise == true) {
             $builder->where('to_char(to_date(enrolled_date,\'DD/MM/YYYY\'), \'MONTH YYYY\')  = to_char(current_date, \'MONTH YYYY\')');
-            $enrolled->where('to_char(to_date(enrolled_date,\'DD/MM/YYYY\'), \'MONTH YYYY\')  = to_char(current_date, \'MONTH YYYY\')');
+            // $enrolled->where('to_char(to_date(enrolled_date,\'DD/MM/YYYY\'), \'MONTH YYYY\')  = to_char(current_date, \'MONTH YYYY\')');
         }
 
-        $builder->union($enrolled);
+        // $builder->union($enrolled);
         $builder->groupBy('status');
-        $builder->orderBy('users', 'desc');
+        $builder->orderBy('status', 'asc');
 
         // echo '<pre>';
         // print_r($builder);
@@ -245,6 +245,27 @@ class UserEnrolmentProgram extends Model
         return $builder->get();
 
     }
+
+    public function learnerDashboardTableFooter($ati, $program, $isMonthWise)
+    {
+        $enrolled = $this->db->table('user_program_enrolment');
+        $enrolled->join('master_program','master_program.program_id = user_program_enrolment.program_id');
+
+        $enrolled->select('\'Total Learners\',count(*)  as users');
+        if ($ati != '') {
+            $enrolled->where('root_org_id', $ati);
+        }
+        if ($program != '') {
+            $enrolled->where('user_program_enrolment.program_id', $program);
+        }
+        if ($isMonthWise == true) {
+            $enrolled->where('to_char(to_date(enrolled_date,\'DD/MM/YYYY\'), \'MONTH YYYY\')  = to_char(current_date, \'MONTH YYYY\')');
+        }
+
+        return $enrolled->get();
+
+    }
+
 
     public function getInstituteWiseCount($org, $limit, $offset, $search, $orderBy, $orderDir)
     {
@@ -313,7 +334,7 @@ class UserEnrolmentProgram extends Model
             $table = new \CodeIgniter\View\Table();
 
             $builder = $this->db->table('user_program_enrolment');
-            $builder->select('concat(first_name,\' \',last_name) as name, email, master_organization.org_name, designation, batch_id, user_program_enrolment.status, completed_on');
+            $builder->select('concat(first_name,\' \',last_name) as name, email, master_organization.org_name, designation, batch_id, user_program_enrolment.status, enrolled_date, completed_on');
             $builder->join('master_user', 'master_user.user_id = user_program_enrolment.user_id ');
             $builder->join('master_program', 'user_program_enrolment.program_id = master_program.program_id ');
             $builder->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id ');

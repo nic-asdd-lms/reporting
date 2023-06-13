@@ -271,7 +271,9 @@
                 var topReportType = $('#topReportType').val();
                 var topCount = $('#topCount').val();
                 var topCourse = $('#topcoursename').val();
-                if (topReportType == 'notSelected') {
+                var competencyType = $('#competencyType').val();
+
+                if (topReportType == 'notSelected') {                   // If report type is not selected then do not submit the form
                     Swal.fire({
                         title: 'Error!',
                         text: 'Please Select Analytics Report Type !',
@@ -279,6 +281,26 @@
                         confirmButtonText: 'OK'
                     });
                     return false;
+                }
+                else if (topCount == '') {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Please Select No. of Records to be shown !',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                    return false;
+                }                                                          
+                else if (topReportType == 'topCompetency' ) {
+                    if (competencyType == 'notSelected') {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Please Select Competency !',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                        return false;
+                    }
                 }
                 else if (topReportType == 'topOrgCourseWise' || topReportType == 'topOrgProgramWise' || topReportType == 'topOrgCollectionWise') {
                     if (topCourse == '') {
@@ -291,15 +313,6 @@
                         return false;
                     }
                 }
-                else if (topCount == '') {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Please Select No. of Records to be shown !',
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
-                    return false;
-                }                                                          // If report type is not selected then do not submit the form
                 else                                                        // Only one option is there no need to check sub dropdowns
                 {
                     return true;
@@ -623,8 +636,11 @@
                                     <option class="options" value="mdoUserCount">MDO-wise user count</option>
                                     <option class="options" value="mdoUserList">MDO-wise user List</option>
                                     <option class="options" value="mdoUserEnrolment">MDO-wise user enrolment report</option>
+                                    <option class="options" value="userWiseCount">MDO-wise user enrolment summary</option>
                                     <option class="options" value="ministryUserList">Ministry/State-wise user list</option>
                                     <option class="options" value="ministryUserEnrolment">Ministry/State-wise user enrolment report</option>
+                                    
+
                         ';
                             } else if ($session->get('role') == 'MDO_ADMIN') {
 

@@ -353,6 +353,22 @@
 
     });
 
+
+    $(document).ready(function () {
+      // var className = document.getElementsByClassName('dashboard-item-value');
+      // for (var index = 0; index < className.length; index++) {
+      //   var value = className[index].value;
+      //   className[index].innerText = Number(className[index].innerText).toLocaleString('en-IN');
+      // }
+      var className = document.getElementsByClassName('numformat');
+      for (var index = 0; index < className.length; index++) {
+        var value = className[index].value;
+        number = Number(className[index].innerText);
+        if (!isNaN(number))
+          className[index].innerText = number.toLocaleString('en-IN');
+      }
+
+    });
   </script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js"></script>

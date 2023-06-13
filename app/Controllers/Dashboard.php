@@ -57,18 +57,40 @@ class Dashboard extends BaseController
 
                 $data = [];
 
-                $learnerheader = ['Status', 'Count'];
+                $learnerheader = ['Status', ['data'=>'Count','class'=>'dashboard-table-header-count']];
                 $learnertable->setHeading($learnerheader);
-
-                $monthheader = ['Status', 'Count'];
+                
+                $monthheader = ['Status', ['data'=>'Count','class'=>'dashboard-table-header-count']];
                 $monthtable->setHeading($monthheader);
-
+                
+                $learnersarr = $learnerTableData->getResultArray(); 
+                usort($learnersarr, fn($a, $b) => $b['users'] <=> $a['users']);
+                foreach ($learnersarr as $row) {
+                    $keyCell = ['data'=>$row['status'],'class'=>'dashboard-column'];
+                    $valueCell = ['data'=>$row['users'],'class'=>'dashboard-value-column numformat'];
+                    $learnertable->addRow($keyCell,$valueCell);
+                }
+                $keyCell = ['data'=>'Total Enrolments','class'=>'dashboard-footer'];
+                $valueCell = ['data'=>$enrolment->learnerDashboardTableFooter($ati, $program, false)->getResultArray()[0]['users'],'class'=>'dashboard-footer dashboard-value-column numformat'];
+                $learnertable->addRow($keyCell,$valueCell);
+                
                 foreach ($learnerChartData->getResult() as $row) {
                     $data['label'][] = $row->status;
                     $data['data'][] = $row->users;
 
                 }
 
+                $montharr = $monthTableData->getResultArray(); 
+                usort($montharr, fn($a, $b) => $b['users'] <=> $a['users']);
+                foreach ($montharr as $row) {
+                    $keyCell = ['data'=>$row['status'],'class'=>'dashboard-column'];
+                    $valueCell = ['data'=>$row['users'],'class'=>'dashboard-value-column numformat'];
+                    $monthtable->addRow($keyCell,$valueCell);
+                }
+                $keyCell = ['data'=>'Total Enrolments','class'=>'dashboard-footer'];
+                $valueCell = ['data'=>$enrolment->learnerDashboardTableFooter($ati, $program, true)->getResultArray()[0]['users'],'class'=>'dashboard-footer dashboard-value-column numformat'];
+                $monthtable->addRow($keyCell,$valueCell);
+                
                 foreach ($monthChartData->getResult() as $row) {
                     $data['monthlabel'][] = $row->status;
                     $data['monthdata'][] = $row->users;
@@ -106,7 +128,7 @@ class Dashboard extends BaseController
                     $data['title'] = 'Program Overview';
 
                 } else {
-                    $header = ['Name', 'Email', 'Organisation', 'Designation', 'BatchID', 'Status','Completed On'];
+                    $header = ['Name', 'Email', 'Organisation', 'Designation', 'BatchID', 'Status','Enrolled On','Completed On'];
                     $table->setHeading($header);
                     $userData = $enrolment->getProgramWiseATIWiseReport($program, $ati, -1, 0, '', 1, 'asc')->getResultArray();
                     $atiName = $orgModel->getOrgName($ati);
@@ -120,14 +142,10 @@ class Dashboard extends BaseController
                 }
                 $data['lastUpdated'] = '[Data as on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
                 
-                $learnersarr = $learnerTableData->getResultArray(); 
-                usort($learnersarr, fn($a, $b) => $b['users'] <=> $a['users']);
-
-                $montharr = $monthTableData->getResultArray(); 
-                usort($montharr, fn($a, $b) => $b['users'] <=> $a['users']);
-
-                $data['learner_overview'] = $learnertable->generate($learnersarr);
-                $data['month_overview'] = $monthtable->generate($montharr);
+                
+                
+                $data['learner_overview'] = $learnertable->generate();
+                $data['month_overview'] = $monthtable->generate();
 
                 return view('header_view')
                     . view('dashboard', $data)

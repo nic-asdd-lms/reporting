@@ -159,7 +159,6 @@ class MasterCourseModel extends Model
             $builder = $this->db->table('master_course');
             $builder->select('  course_name,org_name');
             $builder->where('status', 'Reviewed');
-            $builder->orderBy('course_name');
             if ($search != '')
                 $builder->where("(course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%' 
                             OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
@@ -184,7 +183,6 @@ class MasterCourseModel extends Model
             $builder = $this->db->table('master_course');
             $builder->select('  course_name,org_name');
             $builder->where('status', 'InReview');
-            $builder->orderBy('course_name');
             if ($search != '')
                 $builder->where("(course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%' 
                             OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
@@ -207,9 +205,8 @@ class MasterCourseModel extends Model
         try {
 
             $builder = $this->db->table('master_course');
-            $builder->select('  course_name,org_name');
+            $builder->select('course_name,org_name');
             $builder->where('status', 'Draft');
-            $builder->orderBy('course_name');
             if ($search != '')
                 $builder->where("(course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%' 
                             OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
@@ -219,6 +216,7 @@ class MasterCourseModel extends Model
             if ($limit != -1)
                 $builder->limit($limit, $offset);
 
+            
             $query = $builder->get();
 
             return $query;
