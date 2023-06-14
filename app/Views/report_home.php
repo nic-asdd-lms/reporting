@@ -51,7 +51,7 @@
                 {
                     return true;
                 }
-                else if (mdoReportType == 'mdoUserList' || mdoReportType == 'mdoUserEnrolment')                //  Report type 2nd option validation 
+                else if (mdoReportType == 'mdoUserList' || mdoReportType == 'mdoUserEnrolment' || mdoReportType == 'userWiseCount')                //  Report type 2nd option validation 
                 {
                     // var ms = $('#ms_type').val();
                     // var ministry = $('#ministry').val();
@@ -290,8 +290,8 @@
                         confirmButtonText: 'OK'
                     });
                     return false;
-                }                                                          
-                else if (topReportType == 'topCompetency' ) {
+                }
+                else if (topReportType == 'topCompetency') {
                     if (competencyType == 'notSelected') {
                         Swal.fire({
                             title: 'Error!',
@@ -483,11 +483,11 @@
                         html = '';
                         if (reportType == 'topOrgCourseWise') {
                             for (var count = 0; count < data.length; count++) {
-                                html += '<option class="datalist-options" data-value="' + data[count].course_id + '">' + data[count].course_name  + ' [by ' + data[count].org_name + ']</option>';
+                                html += '<option class="datalist-options" data-value="' + data[count].course_id + '">' + data[count].course_name + ' [by ' + data[count].org_name + ']</option>';
                             }
                         } else if (reportType == 'topOrgProgramWise') {
                             for (var count = 0; count < data.length; count++) {
-                                html += '<option class="datalist-options" data-value="' + data[count].program_id + '">' + data[count].program_name  + ' [by ' + data[count].org_name + ']</option>';
+                                html += '<option class="datalist-options" data-value="' + data[count].program_id + '">' + data[count].program_name + ' [by ' + data[count].org_name + ']</option>';
                             }
                         } else if (reportType == 'topOrgCollectionWise') {
                             for (var count = 0; count < data.length; count++) {
@@ -634,7 +634,7 @@
                                     <option class="options" value="orgList">Organisations onboarded</option>
                                     <option class="options" value="orgHierarchy">Organisation hierarchy</option>
                                     <option class="options" value="mdoUserCount">MDO-wise user count</option>
-                                    <option class="options" value="mdoUserList">MDO-wise user List</option>
+                                    <option class="options" value="mdoUserList">MDO-wise user list</option>
                                     <option class="options" value="mdoUserEnrolment">MDO-wise user enrolment report</option>
                                     <option class="options" value="userWiseCount">MDO-wise user enrolment summary</option>
                                     <option class="options" value="ministryUserList">Ministry/State-wise user list</option>
@@ -722,13 +722,13 @@
                         <select name="courseReportType" class="form-control report-select"
                             onchange="enable_disable_course(this)" id="courseReportType">
                             <option value="notSelected">-- Select Report Type --</option>
-                            <option value="liveCourseList">List of Live courses</option>
+                            <option value="liveCourseList">List of live courses</option>
                             <option value="courseEnrolmentCount">Live courses summary</option>
                             <option value="courseEnrolmentReport">Course-wise enrolment report</option>
                             <option value="programEnrolmentReport">Program-wise enrolment report</option>
                             <option value="programEnrolmentCount">Program-wise summary</option>
                             <option value="collectionEnrolmentReport">Curated Collection-wise enrolment report</option>
-                            <option value="collectionEnrolmentCount">Curated Collection-wise summary</option>
+                            <option value="collectionEnrolmentCount">Curated Collection course-wise summary</option>
                             <option value="cbpProviderWiseCourseCount">CBP Provider-wise course count</option>
                             <?php
                             $session = \Config\Services::session();
@@ -807,8 +807,9 @@
 
                                 echo
                                     '
-                            <option class="options" value="userList">User list</option>
-                            <option class="options" value="userEnrolmentFull">Full enrolment report</option>';
+                            <option class="options" value="userList">Complete user list</option>
+                            <option class="options" value="userEnrolmentFull">Complete enrolment report</option>
+                            <option class="options" value="userEnrolmentSummary">Complete user-wise enrolment summary</option>';
                             } ?>
 
                             <option value="userProfile">User profile</option>
@@ -886,16 +887,16 @@
                         } else if ($session->get('role') == 'MDO_ADMIN') {
 
                             echo '<select name="roleReportType" class="form-control  report-select" id="roleReportType" >
-    <option value="notSelected">-- Select Report Type --</option>
-    <option value="roleWiseCount">Role-wise count</option>
-    <option value="mdoAdminList">MDO ADMIN List</option>
-    <option value="cbpAdminList">CBP ADMIN List</option>
-    <option value="creatorList">CONTENT CREATOR List</option>
-    <option value="reviewerList">CONTENT REVIEWER List</option>
-    <option value="publisherList">CONTENT PUBLISHER List</option>
-    <option value="publicList">PUBLIC User List</option>
+                                    <option value="notSelected">-- Select Report Type --</option>
+                                    <option value="roleWiseCount">Role-wise count</option>
+                                    <option value="mdoAdminList">MDO ADMIN List</option>
+                                    <option value="cbpAdminList">CBP ADMIN List</option>
+                                    <option value="creatorList">CONTENT CREATOR List</option>
+                                    <option value="reviewerList">CONTENT REVIEWER List</option>
+                                    <option value="publisherList">CONTENT PUBLISHER List</option>
+                                    <option value="publicList">PUBLIC User List</option>
                         
-                        </select>
+                                </select>
 
 ';
                         } ?>
@@ -956,8 +957,8 @@
                 </form>
 
             </div>
-            
-            
+
+
 
             <div id="Top-Performers" class="tabcontent">
                 <form id="topreportform" class="form-horizontal login_form"
@@ -1026,11 +1027,11 @@
 
                         </table>
                         <table class="tbl-input" id="tbl-top-competency" style="display:none">
-                        <tr>
+                            <tr>
                                 <td style="width:1%"><label class="required"></label></td>
                                 <td colspan="2">
-                                <div class="auto-widget" id="top-competency-type">
-                                        <select class="form-control" id = "competencyType" name = "competencyType">
+                                    <div class="auto-widget" id="top-competency-type">
+                                        <select class="form-control" id="competencyType" name="competencyType">
                                             <option value="notSelected">--Select Competency Type--</option>
                                             <option value="Domain">Domain</option>
                                             <option value="Behavioural">Behavioural</option>
@@ -1050,10 +1051,10 @@
                                 <td><label class="topcountlabel required">Month</label></td>
                                 <td>
                                     <div class="auto-widget" id="top-month">
-                                        <select class="form-control monthyear-select" id = "month" name = "month">
-                                            <?php 
-                                            foreach ($months as $month){
-                                                echo '<option value="'.$month->completed_month.'">'.$month->completed_month.'</option>';
+                                        <select class="form-control monthyear-select" id="month" name="month">
+                                            <?php
+                                            foreach ($months as $month) {
+                                                echo '<option value="' . $month->completed_month . '">' . $month->completed_month . '</option>';
                                             }
                                             ?>
                                         </select>
@@ -1064,10 +1065,10 @@
                                 <td><label class="topcountlabel required">Year</label></td>
                                 <td>
                                     <div class="auto-widget" id="top-month">
-                                        <select class="form-control monthyear-select" id = "year" name ="year">
-                                        <?php 
-                                            foreach ($years as $year){
-                                                echo '<option  value="'.$year->completed_year.'">'.$year->completed_year.'</option>';
+                                        <select class="form-control monthyear-select" id="year" name="year">
+                                            <?php
+                                            foreach ($years as $year) {
+                                                echo '<option  value="' . $year->completed_year . '">' . $year->completed_year . '</option>';
                                             }
                                             ?>
                                         </select>
@@ -1104,7 +1105,8 @@
                             <option value="notSelected">-- Select Report Type --</option>
                             <option value="rozgarMelaUserList">Rozgar Mela user list</option>
                             <option value="rozgarMelaUserReport">Rozgar Mela user enrolment report</option>
-                            <option value="rozgarMelaKpCollection">Rozgar Mela users enrolled in Karmayogi Prarambh Module</option>
+                            <option value="rozgarMelaKpCollection">Rozgar Mela users enrolled in Karmayogi Prarambh
+                                Module</option>
                             <!-- <option value="rozgarMelaKpProgram">Rozgar Mela users enrolled in Karmayogi Prarambh Program</option> -->
                             <option value="rozgarMelaReport">Rozgar Mela organisation-wise summary</option>
                             <option value="rozgarMelaSummary">Rozgar Mela Course-wise summary</option>

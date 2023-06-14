@@ -92,7 +92,7 @@ function enable_disable_program(value) {
 function enable_disable_user(value) {
     user = document.getElementById("tbl-user");
     
-    if (value.value == "userList" ||value.value == "userEnrolmentFull") {
+    if (value.value == "userList" ||value.value == "userEnrolmentFull" || value.value == "userEnrolmentSummary") {
         user.style.display = "none";
     } else if (value.value == "userProfile" || value.value == "userEnrolment") {
         user.style.display = "block";

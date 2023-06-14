@@ -21,7 +21,8 @@ class MasterUserModel extends Model
         try {
 
             $builder = $this->db->table('user_list');
-            $builder->select('*');
+            $builder->select('name, email, org_name, designation, created_date, roles, profile_update_status');
+            // $builder->distinct();
             
             if ($search != '')
                 $builder->where("(name LIKE '%" . strtolower($search) . "%' OR name LIKE '%" . strtoupper($search) . "%' OR name LIKE '%" . ucfirst($search) . "%'
@@ -48,7 +49,7 @@ class MasterUserModel extends Model
     {
         try {
             $builder = $this->db->table('master_user');
-            $builder->select('count(user_id)');
+            $builder->select('count(*)');
             $query = $builder->get();
 
             // echo $org_id,json_encode($query);
@@ -62,7 +63,7 @@ class MasterUserModel extends Model
         try {
 
             $builder = $this->db->table('master_user');
-            $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation, phone,created_date, roles, profile_update_status');
+            $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation, created_date, roles, profile_update_status');
             $builder->join('master_organization', 'master_organization.root_org_id = master_user.root_org_id');
             $builder->where('master_organization.org_name', $org);
 
@@ -207,14 +208,14 @@ class MasterUserModel extends Model
 
             $query = $this->db->query(' 
             (SELECT concat(first_name, \' \', last_name) as name, "email", "master_org_hierarchy"."ms_name", \'-\' as dept_name, \'-\' as org_name, 
-             "designation", "phone", "created_date", "roles" 
+             "designation", "created_date", "roles" 
              FROM "master_user" JOIN "master_organization" ON "master_organization"."root_org_id" = "master_user"."root_org_id" 
              JOIN "master_org_hierarchy" ON "master_org_hierarchy"."ms_id" = "master_user"."root_org_id" 
              WHERE "master_org_hierarchy"."ms_name" = \'' . $org . '\'' . $likeQuery . ' )  
              UNION 
              
              (SELECT concat(first_name, \' \', last_name) as name, "email", "master_org_hierarchy"."ms_name", "master_org_hierarchy"."dept_name", \'-\' as org_name, 
-              "designation", "phone", "created_date", "roles" 
+              "designation", "created_date", "roles" 
               FROM "master_user" JOIN "master_organization" ON "master_organization"."root_org_id" = "master_user"."root_org_id" 
               JOIN "master_org_hierarchy" ON "master_org_hierarchy"."dept_id" = "master_user"."root_org_id" 
               WHERE "master_org_hierarchy"."ms_name" = \'' . $org . '\' ' . $likeQuery . '
@@ -222,7 +223,7 @@ class MasterUserModel extends Model
               UNION 
              
               (SELECT concat(first_name, \' \', last_name) as name, "email", "master_org_hierarchy"."ms_name", "master_org_hierarchy"."dept_name", "master_organization"."org_name", 
-               "designation", "phone", "created_date", "roles" 
+               "designation","created_date", "roles" 
                FROM "master_user" JOIN "master_organization" ON "master_organization"."root_org_id" = "master_user"."root_org_id" 
                JOIN "master_org_hierarchy" ON "master_org_hierarchy"."org_id" = "master_user"."root_org_id" 
                WHERE "master_org_hierarchy"."ms_name" = \'' . $org . '\' ' . $likeQuery . '
@@ -945,7 +946,7 @@ class MasterUserModel extends Model
         try {
 
             $builder = $this->db->table('user_list');
-            $builder->select('*');
+            $builder->select('name, email, org_name, designation, created_date, roles, profile_update_status');
             $builder->where('email',$email);
 
             if($orgName !='')

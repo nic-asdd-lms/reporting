@@ -143,7 +143,10 @@ class Report extends BaseController
                     $competencyType = $session->getTempdata('competencyType');
 
                 }
+                else if ($reportType == 'userEnrolmentSummary') {
+                    $orgName  = '';
 
+                }
 
                 if ($reportType == 'userList') {
                     $result = $user->getAllUsers($limit, $offset, $search, $orderBy, $orderDir); //  query with given limit, offset, search, order
@@ -269,7 +272,11 @@ class Report extends BaseController
                     $fullResult = $enrolment->getUserEnrolmentFull(-1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getUserEnrolmentFull(-1, 0, $search, $orderBy, $orderDir);
 
-                } else if ($reportType == 'roleWiseCount') {
+                } else if ($reportType == 'userEnrolmentSummary') {
+                    $result = $enrolment->getUserEnrolmentCountByMDO($orgName, $limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $enrolment->getUserEnrolmentCountByMDO($orgName, -1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getUserEnrolmentCountByMDO($orgName, -1, 0, $search, $orderBy, $orderDir);
+                }  else if ($reportType == 'roleWiseCount') {
                     $result = $user->getRoleWiseCount($orgName, $limit, $offset, $search, $orderBy, $orderDir);
                     $fullResult = $user->getRoleWiseCount($orgName, -1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getRoleWiseCount($orgName, -1, 0, $search, $orderBy, $orderDir);
@@ -637,7 +644,7 @@ class Report extends BaseController
                 /* Set table header, filename and report tilte based on report type */
 
                 if ($reportType == 'mdoUserList') {
-                    $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Contact No.', 'Created Date', 'Roles', 'Profile Update Status'];
+                    $header = ['Name', 'Email ID', 'Organisation', 'Designation',  'Created Date', 'Roles', 'Profile Update Status'];
                     $session->setTempdata('fileName', $orgName . '_UserList', 300);
                     $reportTitle = 'Users onboarded from organisation - "' . $orgName . '"';
 
@@ -652,7 +659,7 @@ class Report extends BaseController
                     $reportTitle = 'Users Enrolment Report for organisation - "' . $orgName . '"';
 
                 } else if ($reportType == 'ministryUserList') {
-                    $header = ['Name', 'Email', 'Ministry', 'Department', 'Organization', 'Designation', 'Contact No.', 'Created Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Ministry', 'Department', 'Organization', 'Designation',  'Created Date', 'Roles'];
                     $session->setTempdata('fileName', $orgName . '_UserList', 300);
                     $reportTitle = 'Users list for all organisations under ministry/state - "' . $orgName . '"';
 
@@ -662,7 +669,7 @@ class Report extends BaseController
                     $reportTitle = 'Users enrolement report for all organisations under ministry/state - "' . $orgName . '"';
 
                 } else if ($reportType == 'userWiseCount') {
-                    $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Contact No.','Enrolled','Not started',' In Progress', 'Completed'];
+                    $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Enrolled','Not started',' In Progress', 'Completed'];
                     $session->setTempdata('fileName', $orgName . '_UserWiseSummary', 300);
                     $reportTitle = 'User-wise course enrolment/completion count for organisation - "' . $orgName . '"';
 
@@ -856,12 +863,12 @@ class Report extends BaseController
                 $session->setTempdata('error', '');
 
                 if ($reportType == 'userList') {
-                    $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Contact No.', 'Created Date', 'Roles', 'Profile Update Status'];
+                    $header = ['Name', 'Email ID', 'Organisation', 'Designation',  'Created Date', 'Roles', 'Profile Update Status'];
                     $session->setTempdata('fileName', 'UserList', 300);
                     $reportTitle = 'Users onboarded on iGOT';
 
                 } else if ($reportType == 'userProfile') {
-                    $header = ['Name', 'Email', 'Organisation', 'Designation', 'Contact No.', 'Created Date', 'Roles', 'Profile Update Status'];
+                    $header = ['Name', 'Email', 'Organisation', 'Designation', 'Created Date', 'Roles', 'Profile Update Status'];
                     $session->setTempdata('fileName', 'UserProfile_' . $email, 300);
                     $reportTitle = 'User Profile of - "' . $email . '"';
 
@@ -874,7 +881,12 @@ class Report extends BaseController
                     $session->setTempdata('fileName', 'UserEnrolmentFullReport', 300);
                     $reportTitle = 'Full Enrolment Report';
 
-                }
+                } else if ($reportType == 'userEnrolmentSummary') {
+                    $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Contact No.','Enrolled','Not started',' In Progress', 'Completed'];
+                    $session->setTempdata('fileName',  'UserEnrolmentSummary', 300);
+                    $reportTitle = 'User-wise enrolment summary';
+
+                } 
                 $table->setHeading($header);
 
                 $session->setTempdata('reportHeader', $header);

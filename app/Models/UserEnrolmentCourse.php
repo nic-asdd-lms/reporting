@@ -413,7 +413,6 @@ class UserEnrolmentCourse extends Model
                             OR last_name LIKE '%" . strtolower($search) . "%' OR last_name LIKE '%" . strtoupper($search) . "%' OR last_name LIKE '%" . ucfirst($search) . "%'
                             OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
                             OR master_organization.org_name LIKE '%" . strtolower($search) . "%' OR master_organization.org_name LIKE '%" . strtoupper($search) . "%' OR master_organization.org_name LIKE '%" . ucfirst($search) . "%'
-                            OR course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtoupper($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%'
                             OR designation LIKE '%" . strtolower($search) . "%' OR designation LIKE '%" . strtoupper($search) . "%' OR designation LIKE '%" . ucfirst($search) . "%') ";
 
         } else {
@@ -424,21 +423,25 @@ class UserEnrolmentCourse extends Model
         } else
             $limitQuery = '';
 
+        if($org == '')
+            $orgQuery = '';
+        else 
+            $orgQuery = ' AND master_organization.org_name=\'' . $org . '\' ';
 
-        $query = $this->db->query('SELECT concat(INITCAP(master_user.first_name),\' \',INITCAP(master_user.last_name)) as name, master_user.email, org_name, master_user.designation, phone,COUNT(*) AS enrolled_count
+        $query = $this->db->query('SELECT distinct concat(INITCAP(master_user.first_name),\' \',INITCAP(master_user.last_name)) as name, master_user.email, master_organization.org_name, master_user.designation, COUNT(*) AS enrolled_count
             ,SUM(CASE WHEN user_course_enrolment.completion_status =\'Not Started\' THEN 1 ELSE 0 END) AS not_started_count
             ,SUM(CASE WHEN user_course_enrolment.completion_status =\'In-Progress\' THEN 1 ELSE 0 END) AS in_progress_count
             ,SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count
-            FROM user_course_enrolment, master_user
-            WHERE user_course_enrolment.user_id = master_user.user_id
-            AND master_user.org_name=\'' . $org . '\'' . $likeQuery .
-            'GROUP BY name, email, org_name, designation, phone
+            FROM user_course_enrolment, master_user,master_organization
+            WHERE user_course_enrolment.user_id = master_user.user_id 
+            AND master_organization.root_org_id = master_user.root_org_id ' .$orgQuery . $likeQuery .
+            'GROUP BY name, email, master_organization.org_name, designation, phone
         UNION
-            SELECT concat( INITCAP(master_user.first_name),\' \',INITCAP(master_user.last_name)) as name, master_user.email, org_name, master_user.designation, phone, 0 AS enrolled_count,0 AS not_started_count,0 AS in_progress_count,0 AS completed_count
-            FROM  master_user
-            WHERE master_user.org_name=\'' . $org . '\' ' . $likeQuery .
-            'AND master_user.user_id NOT IN (SELECT DISTINCT user_id from user_course_enrolment)
-            ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
+            SELECT distinct concat( INITCAP(master_user.first_name),\' \',INITCAP(master_user.last_name)) as name, master_user.email, master_organization.org_name, master_user.designation,  0 AS enrolled_count,0 AS not_started_count,0 AS in_progress_count,0 AS completed_count
+            FROM  master_user, master_organization
+            WHERE master_organization.root_org_id = master_user.root_org_id 
+            AND master_user.user_id NOT IN (SELECT DISTINCT user_id from user_course_enrolment) ' . $orgQuery. $likeQuery .
+            ' ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
 
 
         return $query;
