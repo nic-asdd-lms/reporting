@@ -882,7 +882,7 @@ class Report extends BaseController
                     $reportTitle = 'Full Enrolment Report';
 
                 } else if ($reportType == 'userEnrolmentSummary') {
-                    $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Contact No.','Enrolled','Not started',' In Progress', 'Completed'];
+                    $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Enrolled','Not started',' In Progress', 'Completed'];
                     $session->setTempdata('fileName',  'UserEnrolmentSummary', 300);
                     $reportTitle = 'User-wise enrolment summary';
 
