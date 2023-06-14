@@ -959,77 +959,77 @@ class Report extends BaseController
                     $reportTitle = 'Month-wise MDO Admin Creation Count';
 
                 } else if ($roleReportType == 'cbpAdminList') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of CBP Admins', 300);
                     $reportTitle = 'List of CBP Admins';
 
                 } else if ($roleReportType == 'mdoAdminList') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of MDO Admins', 300);
                     $reportTitle = 'List of MDO Admins';
 
                 } else if ($roleReportType == 'creatorList') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of Content Creators', 300);
                     $reportTitle = 'List of Content Creators';
 
                 } else if ($roleReportType == 'reviewerList') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of Content Reviewers', 300);
                     $reportTitle = 'List of Content Reviewers';
 
                 } else if ($roleReportType == 'publisherList') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of Content Publishers', 300);
                     $reportTitle = 'List of Content Publishers';
 
                 } else if ($roleReportType == 'editorList') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of Editors', 300);
                     $reportTitle = 'List of Editors';
 
                 } else if ($roleReportType == 'fracAdminList') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of FRAC Admins', 300);
                     $reportTitle = 'List of FRAC Admins';
 
                 } else if ($roleReportType == 'fracCompetencyMember') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of FRAC Competency Members', 300);
                     $reportTitle = 'List of FRAC Competency Members';
 
                 } else if ($roleReportType == 'fracOneList') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of FRAC_Reviewer_L1', 300);
                     $reportTitle = 'List of FRAC_Reviewer_L1';
 
                 } else if ($roleReportType == 'fracTwoList') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of FRAC_Reviewer_L2', 300);
                     $reportTitle = 'List of FRAC_Reviewer_L2';
 
                 } else if ($roleReportType == 'ifuMemberList') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of IFU Members', 300);
                     $reportTitle = 'List of IFU Members';
 
                 } else if ($roleReportType == 'publicList') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of CBP Admins', 300);
                     $reportTitle = 'List of Public users';
 
                 } else if ($roleReportType == 'spvAdminList') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of SPV Admins', 300);
                     $reportTitle = 'List of SPV Admins';
 
                 } else if ($roleReportType == 'stateAdminList') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of State Admins', 300);
                     $reportTitle = 'List of State Admins';
 
                 } else if ($roleReportType == 'watMemberList') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Contact No.', 'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of WAT Members', 300);
                     $reportTitle = 'List of WAT Members';
 

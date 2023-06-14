@@ -96,7 +96,7 @@ class MasterUserModel extends Model
             $table = new \CodeIgniter\View\Table();
 
             $builder = $this->db->table('master_user');
-            $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation, phone,created_date, roles');
+            $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation,created_date, roles');
             $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
             $builder->like('roles', 'MDO_ADMIN');
             if ($orgName != '') {
@@ -232,7 +232,7 @@ class MasterUserModel extends Model
 
 
             // $builder = $this->db->table('master_user');
-            // $builder->select('concat(first_name,\' \',last_name) as name, email, master_org_hierarchy.ms_name, \'-\' as dept_name,\'-\' as org_name, designation, phone,created_date,roles');
+            // $builder->select('concat(first_name,\' \',last_name) as name, email, master_org_hierarchy.ms_name, \'-\' as dept_name,\'-\' as org_name, designation,created_date,roles');
             // $builder->join('master_organization', 'master_organization.root_org_id = master_user.root_org_id ');
             // $builder->join('master_org_hierarchy', 'master_org_hierarchy.ms_id = master_user.root_org_id ');
             // $builder->where('master_org_hierarchy.ms_name', $org);
@@ -242,7 +242,7 @@ class MasterUserModel extends Model
             //     print_r($builder);
             // }    
             // $unionDept = $this->db->table('master_user')
-            //     ->select('concat(first_name,\' \',last_name) as name, email, master_org_hierarchy.ms_name, master_org_hierarchy.dept_name,  \'-\' as org_name, designation, phone,created_date,roles')
+            //     ->select('concat(first_name,\' \',last_name) as name, email, master_org_hierarchy.ms_name, master_org_hierarchy.dept_name,  \'-\' as org_name, designation,created_date,roles')
             //     ->join('master_organization', 'master_organization.root_org_id = master_user.root_org_id ')
             //     ->join('master_org_hierarchy', 'master_org_hierarchy.dept_id = master_user.root_org_id ')
             //     ->where('master_org_hierarchy.ms_name', $org)
@@ -254,7 +254,7 @@ class MasterUserModel extends Model
 
 
             // $unionOrg = $this->db->table('master_user')
-            //     ->select('concat(first_name,\' \',last_name) as name, email, master_org_hierarchy.ms_name, master_org_hierarchy.dept_name, master_organization.org_name, designation, phone,created_date,roles')
+            //     ->select('concat(first_name,\' \',last_name) as name, email, master_org_hierarchy.ms_name, master_org_hierarchy.dept_name, master_organization.org_name, designation,created_date,roles')
             //     ->join('master_organization', 'master_organization.root_org_id = master_user.root_org_id ')
             //     ->join('master_org_hierarchy', 'master_org_hierarchy.org_id = master_user.root_org_id ')
             //     ->where('master_org_hierarchy.ms_name', $org)
@@ -448,7 +448,7 @@ class MasterUserModel extends Model
             $table = new \CodeIgniter\View\Table();
 
             $builder = $this->db->table('master_user');
-            $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation, phone,created_date,roles');
+            $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation,created_date,roles');
             $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
             $builder->like('roles', 'CBP_ADMIN');
             if ($orgName != '') {
@@ -481,7 +481,7 @@ class MasterUserModel extends Model
             $table = new \CodeIgniter\View\Table();
 
             $builder = $this->db->table('master_user');
-            $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation, phone,created_date,roles');
+            $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation,created_date,roles');
             $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
             $builder->like('roles', 'CONTENT_CREATOR');
             if ($orgName != '') {
@@ -513,7 +513,7 @@ class MasterUserModel extends Model
             $table = new \CodeIgniter\View\Table();
 
             $builder = $this->db->table('master_user');
-            $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation, phone,created_date,roles');
+            $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation,created_date,roles');
             $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
             $builder->like('roles', 'CONTENT_REVIEWER');
             if ($orgName != '') {
@@ -545,7 +545,7 @@ class MasterUserModel extends Model
             $table = new \CodeIgniter\View\Table();
 
             $builder = $this->db->table('master_user');
-            $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation, phone,created_date,roles');
+            $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation,created_date,roles');
             $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
             $builder->like('roles', 'CONTENT_PUBLISHER');
             if ($orgName != '') {
@@ -578,7 +578,7 @@ class MasterUserModel extends Model
             $table = new \CodeIgniter\View\Table();
 
             $builder = $this->db->table('master_user');
-            $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation, phone,created_date,roles');
+            $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation,created_date,roles');
             $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
             $builder->like('roles', 'EDITOR');
             if ($orgName != '') {
@@ -611,7 +611,7 @@ class MasterUserModel extends Model
             $table = new \CodeIgniter\View\Table();
 
             $builder = $this->db->table('master_user');
-            $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation, phone,created_date,roles');
+            $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation,created_date,roles');
             $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
             $builder->like('roles', 'FRAC_ADMIN');
             if ($orgName != '') {
@@ -642,7 +642,7 @@ class MasterUserModel extends Model
             $table = new \CodeIgniter\View\Table();
 
             $builder = $this->db->table('master_user');
-            $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation, phone,created_date,roles');
+            $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation,created_date,roles');
             $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
             $builder->like('roles', 'FRAC_COMPETENCY_MEMBER');
             if ($orgName != '') {
@@ -673,7 +673,7 @@ class MasterUserModel extends Model
             $table = new \CodeIgniter\View\Table();
 
             $builder = $this->db->table('master_user');
-            $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation, phone,created_date,roles');
+            $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation,created_date,roles');
             $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
             $builder->like('roles', 'FRAC_REVIEWER_L1');
             if ($orgName != '') {
@@ -703,7 +703,7 @@ class MasterUserModel extends Model
         $table = new \CodeIgniter\View\Table();
 
         $builder = $this->db->table('master_user');
-        $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation, phone,created_date,roles');
+        $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation,created_date,roles');
         $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
         $builder->like('roles', 'FRAC_REVIEWER_L2');
         if ($orgName != '') {
@@ -730,7 +730,7 @@ class MasterUserModel extends Model
         $table = new \CodeIgniter\View\Table();
 
         $builder = $this->db->table('master_user');
-        $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation, phone,created_date,roles');
+        $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation,created_date,roles');
         $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
         $builder->like('roles', 'IFU_MEMBER');
         if ($orgName != '') {
@@ -757,7 +757,7 @@ class MasterUserModel extends Model
         $table = new \CodeIgniter\View\Table();
 
         $builder = $this->db->table('master_user');
-        $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation, phone,created_date,roles');
+        $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation,created_date,roles');
         $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
         $builder->like('roles', 'PUBLIC');
         if ($orgName != '') {
@@ -784,7 +784,7 @@ class MasterUserModel extends Model
         $table = new \CodeIgniter\View\Table();
 
         $builder = $this->db->table('master_user');
-        $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation, phone,created_date,roles');
+        $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation,created_date,roles');
         $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
         $builder->like('roles', 'SPV_ADMIN');
         if ($orgName != '') {
@@ -811,7 +811,7 @@ class MasterUserModel extends Model
         $table = new \CodeIgniter\View\Table();
 
         $builder = $this->db->table('master_user');
-        $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation, phone,created_date,roles');
+        $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation,created_date,roles');
         $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
         $builder->like('roles', 'STATE_ADMIN');
         if ($orgName != '') {
@@ -838,7 +838,7 @@ class MasterUserModel extends Model
         $table = new \CodeIgniter\View\Table();
 
         $builder = $this->db->table('master_user');
-        $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation, phone,created_date,roles');
+        $builder->select('concat(INITCAP(first_name),\' \',INITCAP(last_name)) as name, email, master_organization.org_name, designation,created_date,roles');
         $builder->join(' master_organization', 'master_organization.root_org_id = master_user.root_org_id');
         $builder->like('roles', 'WAT_MEMBER');
         if ($orgName != '') {
