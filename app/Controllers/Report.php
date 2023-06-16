@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\Home;
 
 use App\Models\MasterUserModel;
+use CodeIgniter\Database\Query;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -180,6 +181,12 @@ class Report extends BaseController
 
                 } else if ($reportType == 'userWiseCount') {
                     $result = $enrolment->getUserEnrolmentCountByMDO($orgName, $limit, $offset, $search, $orderBy, $orderDir);
+                    // $foorterData = $enrolment->dashboardTable('', '', false)->getResultArray();
+                    // $footer = [];
+                    // array_push($footer,["name"=>'',"email"=>'',"org_name"=>'',"designation"=>'Total',"enrolled_count"=>$enrolment->learnerDashboardTableFooter()->getResultArray()[0]['users'],"not_started_count"=>$foorterData[0]['users'],"in_progress_count"=>$foorterData[1]['users'],"completed_count"=>$foorterData[2]['users']]);
+                    // $result = array_merge($result->getResultArray(),$footer);
+                    // $result = (object) $result;
+                    // // echo '<pre>';print_r($result);die;
                     $fullResult = $enrolment->getUserEnrolmentCountByMDO($orgName, -1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getUserEnrolmentCountByMDO($orgName, -1, 0, $search, $orderBy, $orderDir);
                 } else if ($reportType == 'orgList') {
@@ -274,6 +281,9 @@ class Report extends BaseController
 
                 } else if ($reportType == 'userEnrolmentSummary') {
                     $result = $enrolment->getUserEnrolmentCountByMDO($orgName, $limit, $offset, $search, $orderBy, $orderDir);
+                    // $foorterData = $enrolment->dashboardTable('', '', false);
+                    // $footer = ['','','','Total',$enrolment->learnerDashboardTableFooter()->getResultArray()[0]['users'],$foorterData->getResultArray()[0]['users'],$foorterData->getResultArray()[1]['users'],$foorterData->getResultArray()[2]['users']];
+                    // $result = array_merge($result->getResultArray(),$footer);
                     $fullResult = $enrolment->getUserEnrolmentCountByMDO($orgName, -1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getUserEnrolmentCountByMDO($orgName, -1, 0, $search, $orderBy, $orderDir);
                 }  else if ($reportType == 'roleWiseCount') {
@@ -536,6 +546,11 @@ class Report extends BaseController
                     $fullResult = $competencyModel->getCompetencySummary(-1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $competencyModel->getCompetencySummary(-1, 0, $search, $orderBy, $orderDir);
 
+                } else if ($reportType == 'summaryReport') {
+                    $result = $orgModel->getSummaryReport($limit, $offset, $search, $orderBy, $orderDir);
+                    $fullResult = $orgModel->getSummaryReport(-1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $orgModel->getSummaryReport(-1, 0, $search, $orderBy, $orderDir);
+
                 }
 
 
@@ -595,6 +610,7 @@ class Report extends BaseController
                 $session = \Config\Services::session();
                 $table = new \CodeIgniter\View\Table();
                 $table->setTemplate($GLOBALS['tableTemplate']);
+                $footer = '';
 
                 $segments = $request->uri->getSegments();
 
@@ -686,7 +702,7 @@ class Report extends BaseController
                 }
 
                 $table->setHeading($header);
-
+                
                 $session->setTempdata('reportHeader', $header);
                 $session->setTempdata('reportTitle', $reportTitle);
 
@@ -844,6 +860,7 @@ class Report extends BaseController
                 $session = \Config\Services::session();
                 $table = new \CodeIgniter\View\Table();
                 $table->setTemplate($GLOBALS['tableTemplate']);
+                $footer = '';
 
                 $segments = $request->uri->getSegments();
                 //echo json_encode($segments);
@@ -858,7 +875,8 @@ class Report extends BaseController
                 $email = $request->getPost('email');
 
                 $lastUpdate = new DataUpdateModel();
-
+                $enrolment = new UserEnrolmentCourse();
+                
                 $data['lastUpdated'] = '[Report as on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
                 $session->setTempdata('error', '');
 
@@ -883,11 +901,15 @@ class Report extends BaseController
 
                 } else if ($reportType == 'userEnrolmentSummary') {
                     $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Enrolled','Not started',' In Progress', 'Completed'];
+                    // $foorterData = $enrolment->dashboardTable('', '', false);
+                    // $footer = ['Total','','','',$enrolment->learnerDashboardTableFooter()->getResultArray()[0]['users'],$foorterData->getResultArray()[0]['users'],$foorterData->getResultArray()[1]['users'],$foorterData->getResultArray()[2]['users']];
                     $session->setTempdata('fileName',  'UserEnrolmentSummary', 300);
                     $reportTitle = 'User-wise enrolment summary';
 
                 } 
                 $table->setHeading($header);
+                // if($footer != '')
+                // $table->setFooting($footer);
 
                 $session->setTempdata('reportHeader', $header);
                 $session->setTempdata('reportTitle', $reportTitle);
@@ -1402,6 +1424,11 @@ class Report extends BaseController
                     $header = ['Competency', 'Competency Type', 'Courses tagged'];
                     $session->setTempdata('fileName', 'CompetencySummary', 300);
                     $reportTitle = 'Competency Summary';
+
+                } else if ($reportType == 'summaryReport') {
+                    $header = ['Indicator', 'Vaue'];
+                    $session->setTempdata('fileName', 'SummaryReport', 300);
+                    $reportTitle = 'Summary Report';
 
                 }
                 $table->setHeading($header);

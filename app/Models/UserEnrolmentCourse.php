@@ -443,7 +443,6 @@ class UserEnrolmentCourse extends Model
             AND master_user.user_id NOT IN (SELECT DISTINCT user_id from user_course_enrolment) ' . $orgQuery. $likeQuery .
             ' ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
 
-
         return $query;
     }
 
@@ -1293,7 +1292,7 @@ not_started_users as
 
         // $builder->union($enrolled);
         $builder->groupBy('completion_status');
-        // $builder->orderBy('array_position(array[\'Not Started\',\'In-Progress\',\'Completed\',\'Total Enrolments\'], completion_status::text)');
+        $builder->orderBy('array_position(array[\'Not Started\',\'In-Progress\',\'Completed\'], completion_status::text)');
 
         return $builder->get();
 
@@ -1355,6 +1354,25 @@ not_started_users as
             $builder = $this->db->table('user_course_enrolment');
             $builder->select('distinct to_char(date_trunc(\'month\',to_date(enrolled_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as enrolled_month, 
             sum(count(*) ) over (order by to_char(date_trunc(\'month\',to_date(enrolled_date,\'DD/MM/YYYY\')),\'YYYY/MM\'))');
+            // $builder->where('enrolled_date != \'\'');
+            $builder->groupBy('enrolled_month');
+            $builder->orderBy('enrolled_month');
+            $query = $builder->get();
+
+            return $query;
+
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+
+    }
+
+    public function getMonthWiseTotalUniqueEnrolmentCount()
+    {
+        try {
+            $builder = $this->db->table('user_course_enrolment');
+            $builder->select('distinct to_char(date_trunc(\'month\',to_date(enrolled_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as enrolled_month, 
+            sum(count(distinct user_id) ) over (order by to_char(date_trunc(\'month\',to_date(enrolled_date,\'DD/MM/YYYY\')),\'YYYY/MM\'))');
             // $builder->where('enrolled_date != \'\'');
             $builder->groupBy('enrolled_month');
             $builder->orderBy('enrolled_month');

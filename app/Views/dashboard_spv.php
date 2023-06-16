@@ -12,14 +12,15 @@
   <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
-
+  <script src="https://unpkg.com/chart.js@2.8.0/dist/Chart.bundle.js"></script>
+  <script src="https://unpkg.com/chartjs-gauge@0.3.0/dist/chartjs-gauge.js"></script>
   <script src="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"></script>
   <script src="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css"></script>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato">
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link href="<?php echo ASSETS_URL . 'css/dashboard_style.css' ?>" rel="stylesheet" type="text/css">
-
+  
 </head>
 
 <body>
@@ -43,7 +44,7 @@
       <?php echo $reportTitle ?>
     </label>
     <div class="dashboard-summary">
-      <label class="tab-label">Summary</label>
+      <label class="tab-label">At a glance</label>
       <hr />
       <table>
         <tr>
@@ -209,6 +210,17 @@
           </td>
         </tr>
         <tr>
+        <td style="width:50%;padding: 70px; ">
+            <div class="chart-container" style="width:500px">
+
+              <div class="line-chart-container" style="width:600px; height:300px">
+
+                <canvas id="enrolment-completion-bar"></canvas>
+
+              </div>
+
+            </div>
+          </td>
           <td style="width:50%;padding: 70px;  ">
             <div class="chart-container" style="width:500px">
 
@@ -220,17 +232,7 @@
 
             </div>
           </td>
-          <!-- <td style="width:50%;padding: 70px; ">
-            <div class="chart-container" style="width:500px">
-
-              <div class="line-chart-container" style="width:600px; height:300px">
-
-                <canvas id="completion-line-chart"></canvas>
-
-              </div>
-
-            </div>
-          </td> -->
+          
         </tr>
       </table>
 
@@ -306,6 +308,17 @@
 
             </div>
           </td>
+          <!-- <td style="width:50%;padding: 70px; ">
+            <div class="chart-container" style="width:500px">
+
+              <div class="line-chart-container" style="width:600px; height:300px">
+
+                <canvas id="onboarding-enrolment-bar"></canvas>
+
+              </div>
+
+            </div>
+          </td> -->
         </tr>
       </table>
     </div>
@@ -439,22 +452,24 @@
           {
             label: "Courses Published",
             data: cData.coursePublishCount,
-            borderColor: "#ad99bd",
-            pointBackgroundColor: "#ad99bd",
-            pointBorderColor: "#ad99bd",
-            pointHoverBackgroundColor: "#ad99bd",
-            pointHoverBorderColor: "#ad99bd",
-            pointStyle: 'crossRot'
+            borderColor: "#fe96a9",
+            pointBackgroundColor: "#fe96a9",
+            pointBorderColor: "#fe96a9",
+            pointHoverBackgroundColor: "#fe96a9",
+            pointHoverBorderColor: "#fe96a9",
+            pointStyle: 'crossRot',
+            backgroundColor : '#fe96a929'
           },
           {
             label: "Total Courses",
             data: cData.totalCoursePublishCount,
-            borderColor: "#4bc0c0",
-            pointBackgroundColor: "#4bc0c0",
-            pointBorderColor: "#4bc0c0",
-            pointHoverBackgroundColor: "#4bc0c0",
-            pointHoverBorderColor: "#4bc0c0",
-            pointStyle: 'crossRot'
+            borderColor: "#aad6c8",
+            pointBackgroundColor: "#aad6c8",
+            pointBorderColor: "#aad6c8",
+            pointHoverBackgroundColor: "#aad6c8",
+            pointHoverBorderColor: "#aad6c8",
+            pointStyle: 'crossRot',
+            backgroundColor : '#aad6c83d'
           }
         ]
       };
@@ -503,14 +518,15 @@
         labels: cData.onboardingMonth,
         datasets: [
           {
-            label: "Users Onboarded",
+            label: "Users Onboarded in the month",
             data: cData.onboardingCount,
             borderColor: "#36a2eb",
             pointBackgroundColor: "#36a2eb",
             pointBorderColor: "#36a2eb",
             pointHoverBackgroundColor: "#36a2eb",
             pointHoverBorderColor: "#36a2eb",
-            pointStyle: 'crossRot'
+            pointStyle: 'crossRot',
+            backgroundColor : '#36a2eb0f'
           },
           {
             label: "Total Users",
@@ -520,7 +536,8 @@
             pointBorderColor: "#ff6384",
             pointHoverBackgroundColor: "#ff6384",
             pointHoverBorderColor: "#ff6384",
-            pointStyle: 'crossRot'
+            pointStyle: 'crossRot',
+            backgroundColor : '#ff63840f'
           }
         ]
       };
@@ -537,7 +554,7 @@
 
         legend: {
           display: true,
-          position: "left",
+          position: "bottom",
           labels: {
             fontColor: "#333",
             fontSize: 16
@@ -563,6 +580,65 @@
         options: useroptions
       });
 
+// ONBOARDED-ENROLMENT RATIO
+
+      var completionratioctx = $("#onboarding-enrolment-bar");
+      var completionratiodata = {
+        labels: cData.onboardingMonth,
+        datasets: [
+          {
+            label: "Unique users enrolled",
+            data: cData.totalUniqeEnrolmentCount,
+            backgroundColor: '#ffc87d'
+          },
+          {
+            label: "User count",
+            data: cData.totalUserCount,
+            backgroundColor: '#829ccf'
+          }
+          
+        ]
+      };
+
+      var completionratiooptions = {
+        responsive: true,
+        title: {
+          display: true,
+          position: "top",
+          text: "Users Onboarded vs Users Enrolled",
+          fontSize: 16,
+          fontColor: "#111"
+        },
+
+        legend: {
+          display: true,
+          position: "bottom",
+          labels: {
+            fontColor: "#333",
+            fontSize: 16
+          }
+        },
+        scales: {
+          xAxes: [{
+            gridLines: {
+              display: false
+            },
+            stacked: true
+          }],
+          yAxes: [{
+            gridLines: {
+              display: false
+            },
+            stacked: true
+          }]
+        }
+      };
+
+      var completionratiochart = new Chart(completionratioctx, {
+        type: "bar",
+        data: completionratiodata,
+        options: completionratiooptions
+      });
 
       //  ENROLMENT OVERVIEW
 
@@ -571,24 +647,26 @@
         labels: cData.monthWiseEnrolmentMonth,
         datasets: [
           {
-            label: "Total Enrolment",
-            data: cData.totalEnrolmentCount,
-            borderColor: "#68bf7c",
-            pointBackgroundColor: "#68bf7c",
-            pointBorderColor: "#68bf7c",
-            pointHoverBackgroundColor: "#68bf7c",
-            pointHoverBorderColor: "#68bf7c",
-            pointStyle: 'crossRot'
-          },
-          {
             label: "Enrolments in the month",
             data: cData.monthWiseEnrolmentCount,
-            borderColor: "#f4a05a",
-            pointBackgroundColor: "#f4a05a",
-            pointBorderColor: "#f4a05a",
-            pointHoverBackgroundColor: "#f4a05a",
-            pointHoverBorderColor: "#f4a05a",
-            pointStyle: 'crossRot'
+            borderColor: "#94cef5",
+            pointBackgroundColor: "#94cef5",
+            pointBorderColor: "#94cef5",
+            pointHoverBackgroundColor: "#94cef5",
+            pointHoverBorderColor: "#94cef5",
+            pointStyle: 'crossRot',
+            backgroundColor: '#94cef536'
+          },
+          {
+            label: "Total Enrolment",
+            data: cData.totalEnrolmentCount,
+            borderColor: "#ffaf91",
+            pointBackgroundColor: "#ffaf91",
+            pointBorderColor: "#ffaf91",
+            pointHoverBackgroundColor: "#ffaf91",
+            pointHoverBorderColor: "#ffaf91",
+            pointStyle: 'crossRot',
+            backgroundColor: '#ffaf912b'
           }
         ]
       };
@@ -638,24 +716,26 @@
         labels: cData.monthWiseCompletionMonth,
         datasets: [
           {
-            label: "Total Completion",
-            data: cData.totalCompletionCount,
-            borderColor: "#36a2eb",
-            pointBackgroundColor: "#36a2eb",
-            pointBorderColor: "#36a2eb",
-            pointHoverBackgroundColor: "#36a2eb",
-            pointHoverBorderColor: "#36a2eb",
-            pointStyle: 'crossRot'
-          },
-          {
             label: "Completions in the month",
             data: cData.monthWiseCompletionCount,
-            borderColor: "#ff6384",
-            pointBackgroundColor: "#ff6384",
-            pointBorderColor: "#ff6384",
-            pointHoverBackgroundColor: "#ff6384",
-            pointHoverBorderColor: "#ff6384",
-            pointStyle: 'crossRot'
+            borderColor: "#e39cb9",
+            pointBackgroundColor: "#e39cb9",
+            pointBorderColor: "#e39cb9",
+            pointHoverBackgroundColor: "#e39cb9",
+            pointHoverBorderColor: "#e39cb9",
+            pointStyle: 'crossRot',
+            backgroundColor: '#e39cb93d'
+          },
+          {
+            label: "Total Completion",
+            data: cData.totalCompletionCount,
+            borderColor: "#aad09a",
+            pointBackgroundColor: "#aad09a",
+            pointBorderColor: "#aad09a",
+            pointHoverBackgroundColor: "#aad09a",
+            pointHoverBorderColor: "#aad09a",
+            pointStyle: 'crossRot',
+            backgroundColor: '#aad09a3b'
           }
         ]
       };
@@ -698,6 +778,72 @@
         options: completionoptions
       });
 
+
+// ENROLMENT-COMPLETION RATIO
+
+
+var completionratioctx = $("#enrolment-completion-bar");
+      var completionratiodata = {
+        labels: cData.monthWiseCompletionMonth,
+        datasets: [
+          {
+            label: "Completion Count",
+            data: cData.totalCompletionCount,
+            backgroundColor: '#829ccf'
+          },
+          {
+            label: "Enrolment Count",
+            data: cData.totalEnrolmentCount,
+            backgroundColor: '#ffc87d'
+          }
+        ]
+      };
+
+      var completionratiooptions = {
+        responsive: true,
+        title: {
+          display: true,
+          position: "top",
+          text: "Enrolment vs. Completion",
+          fontSize: 16,
+          fontColor: "#111"
+        },
+
+        legend: {
+          display: true,
+          position: "bottom",
+          labels: {
+            fontColor: "#333",
+            fontSize: 16
+          }
+        },
+        scales: {
+          xAxes: [{
+            gridLines: {
+              display: false
+            },
+            stacked: true,
+            ticks: {
+          autoSkip: false
+        }
+          }],
+          yAxes: [{
+            gridLines: {
+              display: false
+            },
+            stacked: true
+          }]
+        }
+      };
+
+      var completionratiochart = new Chart(completionratioctx, {
+        type: "bar",
+        data: completionratiodata,
+        options: completionratiooptions
+      });
+
+
+
       // LEARNING HOURS
 
       var learninghoursctx = $("#learninghours-line-chart");
@@ -705,24 +851,26 @@
         labels: cData.learningHoursMonth,
         datasets: [
           {
-            label: "Total Learning Hours",
-            data: cData.totalearningHours,
-            borderColor: "#5874ce",
-            pointBackgroundColor: "#5874ce",
-            pointBorderColor: "#5874ce",
-            pointHoverBackgroundColor: "#5874ce",
-            pointHoverBorderColor: "#5874ce",
-            pointStyle: 'crossRot'
-          },
-          {
             label: "Learning Hours in the month",
             data: cData.monthWiseLearningHours,
-            borderColor: "#a2df95",
-            pointBackgroundColor: "#a2df95",
-            pointBorderColor: "#a2df95",
-            pointHoverBackgroundColor: "#a2df95",
-            pointHoverBorderColor: "#a2df95",
-            pointStyle: 'crossRot'
+            borderColor: "#ffa6b9",
+            pointBackgroundColor: "#ffa6b9",
+            pointBorderColor: "#ffa6b9",
+            pointHoverBackgroundColor: "#ffa6b9",
+            pointHoverBorderColor: "#ffa6b9",
+            pointStyle: 'crossRot',
+            backgroundColor : '#ffa6b929'
+          },
+          {
+            label: "Total Learning Hours",
+            data: cData.totalearningHours,
+            borderColor: "#7abfee",
+            pointBackgroundColor: "#7abfee",
+            pointBorderColor: "#7abfee",
+            pointHoverBackgroundColor: "#7abfee",
+            pointHoverBorderColor: "#7abfee",
+            pointStyle: 'crossRot',
+            backgroundColor : '#7abfee29'   
           }
         ]
       };
@@ -765,6 +913,9 @@
         options: learninghoursoptions
       });
 
+
+
+      
 
 
 

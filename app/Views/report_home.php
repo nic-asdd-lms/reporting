@@ -1112,6 +1112,7 @@
                             <option value="rozgarMelaSummary">Rozgar Mela Course-wise summary</option>
                             <option value="designationWiseCount">Designation-wise user count</option>
                             <option value="competencySummary">Competency Summary</option>
+                            <option value="summaryReport">Summary Report</option>
                         </select>
 
                     </div>

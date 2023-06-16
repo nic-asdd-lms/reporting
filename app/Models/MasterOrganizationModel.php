@@ -118,6 +118,67 @@ class MasterOrganizationModel extends Model
 
     }
 
+
+    public function getSummaryReport($limit, $offset, $search, $orderBy, $orderDir) {
+        try {
+            if ($search != '') {
+                $andlikeQuery = " AND  (kpi LIKE '%" . strtolower($search) . "%' OR kpi LIKE '%" . strtoupper($search) . "%' OR kpi LIKE '%" . ucfirst($search) . "%' )";
+                $wherelikeQuery = " WHERE  (kpi LIKE '%" . strtolower($search) . "%' OR kpi LIKE '%" . strtoupper($search) . "%' OR kpi LIKE '%" . ucfirst($search) . "%' )";
+    
+            } else {
+                $andlikeQuery = '';
+                $wherelikeQuery = '';
+                
+            }
+            if ($limit != -1) {
+                $limitQuery = ' limit ' . $limit . ' offset ' . $offset;
+            } else
+                $limitQuery = '';
+    
+            
+            $query = $this->db->query
+            ('SELECT * FROM (
+                SELECT \'Organisations Onboarded\' AS kpi,count(org_name) FROM master_organization WHERE status = \'Active\'
+                UNION SELECT \'Users Onboarded\'  AS kpi,count(*) FROM master_user 
+                UNION SELECT \'Courses Published\'  AS kpi,count(course_id) FROM master_course WHERE status = \'Live\'
+                UNION SELECT \'Course Providers\'  AS kpi,count(DISTINCT org_name) FROM master_course WHERE status = \'Live\'
+                UNION SELECT \'Enrolment Count\'  AS kpi,count(*) FROM user_course_enrolment
+                UNION SELECT \'Completion Count\'  AS kpi,count(*) FROM user_course_enrolment WHERE completion_status = \'Completed\'
+                UNION SELECT \'In-Progress Count\'  AS kpi,count(*) FROM user_course_enrolment WHERE completion_status = \'In-Progress\'
+                UNION SELECT \'Not Started Count\'  AS kpi,count(*) FROM user_course_enrolment WHERE completion_status = \'Not Started\'
+                UNION SELECT \'Unique users enrolled\'  AS kpi,count(DISTINCT user_id) FROM user_course_enrolment 
+                UNION SELECT \'Unique users completed\'  AS kpi,count(DISTINCT user_id) FROM user_course_enrolment WHERE completion_status = \'Completed\'
+                UNION SELECT \'No. of MDO Admin\'  AS kpi,count(*) FROM master_user WHERE roles LIKE \'%MDO_ADMIN%\'
+                UNION SELECT \'No. of Organisations having MDO Admin\'  AS kpi,count(DISTINCT root_org_id) FROM master_user WHERE roles LIKE \'%MDO_ADMIN%\'
+                UNION SELECT \'No. of Organisations Enrolled for Courses\'  AS kpi,count(DISTINCT root_org_id) FROM master_user JOIN user_course_enrolment ON master_user.user_id = user_course_enrolment.user_id
+                UNION SELECT \'Learning Hours\'  AS kpi,CAST(sum(durationh) AS integer)FROM master_course JOIN user_course_enrolment ON master_course.course_id = user_course_enrolment.course_id WHERE status = \'Live\' AND completion_status = \'Completed\'
+                UNION SELECT \'Content Hours\'  AS kpi,CAST(sum(durationh)  AS integer)FROM master_course WHERE status = \'Live\' 
+                UNION SELECT \'Courses Under Review\'  AS kpi,count(course_id) FROM master_course WHERE status = \'InReview\'
+                UNION SELECT \'Courses Under Publish\'  AS kpi,count(course_id) FROM master_course WHERE status = \'Reviewed\'
+                UNION SELECT \'Average Rating of Courses\'  AS kpi,ROUND(avg(avg_rating)::numeric,2) FROM master_course WHERE num_of_people_rated > 0
+                UNION SELECT \'No. of Programs\'  AS kpi,count(program_id) FROM master_program WHERE program_status = \'Live\'
+                UNION SELECT \'Program Duration (in hrs)\' AS kpi,CAST(sum(durationh) AS integer) FROM master_program WHERE program_status = \'Live\' 
+                UNION SELECT \'Users Onboarded yesterday\'  AS kpi,count(*) FROM master_user WHERE to_date(created_date,\'DD/MM/YYYY\') = current_date - 1
+                UNION SELECT \'Enrolled to Onboarding percentage\'  AS kpi,ROUND(((SELECT cast(count(DISTINCT user_course_enrolment.user_id) as double precision) FROM user_course_enrolment ) / ( SELECT cast( count(DISTINCT master_user.user_id) as double precision) FROM master_user ) * 100)::numeric,1)
+                UNION SELECT \'Completion to Enrollment percentage\'  AS kpi,ROUND(((SELECT cast(count(user_course_enrolment.user_id) as double precision) FROM user_course_enrolment WHERE completion_status = \'Completed\') / (SELECT cast(count(user_course_enrolment.user_id) as double precision) FROM user_course_enrolment ) * 100)::numeric,1)
+                UNION SELECT \'Not Started to Enrollment percentage\'  AS kpi,ROUND(((SELECT cast(count(user_course_enrolment.user_id) as double precision) FROM user_course_enrolment WHERE completion_status = \'Not Started\') / (SELECT cast(count(user_course_enrolment.user_id) as double precision) FROM user_course_enrolment ) * 100)::numeric,1)
+                UNION SELECT \'In Progress to Enrollment percentage\'  AS kpi,ROUND(((SELECT cast(count(user_course_enrolment.user_id) as double precision) FROM user_course_enrolment WHERE completion_status = \'In-Progress\') / (SELECT cast(count(user_course_enrolment.user_id) as double precision) FROM user_course_enrolment ) * 100)::numeric,1)) a
+                ORDER BY array_position(array[\'Organisations Onboarded\',\'Users Onboarded\',\'Courses Published\',\'Course Providers\',
+                \'Enrolment Count\' ,\'Completion Count\',\'In-Progress Count\' ,\'Not Started Count\',\'Unique users enrolled\',\'Unique users completed\',
+                    \'No. of MDO Admin\',\'No. of Organisations having MDO Admin\',\'No. of Organisations Enrolled for Courses\',\'Learning Hours\',\'Content Hours\',
+                    \'Courses Under Review\',\'Courses Under Publish\',\'Average Rating of Courses\',\'No. of Programs\',\'Program Duration (in hrs)\',
+                    \'Users Onboarded yesterday\',\'Enrolled to Onboarding percentage\',\'Completion to Enrollment percentage\',\'Not Started to Enrollment percentage\',
+                    \'In Progress to Enrollment percentage\'], kpi::text)' . $limitQuery 
+            );
+
+
+            return $query;
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+
 }
 
 ?>
