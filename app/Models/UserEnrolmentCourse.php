@@ -73,22 +73,17 @@ class UserEnrolmentCourse extends Model
     public function getCourseWiseEnrolmentReport($course, $org, $limit, $offset, $search, $orderBy, $orderDir)
     {
 
-        $builder = $this->db->table('user_course_enrolment');
-        $builder->select('concat(INITCAP(master_user.first_name),\' \',INITCAP(master_user.last_name)) as name, master_user.email, master_organization.org_name, master_user.designation, master_course.course_name, master_course.org_name as cbp_provider, user_course_enrolment.completion_status, user_course_enrolment.completion_percentage, user_course_enrolment.completed_on');
-        $builder->join('master_user', 'master_user.user_id = user_course_enrolment.user_id ');
-        $builder->join('master_course', 'master_course.course_id = user_course_enrolment.course_id ');
-        $builder->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id ');
-        $builder->where('user_course_enrolment.course_id', $course);
-        $builder->where('master_course.status', 'Live');
+        $builder = $this->db->table('enrolment');
+        $builder->select('name, email, org_name, designation,  completion_status, completion_percentage, completed_on');
+        $builder->where('course_id', $course);
         if ($search != '')
-            $builder->where("(first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtoupper($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%'
-                            OR last_name LIKE '%" . strtolower($search) . "%' OR last_name LIKE '%" . strtoupper($search) . "%' OR last_name LIKE '%" . ucfirst($search) . "%'
+            $builder->where("(name LIKE '%" . strtolower($search) . "%' OR name LIKE '%" . strtoupper($search) . "%' OR name LIKE '%" . ucfirst($search) . "%'
                             OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
                             OR designation LIKE '%" . strtolower($search) . "%' OR designation LIKE '%" . strtoupper($search) . "%' OR designation LIKE '%" . ucfirst($search) . "%'
-                            OR master_organization.org_name LIKE '%" . strtolower($search) . "%' OR master_organization.org_name LIKE '%" . strtoupper($search) . "%' OR master_organization.org_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
+                            OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
 
         if ($org != '') {
-            $builder->where('master_user.root_org_id', $org);
+            $builder->where('root_org_id', $org);
         }
         $builder->orderBy((int) $orderBy + 1, $orderDir);
         if ($limit != -1)
@@ -103,43 +98,17 @@ class UserEnrolmentCourse extends Model
 
     public function getCourseWiseEnrolmentCount($org, $limit, $offset, $search, $orderBy, $orderDir)
     {
-        if ($search != '') {
-            $likeQuery = " AND  (course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtoupper($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%' )";
+        $builder = $this->db->table('course_enrolment_summary');
+        $builder->select('course_name, org_name, published_date, durationhms,enrolled_count, not_started_count, in_progress_count, completed_count, avg_rating');
+        if ($search != '')
+            $builder->where("(course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtoupper($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
 
-        } else {
-            $likeQuery = '';
-        }
-        if ($limit != -1) {
-            $limitQuery = ' limit ' . $limit . ' offset ' . $offset;
-        } else
-            $limitQuery = '';
-
-        if ($org != '') {
-            $orgQuery = 'AND master_user.root_org_id=\'' . $org . '\'';
-        } else
-            $orgQuery = '';
+        $builder->orderBy((int) $orderBy + 1, $orderDir);
+        if ($limit != -1)
+            $builder->limit($limit, $offset);
 
 
-        $query = $this->db->query('SELECT course_name, master_course.org_name, to_date(published_date,\'DD-MM-YYYY\'), durationhms,COUNT(distinct user_course_enrolment.user_id) AS enrolled_count,
-            SUM(CASE WHEN user_course_enrolment.completion_status =\'Not Started\' THEN 1 ELSE 0 END) AS not_started,
-            SUM(CASE WHEN user_course_enrolment.completion_status =\'In-Progress\' THEN 1 ELSE 0 END) AS in_progress, 
-            SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count, avg_rating
-            FROM user_course_enrolment
-            INNER JOIN  master_course ON user_course_enrolment.course_id = master_course.course_id
-            INNER JOIN  master_user ON master_user.user_id =user_course_enrolment.user_id
-            WHERE master_course.status=\'Live\'' . $orgQuery . $likeQuery . '
-            GROUP BY course_name,master_course.org_name,published_date, durationhms,avg_rating
-            
-            UNION
-
-            SELECT course_name, master_course.org_name, to_date(published_date,\'DD-MM-YYYY\'), durationhms, \'0\' AS enrolled_count, \'0\' AS not_started, \'0\' AS in_progress, 
-            \'0\' AS completed_count, \'0\' AS avg_rating 
-            FROM master_course
-            WHERE status= \'Live\'
-            AND course_id NOT IN ( SELECT course_id FROM user_course_enrolment)
-            ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
-
-
+        $query = $builder->get();
 
         return $query;
 
@@ -318,16 +287,11 @@ class UserEnrolmentCourse extends Model
     public function getEnrolmentByOrg($org, $limit, $offset, $search, $orderBy, $orderDir)
     {
         $table = new \CodeIgniter\View\Table();
-        $builder = $this->db->table('user_course_enrolment');
-        $builder->select('concat(INITCAP(master_user.first_name),\' \',INITCAP(master_user.last_name)) as name, master_user.email, master_organization.org_name, master_user.designation,  course_name, user_course_enrolment.completion_status, completion_percentage, completed_on');
-        $builder->join('master_user', 'master_user.user_id = user_course_enrolment.user_id ');
-        $builder->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id ');
-        $builder->join('master_course', 'master_course.course_id = user_course_enrolment.course_id ');
-        $builder->where('master_organization.org_name', $org);
-        $builder->where('master_course.status', 'Live');
+        $builder = $this->db->table('enrolment');
+        $builder->select('name, email, org_name, designation,  course_name, completion_status, completion_percentage, completed_on');
+        $builder->where('org_name', $org);
         if ($search != '')
-            $builder->where("(first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtoupper($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%' 
-                            OR last_name LIKE '%" . strtolower($search) . "%' OR last_name LIKE '%" . strtoupper($search) . "%' OR last_name LIKE '%" . ucfirst($search) . "%'
+            $builder->where("(name LIKE '%" . strtolower($search) . "%' OR name LIKE '%" . strtoupper($search) . "%' OR name LIKE '%" . ucfirst($search) . "%' 
                             OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
                             OR designation LIKE '%" . strtolower($search) . "%' OR designation LIKE '%" . strtoupper($search) . "%' OR designation LIKE '%" . ucfirst($search) . "%'
                             OR course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtoupper($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
@@ -336,6 +300,7 @@ class UserEnrolmentCourse extends Model
 
         if ($limit != -1)
             $builder->limit($limit, $offset);
+
         $query = $builder->get();
 
         return $query;
@@ -344,62 +309,30 @@ class UserEnrolmentCourse extends Model
     public function getUserEnrolmentByMinistry($org, $limit, $offset, $search, $orderBy, $orderDir)
     {
         try {
+
+            $builder = $this->db->table('ministry_enrolment');
+            $builder->select('name, "email", "ms_name", dept_name,org_name,"designation",  course_name, completion_status, completion_percentage, completed_on');
+            $builder->where('ms_name', $org);
             if ($search != '') {
-                $likeQuery = " AND (first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtoupper($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%' 
-                                OR last_name LIKE '%" . strtolower($search) . "%' OR last_name LIKE '%" . strtoupper($search) . "%' OR last_name LIKE '%" . ucfirst($search) . "%'
-                                OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
-                                OR master_organization.org_name LIKE '%" . strtolower($search) . "%' OR master_organization.org_name LIKE '%" . strtoupper($search) . "%' OR master_organization.org_name LIKE '%" . ucfirst($search) . "%'
-                                OR dept_name LIKE '%" . strtolower($search) . "%' OR dept_name LIKE '%" . strtoupper($search) . "%' OR dept_name LIKE '%" . ucfirst($search) . "%'
-                                OR designation LIKE '%" . strtolower($search) . "%' OR designation LIKE '%" . strtoupper($search) . "%' OR designation LIKE '%" . ucfirst($search) . "%') ";
-
-            } else {
-                $likeQuery = '';
+                $builder->where("(name LIKE '%" . strtolower($search) . "%' OR name LIKE '%" . strtoupper($search) . "%' OR name LIKE '%" . ucfirst($search) . "%'
+                            OR course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtoupper($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%'
+                            OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
+                            OR designation LIKE '%" . strtolower($search) . "%' OR designation LIKE '%" . strtoupper($search) . "%' OR designation LIKE '%" . ucfirst($search) . "%'
+                            OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%'
+                            OR dept_name LIKE '%" . strtolower($search) . "%' OR dept_name LIKE '%" . strtoupper($search) . "%' OR dept_name LIKE '%" . ucfirst($search) . "%'
+                                OR completion_status LIKE '%" . strtolower($search) . "%' OR completion_status LIKE '%" . strtoupper($search) . "%' OR completion_status LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
             }
+            $builder->orderBy((int) $orderBy + 1, $orderDir);
+
             if ($limit != -1) {
-                $limitQuery = ' limit ' . $limit . ' offset ' . $offset;
-            } else
-                $limitQuery = '';
+                $builder->limit($limit, $offset);
+            }
 
-
-            $query = $this->db->query(' 
-                (SELECT concat(first_name, \' \', last_name) as name, "email", "master_org_hierarchy"."ms_name", \'-\' as dept_name, \'-\' as org_name, 
-                "designation",  course_name, user_course_enrolment.completion_status, completion_percentage, completed_on 
-                FROM "user_course_enrolment" 
-                JOIN master_user ON master_user.user_id = user_course_enrolment.user_id 
-                JOIN "master_organization" ON "master_organization"."root_org_id" = "master_user"."root_org_id" 
-                JOIN "master_org_hierarchy" ON "master_org_hierarchy"."ms_id" = "master_user"."root_org_id" 
- 			    JOIN master_course ON master_course.course_id = user_course_enrolment.course_id
-                WHERE "master_org_hierarchy"."ms_name" =  \'' . $org . '\'' . ' AND master_course.status = \'Live\' ' . $likeQuery . ')  
-                UNION 
-             
-                (SELECT concat(first_name, \' \', last_name) as name, "email", "master_org_hierarchy"."ms_name", "master_org_hierarchy"."dept_name", 
-                \'-\' as org_name, "designation",  course_name, user_course_enrolment.completion_status, completion_percentage, completed_on  
-                FROM "user_course_enrolment" 
-                JOIN master_user ON master_user.user_id = user_course_enrolment.user_id 
-                JOIN "master_organization" ON "master_organization"."root_org_id" = "master_user"."root_org_id" 
-                JOIN "master_org_hierarchy" ON "master_org_hierarchy"."dept_id" = "master_user"."root_org_id" 
-                JOIN master_course ON master_course.course_id = user_course_enrolment.course_id
-                WHERE "master_org_hierarchy"."ms_name" = \'' . $org . '\'' . ' AND master_course.status = \'Live\' 
-                AND "master_org_hierarchy"."dept_id" != "master_org_hierarchy"."ms_id"  ' . $likeQuery . '
-                )  
-                UNION 
-             
-                (SELECT concat(first_name, \' \', last_name) as name, "email", "master_org_hierarchy"."ms_name", "master_org_hierarchy"."dept_name", 
-                "master_organization"."org_name", "designation",  course_name, user_course_enrolment.completion_status, completion_percentage, completed_on 
-                FROM "user_course_enrolment" 
-                JOIN master_user ON master_user.user_id = user_course_enrolment.user_id 
-                JOIN "master_organization" ON "master_organization"."root_org_id" = "master_user"."root_org_id" 
-                JOIN "master_org_hierarchy" ON "master_org_hierarchy"."org_id" = "master_user"."root_org_id" 
-                JOIN master_course ON master_course.course_id = user_course_enrolment.course_id
-                WHERE "master_org_hierarchy"."ms_name" = \'' . $org . '\'' . ' AND master_course.status = \'Live\' 
-                AND "master_org_hierarchy"."dept_id" != "master_org_hierarchy"."org_id" 
-                AND "master_org_hierarchy"."org_id" != "master_org_hierarchy"."ms_id" ' . $likeQuery . '
-			    )  
-                order by ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
-
-
+            $query = $builder->get();
 
             return $query;
+
+            
         } catch (\Exception $e) {
             throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
@@ -408,40 +341,22 @@ class UserEnrolmentCourse extends Model
 
     public function getUserEnrolmentCountByMDO($org, $limit, $offset, $search, $orderBy, $orderDir)
     {
-        if ($search != '') {
-            $likeQuery = " AND (first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtoupper($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%' 
-                            OR last_name LIKE '%" . strtolower($search) . "%' OR last_name LIKE '%" . strtoupper($search) . "%' OR last_name LIKE '%" . ucfirst($search) . "%'
+        $builder = $this->db->table('enrolment_summary');
+        $builder->select('*');
+        if ($org != '')
+            $builder->where('org_name', $org);
+        if ($search != '')
+            $builder->where("(name LIKE '%" . strtolower($search) . "%' OR name LIKE '%" . strtoupper($search) . "%' OR name LIKE '%" . ucfirst($search) . "%' 
                             OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
-                            OR master_organization.org_name LIKE '%" . strtolower($search) . "%' OR master_organization.org_name LIKE '%" . strtoupper($search) . "%' OR master_organization.org_name LIKE '%" . ucfirst($search) . "%'
-                            OR designation LIKE '%" . strtolower($search) . "%' OR designation LIKE '%" . strtoupper($search) . "%' OR designation LIKE '%" . ucfirst($search) . "%') ";
+                            OR designation LIKE '%" . strtolower($search) . "%' OR designation LIKE '%" . strtoupper($search) . "%' OR designation LIKE '%" . ucfirst($search) . "%'
+                            OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
 
-        } else {
-            $likeQuery = '';
-        }
-        if ($limit != -1) {
-            $limitQuery = ' limit ' . $limit . ' offset ' . $offset;
-        } else
-            $limitQuery = '';
+        if ($limit != -1)
+            $builder->limit($limit, $offset);
+        $builder->orderBy((int) $orderBy + 1, $orderDir);
 
-        if($org == '')
-            $orgQuery = '';
-        else 
-            $orgQuery = ' AND master_organization.org_name=\'' . $org . '\' ';
+        $query = $builder->get();
 
-        $query = $this->db->query('SELECT distinct concat(INITCAP(master_user.first_name),\' \',INITCAP(master_user.last_name)) as name, master_user.email, master_organization.org_name, master_user.designation, COUNT(*) AS enrolled_count
-            ,SUM(CASE WHEN user_course_enrolment.completion_status =\'Not Started\' THEN 1 ELSE 0 END) AS not_started_count
-            ,SUM(CASE WHEN user_course_enrolment.completion_status =\'In-Progress\' THEN 1 ELSE 0 END) AS in_progress_count
-            ,SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count
-            FROM user_course_enrolment, master_user,master_organization
-            WHERE user_course_enrolment.user_id = master_user.user_id 
-            AND master_organization.root_org_id = master_user.root_org_id ' .$orgQuery . $likeQuery .
-            'GROUP BY name, email, master_organization.org_name, designation, phone
-        UNION
-            SELECT distinct concat( INITCAP(master_user.first_name),\' \',INITCAP(master_user.last_name)) as name, master_user.email, master_organization.org_name, master_user.designation,  0 AS enrolled_count,0 AS not_started_count,0 AS in_progress_count,0 AS completed_count
-            FROM  master_user, master_organization
-            WHERE master_organization.root_org_id = master_user.root_org_id 
-            AND master_user.user_id NOT IN (SELECT DISTINCT user_id from user_course_enrolment) ' . $orgQuery. $likeQuery .
-            ' ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
 
         return $query;
     }
@@ -475,20 +390,20 @@ class UserEnrolmentCourse extends Model
     public function getMonthWiseCourseCompletion($limit, $offset, $search, $orderBy, $orderDir)
     {
         try {
-            
+
             $builder = $this->db->table('user_course_enrolment');
             $builder->select('distinct to_char(date_trunc(\'month\',to_date(completed_on,\'DD/MM/YYYY\')),\'YYYY/MM\') as completed_month, count(*) ');
             $builder->where('completion_status', 'Completed');
             $builder->where('completed_on != \'\'');
-            
+
             if ($search != '')
-                $builder->where("(completed_month LIKE '%" . strtolower($search) . "%' OR completed_month LIKE '%" . strtoupper($search) . "%' OR completed_month LIKE '%" . ucfirst($search) . "%' )", NULL, FALSE);
+                $builder->where("(completed_on LIKE '%" . strtolower($search) . "%' OR completed_on LIKE '%" . strtoupper($search) . "%' OR completed_on LIKE '%" . ucfirst($search) . "%' )", NULL, FALSE);
             if ($limit != -1)
                 $builder->limit($limit, $offset);
 
             $builder->groupBy('completed_month');
             $builder->orderBy((int) $orderBy + 1, $orderDir);
-            
+
             $query = $builder->get();
 
             return $query;
@@ -500,27 +415,23 @@ class UserEnrolmentCourse extends Model
     }
     public function getTopUserEnrolment($topCount, $limit, $offset, $search, $orderBy, $orderDir)
     {
+        $builder = $this->db->table('enrolment_summary');
+        $builder->select('name, email, org_name, enrolled_count');
+
         if ($search != '') {
-            $likeQuery = " AND (first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtoupper($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%' 
-                            OR last_name LIKE '%" . strtolower($search) . "%' OR last_name LIKE '%" . strtoupper($search) . "%' OR last_name LIKE '%" . ucfirst($search) . "%'
+            $builder->where("(name LIKE '%" . strtolower($search) . "%' OR name LIKE '%" . strtoupper($search) . "%' OR name LIKE '%" . ucfirst($search) . "%' 
                             OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
-                            OR master_organization.org_name LIKE '%" . strtolower($search) . "%' OR master_organization.org_name LIKE '%" . strtoupper($search) . "%' OR master_organization.org_name LIKE '%" . ucfirst($search) . "%') ";
+                            OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%') ", NULL, FALSE);
 
-        } else {
-            $likeQuery = '';
         }
+        $builder->orderBy('enrolled_count', 'desc');
+
         if ($limit != -1) {
-            $limitQuery = ' limit ' . min($limit, $topCount - $offset) . ' offset ' . $offset;
+            $builder->limit(min($limit, $topCount - $offset), $offset);
         } else
-            $limitQuery = ' limit ' . $topCount - $offset . ' offset ' . $offset;
+            $builder->limit($topCount - $offset, $offset);
 
-
-        $query = $this->db->query('SELECT concat(INITCAP(master_user.first_name),\' \',INITCAP(master_user.last_name)) as name, email, master_organization.org_name, COUNT(*) AS enrolled_count
-            FROM user_course_enrolment, master_user, master_organization
-            WHERE user_course_enrolment.user_id = master_user.user_id
-            AND master_organization.root_org_id = master_user.root_org_id ' . $likeQuery .
-            'GROUP BY name, email, master_organization.org_name
-            ORDER BY enrolled_count desc ' . $limitQuery);
+        $query = $builder->get();
 
 
         return $query;
@@ -528,28 +439,23 @@ class UserEnrolmentCourse extends Model
 
     public function getTopUserCompletion($topCount, $limit, $offset, $search, $orderBy, $orderDir)
     {
+        $builder = $this->db->table('enrolment_summary');
+        $builder->select('name, email, org_name, completed_count');
+
         if ($search != '') {
-            $likeQuery = " AND (first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtoupper($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%' 
-                            OR last_name LIKE '%" . strtolower($search) . "%' OR last_name LIKE '%" . strtoupper($search) . "%' OR last_name LIKE '%" . ucfirst($search) . "%'
+            $builder->where("(name LIKE '%" . strtolower($search) . "%' OR name LIKE '%" . strtoupper($search) . "%' OR name LIKE '%" . ucfirst($search) . "%' 
                             OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
-                            OR master_organization.org_name LIKE '%" . strtolower($search) . "%' OR master_organization.org_name LIKE '%" . strtoupper($search) . "%' OR master_organization.org_name LIKE '%" . ucfirst($search) . "%') ";
+                            OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%') ", NULL, FALSE);
 
-        } else {
-            $likeQuery = '';
         }
+        $builder->orderBy('completed_count', 'desc');
+
         if ($limit != -1) {
-            $limitQuery = ' limit ' . min($limit, $topCount - $offset) . ' offset ' . $offset;
+            $builder->limit(min($limit, $topCount - $offset), $offset);
         } else
-            $limitQuery = ' limit ' . $topCount - $offset . ' offset ' . $offset;
+            $builder->limit($topCount - $offset, $offset);
 
-
-        $query = $this->db->query('SELECT concat(INITCAP(master_user.first_name),\' \',INITCAP(master_user.last_name)) as name,  email, master_organization.org_name, 
-        SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count
-            FROM user_course_enrolment, master_user, master_organization
-            WHERE user_course_enrolment.user_id = master_user.user_id
-            AND master_organization.root_org_id = master_user.root_org_id ' . $likeQuery .
-            'GROUP BY name, email, master_organization.org_name
-            ORDER BY completed_count desc ' . $limitQuery);
+        $query = $builder->get();
 
 
         return $query;
@@ -557,28 +463,23 @@ class UserEnrolmentCourse extends Model
 
     public function getTopUserNotStarted($topCount, $limit, $offset, $search, $orderBy, $orderDir)
     {
+        $builder = $this->db->table('enrolment_summary');
+        $builder->select('name, email, org_name, not_started_count');
+
         if ($search != '') {
-            $likeQuery = " AND (first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtoupper($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%' 
-                            OR last_name LIKE '%" . strtolower($search) . "%' OR last_name LIKE '%" . strtoupper($search) . "%' OR last_name LIKE '%" . ucfirst($search) . "%'
+            $builder->where("(name LIKE '%" . strtolower($search) . "%' OR name LIKE '%" . strtoupper($search) . "%' OR name LIKE '%" . ucfirst($search) . "%' 
                             OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
-                            OR master_organization.org_name LIKE '%" . strtolower($search) . "%' OR master_organization.org_name LIKE '%" . strtoupper($search) . "%' OR master_organization.org_name LIKE '%" . ucfirst($search) . "%') ";
+                            OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%') ", NULL, FALSE);
 
-        } else {
-            $likeQuery = '';
         }
+        $builder->orderBy('not_started_count', 'desc');
+
         if ($limit != -1) {
-            $limitQuery = ' limit ' . min($limit, $topCount - $offset) . ' offset ' . $offset;
+            $builder->limit(min($limit, $topCount - $offset), $offset);
         } else
-            $limitQuery = ' limit ' . $topCount - $offset . ' offset ' . $offset;
+            $builder->limit($topCount - $offset, $offset);
 
-
-        $query = $this->db->query('SELECT concat(INITCAP(master_user.first_name),\' \',INITCAP(master_user.last_name)) as name, email, master_organization.org_name, 
-        SUM(CASE WHEN user_course_enrolment.completion_status =\'Not Started\' THEN 1 ELSE 0 END) AS not_started
-            FROM user_course_enrolment, master_user, master_organization
-            WHERE user_course_enrolment.user_id = master_user.user_id
-            AND master_organization.root_org_id = master_user.root_org_id ' . $likeQuery .
-            'GROUP BY name, email, master_organization.org_name
-            ORDER BY not_started desc ' . $limitQuery);
+        $query = $builder->get();
 
 
         return $query;
@@ -586,28 +487,23 @@ class UserEnrolmentCourse extends Model
 
     public function getTopUserInProgress($topCount, $limit, $offset, $search, $orderBy, $orderDir)
     {
+        $builder = $this->db->table('enrolment_summary');
+        $builder->select('name, email, org_name, in_progress_count');
+
         if ($search != '') {
-            $likeQuery = " AND (first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtoupper($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%' 
-                            OR last_name LIKE '%" . strtolower($search) . "%' OR last_name LIKE '%" . strtoupper($search) . "%' OR last_name LIKE '%" . ucfirst($search) . "%'
+            $builder->where("(name LIKE '%" . strtolower($search) . "%' OR name LIKE '%" . strtoupper($search) . "%' OR name LIKE '%" . ucfirst($search) . "%' 
                             OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
-                            OR master_organization.org_name LIKE '%" . strtolower($search) . "%' OR master_organization.org_name LIKE '%" . strtoupper($search) . "%' OR master_organization.org_name LIKE '%" . ucfirst($search) . "%') ";
+                            OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%') ", NULL, FALSE);
 
-        } else {
-            $likeQuery = '';
         }
+        $builder->orderBy('in_progress_count', 'desc');
+
         if ($limit != -1) {
-            $limitQuery = ' limit ' . min($limit, $topCount - $offset) . ' offset ' . $offset;
+            $builder->limit(min($limit, $topCount - $offset), $offset);
         } else
-            $limitQuery = ' limit ' . $topCount - $offset . ' offset ' . $offset;
+            $builder->limit($topCount - $offset, $offset);
 
-
-        $query = $this->db->query('SELECT concat(INITCAP(master_user.first_name),\' \',INITCAP(master_user.last_name)) as name, email, master_organization.org_name, 
-        SUM(CASE WHEN user_course_enrolment.completion_status =\'In-Progress\' THEN 1 ELSE 0 END) AS in_progress
-            FROM user_course_enrolment, master_user, master_organization
-            WHERE user_course_enrolment.user_id = master_user.user_id
-            AND master_organization.root_org_id = master_user.root_org_id ' . $likeQuery .
-            'GROUP BY name, email, master_organization.org_name
-            ORDER BY in_progress desc ' . $limitQuery);
+        $query = $builder->get();
 
 
         return $query;
@@ -617,26 +513,23 @@ class UserEnrolmentCourse extends Model
     {
         try {
 
-            $builder = $this->db->table('user_course_enrolment');
-            $builder->join('master_user', 'master_user.user_id = user_course_enrolment.user_id');
-            $builder->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id ');
-            $builder->select('master_organization.org_name, count(distinct user_course_enrolment.user_id) as enrol_count');
+            $builder = $this->db->table('enrolment_summary');
+            $builder->select('org_name, sum(enrolled_count) as enrol_count');
             // $builder->where(' org_name IS NOT NULL');
             if ($search != '') {
 
-                $builder->like('master_organization.org_name', strtolower($search));
-                $builder->orLike('master_organization.org_name', strtoupper($search));
-                $builder->orLike('master_organization.org_name', ucfirst($search));
+                $builder->like('org_name', strtolower($search));
+                $builder->orLike('org_name', strtoupper($search));
+                $builder->orLike('org_name', ucfirst($search));
             }
 
-            $builder->groupBy('master_organization.org_name');
+            $builder->groupBy('org_name');
             $builder->orderBy('enrol_count', 'desc');
             if ($limit != -1)
                 $builder->limit(min($topCount - $offset, $limit), $offset);
             else
                 $builder->limit($topCount - $offset, $offset);
             $query = $builder->get();
-            // print_r($builder);
             return $query;
 
         } catch (\Exception $e) {
@@ -647,29 +540,25 @@ class UserEnrolmentCourse extends Model
     public function getTopOrgCompletion($topCount, $limit, $offset, $search, $orderBy, $orderDir)
     {
         try {
-            $table = new \CodeIgniter\View\Table();
-
-            $builder = $this->db->table('user_course_enrolment');
-            $builder->join('master_user', 'master_user.user_id = user_course_enrolment.user_id');
-            $builder->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id ');
-            $builder->select('master_organization.org_name, SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count');
+            $builder = $this->db->table('enrolment_summary');
+            $builder->select('org_name, sum(completed_count) as completions');
             // $builder->where(' org_name IS NOT NULL');
             if ($search != '') {
 
-                $builder->like('master_organization.org_name', strtolower($search));
-                $builder->orLike('master_organization.org_name', strtoupper($search));
-                $builder->orLike('master_organization.org_name', ucfirst($search));
+                $builder->like('org_name', strtolower($search));
+                $builder->orLike('org_name', strtoupper($search));
+                $builder->orLike('org_name', ucfirst($search));
             }
 
-            $builder->groupBy('master_organization.org_name');
-            $builder->orderBy('completed_count', 'desc');
+            $builder->groupBy('org_name');
+            $builder->orderBy('completions', 'desc');
             if ($limit != -1)
                 $builder->limit(min($topCount - $offset, $limit), $offset);
             else
                 $builder->limit($topCount - $offset, $offset);
             $query = $builder->get();
-            // print_r($builder);
             return $query;
+
 
         } catch (\Exception $e) {
             throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
@@ -678,19 +567,17 @@ class UserEnrolmentCourse extends Model
 
     public function getTopCourseEnrolment($topCount, $limit, $offset, $search, $orderBy, $orderDir)
     {
-        $builder = $this->db->table('user_course_enrolment');
-        $builder->join('master_user', 'master_user.user_id = user_course_enrolment.user_id');
-        $builder->join('master_course', 'master_course.course_id = user_course_enrolment.course_id ');
-        $builder->select('master_course. course_name, count(distinct user_course_enrolment.user_id) as enroll_count');
+        $builder = $this->db->table('course_enrolment_summary');
+        $builder->select('course_name, org_name, sum(enrolled_count) as enroll_count');
         // $builder->where(' org_name IS NOT NULL');
         if ($search != '') {
 
-            $builder->like('master_course.course_name', strtolower($search));
-            $builder->orLike('master_course.course_name', strtoupper($search));
-            $builder->orLike('master_course.course_name', ucfirst($search));
+            $builder->like('course_name', strtolower($search));
+            $builder->orLike('course_name', strtoupper($search));
+            $builder->orLike('course_name', ucfirst($search));
         }
 
-        $builder->groupBy('master_course.course_name');
+        $builder->groupBy('course_name, org_name');
         $builder->orderBy('enroll_count', 'desc');
         if ($limit != -1)
             $builder->limit(min($topCount - $offset, $limit), $offset);
@@ -698,33 +585,29 @@ class UserEnrolmentCourse extends Model
             $builder->limit($topCount - $offset, $offset);
 
         $query = $builder->get();
-        // print_r($builder);
         return $query;
     }
 
     public function getTopCourseCompletion($topCount, $limit, $offset, $search, $orderBy, $orderDir)
     {
-        $builder = $this->db->table('user_course_enrolment');
-        $builder->join('master_user', 'master_user.user_id = user_course_enrolment.user_id');
-        $builder->join('master_course', 'master_course.course_id = user_course_enrolment.course_id ');
-        $builder->select('master_course.course_name, SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count');
+        $builder = $this->db->table('course_enrolment_summary');
+        $builder->select('course_name, org_name, sum(completed_count) as completions');
         // $builder->where(' org_name IS NOT NULL');
         if ($search != '') {
 
-            $builder->like('master_course.course_name', strtolower($search));
-            $builder->orLike('master_course.course_name', strtoupper($search));
-            $builder->orLike('master_course.course_name', ucfirst($search));
+            $builder->like('course_name', strtolower($search));
+            $builder->orLike('course_name', strtoupper($search));
+            $builder->orLike('course_name', ucfirst($search));
         }
 
-        $builder->groupBy('master_course.course_name');
-        $builder->orderBy('completed_count', 'desc');
+        $builder->groupBy('course_name, org_name');
+        $builder->orderBy('completions', 'desc');
         if ($limit != -1)
             $builder->limit(min($topCount - $offset, $limit), $offset);
         else
             $builder->limit($topCount - $offset, $offset);
 
         $query = $builder->get();
-
         return $query;
 
     }
@@ -733,24 +616,20 @@ class UserEnrolmentCourse extends Model
     {
         try {
 
-            $builder = $this->db->table('user_course_enrolment');
-            $builder->join('master_user', 'master_user.user_id = user_course_enrolment.user_id');
-            $builder->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id ');
-            $builder->join('master_course', 'master_course.course_id = user_course_enrolment.course_id ');
-            $builder->select('master_organization.org_name, SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count');
-            $builder->where('user_course_enrolment.course_id', $course);
-            $builder->where('master_course.status', 'Live');
-            $builder->groupBy('master_organization.org_name');
+            $builder = $this->db->table('enrolment');
+            $builder->select('org_name, SUM(CASE WHEN completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count');
+            $builder->where('course_id', $course);
+            $builder->groupBy('org_name');
             $builder->orderBy('completed_count', 'desc');
 
             if ($search != '') {
 
-                $builder->like('master_organization.org_name', strtolower($search));
-                $builder->orLike('master_organization.org_name', strtoupper($search));
-                $builder->orLike('master_organization.org_name', ucfirst($search));
+                $builder->like('org_name', strtolower($search));
+                $builder->orLike('org_name', strtoupper($search));
+                $builder->orLike('org_name', ucfirst($search));
             }
 
-            $builder->groupBy('master_organization.org_name');
+            $builder->groupBy('org_name');
             $builder->orderBy('completed_count', 'desc');
             if ($limit != -1)
                 $builder->limit(min($topCount - $offset, $limit), $offset);
@@ -819,8 +698,6 @@ class UserEnrolmentCourse extends Model
             else
                 $builder->limit($topCount - $offset, $offset);
 
-
-
             $query = $db->query($withQuery . " " . $builder->getCompiledSelect());
 
             return $query;
@@ -857,28 +734,24 @@ class UserEnrolmentCourse extends Model
 
     }
 
-    public function getUserWiseEnrolmentReport($userId, $org, $limit, $offset, $search, $orderBy, $orderDir)
+    public function getUserWiseEnrolmentReport($email, $org, $limit, $offset, $search, $orderBy, $orderDir)
     {
 
-        $builder = $this->db->table('user_course_enrolment');
-        $builder->select('master_course.course_name, master_course.org_name as cbp_provider,  user_course_enrolment.completion_status, user_course_enrolment.completion_percentage, user_course_enrolment.completed_on');
-        $builder->join('master_course', 'master_course.course_id = user_course_enrolment.course_id ');
-        $builder->join('master_user', 'master_user.user_id = user_course_enrolment.user_id ');
-        $builder->where('user_course_enrolment.user_id', $userId);
-        $builder->where('master_course.status', 'Live');
+        $builder = $this->db->table('enrolment');
+        $builder->select('course_name, course_provider,  completion_status, completion_percentage, completed_on');
+        $builder->where('email', $email);
         $builder->distinct();
         if ($search != '')
             $builder->where(" (course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtoupper($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%'
                             OR completion_status LIKE '%" . strtolower($search) . "%' OR completion_status LIKE '%" . strtoupper($search) . "%' OR completion_status LIKE '%" . ucfirst($search) . "%'
-                            OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
+                            OR course_provider LIKE '%" . strtolower($search) . "%' OR course_provider LIKE '%" . strtoupper($search) . "%' OR course_provider LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
 
         if ($org != '') {
-            $builder->where('master_user.root_org_id', $org);
+            $builder->where('root_org_id', $org);
         }
         $builder->orderBy((int) $orderBy + 1, $orderDir);
         if ($limit != -1)
             $builder->limit($limit, $offset);
-
 
         $query = $builder->get();
 
@@ -1019,7 +892,7 @@ class UserEnrolmentCourse extends Model
             AND master_curated_collection.curated_id = course_curated.curated_id
             AND master_user.user_id = user_course_enrolment.user_id
             AND master_user.email LIKE \'%.kb@karmayogi.in\'
-            AND master_course.course_id = user_course_enrolment.course_id 
+            AND master_course.course_id = user_course_enrolment.course_id ' . $likeQuery. '
             GROUP BY  course_name
             ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
 
@@ -1128,7 +1001,7 @@ not_started_users as
                                 master_organization.org_name, master_user.designation, user_program_enrolment.status');
         $programBuilder->join('master_user', 'master_user.user_id = user_program_enrolment.user_id');
         $programBuilder->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id');
-        $programBuilder->where('program_id','do_1137731307613716481132');
+        $programBuilder->where('program_id', 'do_1137731307613716481132');
         $programBuilder->distinct();
 
         $completedBuilder->union($inProgressBuilder);
@@ -1190,28 +1063,21 @@ not_started_users as
 
     }
 
-    public function getRozgarMelaUserEnrolmentReport( $limit, $offset, $search, $orderBy, $orderDir)
+    public function getRozgarMelaUserEnrolmentReport($limit, $offset, $search, $orderBy, $orderDir)
     {
         $table = new \CodeIgniter\View\Table();
-        $builder = $this->db->table('user_course_enrolment');
-        $builder->select('concat(INITCAP(master_user.first_name),\' \',INITCAP(master_user.last_name)) as name, master_user.email, master_organization.org_name, master_user.designation,  
-        COUNT(distinct user_course_enrolment.course_id) AS enrolled_count,
-            SUM(CASE WHEN user_course_enrolment.completion_status =\'Not Started\' THEN 1 ELSE 0 END) AS not_started,
-            SUM(CASE WHEN user_course_enrolment.completion_status =\'In-Progress\' THEN 1 ELSE 0 END) AS in_progress, 
-            SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count');
-        $builder->join('master_user', 'master_user.user_id = user_course_enrolment.user_id ');
-        $builder->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id ');
-        $builder->join('master_course', 'master_course.course_id = user_course_enrolment.course_id ');
-        $builder->where('master_course.status', 'Live');
-        $builder->like('email', '.kb@karmayogi.in');
+        $builder = $this->db->table('rozgar_mela_enrolment');
+        $builder->select('name, email, org_name, designation,COUNT(distinct course_id) AS enrolled_count,
+        SUM(CASE WHEN completion_status =\'Not Started\' THEN 1 ELSE 0 END) AS not_started,
+        SUM(CASE WHEN completion_status =\'In-Progress\' THEN 1 ELSE 0 END) AS in_progress, 
+        SUM(CASE WHEN completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count');
         if ($search != '')
-            $builder->where("(first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtoupper($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%' 
-                            OR last_name LIKE '%" . strtolower($search) . "%' OR last_name LIKE '%" . strtoupper($search) . "%' OR last_name LIKE '%" . ucfirst($search) . "%'
+            $builder->where("(name LIKE '%" . strtolower($search) . "%' OR name LIKE '%" . strtoupper($search) . "%' OR name LIKE '%" . ucfirst($search) . "%' 
                             OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
                             OR designation LIKE '%" . strtolower($search) . "%' OR designation LIKE '%" . strtoupper($search) . "%' OR designation LIKE '%" . ucfirst($search) . "%'
-                            OR master_organization.org_name LIKE '%" . strtolower($search) . "%' OR master_organization.org_name LIKE '%" . strtoupper($search) . "%' OR master_organization.org_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
+                            OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
+        $builder->groupBy('name, email,org_name, designation');
 
-        $builder->groupBy('first_name, last_name, email,master_organization.org_name, designation');
         $builder->orderBy((int) $orderBy + 1, $orderDir);
 
         if ($limit != -1)
@@ -1223,31 +1089,25 @@ not_started_users as
 
     public function getRozgarMelaKpCollectionReport($limit, $offset, $search, $orderBy, $orderDir)
     {
-        $builder = $this->db->table('user_course_enrolment');
-        $builder->select('concat(first_name,\' \',last_name) as name, email, master_organization.org_name, designation,
-        COUNT(distinct user_course_enrolment.course_id) AS enrolled_count,
-            SUM(CASE WHEN user_course_enrolment.completion_status =\'Not Started\' THEN 1 ELSE 0 END) AS not_started,
-            SUM(CASE WHEN user_course_enrolment.completion_status =\'In-Progress\' THEN 1 ELSE 0 END) AS in_progress, 
-            SUM(CASE WHEN user_course_enrolment.completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count');
-        $builder->join('master_user', 'master_user.user_id = user_course_enrolment.user_id ');
-        $builder->join('master_organization', 'master_user.root_org_id = master_organization.root_org_id ');
-        $builder->join('course_curated', 'course_curated.course_id = user_course_enrolment.course_id ');
-        $builder->join('master_course', 'master_course.course_id = user_course_enrolment.course_id ');
+        $builder = $this->db->table('rozgar_mela_enrolment');
+        $builder->select('name, email, org_name, designation,
+        COUNT(distinct rozgar_mela_enrolment.course_id) AS enrolled_count,
+            SUM(CASE WHEN completion_status =\'Not Started\' THEN 1 ELSE 0 END) AS not_started,
+            SUM(CASE WHEN completion_status =\'In-Progress\' THEN 1 ELSE 0 END) AS in_progress, 
+            SUM(CASE WHEN completion_status =\'Completed\' THEN 1 ELSE 0 END) AS completed_count');
+        $builder->join('course_curated', 'course_curated.course_id = rozgar_mela_enrolment.course_id ');
         $builder->join('master_curated_collection', 'course_curated.curated_id = master_curated_collection.curated_id ');
         $builder->where('master_curated_collection.curated_id', 'do_11367399557473075211');
-        $builder->where('master_course.status', 'Live');
-        $builder->like('email','.kb@karmayogi.in');
-
-        $builder->distinct();
+        
+        // $builder->distinct();
 
         if ($search != '')
-            $builder->where("(first_name LIKE '%" . strtolower($search) . "%' OR first_name LIKE '%" . strtoupper($search) . "%' OR first_name LIKE '%" . ucfirst($search) . "%' 
-                            OR last_name LIKE '%" . strtolower($search) . "%' OR last_name LIKE '%" . strtoupper($search) . "%' OR last_name LIKE '%" . ucfirst($search) . "%'
+            $builder->where("(name LIKE '%" . strtolower($search) . "%' OR name LIKE '%" . strtoupper($search) . "%' OR name LIKE '%" . ucfirst($search) . "%' 
                             OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
                             OR designation LIKE '%" . strtolower($search) . "%' OR designation LIKE '%" . strtoupper($search) . "%' OR designation LIKE '%" . ucfirst($search) . "%'
-                            OR master_organization.org_name LIKE '%" . strtolower($search) . "%' OR master_organization.org_name LIKE '%" . strtoupper($search) . "%' OR master_organization.org_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
+                            OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
 
-        $builder->groupBy('first_name, last_name, email,master_organization.org_name, designation');
+        $builder->groupBy('name, email,org_name, designation');
 
         $builder->orderBy((int) $orderBy + 1, $orderDir);
 
@@ -1301,9 +1161,9 @@ not_started_users as
     public function learnerDashboardTableFooter()
     {
         $builder = $this->db->table('user_course_enrolment');
-        
+
         $builder->select('count(*)  as users');
-        
+
         return $builder->get();
 
     }
@@ -1347,7 +1207,7 @@ not_started_users as
 
     }
 
-    
+
     public function getMonthWiseTotalEnrolmentCount()
     {
         try {
@@ -1410,16 +1270,16 @@ not_started_users as
     {
         try {
             $builder = $this->db->table('master_course');
-            $builder->join('user_course_enrolment','user_course_enrolment.course_id = master_course.course_id');
+            $builder->join('user_course_enrolment', 'user_course_enrolment.course_id = master_course.course_id');
             $builder->select('to_char(date_trunc(\'MONTH\',to_date(completed_on,\'DD/MM/YYYY\')),\'YYYY/MM\') as month, sum(durationh)');
-            $builder->where('status','Live');
+            $builder->where('status', 'Live');
             $builder->where('completion_status', 'Completed');
             $builder->groupBy('month');
             $builder->orderBy('month');
             $query = $builder->get();
 
             return $query;
-            
+
         } catch (\Exception $e) {
             throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
@@ -1438,9 +1298,9 @@ not_started_users as
                 AND completion_status=\'Completed\'
                 GROUP BY month) a
                 ORDER BY month;');
-                        
+
             return $query;
-            
+
         } catch (\Exception $e) {
             throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
@@ -1481,26 +1341,25 @@ not_started_users as
 
     }
 
-    public function getTopCourseInMonth($month, $topCount,$limit, $offset, $search, $orderBy, $orderDir)
+    public function getTopCourseInMonth($month, $topCount, $limit, $offset, $search, $orderBy, $orderDir)
     {
         try {
             $builder = $this->db->table('user_course_enrolment');
-            $builder->join('master_course','master_course.course_id = user_course_enrolment.course_id');
+            $builder->join('master_course', 'master_course.course_id = user_course_enrolment.course_id');
             $builder->select('course_name, count(*) ');
-            $builder->where('to_char(date_trunc(\'month\',to_date(completed_on,\'DD/MM/YYYY\')),\'YYYY/MM\') = \''.$month.'\'');
-            $builder->where('status','Live');
+            $builder->where('to_char(date_trunc(\'month\',to_date(completed_on,\'DD/MM/YYYY\')),\'YYYY/MM\') = \'' . $month . '\'');
+            $builder->where('status', 'Live');
             $builder->groupBy('course_name');
-            $builder->orderBy('count','desc');
+            $builder->orderBy('count', 'desc');
             if ($limit != -1)
                 $builder->limit(min($topCount - $offset, $limit), $offset);
             else
                 $builder->limit($topCount - $offset, $offset);
 
-            //     print_r($builder->getCompiledSelect());
-            // die;
+
             $query = $builder->get();
 
-            
+
             return $query;
 
         } catch (\Exception $e) {
@@ -1508,7 +1367,7 @@ not_started_users as
         }
 
     }
-    
+
 }
 
 ?>

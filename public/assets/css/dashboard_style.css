@@ -291,3 +291,237 @@ h2 {
 .dashboard-summary-item {
     width:20%;
 }
+
+
+.learner-tab-label {
+  font-family: Lato;
+  font-weight: 50;
+  font-size: 20px;
+  color: #665291;
+}
+
+.learner-dashboard-item {
+  background-color: #66529126;
+
+  margin-left: 15%;
+  margin-right: 15%;
+  margin-top: 20px;
+  width: 70%;
+  padding-left: 15px;
+  padding-top: 20px;
+  margin-bottom: 50px;
+}
+.learner-dashboard-item-header {
+  font-family: Lato;
+  font-weight: 50;
+  font-size: 15px;
+  color: #665291;
+  text-align: center;
+  padding-left: 15px;
+  padding-right: 30px;
+  padding-bottom: 20px;
+}
+.learner-dashboard-item-value {
+  font-family: Lato;
+  font-weight: 100;
+  font-size: 40px;
+  color: #665291;
+  text-align: center;
+  padding-left: 15px;
+  padding-right: 30px;
+  padding-top: 20px;
+}
+
+.learner-dashboard-table-header {
+  background-color: #5291601c;
+  border-block-start-style: solid;
+  border-block-start-width: thin;
+  border-block-start-color: #8686865c;
+  border-block-end-style: solid;
+  border-block-end-width: thin;
+  border-block-end-color: #8686865c;
+  color: rgb(87, 89, 96);
+  padding: 10px;
+  font-size: 16px;
+}
+
+.learner-dashboard-summary-item {
+  width:20%;
+}
+
+.course-tab-label {
+  font-family: Lato;
+  font-weight: 50;
+  font-size: 20px;
+  color: #02889d;
+}
+
+.course-dashboard-item {
+  background-color: #02889d2b;
+
+  margin-left: 15%;
+  margin-right: 15%;
+  margin-top: 20px;
+  width: 75%;
+  padding-left: 15px;
+  padding-top: 20px;
+  margin-bottom: 50px;
+}
+.course-dashboard-item-header {
+  font-family: Lato;
+  font-weight: 50;
+  font-size: 15px;
+  color: #02889d;
+  text-align: center;
+  padding-left: 15px;
+  padding-right: 30px;
+  padding-bottom: 20px;
+}
+.course-dashboard-item-value {
+  font-family: Lato;
+  font-weight: 100;
+  font-size: 40px;
+  color: #02889d;
+  text-align: center;
+  padding-left: 15px;
+  padding-right: 30px;
+  padding-top: 20px;
+}
+
+.course-dashboard-table-header {
+  background-color: #5291601c;
+  border-block-start-style: solid;
+  border-block-start-width: thin;
+  border-block-start-color: #8686865c;
+  border-block-end-style: solid;
+  border-block-end-width: thin;
+  border-block-end-color: #8686865c;
+  color: rgb(87, 89, 96);
+  padding: 10px;
+  font-size: 16px;
+}
+
+.course-dashboard-summary-item {
+  width:20%;
+}
+
+.course-dashboard-table-header {
+  background-color: #4ae6ff26;
+  border-block-start-style: solid;
+  border-block-start-width: thin;
+  border-block-start-color: #8686865c;
+  border-block-end-style: solid;
+  border-block-end-width: thin;
+  border-block-end-color: #8686865c;
+  color: rgb(87, 89, 96);
+  padding: 10px;
+  font-size: 16px;
+}
+.course-dashboard-table-header-count {
+  background-color: #4ae6ff26;
+  border-block-start-style: solid;
+  border-block-start-width: thin;
+  border-block-start-color: #8686865c;
+  border-block-end-style: solid;
+  border-block-end-width: thin;
+  border-block-end-color: #8686865c;
+  color: rgb(87, 89, 96);
+  padding: 10px;
+  font-size: 16px;
+  text-align: right;
+}
+
+.user-tab-label {
+  font-family: Lato;
+  font-weight: 50;
+  font-size: 20px;
+  color: #a44e93;
+}
+
+.user-dashboard-item {
+  background-color: #a44e9321;
+
+  margin-left: 15%;
+  margin-right: 15%;
+  margin-top: 20px;
+  width: 65%;
+  padding-left: 15px;
+  padding-top: 20px;
+  margin-bottom: 50px;
+}
+.user-dashboard-item-header {
+  font-family: Lato;
+  font-weight: 50;
+  font-size: 15px;
+  color: #a44e93;
+  text-align: center;
+  padding-left: 15px;
+  padding-right: 30px;
+  padding-bottom: 20px;
+}
+.user-dashboard-item-value {
+  font-family: Lato;
+  font-weight: 100;
+  font-size: 40px;
+  color: #a44e93;
+  text-align: center;
+  padding-left: 15px;
+  padding-right: 30px;
+  padding-top: 20px;
+}
+
+.user-dashboard-table-header {
+  background-color: #5291601c;
+  border-block-start-style: solid;
+  border-block-start-width: thin;
+  border-block-start-color: #8686865c;
+  border-block-end-style: solid;
+  border-block-end-width: thin;
+  border-block-end-color: #8686865c;
+  color: rgb(87, 89, 96);
+  padding: 10px;
+  font-size: 16px;
+}
+
+.user-dashboard-summary-item {
+  width:20%;
+}
+
+.org-tab-label {
+  font-family: Lato;
+  font-weight: 50;
+  font-size: 20px;
+  color: #d06969;
+}
+
+.org-dashboard-item {
+  background-color: #d0696914;
+
+  margin-left: 15%;
+  margin-right: 15%;
+  margin-top: 20px;
+  width: 80%;
+  padding-left: 15px;
+  padding-top: 20px;
+  margin-bottom: 50px;
+}
+.org-dashboard-item-header {
+  font-family: Lato;
+  font-weight: 50;
+  font-size: 15px;
+  color: #d06969;
+  text-align: center;
+  padding-left: 15px;
+  padding-right: 30px;
+  padding-bottom: 20px;
+}
+.org-dashboard-item-value {
+  font-family: Lato;
+  font-weight: 100;
+  font-size: 40px;
+  color: #d06969;
+  text-align: center;
+  padding-left: 15px;
+  padding-right: 30px;
+  padding-top: 20px;
+}

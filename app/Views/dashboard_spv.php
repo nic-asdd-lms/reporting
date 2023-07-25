@@ -20,7 +20,7 @@
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link href="<?php echo ASSETS_URL . 'css/dashboard_style.css' ?>" rel="stylesheet" type="text/css">
-  
+
 </head>
 
 <body>
@@ -105,7 +105,7 @@
               <label class="dashboard-item-header">Content Hours</label>
             </div>
           </td>
-          
+
         </tr>
 
         <tr>
@@ -154,7 +154,7 @@
               <label class="dashboard-item-header">Learning Hours</label>
             </div>
           </td>
-          
+
         </tr>
 
 
@@ -162,18 +162,63 @@
     </div>
 
     <div class="dashboard-summary">
-      <label class="tab-label">Learner Overview</label>
+      <label class="learner-tab-label">Learner Overview</label>
       <hr />
       <table>
         <tr>
-          <td style="width:50%;padding: 70px; ">
+
+          <td class="learner-dashboard-summary-item">
+            <div class="learner-dashboard-item">
+              <div>
+                <label class="learner-dashboard-item-value numformat">
+                  <?php echo $enrolmentPercentage; ?>%
+                </label>
+              </div>
+              <div>
+                <label class="learner-dashboard-item-header">Onboarded users enrolled</label>
+              </div>
+            </div>
+          </td>
+          <td class="learner-dashboard-summary-item">
+            <div class="learner-dashboard-item">
+              <div>
+                <label class="learner-dashboard-item-value numformat">
+                  <?php echo $completionPercentage; ?>%
+                </label>
+              </div>
+              <div>
+                <label class="learner-dashboard-item-header">Completion vs. Enrolment </label>
+              </div>
+            </div>
+          </td>
+          <td class="learner-dashboard-summary-item">
+            <div class="learner-dashboard-item">
+              <!-- <hr /> -->
+              <label class="learner-dashboard-item-value numformat">
+                <?php echo $notStartedPercentage; ?>%
+              </label>
+              <label class="learner-dashboard-item-header">Not Started vs. Enrolment </label>
+            </div>
+          </td>
+          <td class="learner-dashboard-summary-item">
+            <div class="learner-dashboard-item">
+              <!-- <hr /> -->
+              <label class="learner-dashboard-item-value numformat">
+                <?php echo $inProgressPercentage; ?>%
+              </label>
+              <label class="learner-dashboard-item-header">In Progress vs. Enrolment </label>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" style="width:50%;padding: 50px 70px 50px 70px; ">
             <div class="table-container">
               <?php
               echo $learner_overview;
               ?>
             </div>
           </td>
-          <td style="width:50%;padding: 70px; ">
+          <td colspan="2" style="width:50%;padding: 50px 70px 50px 70px; ">
             <div class="chart-container" style="width:500px">
 
               <div class="pie-chart-container">
@@ -186,7 +231,7 @@
           </td>
         </tr>
         <tr>
-          <td style="width:50%;padding: 70px;  ">
+          <td colspan="2" style="width:50%;padding:  50px 70px 50px 70px;  ">
             <div class="chart-container" style="width:500px">
 
               <div class="line-chart-container" style="width:600px; height:300px">
@@ -197,7 +242,7 @@
 
             </div>
           </td>
-          <td style="width:50%;padding: 70px; ">
+          <td colspan="2" style="width:50%;padding:  50px 70px 50px 70px;">
             <div class="chart-container" style="width:500px">
 
               <div class="line-chart-container" style="width:600px; height:300px">
@@ -210,7 +255,7 @@
           </td>
         </tr>
         <tr>
-        <td style="width:50%;padding: 70px; ">
+          <td colspan="2" style="width:50%;padding:  50px 70px 50px 70px; ">
             <div class="chart-container" style="width:500px">
 
               <div class="line-chart-container" style="width:600px; height:300px">
@@ -221,7 +266,7 @@
 
             </div>
           </td>
-          <td style="width:50%;padding: 70px;  ">
+          <td colspan="2" style="width:50%;padding:  50px 70px 50px 70px; ">
             <div class="chart-container" style="width:500px">
 
               <div class="line-chart-container" style="width:600px; height:300px">
@@ -232,25 +277,70 @@
 
             </div>
           </td>
-          
+
         </tr>
       </table>
 
     </div>
 
     <div class="dashboard-summary">
-      <label class="tab-label">Course Overview</label>
+      <label class="course-tab-label">Course Overview</label>
       <hr />
       <table>
         <tr>
-          <td style="width:50%;padding-left: 80px;">
+          <td class="course-dashboard-summary-item">
+            <div class="course-dashboard-item">
+              <div>
+                <label class="course-dashboard-item-value numformat">
+                  <?php echo $avgRating; ?>
+                </label>
+              </div>
+              <div>
+                <label class="course-dashboard-item-header">Avg rating of courses</label>
+              </div>
+            </div>
+          </td>
+          <td class="course-dashboard-summary-item">
+            <div class="course-dashboard-item">
+              <div>
+                <label class="course-dashboard-item-value numformat">
+                  <?php echo $programCount; ?>
+                </label>
+              </div>
+              <div>
+                <label class="course-dashboard-item-header">Programs created</label>
+              </div>
+            </div>
+          </td>
+          <td class="course-dashboard-summary-item">
+            <div class="course-dashboard-item">
+              <div>
+                <label class="course-dashboard-item-value numformat">
+                  <?php echo $programDuration; ?>
+                </label>
+                <label class="course-dashboard-item-header">Program Duration (in hrs)</label>
+              </div>
+          </td>
+          <td class="course-dashboard-summary-item">
+            <div class="course-dashboard-item">
+              <!-- <hr /> -->
+              <label class="course-dashboard-item-value numformat">
+                <?php echo $coursesCurrentMonth; ?>
+              </label>
+              <label class="course-dashboard-item-header">Courses published this month</label>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td colspan="2" style="width:50%;padding:  50px 70px 50px 70px; ">
             <div class="table-container">
               <?php
               echo $course_overview;
               ?>
             </div>
           </td>
-          <td style="width:50%;padding-left: 80px;">
+          <td colspan="2" style="width:50%; padding:  50px 70px 50px 70px; ">
             <div class="chart-container" style="width:500px">
 
               <div class="pie-chart-container">
@@ -270,10 +360,10 @@
               ?>
             </div>
           </td> -->
-          <td  style="width:50%;padding: 70px; ">
+          <td colspan="2" style="width:50%; padding:  50px 70px 50px 70px;  ">
             <div class="chart-container">
 
-              <div class="line-chart-container"  style="width:500px">
+              <div class="line-chart-container" style="width:500px">
 
                 <canvas id="coursePublished-line-chart" style="width:600px; height:350px"></canvas>
 
@@ -286,9 +376,37 @@
     </div>
 
     <div class="dashboard-summary">
-      <label class="tab-label">User Overview</label>
+      <label class="user-tab-label">User Overview</label>
       <hr />
       <table>
+        <tr>
+          <td>
+            <div class="user-dashboard-item">
+              <div>
+                <label class="user-dashboard-item-value numformat">
+                  <?php echo $usersOnboardedYesterday; ?>
+                </label>
+              </div>
+              <div>
+                <label class="user-dashboard-item-header">Users onboarded yesterday</label>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="user-dashboard-item">
+              <div>
+                <label class="user-dashboard-item-value numformat">
+                  <?php echo $mdoAdminCount; ?>
+                </label>
+              </div>
+
+
+              <div>
+                <label class="user-dashboard-item-header">MDO Admins onboarded</label>
+              </div>
+            </div>
+          </td>
+        </tr>
         <tr>
           <!-- <td style="width:50%;padding-left: 80px;">
             <div class="table-container">
@@ -297,12 +415,77 @@
               ?>
             </div>
           </td> -->
-          <td>
+          <td colspan="2" style="padding:  50px 70px 50px 70px; ">
             <div class="chart-container">
 
               <div class="line-chart-container">
 
                 <canvas id="user-line-chart" style="width:800px; height:400px"></canvas>
+
+              </div>
+
+            </div>
+          </td>
+          <!-- <td style="width:50%;padding: 70px; ">
+            <div class="chart-container" style="width:500px">
+
+              <div class="line-chart-container" style="width:600px; height:300px">
+
+                <canvas id="onboarding-enrolment-bar"></canvas>
+
+              </div>
+
+            </div>
+          </td> -->
+        </tr>
+      </table>
+    </div>
+
+
+    <div class="dashboard-summary">
+      <label class="org-tab-label">Organisation Overview</label>
+      <hr />
+      <table>
+        <tr>
+          <td>
+            <div class="org-dashboard-item">
+              <div>
+                <label class="org-dashboard-item-value numformat">
+                  <?php echo $orgEnrolled; ?>
+                </label>
+              </div>
+              <div>
+                <label class="org-dashboard-item-header">Organisations Enrolled for Courses</label>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="org-dashboard-item">
+              <div>
+                <label class="org-dashboard-item-value numformat">
+                  <?php echo $mdoAdminOrgCount; ?>
+                </label>
+              </div>
+              <div>
+                <label class="org-dashboard-item-header">Organisations with MDO Admin</label>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <!-- <td style="width:50%;padding-left: 80px;">
+            <div class="table-container">
+              <?php
+              //echo $course_overview;
+              ?>
+            </div>
+          </td> -->
+          <td colspan="2">
+            <div class="chart-container">
+
+              <div class="line-chart-container">
+
+                <canvas id="org-line-chart" style="width:800px; height:400px"></canvas>
 
               </div>
 
@@ -458,7 +641,7 @@
             pointHoverBackgroundColor: "#fe96a9",
             pointHoverBorderColor: "#fe96a9",
             pointStyle: 'crossRot',
-            backgroundColor : '#fe96a929'
+            backgroundColor: '#fe96a929'
           },
           {
             label: "Total Courses",
@@ -469,7 +652,7 @@
             pointHoverBackgroundColor: "#aad6c8",
             pointHoverBorderColor: "#aad6c8",
             pointStyle: 'crossRot',
-            backgroundColor : '#aad6c83d'
+            backgroundColor: '#aad6c83d'
           }
         ]
       };
@@ -526,7 +709,7 @@
             pointHoverBackgroundColor: "#36a2eb",
             pointHoverBorderColor: "#36a2eb",
             pointStyle: 'crossRot',
-            backgroundColor : '#36a2eb0f'
+            backgroundColor: '#36a2eb0f'
           },
           {
             label: "Total Users",
@@ -537,7 +720,7 @@
             pointHoverBackgroundColor: "#ff6384",
             pointHoverBorderColor: "#ff6384",
             pointStyle: 'crossRot',
-            backgroundColor : '#ff63840f'
+            backgroundColor: '#ff63840f'
           }
         ]
       };
@@ -580,7 +763,7 @@
         options: useroptions
       });
 
-// ONBOARDED-ENROLMENT RATIO
+      // ONBOARDED-ENROLMENT RATIO
 
       var completionratioctx = $("#onboarding-enrolment-bar");
       var completionratiodata = {
@@ -596,7 +779,7 @@
             data: cData.totalUserCount,
             backgroundColor: '#829ccf'
           }
-          
+
         ]
       };
 
@@ -779,10 +962,10 @@
       });
 
 
-// ENROLMENT-COMPLETION RATIO
+      // ENROLMENT-COMPLETION RATIO
 
 
-var completionratioctx = $("#enrolment-completion-bar");
+      var completionratioctx = $("#enrolment-completion-bar");
       var completionratiodata = {
         labels: cData.monthWiseCompletionMonth,
         datasets: [
@@ -824,8 +1007,8 @@ var completionratioctx = $("#enrolment-completion-bar");
             },
             stacked: true,
             ticks: {
-          autoSkip: false
-        }
+              autoSkip: false
+            }
           }],
           yAxes: [{
             gridLines: {
@@ -859,7 +1042,7 @@ var completionratioctx = $("#enrolment-completion-bar");
             pointHoverBackgroundColor: "#ffa6b9",
             pointHoverBorderColor: "#ffa6b9",
             pointStyle: 'crossRot',
-            backgroundColor : '#ffa6b929'
+            backgroundColor: '#ffa6b929'
           },
           {
             label: "Total Learning Hours",
@@ -870,7 +1053,7 @@ var completionratioctx = $("#enrolment-completion-bar");
             pointHoverBackgroundColor: "#7abfee",
             pointHoverBorderColor: "#7abfee",
             pointStyle: 'crossRot',
-            backgroundColor : '#7abfee29'   
+            backgroundColor: '#7abfee29'
           }
         ]
       };
@@ -913,9 +1096,76 @@ var completionratioctx = $("#enrolment-completion-bar");
         options: learninghoursoptions
       });
 
+      //  ORG OVERVIEW
+
+      var orgctx = $("#org-line-chart");
+      var orgdata = {
+        labels: cData.orgOnboardingMonth,
+        datasets: [
+          {
+            label: "Organisations Onboarded in the month",
+            data: cData.orgOnboardingCount,
+            borderColor: "#36a2eb",
+            pointBackgroundColor: "#36a2eb",
+            pointBorderColor: "#36a2eb",
+            pointHoverBackgroundColor: "#36a2eb",
+            pointHoverBorderColor: "#36a2eb",
+            pointStyle: 'crossRot',
+            backgroundColor: '#36a2eb0f'
+          },
+          {
+            label: "Total Organisations",
+            data: cData.totalOrgCount,
+            borderColor: "#ff6384",
+            pointBackgroundColor: "#ff6384",
+            pointBorderColor: "#ff6384",
+            pointHoverBackgroundColor: "#ff6384",
+            pointHoverBorderColor: "#ff6384",
+            pointStyle: 'crossRot',
+            backgroundColor: '#ff63840f'
+          }
+        ]
+      };
+
+      var orgoptions = {
+        responsive: true,
+        title: {
+          display: true,
+          position: "top",
+          text: "Month-wise Organisation Count",
+          fontSize: 16,
+          fontColor: "#111"
+        },
+
+        legend: {
+          display: true,
+          position: "bottom",
+          labels: {
+            fontColor: "#333",
+            fontSize: 16
+          }
+        },
+        scales: {
+          xAxes: [{
+            gridLines: {
+              display: false
+            }
+          }],
+          yAxes: [{
+            gridLines: {
+              display: false
+            }
+          }]
+        }
+      };
+
+      var orgchart = new Chart(orgctx, {
+        type: "line",
+        data: orgdata,
+        options: orgoptions
+      });
 
 
-      
 
 
 

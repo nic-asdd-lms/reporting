@@ -63,6 +63,7 @@ class Report extends BaseController
                 $search = $request['search']['value'];
                 $orderBy = $request['order'][0]['column'];
                 $orderDir = $request['order'][0]['dir'];
+                $draw = (int) $request['draw'];
 
                 $session = \Config\Services::session();
                 $user = new MasterUserModel();
@@ -135,7 +136,7 @@ class Report extends BaseController
                         $orgName = '';
 
                 } else if ($reportType == 'userEnrolment') {
-                    $userId = $session->getTempdata('userid');
+                    $email = $session->getTempdata('email');
                     if ($session->get('role') == 'MDO_ADMIN')
                         $org = $session->get('organisation');
                     else
@@ -143,140 +144,235 @@ class Report extends BaseController
                 } else if ($reportType == 'topCompetency') {
                     $competencyType = $session->getTempdata('competencyType');
 
-                }
-                else if ($reportType == 'userEnrolmentSummary') {
-                    $orgName  = '';
+                } else if ($reportType == 'userEnrolmentSummary') {
+                    $orgName = '';
 
                 }
 
                 if ($reportType == 'userList') {
                     $result = $user->getAllUsers($limit, $offset, $search, $orderBy, $orderDir); //  query with given limit, offset, search, order
-                    $fullResult = $user->getAllUsers(-1, 0, '', $orderBy, $orderDir); //  query to get total no. of rows
-                    $resultFiltered = $user->getAllUsers(-1, 0, $search, $orderBy, $orderDir); //  query to get count of filtered result
+
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getAllUsers(250, 0, '', $orderBy, $orderDir); //  query to get total no. of rows
+                    else if ($limit == 1){
+                        $fullResult = $user->getAllUsers(1, 0, '', $orderBy, $orderDir);
+                        $resultFiltered = $user->getAllUsers(250, 0, $search, $orderBy, $orderDir); //  query to get count of filtered result
+                    }
+                    $resultFiltered = $user->getAllUsers(250, 0, $search, $orderBy, $orderDir); //  query to get count of filtered result
 
                 } else if ($reportType == 'mdoUserList') {
                     $result = $user->getUserByOrg($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getUserByOrg($orgName, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getUserByOrg($orgName, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1){
+                        $fullResult = $user->getUserByOrg($orgName, 1, 0, '', $orderBy, $orderDir);
+                        $resultFiltered = $user->getUserByOrg($orgName, 1, 0, $search, $orderBy, $orderDir);
+                    }
                     $resultFiltered = $user->getUserByOrg($orgName, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'mdoUserCount') {
                     $result = $user->getUserCountByOrg($limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getUserCountByOrg(-1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getUserCountByOrg(-1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1){
+                        $fullResult = $user->getUserCountByOrg(1, 0, '', $orderBy, $orderDir);
+                        $resultFiltered = $user->getUserCountByOrg(1, 0, $search, $orderBy, $orderDir);
+                    }
                     $resultFiltered = $user->getUserCountByOrg(-1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'mdoUserEnrolment') {
                     $result = $enrolment->getEnrolmentByOrg($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getEnrolmentByOrg($orgName, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolment->getEnrolmentByOrg($orgName, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1){
+                        $fullResult = $enrolment->getEnrolmentByOrg($orgName, 1, 0, '', $orderBy, $orderDir);
+                        $resultFiltered = $enrolment->getEnrolmentByOrg($orgName, 1, 0, $search, $orderBy, $orderDir);
+                        
+                    }
                     $resultFiltered = $enrolment->getEnrolmentByOrg($orgName, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'ministryUserList') {
                     $result = $user->getUserByMinistry($ministryName, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getUserByMinistry($ministryName, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getUserByMinistry($ministryName, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $user->getUserByMinistry($ministryName, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getUserByMinistry($ministryName, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'ministryUserEnrolment') {
                     $result = $enrolment->getUserEnrolmentByMinistry($ministryName, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getUserEnrolmentByMinistry($ministryName, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolment->getUserEnrolmentByMinistry($ministryName, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $enrolment->getUserEnrolmentByMinistry($ministryName, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getUserEnrolmentByMinistry($ministryName, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'userWiseCount') {
                     $result = $enrolment->getUserEnrolmentCountByMDO($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-                    // $foorterData = $enrolment->dashboardTable('', '', false)->getResultArray();
-                    // $footer = [];
-                    // array_push($footer,["name"=>'',"email"=>'',"org_name"=>'',"designation"=>'Total',"enrolled_count"=>$enrolment->learnerDashboardTableFooter()->getResultArray()[0]['users'],"not_started_count"=>$foorterData[0]['users'],"in_progress_count"=>$foorterData[1]['users'],"completed_count"=>$foorterData[2]['users']]);
-                    // $result = array_merge($result->getResultArray(),$footer);
-                    // $result = (object) $result;
-                    // // echo '<pre>';print_r($result);die;
-                    $fullResult = $enrolment->getUserEnrolmentCountByMDO($orgName, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolment->getUserEnrolmentCountByMDO($orgName, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1){
+                        $fullResult = $enrolment->getUserEnrolmentCountByMDO($orgName, 1, 0, '', $orderBy, $orderDir);
+                        $resultFiltered = $enrolment->getUserEnrolmentCountByMDO($orgName, 1, 0, $search, $orderBy, $orderDir);
+                    }
+                        
                     $resultFiltered = $enrolment->getUserEnrolmentCountByMDO($orgName, -1, 0, $search, $orderBy, $orderDir);
                 } else if ($reportType == 'orgList') {
                     $result = $orgModel->getOrgList($limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $orgModel->getOrgList(-1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $orgModel->getOrgList(-1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $orgModel->getOrgList(1, 0, '', $orderBy, $orderDir);
+
+                    
                     $resultFiltered = $orgModel->getOrgList(-1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'orgHierarchy') {
                     $result = $org_hierarchy->getHierarchy($ministry, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $org_hierarchy->getHierarchy($ministry, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $org_hierarchy->getHierarchy($ministry, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $org_hierarchy->getHierarchy($ministry, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $org_hierarchy->getHierarchy($ministry, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'liveCourseList') {
                     $result = $courseModel->getLiveCourseList($limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $courseModel->getLiveCourseList(-1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $courseModel->getLiveCourseList(-1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1){
+                        $fullResult = $courseModel->getLiveCourseList(1, 0, '', $orderBy, $orderDir);
+                        $resultFiltered = $courseModel->getLiveCourseList(1, 0, $search, $orderBy, $orderDir);
+
+                    }
+                        
                     $resultFiltered = $courseModel->getLiveCourseList(-1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'liveCourses') {
                     $result = $courseModel->getLiveCourses($limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $courseModel->getLiveCourses(-1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $courseModel->getLiveCourses(-1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1){
+                        $fullResult = $courseModel->getLiveCourses(1, 0, '', $orderBy, $orderDir);
+                        $resultFiltered = $courseModel->getLiveCourses(1, 0, $search, $orderBy, $orderDir);
+
+                    }
+                        
                     $resultFiltered = $courseModel->getLiveCourses(-1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'underPublishCourses') {
                     $result = $courseModel->getCoursesUnderPublish($limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $courseModel->getCoursesUnderPublish(-1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $courseModel->getCoursesUnderPublish(-1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $courseModel->getCoursesUnderPublish(1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $courseModel->getCoursesUnderPublish(-1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'underReviewCourses') {
                     $result = $courseModel->getCoursesUnderReview($limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $courseModel->getCoursesUnderReview(-1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $courseModel->getCoursesUnderReview(-1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $courseModel->getCoursesUnderReview(1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $courseModel->getCoursesUnderReview(-1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'draftCourses') {
                     $result = $courseModel->getDraftCourses($limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $courseModel->getDraftCourses(-1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $courseModel->getDraftCourses(-1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $courseModel->getDraftCourses(1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $courseModel->getDraftCourses(-1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'courseEnrolmentReport') {
                     $result = $enrolment->getCourseWiseEnrolmentReport($course, $org, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getCourseWiseEnrolmentReport($course, $org, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolment->getCourseWiseEnrolmentReport($course, $org, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $enrolment->getCourseWiseEnrolmentReport($course, $org, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getCourseWiseEnrolmentReport($course, $org, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'courseEnrolmentCount') {
                     $result = $enrolment->getCourseWiseEnrolmentCount($org, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getCourseWiseEnrolmentCount($org, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolment->getCourseWiseEnrolmentCount($org, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $enrolment->getCourseWiseEnrolmentCount($org, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getCourseWiseEnrolmentCount($org, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'programEnrolmentReport') {
                     $result = $enrolmentProgram->getProgramWiseEnrolmentReport($course, $org, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolmentProgram->getProgramWiseEnrolmentReport($course, $org, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolmentProgram->getProgramWiseEnrolmentReport($course, $org, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $enrolmentProgram->getProgramWiseEnrolmentReport($course, $org, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolmentProgram->getProgramWiseEnrolmentReport($course, $org, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'programEnrolmentCount') {
                     $result = $enrolmentProgram->getProgramWiseEnrolmentCount($org, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolmentProgram->getProgramWiseEnrolmentCount($org, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolmentProgram->getProgramWiseEnrolmentCount($org, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $enrolmentProgram->getProgramWiseEnrolmentCount( $org, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolmentProgram->getProgramWiseEnrolmentCount($org, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'collectionEnrolmentReport') {
                     $result = $enrolment->getCollectionWiseEnrolmentReport($course, $org, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getCollectionWiseEnrolmentReport($course, $org, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolment->getCollectionWiseEnrolmentReport($course, $org, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1) {
+                        $fullResult = $enrolment->getCollectionWiseEnrolmentReport($course, $org, 1, 0, '', $orderBy, $orderDir);
+                        $resultFiltered = $enrolment->getCollectionWiseEnrolmentReport($course, $org, 1, 0, $search, $orderBy, $orderDir);
+                    }
                     $resultFiltered = $enrolment->getCollectionWiseEnrolmentReport($course, $org, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'collectionEnrolmentCount') {
                     $result = $enrolment->getCollectionWiseEnrolmentCount($course, $org, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getCollectionWiseEnrolmentCount($course, $org, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolment->getCollectionWiseEnrolmentCount($course, $org, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $enrolment->getCollectionWiseEnrolmentCount($course, $org, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getCollectionWiseEnrolmentCount($course, $org, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'cbpProviderWiseCourseCount') {
                     $result = $courseModel->getCourseCountByCBPProvider($limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $courseModel->getCourseCountByCBPProvider(-1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $courseModel->getCourseCountByCBPProvider(-1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $courseModel->getCourseCountByCBPProvider(1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $courseModel->getCourseCountByCBPProvider(-1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'courseMinistrySummary') {
                     $result = $enrolment->getCourseMinistrySummary($course, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getCourseMinistrySummary($course, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolment->getCourseMinistrySummary($course, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1){
+                        $fullResult = $enrolment->getCourseMinistrySummary($course, 1, 0, '', $orderBy, $orderDir);
+                        $resultFiltered = $enrolment->getCourseMinistrySummary($course, 1, 0, $search, $orderBy, $orderDir);
+                    }
                     $resultFiltered = $enrolment->getCourseMinistrySummary($course, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'userProfile') {
                     $result = $user->getProfile($email, $orgName, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getProfile($email, $orgName, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getProfile($email, $orgName, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $user->getProfile($email, $orgName, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getProfile($email, $orgName, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'userEnrolment') {
-                    $result = $enrolment->getUserWiseEnrolmentReport($userId, $org, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getUserWiseEnrolmentReport($userId, $org, -1, 0, '', $orderBy, $orderDir);
-                    $resultFiltered = $enrolment->getUserWiseEnrolmentReport($userId, $org, -1, 0, $search, $orderBy, $orderDir);
+                    $result = $enrolment->getUserWiseEnrolmentReport($email, $org, $limit, $offset, $search, $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolment->getUserWiseEnrolmentReport($email, $org, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $enrolment->getUserWiseEnrolmentReport($email, $org, 1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $enrolment->getUserWiseEnrolmentReport($email, $org, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'userEnrolmentFull') {
                     $result = $enrolment->getUserEnrolmentFull($limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getUserEnrolmentFull(-1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolment->getUserEnrolmentFull(-1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $enrolment->getUserEnrolmentFull(1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getUserEnrolmentFull(-1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'userEnrolmentSummary') {
@@ -284,291 +380,467 @@ class Report extends BaseController
                     // $foorterData = $enrolment->dashboardTable('', '', false);
                     // $footer = ['','','','Total',$enrolment->learnerDashboardTableFooter()->getResultArray()[0]['users'],$foorterData->getResultArray()[0]['users'],$foorterData->getResultArray()[1]['users'],$foorterData->getResultArray()[2]['users']];
                     // $result = array_merge($result->getResultArray(),$footer);
-                    $fullResult = $enrolment->getUserEnrolmentCountByMDO($orgName, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolment->getUserEnrolmentCountByMDO($orgName, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $enrolment->getUserEnrolmentCountByMDO($orgName, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getUserEnrolmentCountByMDO($orgName, -1, 0, $search, $orderBy, $orderDir);
-                }  else if ($reportType == 'roleWiseCount') {
+                } else if ($reportType == 'roleWiseCount') {
                     $result = $user->getRoleWiseCount($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getRoleWiseCount($orgName, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getRoleWiseCount($orgName, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $user->getRoleWiseCount($orgName, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getRoleWiseCount($orgName, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'monthWiseMDOAdminCount') {
                     $result = $user->getMonthWiseMDOAdminCount($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getMonthWiseMDOAdminCount($orgName, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getMonthWiseMDOAdminCount($orgName, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $user->getMonthWiseMDOAdminCount($orgName, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getMonthWiseMDOAdminCount($orgName, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'cbpAdminList') {
                     $result = $user->getCBPAdminList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getCBPAdminList($orgName, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getCBPAdminList($orgName, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $user->getCBPAdminList($orgName, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getCBPAdminList($orgName, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'mdoAdminList') {
                     $result = $user->getMDOAdminList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getMDOAdminList($orgName, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getMDOAdminList($orgName, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $user->getMDOAdminList($orgName, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getMDOAdminList($orgName, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'creatorList') {
                     $result = $user->getCreatorList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getCreatorList($orgName, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getCreatorList($orgName, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $user->getCreatorList($orgName, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getCreatorList($orgName, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'reviewerList') {
                     $result = $user->getReviewerList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getReviewerList($orgName, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getReviewerList($orgName, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $user->getReviewerList($orgName, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getReviewerList($orgName, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'publisherList') {
                     $result = $user->getPublisherList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getPublisherList($orgName, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getPublisherList($orgName, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $user->getPublisherList($orgName, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getPublisherList($orgName, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'editorList') {
                     $result = $user->getEditorList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getEditorList($orgName, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getEditorList($orgName, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $user->getEditorList($orgName, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getEditorList($orgName, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'fracAdminList') {
                     $result = $user->getFracAdminList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getFracAdminList($orgName, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getFracAdminList($orgName, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $user->getFracAdminList($orgName, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getFracAdminList($orgName, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'fracCompetencyMember') {
                     $result = $user->getFracCompetencyMemberList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getFracCompetencyMemberList($orgName, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getFracCompetencyMemberList($orgName, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $user->getFracCompetencyMemberList($orgName, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getFracCompetencyMemberList($orgName, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'fracOneList') {
                     $result = $user->getFRACL1List($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getFRACL1List($orgName, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getFRACL1List($orgName, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $user->getFRACL1List($orgName, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getFRACL1List($orgName, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'fracTwoList') {
                     $result = $user->getFRACL2List($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getFRACL2List($orgName, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getFRACL2List($orgName, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $user->getFRACL2List($orgName, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getFRACL2List($orgName, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'ifuMemberList') {
                     $result = $user->getIFUMemberList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getIFUMemberList($orgName, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getIFUMemberList($orgName, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $user->getIFUMemberList($orgName, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getIFUMemberList($orgName, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'publicList') {
                     $result = $user->getPublicList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getPublicList($orgName, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getPublicList($orgName, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $user->getPublicList($orgName, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getPublicList($orgName, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'spvAdminList') {
                     $result = $user->getSPVAdminList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getSPVAdminList($orgName, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getSPVAdminList($orgName, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $user->getSPVAdminList($orgName, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getSPVAdminList($orgName, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'stateAdminList') {
                     $result = $user->getStateAdminList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getStateAdminList($orgName, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getStateAdminList($orgName, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $user->getSPVAdminList($orgName, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getStateAdminList($orgName, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'watMemberList') {
                     $result = $user->getWATMemberList($orgName, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getWATMemberList($orgName, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getWATMemberList($orgName, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $user->getWATMemberList($orgName, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getWATMemberList($orgName, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'dayWiseUserOnboarding') {
                     $result = $user->getDayWiseUserOnboarding($limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getDayWiseUserOnboarding(-1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getDayWiseUserOnboarding(-1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $user->getDayWiseUserOnboarding(1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getDayWiseUserOnboarding(-1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'monthWiseUserOnboarding') {
                     $result = $user->getMonthWiseUserOnboarding($limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getMonthWiseUserOnboarding(-1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getMonthWiseUserOnboarding(-1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $user->getMonthWiseUserOnboarding(1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getMonthWiseUserOnboarding(-1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'monthWiseOrgOnboarding') {
                     $result = $orgModel->getMonthWiseOrgOnboarding($limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $orgModel->getMonthWiseOrgOnboarding(-1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $orgModel->getMonthWiseOrgOnboarding(-1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $orgModel->getMonthWiseOrgOnboarding(1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $orgModel->getMonthWiseOrgOnboarding(-1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'monthWiseCourses') {
                     $result = $courseModel->getMonthWiseCourses($limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $courseModel->getMonthWiseCourses(-1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $courseModel->getMonthWiseCourses(-1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $courseModel->getMonthWiseCourses(1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $courseModel->getMonthWiseCourses(-1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'monthWiseCompletion') {
                     $result = $enrolment->getMonthWiseCourseCompletion($limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getMonthWiseCourseCompletion(-1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolment->getMonthWiseCourseCompletion(-1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $enrolment->getMonthWiseCourseCompletion(1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getMonthWiseCourseCompletion(-1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'atiWiseOverview') {
                     $result = $enrolmentProgram->getATIWiseCount($org, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolmentProgram->getATIWiseCount($org, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolmentProgram->getATIWiseCount($org, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $enrolmentProgram->getATIWiseCount($org, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolmentProgram->getATIWiseCount($org, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topUserEnrolment') {
                     $result = $enrolment->getTopUserEnrolment($topCount, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getTopUserEnrolment($topCount, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolment->getTopUserEnrolment($topCount, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1) {
+                        $fullResult = $enrolment->getTopUserEnrolment($topCount, 1, 0, '', $orderBy, $orderDir);
+                        $resultFiltered = $enrolment->getTopUserEnrolment($topCount, 1, 0, $search, $orderBy, $orderDir);
+                    }
                     $resultFiltered = $enrolment->getTopUserEnrolment($topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topUserCompletion') {
                     $result = $enrolment->getTopUserCompletion($topCount, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getTopUserCompletion($topCount, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolment->getTopUserCompletion($topCount, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $enrolment->getTopUserCompletion($topCount, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getTopUserCompletion($topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topUserNotStarted') {
                     $result = $enrolment->getTopUserNotStarted($topCount, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getTopUserNotStarted($topCount, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolment->getTopUserNotStarted($topCount, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $enrolment->getTopUserNotStarted($topCount, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getTopUserNotStarted($topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topUserInProgress') {
                     $result = $enrolment->getTopUserInProgress($topCount, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getTopUserInProgress($topCount, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolment->getTopUserInProgress($topCount, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $enrolment->getTopUserInProgress($topCount, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getTopUserInProgress($topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topOrgOnboarding') {
                     $result = $user->getTopOrgOnboarding($topCount, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getTopOrgOnboarding($topCount, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getTopOrgOnboarding($topCount, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $user->getTopOrgOnboarding($topCount, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getTopOrgOnboarding($topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topOrgEnrolment') {
                     $result = $enrolment->getTopOrgEnrolment($topCount, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getTopOrgEnrolment($topCount, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolment->getTopOrgEnrolment($topCount, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $enrolment->getTopOrgEnrolment($topCount, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getTopOrgEnrolment($topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topOrgCompletion') {
                     $result = $enrolment->getTopOrgCompletion($topCount, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getTopOrgCompletion($topCount, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolment->getTopOrgCompletion($topCount, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $enrolment->getTopOrgCompletion($topCount, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getTopOrgCompletion($topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topOrgMdoAdmin') {
                     $result = $user->getTopOrgMdoAdmin($topCount, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getTopOrgMdoAdmin($topCount, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getTopOrgMdoAdmin($topCount, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $user->getTopOrgMdoAdmin($topCount, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getTopOrgMdoAdmin($topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topCbpLiveCourses') {
                     $result = $courseModel->getTopCbpLiveCourses($topCount, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $courseModel->getTopCbpLiveCourses($topCount, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $courseModel->getTopCbpLiveCourses($topCount, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $courseModel->getTopCbpLiveCourses($topCount, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $courseModel->getTopCbpLiveCourses($topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topCbpUnderPublish') {
                     $result = $courseModel->getTopCbpUnderPublish($topCount, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $courseModel->getTopCbpUnderPublish($topCount, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $courseModel->getTopCbpUnderPublish($topCount, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $courseModel->getTopCbpUnderPublish($topCount, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $courseModel->getTopCbpUnderPublish($topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topCbpUnderReview') {
                     $result = $courseModel->getTopCbpUnderReview($topCount, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $courseModel->getTopCbpUnderReview($topCount, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $courseModel->getTopCbpUnderReview($topCount, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $courseModel->getTopCbpUnderReview($topCount, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $courseModel->getTopCbpUnderReview($topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topCbpDraftCourses') {
                     $result = $courseModel->getTopCbpDraftCourses($topCount, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $courseModel->getTopCbpDraftCourses($topCount, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $courseModel->getTopCbpDraftCourses($topCount, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $courseModel->getTopCbpDraftCourses($topCount, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $courseModel->getTopCbpDraftCourses($topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topCourseEnrolment') {
                     $result = $enrolment->getTopCourseEnrolment($topCount, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getTopCourseEnrolment($topCount, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolment->getTopCourseEnrolment($topCount, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1) {
+                        $fullResult = $enrolment->getTopCourseEnrolment($topCount, 1, 0, '', $orderBy, $orderDir);
+                        $resultFiltered = $enrolment->getTopCourseEnrolment($topCount, 1, 0, $search, $orderBy, $orderDir);
+                    }
                     $resultFiltered = $enrolment->getTopCourseEnrolment($topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topCourseCompletion') {
                     $result = $enrolment->getTopCourseCompletion($topCount, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getTopCourseCompletion($topCount, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolment->getTopCourseCompletion($topCount, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $enrolment->getTopCourseCompletion($topCount, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getTopCourseCompletion($topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topCourseRating') {
                     $result = $courseModel->getTopCourseRating($topCount, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $courseModel->getTopCourseRating($topCount, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $courseModel->getTopCourseRating($topCount, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $courseModel->getTopCourseRating($topCount, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $courseModel->getTopCourseRating($topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topOrgCourseWise') {
                     $result = $enrolment->getTopOrgCourseWise($course, $topCount, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getTopOrgCourseWise($course, $topCount, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolment->getTopOrgCourseWise($course, $topCount, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1){
+                        $fullResult = $enrolment->getTopOrgCourseWise($course, $topCount, 1, 0, '', $orderBy, $orderDir);
+                        $resultFiltered = $enrolment->getTopOrgCourseWise($course, $topCount, 1, 0, $search, $orderBy, $orderDir);
+                    }
                     $resultFiltered = $enrolment->getTopOrgCourseWise($course, $topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topOrgProgramWise') {
                     $result = $enrolmentProgram->getTopOrgProgramWise($course, $topCount, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolmentProgram->getTopOrgProgramWise($course, $topCount, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolmentProgram->getTopOrgProgramWise($course, $topCount, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1) {
+                        $fullResult = $enrolmentProgram->getTopOrgProgramWise($course, $topCount, 1, 0, '', $orderBy, $orderDir);
+                        $resultFiltered = $enrolmentProgram->getTopOrgProgramWise($course, $topCount, 1, 0, $search, $orderBy, $orderDir);
+                    }
                     $resultFiltered = $enrolmentProgram->getTopOrgProgramWise($course, $topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topOrgCollectionWise') {
                     $result = $enrolment->getTopOrgCollectionWise($course, $topCount, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getTopOrgCollectionWise($course, $topCount, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolment->getTopOrgCollectionWise($course, $topCount, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1){
+                        $fullResult = $enrolment->getTopOrgCollectionWise($course, $topCount, 1, 0, '', $orderBy, $orderDir);
+                        $resultFiltered = $enrolment->getTopOrgCollectionWise($course, $topCount, 1, 0, $search, $orderBy, $orderDir);
+                    }
                     $resultFiltered = $enrolment->getTopOrgCollectionWise($course, $topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topCourseInMonth') {
                     $result = $enrolment->getTopCourseInMonth($month, $topCount, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getTopCourseInMonth($month, $topCount, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolment->getTopCourseInMonth($month, $topCount, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $enrolment->getTopCourseInMonth($month, $topCount, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getTopCourseInMonth($month, $topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topCompetency') {
                     $result = $competencyModel->getTopCompetencies($competencyType, $topCount, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $competencyModel->getTopCompetencies($competencyType, $topCount, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $competencyModel->getTopCompetencies($competencyType, $topCount, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $competencyModel->getTopCompetencies($competencyType, $topCount, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $competencyModel->getTopCompetencies($competencyType, $topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'topCoursesCompetencyWise') {
                     $result = $competencyModel->getTopCoursesCompetencyWise($topCount, $limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $competencyModel->getTopCoursesCompetencyWise($topCount, -1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $competencyModel->getTopCoursesCompetencyWise($topCount, -1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $competencyModel->getTopCoursesCompetencyWise($topCount, 1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $competencyModel->getTopCoursesCompetencyWise($topCount, -1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'rozgarMelaUserReport') {
                     $result = $enrolment->getRozgarMelaUserEnrolmentReport($limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getRozgarMelaUserEnrolmentReport(-1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolment->getRozgarMelaUserEnrolmentReport(-1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $enrolment->getRozgarMelaUserEnrolmentReport(1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getRozgarMelaUserEnrolmentReport(-1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'rozgarMelaReport') {
                     $result = $enrolment->getRozgarMelaReport($limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getRozgarMelaReport(-1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolment->getRozgarMelaReport(-1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $enrolment->getRozgarMelaReport(1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getRozgarMelaReport(-1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'rozgarMelaSummary') {
                     $result = $enrolment->getRozgarMelaSummary($limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getRozgarMelaSummary(-1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolment->getRozgarMelaSummary(-1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $enrolment->getRozgarMelaSummary(1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolment->getRozgarMelaSummary(-1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'rozgarMelaUserList') {
                     $result = $user->getRozgarMelaUserList($limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getRozgarMelaUserList(-1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getRozgarMelaUserList(-1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $user->getRozgarMelaUserList(1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getRozgarMelaUserList(-1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'rozgarMelaKpCollection') {
                     $result = $enrolment->getRozgarMelaKpCollectionReport($limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolment->getRozgarMelaKpCollectionReport(-1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolment->getRozgarMelaKpCollectionReport(-1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1){
+                        $fullResult = $enrolment->getRozgarMelaKpCollectionReport(1, 0, '', $orderBy, $orderDir);
+                        $resultFiltered = $enrolment->getRozgarMelaKpCollectionReport(1, 0, $search, $orderBy, $orderDir);
+                    }
                     $resultFiltered = $enrolment->getRozgarMelaKpCollectionReport(-1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'rozgarMelaKpProgram') {
                     $result = $enrolmentProgram->getRozgarMelaKpProgramReport($limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $enrolmentProgram->getRozgarMelaKpProgramReport(-1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $enrolmentProgram->getRozgarMelaKpProgramReport(-1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $enrolmentProgram->getRozgarMelaKpProgramReport(1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $enrolmentProgram->getRozgarMelaKpProgramReport(-1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'designationWiseCount') {
                     $result = $user->getDesignationWiseUserCount($limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $user->getDesignationWiseUserCount(-1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getDesignationWiseUserCount(-1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $user->getDesignationWiseUserCount(1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $user->getDesignationWiseUserCount(-1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'competencySummary') {
                     $result = $competencyModel->getCompetencySummary($limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $competencyModel->getCompetencySummary(-1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $competencyModel->getCompetencySummary(-1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $competencyModel->getCompetencySummary(1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $competencyModel->getCompetencySummary(-1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'summaryReport') {
                     $result = $orgModel->getSummaryReport($limit, $offset, $search, $orderBy, $orderDir);
-                    $fullResult = $orgModel->getSummaryReport(-1, 0, '', $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $orgModel->getSummaryReport(-1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $orgModel->getSummaryReport(1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $orgModel->getSummaryReport(-1, 0, $search, $orderBy, $orderDir);
 
                 }
 
 
+                if ($draw == 1) {
+                    $session->remove('resultArray');
+                    $session->setTempdata('resultArray', $fullResult->getResultArray(), 600);
+                    $session->setTempdata('totalRecords', $fullResult->getNumRows(), 600);
 
+                }
 
-                $session->remove('resultArray');
                 $session->remove('filteredResultArray');
-
-                $session->setTempdata('resultArray', $fullResult->getResultArray(), 300);
                 $session->setTempdata('filteredResultArray', $resultFiltered->getResultArray(), 300);
 
-                if ($fullResult->getNumRows() == 0)
+                if ($session->getTempdata('totalRecords') == 0)
                     $session->setTempdata('error', 'No matching records found', 300);
 
 
                 $response = array(
                     "draw" => intval($request['draw']),
-                    "recordsTotal" => $fullResult->getNumRows(),
+                    "recordsTotal" => $session->getTempdata('totalRecords'),
                     "recordsFiltered" => $resultFiltered->getNumRows(),
                     "data" => $result->getResultArray()
                 );
@@ -660,7 +932,7 @@ class Report extends BaseController
                 /* Set table header, filename and report tilte based on report type */
 
                 if ($reportType == 'mdoUserList') {
-                    $header = ['Name', 'Email ID', 'Organisation', 'Designation',  'Created Date', 'Roles', 'Profile Update Status'];
+                    $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Created Date', 'Roles', 'Profile Update Status'];
                     $session->setTempdata('fileName', $orgName . '_UserList', 300);
                     $reportTitle = 'Users onboarded from organisation - "' . $orgName . '"';
 
@@ -675,7 +947,7 @@ class Report extends BaseController
                     $reportTitle = 'Users Enrolment Report for organisation - "' . $orgName . '"';
 
                 } else if ($reportType == 'ministryUserList') {
-                    $header = ['Name', 'Email', 'Ministry', 'Department', 'Organization', 'Designation',  'Created Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Ministry', 'Department', 'Organization', 'Designation', 'Created Date', 'Roles'];
                     $session->setTempdata('fileName', $orgName . '_UserList', 300);
                     $reportTitle = 'Users list for all organisations under ministry/state - "' . $orgName . '"';
 
@@ -685,7 +957,7 @@ class Report extends BaseController
                     $reportTitle = 'Users enrolement report for all organisations under ministry/state - "' . $orgName . '"';
 
                 } else if ($reportType == 'userWiseCount') {
-                    $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Enrolled','Not started',' In Progress', 'Completed'];
+                    $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Enrolled', 'Not started', ' In Progress', 'Completed'];
                     $session->setTempdata('fileName', $orgName . '_UserWiseSummary', 300);
                     $reportTitle = 'User-wise course enrolment/completion count for organisation - "' . $orgName . '"';
 
@@ -702,7 +974,7 @@ class Report extends BaseController
                 }
 
                 $table->setHeading($header);
-                
+
                 $session->setTempdata('reportHeader', $header);
                 $session->setTempdata('reportTitle', $reportTitle);
 
@@ -789,7 +1061,7 @@ class Report extends BaseController
                     $reportTitle = 'Courses in draft';
 
                 } else if ($courseReportType == 'courseEnrolmentReport') {
-                    $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Course Name', 'Course Provider', 'Completion Status', 'Completion Percentage', 'Completed On'];
+                    $header = ['Name', 'Email ID', 'Organisation', 'Designation',  'Completion Status', 'Completion Percentage', 'Completed On'];
                     $session->setTempdata('fileName', $course . '_EnrolmentReport', 300);
                     $reportTitle = 'User Enrolment Report for Course - "' . $home->getCourseName($course) . '"';
 
@@ -876,12 +1148,12 @@ class Report extends BaseController
 
                 $lastUpdate = new DataUpdateModel();
                 $enrolment = new UserEnrolmentCourse();
-                
+
                 $data['lastUpdated'] = '[Report as on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
                 $session->setTempdata('error', '');
 
                 if ($reportType == 'userList') {
-                    $header = ['Name', 'Email ID', 'Organisation', 'Designation',  'Created Date', 'Roles', 'Profile Update Status'];
+                    $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Created Date', 'Roles', 'Profile Update Status'];
                     $session->setTempdata('fileName', 'UserList', 300);
                     $reportTitle = 'Users onboarded on iGOT';
 
@@ -900,13 +1172,13 @@ class Report extends BaseController
                     $reportTitle = 'Full Enrolment Report';
 
                 } else if ($reportType == 'userEnrolmentSummary') {
-                    $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Enrolled','Not started',' In Progress', 'Completed'];
+                    $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Enrolled', 'Not started', ' In Progress', 'Completed'];
                     // $foorterData = $enrolment->dashboardTable('', '', false);
                     // $footer = ['Total','','','',$enrolment->learnerDashboardTableFooter()->getResultArray()[0]['users'],$foorterData->getResultArray()[0]['users'],$foorterData->getResultArray()[1]['users'],$foorterData->getResultArray()[2]['users']];
-                    $session->setTempdata('fileName',  'UserEnrolmentSummary', 300);
+                    $session->setTempdata('fileName', 'UserEnrolmentSummary', 300);
                     $reportTitle = 'User-wise enrolment summary';
 
-                } 
+                }
                 $table->setHeading($header);
                 // if($footer != '')
                 // $table->setFooting($footer);
@@ -981,77 +1253,77 @@ class Report extends BaseController
                     $reportTitle = 'Month-wise MDO Admin Creation Count';
 
                 } else if ($roleReportType == 'cbpAdminList') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of CBP Admins', 300);
                     $reportTitle = 'List of CBP Admins';
 
                 } else if ($roleReportType == 'mdoAdminList') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of MDO Admins', 300);
                     $reportTitle = 'List of MDO Admins';
 
                 } else if ($roleReportType == 'creatorList') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of Content Creators', 300);
                     $reportTitle = 'List of Content Creators';
 
                 } else if ($roleReportType == 'reviewerList') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of Content Reviewers', 300);
                     $reportTitle = 'List of Content Reviewers';
 
                 } else if ($roleReportType == 'publisherList') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of Content Publishers', 300);
                     $reportTitle = 'List of Content Publishers';
 
                 } else if ($roleReportType == 'editorList') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of Editors', 300);
                     $reportTitle = 'List of Editors';
 
                 } else if ($roleReportType == 'fracAdminList') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of FRAC Admins', 300);
                     $reportTitle = 'List of FRAC Admins';
 
                 } else if ($roleReportType == 'fracCompetencyMember') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of FRAC Competency Members', 300);
                     $reportTitle = 'List of FRAC Competency Members';
 
                 } else if ($roleReportType == 'fracOneList') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of FRAC_Reviewer_L1', 300);
                     $reportTitle = 'List of FRAC_Reviewer_L1';
 
                 } else if ($roleReportType == 'fracTwoList') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of FRAC_Reviewer_L2', 300);
                     $reportTitle = 'List of FRAC_Reviewer_L2';
 
                 } else if ($roleReportType == 'ifuMemberList') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of IFU Members', 300);
                     $reportTitle = 'List of IFU Members';
 
                 } else if ($roleReportType == 'publicList') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of CBP Admins', 300);
                     $reportTitle = 'List of Public users';
 
                 } else if ($roleReportType == 'spvAdminList') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of SPV Admins', 300);
                     $reportTitle = 'List of SPV Admins';
 
                 } else if ($roleReportType == 'stateAdminList') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of State Admins', 300);
                     $reportTitle = 'List of State Admins';
 
                 } else if ($roleReportType == 'watMemberList') {
-                    $header = ['Name', 'Email', 'Organization', 'Designation',  'Creation Date', 'Roles'];
+                    $header = ['Name', 'Email', 'Organization', 'Designation', 'Creation Date', 'Roles'];
                     $session->setTempdata('fileName', 'List of WAT Members', 300);
                     $reportTitle = 'List of WAT Members';
 
@@ -1277,12 +1549,12 @@ class Report extends BaseController
                     $reportTitle = 'CBP Providers with highest no. of draft courses';
 
                 } else if ($reportType == 'topCourseEnrolment') {
-                    $header = ['Course', 'No. of Users Enrolled'];
+                    $header = ['Course','Course Provider', 'No. of Users Enrolled'];
                     $session->setTempdata('fileName', 'TopCourse_Enrolment', 300);
                     $reportTitle = 'Top ' . $topCount . ' courses based on enrolment';
 
                 } else if ($reportType == 'topCourseCompletion') {
-                    $header = ['Course', 'No. of Users Completed'];
+                    $header = ['Course', 'Course Provider','No. of Users Completed'];
                     $session->setTempdata('fileName', 'TopCourse_Completion', 300);
                     $reportTitle = 'Top ' . $topCount . ' courses based on completion';
 
@@ -1658,15 +1930,14 @@ class Report extends BaseController
                 header("Expires: 0");
 
                 $handle = fopen('php://output', 'w');
-fputcsv($handle, $keys);
+                fputcsv($handle, $keys);
                 foreach ($report as $data_array) {
                     fputcsv($handle, $data_array);
                 }
                 fclose($handle);
                 exit;
             }
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
             // return view('header_view') . view('error_general').view('footer_view');
         }

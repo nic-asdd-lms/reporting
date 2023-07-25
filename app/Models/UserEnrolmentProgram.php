@@ -80,7 +80,7 @@ class UserEnrolmentProgram extends Model
         return $query;
     }
 
-    
+
     public function getATIWiseCount($org, $limit, $offset, $search, $orderBy, $orderDir)
     {
         try {
@@ -174,7 +174,7 @@ class UserEnrolmentProgram extends Model
                             OR designation LIKE '%" . strtolower($search) . "%' OR designation LIKE '%" . strtoupper($search) . "%' OR designation LIKE '%" . ucfirst($search) . "%'
                             OR batch_id LIKE '%" . strtolower($search) . "%' OR batch_id LIKE '%" . strtoupper($search) . "%' OR batch_id LIKE '%" . ucfirst($search) . "%'
                             OR master_organization.org_name LIKE '%" . strtolower($search) . "%' OR master_organization.org_name LIKE '%" . strtoupper($search) . "%' OR master_organization.org_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
-            
+
             $builder->orderBy((int) $orderBy + 1, $orderDir);
             if ($limit != -1)
                 $builder->limit($limit, $offset);
@@ -186,12 +186,12 @@ class UserEnrolmentProgram extends Model
         }
         //return $query->getResult();
     }
-    
+
     public function dashboardChart($ati, $program, $isMonthWise)
     {
         $builder = $this->db->table('user_program_enrolment');
-        $builder->join('master_program','master_program.program_id = user_program_enrolment.program_id');
-    
+        $builder->join('master_program', 'master_program.program_id = user_program_enrolment.program_id');
+
         $builder->select('status,count(*) as users');
 
         if ($ati != '')
@@ -213,7 +213,7 @@ class UserEnrolmentProgram extends Model
     public function dashboardTable($ati, $program, $isMonthWise)
     {
         $builder = $this->db->table('user_program_enrolment');
-        $builder->join('master_program','master_program.program_id = user_program_enrolment.program_id');
+        $builder->join('master_program', 'master_program.program_id = user_program_enrolment.program_id');
 
         // $enrolled = $this->db->table('user_program_enrolment');
         // $enrolled->join('master_program','master_program.program_id = user_program_enrolment.program_id');
@@ -249,7 +249,7 @@ class UserEnrolmentProgram extends Model
     public function learnerDashboardTableFooter($ati, $program, $isMonthWise)
     {
         $enrolled = $this->db->table('user_program_enrolment');
-        $enrolled->join('master_program','master_program.program_id = user_program_enrolment.program_id');
+        $enrolled->join('master_program', 'master_program.program_id = user_program_enrolment.program_id');
 
         $enrolled->select('\'Total Learners\',count(*)  as users');
         if ($ati != '') {
@@ -312,9 +312,7 @@ class UserEnrolmentProgram extends Model
         if ($limit != -1) {
             $limitQuery = ' limit ' . $limit . ' offset ' . $offset;
         } else
-            $limitQuery = '';
-
-        {
+            $limitQuery = ''; {
             $query = $this->db->query('SELECT user_program_enrolment.program_id,program_name,  COUNT(*) AS enrolled_count
       ,SUM(CASE WHEN user_program_enrolment.status =\'Not Started\' THEN 1 ELSE 0 END) AS not_staretd,
             SUM(CASE WHEN user_program_enrolment.status =\'In-Progress\' THEN 1 ELSE 0 END) AS in_progress,
@@ -353,13 +351,13 @@ class UserEnrolmentProgram extends Model
             $builder->orderBy((int) $orderBy + 1, $orderDir);
             if ($limit != -1)
                 $builder->limit($limit, $offset);
-                
-                // echo '<pre>';
-                // print_r($builder->getCompiledSelect());
-                // die;
-                $query = $builder->get();
 
-            
+            // echo '<pre>';
+            // print_r($builder->getCompiledSelect());
+            // die;
+            $query = $builder->get();
+
+
             return $query;
         } catch (\Exception $e) {
             throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
@@ -367,7 +365,7 @@ class UserEnrolmentProgram extends Model
         //return $query->getResult();
     }
 
-    
+
 
 }
 

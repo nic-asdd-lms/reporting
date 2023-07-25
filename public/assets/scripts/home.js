@@ -36,14 +36,12 @@ function enable_disable_mdo(value) {
     }
 
     if (value.value == "ministryUserEnrolment" || value.value == "orgHierarchy" || value.value == "ministryUserList") {
-        org.style.display = "block";
         org.placeholder = "Search Ministry/State";
         org.value = "";
 
     }
 
     else {
-        org.style.display = "block";
         org.placeholder = "Search Organisation";
         org.value = "";
 

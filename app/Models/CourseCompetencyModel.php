@@ -30,7 +30,7 @@ class CourseCompetencyModel extends Model
 
             if ($limit != -1)
                 $builder->limit($limit, $offset);
-            $query = $builder->get();
+                $query = $builder->get();
 
             return $query;
         } catch (\Exception $e) {
@@ -61,7 +61,7 @@ class CourseCompetencyModel extends Model
                 $builder->limit(min($topCount - $offset, $limit), $offset);
             else
                 $builder->limit($topCount - $offset, $offset);
-
+                 
             $query = $builder->get();
 
             return $query;
@@ -89,7 +89,7 @@ class CourseCompetencyModel extends Model
                 $builder->limit(min($topCount - $offset, $limit), $offset);
             else
                 $builder->limit($topCount - $offset, $offset);
-
+                
             $query = $builder->get();
 
             return $query;

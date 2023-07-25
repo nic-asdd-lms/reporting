@@ -689,7 +689,6 @@
                                    ';
 
 
-
                                 } ?>
 
 
@@ -723,7 +722,6 @@
                             onchange="enable_disable_course(this)" id="courseReportType">
                             <option value="notSelected">-- Select Report Type --</option>
                             <option value="liveCourseList">List of live courses</option>
-                            <option value="courseEnrolmentCount">Live courses summary</option>
                             <option value="courseEnrolmentReport">Course-wise enrolment report</option>
                             <option value="programEnrolmentReport">Program-wise enrolment report</option>
                             <option value="programEnrolmentCount">Program-wise summary</option>
@@ -734,6 +732,7 @@
                             $session = \Config\Services::session();
 
                             if ($session->get('role') == 'SPV_ADMIN' || $session->get('role') == 'IGOT_TEAM_MEMBER') {
+                                echo '<option value="courseEnrolmentCount">Live courses summary</option>';
                                 echo '<option value="courseMinistrySummary">Ministry-wise summary for a course</option>';
                                 echo '<option value="underPublishCourses">Courses under publish</option>';
                                 echo '<option value="underReviewCourses">Courses under review </option>';
@@ -801,16 +800,17 @@
                             onchange="enable_disable_user(this)">
                             <option value="notSelected">-- Select Report Type --</option>
                             <?php
-                            $session = \Config\Services::session();
-
-                            if ($session->get('role') == 'SPV_ADMIN' || $session->get('role') == 'IGOT_TEAM_MEMBER') {
-
-                                echo
-                                    '
-                            <option class="options" value="userList">Complete user list</option>
-                            <option class="options" value="userEnrolmentFull">Complete enrolment report</option>
-                            <option class="options" value="userEnrolmentSummary">Complete user-wise enrolment summary</option>';
-                            } ?>
+                            // $session = \Config\Services::session();
+                            
+                            // if ($session->get('role') == 'SPV_ADMIN' || $session->get('role') == 'IGOT_TEAM_MEMBER') {
+                            
+                            //     echo
+                            //         '
+                            // <option class="options" value="userList">User list</option>
+                            // <option class="options" value="userEnrolmentFull">User enrolment report</option>
+                            // <option class="options" value="userEnrolmentSummary">User-wise enrolment summary</option>';
+                            // } 
+                            ?>
 
                             <option value="userProfile">User profile</option>
                             <option value="userEnrolment">User-wise enrolment report</option>
@@ -877,7 +877,6 @@
                         <option value="fracOneList">FRAC REVIEWER L1 List</option>
                         <option value="fracTwoList">FRAC REVIEWER L2 List</option>
                         <option value="ifuMemberList">IFU MEMBER List</option>
-                        <option value="publicList">PUBLIC User List</option>
                         <option value="spvAdminList">SPV ADMIN List</option>
                         <option value="stateAdminList">STATE ADMIN List</option>
                         <option value="watMemberList">WAT MEMBER List</option>

@@ -9,6 +9,7 @@ use App\Models\MasterCourseModel;
 use App\Models\UserEnrolmentProgram;
 use App\Models\UserEnrolmentCourse;
 use App\Models\DataUpdateModel;
+use App\Models\DashboardModel;
 
 
 class Dashboard extends BaseController
@@ -200,6 +201,7 @@ class Dashboard extends BaseController
                 $orgModel = new MasterOrganizationModel();
                 $programModel = new MasterProgramModel();
                 $lastUpdate = new DataUpdateModel();
+                $dashboardModel = new DashboardModel();
 
                 $orgData = $orgModel->getOrganisationCount();
                 $data['orgCount'] = ($orgData->getResultArray()[0]['count']);
@@ -262,6 +264,20 @@ class Dashboard extends BaseController
 
                 // $data = [];
 
+                // LEARNER OVERVIEW
+
+                $enrolmentPercentage = $dashboardModel->getEnrolmentPercentage();
+                $data['enrolmentPercentage'] = $enrolmentPercentage->getResultArray()[0]['round'];
+
+                $completionPercentage = $dashboardModel->getCompletionPercentage();
+                $data['completionPercentage'] = $completionPercentage->getResultArray()[0]['round'];
+
+                $inProgressPercentage = $dashboardModel->getInProgressPercentage();
+                $data['inProgressPercentage'] = $inProgressPercentage->getResultArray()[0]['round'];
+
+                $notStartedPercentage = $dashboardModel->getNotStartedPercentage();
+                $data['notStartedPercentage'] = $notStartedPercentage->getResultArray()[0]['round'];
+
                 $learnerheader = ['Status', ['data' => 'Count', 'class' => 'dashboard-table-header-count']];
                 $learnertable->setHeading($learnerheader);
                 $learnersarr = $learnerTableData->getResultArray();
@@ -270,7 +286,7 @@ class Dashboard extends BaseController
 
                 // $learnertable->setFooting('Total Enrolments',$enrolmentCourse->learnerDashboardTableFooter()->getResultArray()[0]['users']);
 
-                $courseheader = ['Status', ['data' => 'Count', 'class' => 'dashboard-table-header-count']];
+                $courseheader = ['Status', ['data' => 'Count', 'class' => 'course-dashboard-table-header-count']];
                 $coursetable->setHeading($courseheader);
 
                 $monthheader = ['Status', 'Count'];
@@ -289,6 +305,22 @@ class Dashboard extends BaseController
                 $keyCell = ['data' => 'Total Enrolments', 'class' => 'dashboard-footer'];
                 $valueCell = ['data' => $enrolmentCourse->learnerDashboardTableFooter()->getResultArray()[0]['users'], 'class' => 'dashboard-footer dashboard-value-column numformat'];
                 $learnertable->addRow($keyCell, $valueCell);
+
+
+                //  COURSE OVERVIEW
+
+                $avgRating = $dashboardModel->getAvgRating();
+                $data['avgRating'] = $avgRating->getResultArray()[0]['round'];
+
+                $programCount = $dashboardModel->getProgramCount();
+                $data['programCount'] = $programCount->getResultArray()[0]['count'];
+
+                $programDuration = $dashboardModel->getProgramDuration();
+                $data['programDuration'] = $programDuration->getResultArray()[0]['sum'];
+
+                $coursesCurrentMonth= $dashboardModel->getCourseCountCurrentMonth();
+                $data['coursesCurrentMonth'] = $coursesCurrentMonth->getResultArray()[0]['count'];
+
 
                 foreach ($courseChartData->getResult() as $row) {
                     $data['courselabel'][] = $row->status;
@@ -383,6 +415,15 @@ class Dashboard extends BaseController
                     }
                 }
 
+                // USER OVERVIEW
+
+                $usersOnboardedYesterday = $dashboardModel->getUserOnboardingCountYesterday();
+                $data['usersOnboardedYesterday'] = $usersOnboardedYesterday->getResultArray()[0]['count'];
+
+                $mdoAdminCount = $dashboardModel->getMDOAdminCount();
+                $data['mdoAdminCount'] = $mdoAdminCount->getResultArray()[0]['count'];
+
+
                 $onboardingArray = $monthWiseUserOnboarding->getResultArray();
                 for ($i = 0; $i < sizeof($months); $i++) {
                     $data['onboardingMonth'][] = $months[$i];
@@ -436,6 +477,39 @@ class Dashboard extends BaseController
                     $data['totalLearningHoursMonth'][] = $row->month;
                     $data['totalearningHours'][] = (int) ($row->sum);
                 }
+
+
+                //  ORG OVERVIEW
+
+                $orgEnrolled = $dashboardModel->getOrganisationEnrolled();
+                $data['orgEnrolled'] = $orgEnrolled->getResultArray()[0]['count'];
+
+                $mdoAdminOrgCount = $dashboardModel->getOrganisationWithMDOAdmin();
+                $data['mdoAdminOrgCount'] = $mdoAdminOrgCount->getResultArray()[0]['count'];
+
+                $monthWiseOrgOnboarding = $orgModel->getMonthWiseOrgOnboardingChart();
+                $monthWiseTotalOrg = $orgModel->getMonthWiseTotalOrgChart();
+                
+                $orgOnboardingArray = $monthWiseOrgOnboarding->getResultArray();
+                for ($i = 0; $i < sizeof($months); $i++) {
+                    $data['orgOnboardingMonth'][] = $months[$i];
+                    if (array_search($months[$i], array_column($orgOnboardingArray, 'creation_month')) != null) {
+                        $data['orgOnboardingCount'][] = (int) $orgOnboardingArray[array_search($months[$i], array_column($orgOnboardingArray, 'creation_month'))]['count'];
+                    } else {
+                        $data['orgOnboardingCount'][] = (int) ($i == 0 ? 0 : $orgOnboardingArray[array_search($months[$i - 1], array_column($orgOnboardingArray, 'creation_month'))]['count']);
+                    }
+                }
+
+                $totalOrgOnboardingArray = $monthWiseTotalOrg->getResultArray();
+                for ($i = 0; $i < sizeof($months); $i++) {
+                    $data['totalOrgMonth'][] = $months[$i];
+                    if (array_search($months[$i], array_column($totalOrgOnboardingArray, 'creation_month')) != null) {
+                        $data['totalOrgCount'][] = (int) $totalOrgOnboardingArray[array_search($months[$i], array_column($totalOrgOnboardingArray, 'creation_month'))]['sum'];
+                    } else {
+                        $data['totalOrgCount'][] = (int) ($i == 0 ? 0 : $totalOrgOnboardingArray[array_search($months[$i - 1], array_column($totalOrgOnboardingArray, 'creation_month'))]['sum']);
+                    }
+                }
+
                 $data['chart_data'] = json_encode($data);
 
                 $tabledata = [];

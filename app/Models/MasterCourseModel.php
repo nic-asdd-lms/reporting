@@ -74,7 +74,7 @@ class MasterCourseModel extends Model
     {
         try {
             $builder = $this->db->table('master_course');
-            $builder->join('user_course_enrolment','user_course_enrolment.course_id = master_course.course_id');
+            $builder->join('user_course_enrolment', 'user_course_enrolment.course_id = master_course.course_id');
             $builder->select('sum(durationh)');
             $builder->where('status', 'Live');
             $builder->where('completion_status', 'Completed');
@@ -118,6 +118,7 @@ class MasterCourseModel extends Model
             if ($limit != -1)
                 $builder->limit($limit, $offset);
 
+
             $query = $builder->get();
 
             return $query;
@@ -141,7 +142,6 @@ class MasterCourseModel extends Model
 
             if ($limit != -1)
                 $builder->limit($limit, $offset);
-
             $query = $builder->get();
 
             return $query;
@@ -216,7 +216,7 @@ class MasterCourseModel extends Model
             if ($limit != -1)
                 $builder->limit($limit, $offset);
 
-            
+
             $query = $builder->get();
 
             return $query;
@@ -282,31 +282,31 @@ class MasterCourseModel extends Model
         }
     }
 
-    public function courseSearch($search_key) {
+    public function courseSearch($search_key)
+    {
         try {
             $builder = $this->db->table('master_course');
-        $builder->select('course_id,  course_name,org_name');
-        $builder->where('(SIMILARITY(course_name,\''.$search_key.'\') > 0.1)', NULL, FALSE);
-        $builder->where('status', 'Live');
-        $builder->orderBy('SIMILARITY(course_name,\''.$search_key.'\') desc');
-        $query = $builder->get();
-        
-        // $result = $this->db->query('SELECT org_name FROM master_organization WHERE SIMILARITY(org_name,\''.$search_key.'\') > 0.4 ;');
-        // echo $search_key,json_encode($query);
-        return $query->getResult();
-        }
-        catch (\Exception $e) {
+            $builder->select('course_id,  course_name,org_name');
+            $builder->where('(SIMILARITY(course_name,\'' . $search_key . '\') > 0.1)', NULL, FALSE);
+            $builder->where('status', 'Live');
+            $builder->orderBy('SIMILARITY(course_name,\'' . $search_key . '\') desc');
+            $query = $builder->get();
+
+            // $result = $this->db->query('SELECT org_name FROM master_organization WHERE SIMILARITY(org_name,\''.$search_key.'\') > 0.4 ;');
+            // echo $search_key,json_encode($query);
+            return $query->getResult();
+        } catch (\Exception $e) {
             throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
-        } 
-        
+        }
+
     }
 
-    public function getTopCbpLiveCourses($topCount,$limit, $offset, $search, $orderBy, $orderDir)
+    public function getTopCbpLiveCourses($topCount, $limit, $offset, $search, $orderBy, $orderDir)
     {
         try {
 
             $builder = $this->db->table('master_course');
-            $builder->select('org_name, count(distinct course_id) as course_count' );
+            $builder->select('org_name, count(distinct course_id) as course_count');
             $builder->where('status', 'Live');
             $builder->groupBy('org_name');
             if ($search != '') {
@@ -316,13 +316,13 @@ class MasterCourseModel extends Model
                 $builder->orLike('org_name', ucfirst($search));
             }
 
-            $builder->orderBy('course_count' ,'desc');
+            $builder->orderBy('course_count', 'desc');
             if ($limit != -1)
-            $builder->limit(min($topCount-$offset,$limit), $offset);
-        else
-            $builder->limit($topCount-$offset, $offset);
+                $builder->limit(min($topCount - $offset, $limit), $offset);
+            else
+                $builder->limit($topCount - $offset, $offset);
 
-        $query = $builder->get();
+            $query = $builder->get();
             // print_r($builder);
             return $query;
 
@@ -331,12 +331,12 @@ class MasterCourseModel extends Model
         }
     }
 
-    public function getTopCbpUnderPublish($topCount,$limit, $offset, $search, $orderBy, $orderDir)
+    public function getTopCbpUnderPublish($topCount, $limit, $offset, $search, $orderBy, $orderDir)
     {
         try {
 
             $builder = $this->db->table('master_course');
-            $builder->select('org_name, count(distinct course_id) as course_count' );
+            $builder->select('org_name, count(distinct course_id) as course_count');
             $builder->where('status', 'Reviewed');
             $builder->groupBy('org_name');
             if ($search != '') {
@@ -346,13 +346,13 @@ class MasterCourseModel extends Model
                 $builder->orLike('org_name', ucfirst($search));
             }
 
-            $builder->orderBy('course_count' ,'desc');
+            $builder->orderBy('course_count', 'desc');
             if ($limit != -1)
-            $builder->limit(min($topCount-$offset,$limit), $offset);
-        else
-            $builder->limit($topCount-$offset, $offset);
+                $builder->limit(min($topCount - $offset, $limit), $offset);
+            else
+                $builder->limit($topCount - $offset, $offset);
 
-        $query = $builder->get();
+            $query = $builder->get();
             // print_r($builder);
             return $query;
 
@@ -361,12 +361,12 @@ class MasterCourseModel extends Model
         }
     }
 
-    public function getTopCbpUnderReview($topCount,$limit, $offset, $search, $orderBy, $orderDir)
+    public function getTopCbpUnderReview($topCount, $limit, $offset, $search, $orderBy, $orderDir)
     {
         try {
 
             $builder = $this->db->table('master_course');
-            $builder->select('org_name, count(distinct course_id) as course_count' );
+            $builder->select('org_name, count(distinct course_id) as course_count');
             $builder->where('status', 'InReview');
             $builder->groupBy('org_name');
             if ($search != '') {
@@ -376,13 +376,13 @@ class MasterCourseModel extends Model
                 $builder->orLike('org_name', ucfirst($search));
             }
 
-            $builder->orderBy('course_count' ,'desc');
+            $builder->orderBy('course_count', 'desc');
             if ($limit != -1)
-            $builder->limit(min($topCount-$offset,$limit), $offset);
-        else
-            $builder->limit($topCount-$offset, $offset);
+                $builder->limit(min($topCount - $offset, $limit), $offset);
+            else
+                $builder->limit($topCount - $offset, $offset);
 
-        $query = $builder->get();
+            $query = $builder->get();
             // print_r($builder);
             return $query;
 
@@ -391,12 +391,12 @@ class MasterCourseModel extends Model
         }
     }
 
-    public function getTopCbpDraftCourses($topCount,$limit, $offset, $search, $orderBy, $orderDir)
+    public function getTopCbpDraftCourses($topCount, $limit, $offset, $search, $orderBy, $orderDir)
     {
         try {
 
             $builder = $this->db->table('master_course');
-            $builder->select('org_name, count(distinct course_id) as course_count' );
+            $builder->select('org_name, count(distinct course_id) as course_count');
             $builder->where('status', 'Draft');
             $builder->groupBy('org_name');
             if ($search != '') {
@@ -406,13 +406,13 @@ class MasterCourseModel extends Model
                 $builder->orLike('org_name', ucfirst($search));
             }
 
-            $builder->orderBy('course_count' ,'desc');
+            $builder->orderBy('course_count', 'desc');
             if ($limit != -1)
-            $builder->limit(min($topCount-$offset,$limit), $offset);
-        else
-            $builder->limit($topCount-$offset, $offset);
+                $builder->limit(min($topCount - $offset, $limit), $offset);
+            else
+                $builder->limit($topCount - $offset, $offset);
 
-        $query = $builder->get();
+            $query = $builder->get();
             // print_r($builder);
             return $query;
 
@@ -435,9 +435,9 @@ class MasterCourseModel extends Model
 
         $builder->orderBy('avg_rating, total_rating', 'desc');
         if ($limit != -1)
-            $builder->limit(min($topCount-$offset,$limit), $offset);
+            $builder->limit(min($topCount - $offset, $limit), $offset);
         else
-            $builder->limit($topCount-$offset, $offset);
+            $builder->limit($topCount - $offset, $offset);
 
         $query = $builder->get();
 
@@ -448,10 +448,10 @@ class MasterCourseModel extends Model
     public function dashboardChart($isMonthWise)
     {
         $builder = $this->db->table('master_course');
-        
+
         $builder->select('status,count(*) as count');
 
-        
+
         if ($isMonthWise == true)
             $builder->where('to_char(to_date(created_date,\'DD/MM/YYYY\'), \'MONTH YYYY\')  = to_char(current_date, \'MONTH YYYY\')');
 
@@ -465,10 +465,10 @@ class MasterCourseModel extends Model
     public function dashboardTable($isMonthWise)
     {
         $builder = $this->db->table('master_course');
-        
-        
+
+
         $builder->select('status,count(*) as count');
-        
+
         if ($isMonthWise == true) {
             $builder->where('to_char(to_date(created_date,\'DD/MM/YYYY\'), \'MONTH YYYY\')  = to_char(current_date, \'MONTH YYYY\')');
         }
@@ -489,13 +489,13 @@ class MasterCourseModel extends Model
         try {
             $builder = $this->db->table('master_course');
             $builder->select('to_char(date_trunc(\'MONTH\',to_date(published_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as publish_month, count(*)');
-            $builder->where('status','Live');
+            $builder->where('status', 'Live');
             $builder->groupBy('publish_month');
             $builder->orderBy('publish_month');
             $query = $builder->get();
 
             return $query;
-            
+
         } catch (\Exception $e) {
             throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
@@ -508,13 +508,13 @@ class MasterCourseModel extends Model
             $builder = $this->db->table('master_course');
             $builder->select('distinct to_char(date_trunc(\'month\',to_date(published_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as publish_month, 
             sum(count(*) ) over (order by to_char(date_trunc(\'month\',to_date(published_date,\'DD/MM/YYYY\')),\'YYYY/MM\'))');
-            $builder->where('status','Live');
+            $builder->where('status', 'Live');
             $builder->groupBy('publish_month');
             $builder->orderBy('publish_month');
             $query = $builder->get();
 
             return $query;
-            
+
         } catch (\Exception $e) {
             throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
