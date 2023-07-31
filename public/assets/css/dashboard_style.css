@@ -491,11 +491,11 @@ h2 {
   font-family: Lato;
   font-weight: 50;
   font-size: 20px;
-  color: #d06969;
+  color: #3f863d;
 }
 
 .org-dashboard-item {
-  background-color: #d0696914;
+  background-color: #3f863d1a;
 
   margin-left: 15%;
   margin-right: 15%;
@@ -509,7 +509,7 @@ h2 {
   font-family: Lato;
   font-weight: 50;
   font-size: 15px;
-  color: #d06969;
+  color: #3f863d;
   text-align: center;
   padding-left: 15px;
   padding-right: 30px;
@@ -519,7 +519,7 @@ h2 {
   font-family: Lato;
   font-weight: 100;
   font-size: 40px;
-  color: #d06969;
+  color: #3f863d;
   text-align: center;
   padding-left: 15px;
   padding-right: 30px;

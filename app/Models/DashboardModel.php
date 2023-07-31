@@ -94,7 +94,7 @@ class DashboardModel extends Model
             $builder = $this->db->table('master_course');
             $builder->select('count(*)');
             $builder->where('status','Live');
-            $builder->where('to_char(to_date(created_date,\'DD/MM/YYYY\'), \'MONTH YYYY\')  = to_char(current_date, \'MONTH YYYY\')');
+            $builder->where('to_char(to_date(published_date,\'DD/MM/YYYY\'), \'MONTH YYYY\')  = to_char(current_date, \'MONTH YYYY\')');
 
             
             $query = $builder->get();

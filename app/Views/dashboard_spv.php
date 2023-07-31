@@ -7,15 +7,19 @@
 
 
   <!-- Latest CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
 
-  <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
-  <script src="https://unpkg.com/chart.js@2.8.0/dist/Chart.bundle.js"></script>
-  <script src="https://unpkg.com/chartjs-gauge@0.3.0/dist/chartjs-gauge.js"></script>
-  <script src="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css"></script>
+  <!-- <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script> -->
+  <!-- <script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script> -->
+  <!-- <script src="https://unpkg.com/chart.js@2.8.0/dist/Chart.bundle.js"></script>
+  <script src="https://unpkg.com/chartjs-gauge@0.3.0/dist/chartjs-gauge.js"></script> -->
+  <!-- <script src="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"></script> -->
+  <!-- <script src="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css"></script> -->
+  <!-- <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> -->
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js"></script>
+
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato">
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
@@ -1189,8 +1193,6 @@
 
   </script>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js"></script>
-
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  
 
 </body>
