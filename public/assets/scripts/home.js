@@ -25,7 +25,7 @@ function enable_disable_mdo(value) {
     mdo = document.getElementById('tbl');
     org = document.getElementById('orgname');
 
-    if (value.value == "mdoUserCount" || value.value == "orgList" || value.value == "userList") {
+    if (value.value == "mdoUserCount" || value.value == "orgList" || value.value == "userList"|| value.value == "enrolmentPercentage") {
         mdo.style.display = "none";
         org.style.display = "none";
 

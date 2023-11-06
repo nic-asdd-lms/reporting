@@ -30,9 +30,9 @@ class MasterCourseModel extends Model
     public function getCourseCount()
     {
         try {
-            $builder = $this->db->table('master_course');
-            $builder->select('count(course_id)');
-            $builder->where('status', 'Live');
+            $builder = $this->db->table('summary');
+            $builder->select('count');
+            $builder->where('kpi', 'Courses Published');
             $query = $builder->get();
 
             // echo $org_id,json_encode($query);
@@ -44,9 +44,9 @@ class MasterCourseModel extends Model
     public function getProviderCount()
     {
         try {
-            $builder = $this->db->table('master_course');
-            $builder->select('count(distinct org_name)');
-            $builder->where('status', 'Live');
+            $builder = $this->db->table('summary');
+            $builder->select('count');
+            $builder->where('kpi', 'Course Providers');
             $query = $builder->get();
 
             // echo $org_id,json_encode($query);
@@ -59,9 +59,9 @@ class MasterCourseModel extends Model
     public function getContentHours()
     {
         try {
-            $builder = $this->db->table('master_course');
-            $builder->select('sum(durationh)');
-            $builder->where('status', 'Live');
+            $builder = $this->db->table('summary');
+            $builder->select('count');
+            $builder->where('kpi', 'Content Hours');
             $query = $builder->get();
 
             // echo $org_id,json_encode($query);
@@ -73,11 +73,9 @@ class MasterCourseModel extends Model
     public function getLearningHours()
     {
         try {
-            $builder = $this->db->table('master_course');
-            $builder->join('user_course_enrolment', 'user_course_enrolment.course_id = master_course.course_id');
-            $builder->select('sum(durationh)');
-            $builder->where('status', 'Live');
-            $builder->where('completion_status', 'Completed');
+            $builder = $this->db->table('summary');
+            $builder->select('count');
+            $builder->where('kpi', 'Learning Hours');
             $query = $builder->get();
 
             // echo $org_id,json_encode($query);
@@ -447,18 +445,14 @@ class MasterCourseModel extends Model
 
     public function dashboardChart($isMonthWise)
     {
-        $builder = $this->db->table('master_course');
-
-        $builder->select('status,count(*) as count');
-
-
         if ($isMonthWise == true)
-            $builder->where('to_char(to_date(created_date,\'DD/MM/YYYY\'), \'MONTH YYYY\')  = to_char(current_date, \'MONTH YYYY\')');
+            $whereQuery = 'WHERE to_char(to_date(created_date,\'DD/MM/YYYY\'), \'MONTH YYYY\')  = to_char(current_date, \'MONTH YYYY\')';
+        else
+            $whereQuery = '';
 
-        $builder->groupBy('status');
-        $builder->orderBy('count', 'desc');
+        $query = $this->db->query('SELECT status,count(*) as count from master_course ' . $whereQuery . ' GROUP BY status ORDER BY (array_position(ARRAY[\'Live\',\'Review\',\'Draft\',\'Failed\',\'Processing\',\'Retired\']::varchar[],status))');
 
-        return $builder->get();
+        return $query;
 
     }
 

@@ -71,7 +71,7 @@
                         return true;
                     }
                 }
-                else if (mdoReportType == 'orgHierarchy' || mdoReportType == 'ministryUserEnrolment')             //Report type 3rd option validation  
+                else if (mdoReportType == 'orgHierarchy' || mdoReportType == 'ministryUserEnrolment' || mdoReportType == 'ministryUserList')             //Report type 3rd option validation  
                 {
                     var org = $('#org').val();
 
@@ -361,7 +361,7 @@
                     dataType: "JSON",
                     success: function (data) {
                         html = '';
-                        if (reportType == "ministryUserEnrolment" || reportType == "orgHierarchy") {    //  Fetch ministry names from DB
+                        if (reportType == "ministryUserEnrolment" || reportType == "orgHierarchy"|| reportType == "ministryUserList") {    //  Fetch ministry names from DB
                             for (var count = 0; count < data.length; count++) {
                                 html += '<option class="datalist-options" data-value="' + data[count].ms_id + '">' + data[count].ms_name + '</option>';
                             }
@@ -637,6 +637,7 @@
                                     <option class="options" value="mdoUserList">MDO-wise user list</option>
                                     <option class="options" value="mdoUserEnrolment">MDO-wise user enrolment report</option>
                                     <option class="options" value="userWiseCount">MDO-wise user enrolment summary</option>
+                                    <option class="options" value="enrolmentPercentage">MDO-wise user enrolment percentage</option>
                                     <option class="options" value="ministryUserList">Ministry/State-wise user list</option>
                                     <option class="options" value="ministryUserEnrolment">Ministry/State-wise user enrolment report</option>
                                     
@@ -871,7 +872,6 @@
                         <option value="creatorList">CONTENT CREATOR List</option>
                         <option value="reviewerList">CONTENT REVIEWER List</option>
                         <option value="publisherList">CONTENT PUBLISHER List</option>
-                        <option value="editorList">EDITOR List</option>
                         <option value="fracAdminList">FRAC ADMIN List</option>
                         <option value="fracCompetencyMember">FRAC COMPETENCY MEMBER List</option>
                         <option value="fracOneList">FRAC REVIEWER L1 List</option>
@@ -1035,7 +1035,7 @@
                                             <option value="Domain">Domain</option>
                                             <option value="Behavioural">Behavioural</option>
                                             <option value="Functional">Functional</option>
-                                            <option value="All">Select All</option>
+                                            <option value="All">Overall</option>
                                         </select>
 
                                     </div>

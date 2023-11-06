@@ -17,7 +17,7 @@
   <!-- <script src="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"></script> -->
   <!-- <script src="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css"></script> -->
   <!-- <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> -->
-  
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js"></script>
 
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato">
@@ -419,18 +419,18 @@
               ?>
             </div>
           </td> -->
-          <td colspan="2" style="padding:  50px 70px 50px 70px; ">
+          <td colspan="2" style="width:50%;padding: 50px 70px 50px 70px; ">
             <div class="chart-container">
 
               <div class="line-chart-container">
 
-                <canvas id="user-line-chart" style="width:800px; height:400px"></canvas>
+                <canvas id="user-line-chart" style="width:600px; height:300px"></canvas>
 
               </div>
 
             </div>
           </td>
-          <!-- <td style="width:50%;padding: 70px; ">
+          <td colspan="2" style="width:50%;padding: 50px 70px 50px 70px; ">
             <div class="chart-container" style="width:500px">
 
               <div class="line-chart-container" style="width:600px; height:300px">
@@ -440,7 +440,7 @@
               </div>
 
             </div>
-          </td> -->
+          </td>
         </tr>
       </table>
     </div>
@@ -594,15 +594,19 @@
               "#68bf7c",
               "#f4a05a",
               "#ad99bd",
+              "#db5252",
               "#337ab7",
-              "#d7cd7a"
+              "#d7cd7a",
+              "#bf72a7"
             ],
             borderColor: [
               "#68bf7c",
               "#f4a05a",
               "#ad99bd",
+              "#db5252",
               "#337ab7",
-              "#d7cd7a"
+              "#d7cd7a",
+              "#bf72a7"
             ],
             borderWidth: [1, 1, 1, 1, 1, 1, 1, 1, 1]
           }
@@ -769,8 +773,8 @@
 
       // ONBOARDED-ENROLMENT RATIO
 
-      var completionratioctx = $("#onboarding-enrolment-bar");
-      var completionratiodata = {
+      var enrolmentratioctx = $("#onboarding-enrolment-bar");
+      var enrolmentratiodata = {
         labels: cData.onboardingMonth,
         datasets: [
           {
@@ -783,11 +787,10 @@
             data: cData.totalUserCount,
             backgroundColor: '#829ccf'
           }
-
         ]
       };
 
-      var completionratiooptions = {
+      var enrolmentratiooptions = {
         responsive: true,
         title: {
           display: true,
@@ -815,16 +818,15 @@
           yAxes: [{
             gridLines: {
               display: false
-            },
-            stacked: true
+            }
           }]
         }
       };
 
-      var completionratiochart = new Chart(completionratioctx, {
+      var enrolmentratiochart = new Chart(enrolmentratioctx, {
         type: "bar",
-        data: completionratiodata,
-        options: completionratiooptions
+        data: enrolmentratiodata,
+        options: enrolmentratiooptions
       });
 
       //  ENROLMENT OVERVIEW
@@ -968,20 +970,23 @@
 
       // ENROLMENT-COMPLETION RATIO
 
-
+      var completionCount = cData.totalCompletionCount;
+      var enrolmentCount = cData.totalEnrolmentCount;
       var completionratioctx = $("#enrolment-completion-bar");
       var completionratiodata = {
         labels: cData.monthWiseCompletionMonth,
         datasets: [
           {
             label: "Completion Count",
-            data: cData.totalCompletionCount,
-            backgroundColor: '#829ccf'
+            data: completionCount,
+            backgroundColor: '#ffc87d',
+            borderColor:'#ffc87d'
           },
           {
             label: "Enrolment Count",
-            data: cData.totalEnrolmentCount,
-            backgroundColor: '#ffc87d'
+            data: enrolmentCount,
+            backgroundColor: '#829ccf',
+            borderColor:'#829ccf'
           }
         ]
       };
@@ -1017,8 +1022,7 @@
           yAxes: [{
             gridLines: {
               display: false
-            },
-            stacked: true
+            }
           }]
         }
       };
@@ -1193,6 +1197,6 @@
 
   </script>
 
-  
+
 
 </body>

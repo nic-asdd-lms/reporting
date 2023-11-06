@@ -180,6 +180,16 @@ class Report extends BaseController
                     }
                     $resultFiltered = $user->getUserCountByOrg(-1, 0, $search, $orderBy, $orderDir);
 
+                } else if ($reportType == 'enrolmentPercentage') {
+                    $result = $user->getEnrolmentPercentageByOrg($limit, $offset, $search, $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $user->getEnrolmentPercentageByOrg(-1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1){
+                        $fullResult = $user->getEnrolmentPercentageByOrg(1, 0, '', $orderBy, $orderDir);
+                        $resultFiltered = $user->getEnrolmentPercentageByOrg(1, 0, $search, $orderBy, $orderDir);
+                    }
+                    $resultFiltered = $user->getEnrolmentPercentageByOrg(-1, 0, $search, $orderBy, $orderDir);
+
                 } else if ($reportType == 'mdoUserEnrolment') {
                     $result = $enrolment->getEnrolmentByOrg($orgName, $limit, $offset, $search, $orderBy, $orderDir);
                     if ($draw == 1 && $limit != 1)
@@ -941,6 +951,11 @@ class Report extends BaseController
                     $session->setTempdata('fileName', 'MDOWiseUserCount', 300);
                     $reportTitle = 'MDO-wise user count ';
 
+                } else if ($reportType == 'enrolmentPercentage') {
+                    $header = ['Organisation', 'Users Onboarded', 'Users Enrolled', 'Enrolment Percentage'];
+                    $session->setTempdata('fileName', 'MDOWiseEnrolmentPercentage', 300);
+                    $reportTitle = 'MDO-wise Enrolment Percentage';
+
                 } else if ($reportType == 'mdoUserEnrolment') {
                     $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Course', 'Status', 'Completion Percentage', 'Completed On'];
                     $session->setTempdata('fileName', $orgName . '_UserEnrolmentReport', 300);
@@ -1591,7 +1606,7 @@ class Report extends BaseController
                 } else if ($reportType == 'topCompetency') {
                     $header = ['Competency', 'No. of Courses Tagegd'];
                     $session->setTempdata('fileName', 'TopCompetencies', 300);
-                    $reportTitle = 'Top ' . $topCount . $competencyType . ' Competencies';
+                    $reportTitle = 'Top ' . $topCount .' '. $competencyType . ' Competencies';
 
                 }
 

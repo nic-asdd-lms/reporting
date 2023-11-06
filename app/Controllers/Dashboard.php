@@ -228,10 +228,10 @@ class Dashboard extends BaseController
                 $data['uniqueCompletionCount'] = ($uniqueCompletionData->getResultArray()[0]['count']);
 
                 $durationtData = $courseModel->getContentHours();
-                $data['contentHours'] = (int) ($durationtData->getResultArray()[0]['sum']);
+                $data['contentHours'] = (int) ($durationtData->getResultArray()[0]['count']);
 
                 $learningHoursData = $courseModel->getlearningHours();
-                $data['learningHours'] = (int) ($learningHoursData->getResultArray()[0]['sum']);
+                $data['learningHours'] = (int) ($learningHoursData->getResultArray()[0]['count']);
 
                 $learnerTableData = $enrolmentCourse->dashboardTable('', '', false);
                 $learnerChartData = $enrolmentCourse->dashboardChart('', '', false);
@@ -267,16 +267,16 @@ class Dashboard extends BaseController
                 // LEARNER OVERVIEW
 
                 $enrolmentPercentage = $dashboardModel->getEnrolmentPercentage();
-                $data['enrolmentPercentage'] = $enrolmentPercentage->getResultArray()[0]['round'];
+                $data['enrolmentPercentage'] = $enrolmentPercentage->getResultArray()[0]['count'];
 
                 $completionPercentage = $dashboardModel->getCompletionPercentage();
-                $data['completionPercentage'] = $completionPercentage->getResultArray()[0]['round'];
+                $data['completionPercentage'] = $completionPercentage->getResultArray()[0]['count'];
 
                 $inProgressPercentage = $dashboardModel->getInProgressPercentage();
-                $data['inProgressPercentage'] = $inProgressPercentage->getResultArray()[0]['round'];
+                $data['inProgressPercentage'] = $inProgressPercentage->getResultArray()[0]['count'];
 
                 $notStartedPercentage = $dashboardModel->getNotStartedPercentage();
-                $data['notStartedPercentage'] = $notStartedPercentage->getResultArray()[0]['round'];
+                $data['notStartedPercentage'] = $notStartedPercentage->getResultArray()[0]['count'];
 
                 $learnerheader = ['Status', ['data' => 'Count', 'class' => 'dashboard-table-header-count']];
                 $learnertable->setHeading($learnerheader);
@@ -310,13 +310,13 @@ class Dashboard extends BaseController
                 //  COURSE OVERVIEW
 
                 $avgRating = $dashboardModel->getAvgRating();
-                $data['avgRating'] = $avgRating->getResultArray()[0]['round'];
+                $data['avgRating'] = $avgRating->getResultArray()[0]['count'];
 
                 $programCount = $dashboardModel->getProgramCount();
                 $data['programCount'] = $programCount->getResultArray()[0]['count'];
 
                 $programDuration = $dashboardModel->getProgramDuration();
-                $data['programDuration'] = $programDuration->getResultArray()[0]['sum'];
+                $data['programDuration'] = $programDuration->getResultArray()[0]['count'];
 
                 $coursesCurrentMonth= $dashboardModel->getCourseCountCurrentMonth();
                 $data['coursesCurrentMonth'] = $coursesCurrentMonth->getResultArray()[0]['count'];
@@ -370,6 +370,15 @@ class Dashboard extends BaseController
                     // $data['monthWiseCompletionCount'][] = (int) ($row->count);
                 }
 
+                /* Merge the month values in onboarding, enrolment and completion data to prevent discrepancy 
+                in multi-dataset charts [like Enrolment vs. Completion, Onboarding vs. Enroment etc.]
+
+                For each dataset in a multi-dataset chart, check if value exist for each month
+                If value does not exist, assign 0 for that month if the chart is a non-cumulative chart [like Enrolment count, Completion count etc.]. 
+                Assign value of previous month if the chart is cumulative [like Total Enrolment count, Total Completion count etc.]
+                */
+                
+                
                 $months = array_unique(array_merge(array_merge($onboarding_month, $enrol_month), $completion_month));
                 sort($months);
 
@@ -447,13 +456,12 @@ class Dashboard extends BaseController
                 $totalUniqueEnrollArray = $monthWiseTotalUniqueEnrolment->getResultArray();
                 for ($i = 0; $i < sizeof($months); $i++) {
                     $data['totalEnrolmentMonth'][] = $months[$i];
-                    if (array_search($months[$i], array_column($totalUniqueEnrollArray, 'enrolled_month')) != null) {
+                    if (array_search($months[$i], array_column($totalUniqueEnrollArray, 'enrolled_month')) >= 0) {
                         $data['totalUniqeEnrolmentCount'][] = (int) $totalUniqueEnrollArray[array_search($months[$i], array_column($totalUniqueEnrollArray, 'enrolled_month'))]['sum'];
                     } else {
                         $data['totalUniqueEnrolmentCount'][] = (int) ($i == 0 ? 0 : $totalUniqueEnrollArray[array_search($months[$i - 1], array_column($totalUniqueEnrollArray, 'enrolled_month'))]['sum']);
                     }
                 }
-
 
                 // foreach ($monthWiseTotalEnrolment->getResult() as $row) {
                 //     $data['totalEnrolmentMonth'][] = $row->enrolled_month;

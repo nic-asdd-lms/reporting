@@ -103,28 +103,30 @@ $GLOBALS['tableTemplate'] = [
 ];
 $GLOBALS['learnerOverviewTableTemplate'] = [
     'table_open' => '<table id="tbl-learner-overview" class="dashboard-table table-hover" style="width:80%">',
-    'cell_start' => '<td class="dashboard-column">',
-    'cell_alt_start' => '<td class="dashboard-column">',
-    'heading_cell_start'  => '<th class="dashboard-table-header">'
+    'cell_start' => '<td class="dashboard-column numformat">',
+    'cell_alt_start' => '<td class="dashboard-column numformat">',
+    'heading_cell_start'  => '<th class="dashboard-table-header">',
+    'tfoot_open'  => '<tfoot class="dashboard-footer numformat">'
     
 
 ];
 
 $GLOBALS['courseOverviewTableTemplate'] = [
     'table_open' => '<table id="tbl-course-overview" class="dashboard-table table-hover" style="width:80%">',
-    'cell_start' => '<td class="dashboard-column">',
-    'cell_alt_start' => '<td class="dashboard-column">',
-    'heading_cell_start'  => '<th class="dashboard-table-header">'
+    'cell_start' => '<td class="dashboard-column numformat">',
+    'cell_alt_start' => '<td class="dashboard-column numformat">',
+    'heading_cell_start'  => '<th class="course-dashboard-table-header">'
     
 
 ];
 $GLOBALS['monthOverviewTableTemplate'] = [
     'table_open' => '<table id="tbl-month-overview" class="dashboard-table table-hover" style="width:80%">',
-    'cell_start' => '<td class="dashboard-column">',
-    'cell_alt_start' => '<td class="dashboard-column">',
+    'cell_start' => '<td class="dashboard-column numformat">',
+    'cell_alt_start' => '<td class="dashboard-column numformat">',
     'heading_cell_start'  => '<th class="dashboard-table-header">'
 
 ];
+
 $GLOBALS['overviewTableTemplate'] = [
     'table_open' => '<table id="tbl-overview" class="display dataTable " style="width:100%">',
     'cell_start' => '<td class="dashboard-column">',

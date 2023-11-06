@@ -15,8 +15,9 @@ class UserEnrolmentCourse extends Model
     public function getEnrolmentCount()
     {
         try {
-            $builder = $this->db->table('user_course_enrolment');
-            $builder->select('count(*)');
+            $builder = $this->db->table('summary');
+            $builder->select('count');
+            $builder->where('kpi', 'Enrolment Count');
             $query = $builder->get();
 
             // echo $org_id,json_encode($query);
@@ -29,9 +30,9 @@ class UserEnrolmentCourse extends Model
     public function getCompletionCount()
     {
         try {
-            $builder = $this->db->table('user_course_enrolment');
-            $builder->select('count(*)');
-            $builder->where('completion_status', 'Completed');
+            $builder = $this->db->table('summary');
+            $builder->select('count');
+            $builder->where('kpi', 'Completion Count');
             $query = $builder->get();
 
             // echo $org_id,json_encode($query);
@@ -43,8 +44,9 @@ class UserEnrolmentCourse extends Model
     public function getUniqueEnrolmentCount()
     {
         try {
-            $builder = $this->db->table('user_course_enrolment');
-            $builder->select('count(distinct user_id)');
+            $builder = $this->db->table('summary');
+            $builder->select('count');
+            $builder->where('kpi', 'Unique users enrolled');
             $query = $builder->get();
 
             // echo $org_id,json_encode($query);
@@ -57,9 +59,9 @@ class UserEnrolmentCourse extends Model
     public function getUniqueCompletionCount()
     {
         try {
-            $builder = $this->db->table('user_course_enrolment');
-            $builder->select('count(distinct user_id)');
-            $builder->where('completion_status', 'Completed');
+            $builder = $this->db->table('summary');
+            $builder->select('count');
+            $builder->where('kpi', 'Unique users completed');
             $query = $builder->get();
 
             // echo $org_id,json_encode($query);
@@ -223,7 +225,7 @@ class UserEnrolmentCourse extends Model
 
         // $builder->orderBy((int) $orderBy + 1, $orderDir);
         // $query = $builder->get();
-
+        
         return $query;
 
     }
@@ -391,7 +393,7 @@ class UserEnrolmentCourse extends Model
     {
         try {
 
-            $builder = $this->db->table('user_course_enrolment');
+            $builder = $this->db->table('enrolment');
             $builder->select('distinct to_char(date_trunc(\'month\',to_date(completed_on,\'DD/MM/YYYY\')),\'YYYY/MM\') as completed_month, count(*) ');
             $builder->where('completion_status', 'Completed');
             $builder->where('completed_on != \'\'');
@@ -403,7 +405,7 @@ class UserEnrolmentCourse extends Model
 
             $builder->groupBy('completed_month');
             $builder->orderBy((int) $orderBy + 1, $orderDir);
-
+            
             $query = $builder->get();
 
             return $query;
@@ -753,6 +755,7 @@ class UserEnrolmentCourse extends Model
         if ($limit != -1)
             $builder->limit($limit, $offset);
 
+            
         $query = $builder->get();
 
         return $query;
@@ -1121,7 +1124,7 @@ not_started_users as
 
     public function dashboardChart($ati, $program, $isMonthWise)
     {
-        $builder = $this->db->table('user_course_enrolment');
+        $builder = $this->db->table('enrolment');
 
         $builder->select('completion_status,count(*) as users');
 
@@ -1139,7 +1142,7 @@ not_started_users as
 
     public function dashboardTable($ati, $program, $isMonthWise)
     {
-        $builder = $this->db->table('user_course_enrolment');
+        $builder = $this->db->table('enrolment');
         // $enrolled = $this->db->table('user_course_enrolment');
 
         $builder->select('completion_status,count(*) as users');
@@ -1177,6 +1180,9 @@ not_started_users as
             // $builder->where('enrolled_date != \'\'');
             $builder->groupBy('enrolled_month');
             $builder->orderBy('enrolled_month');
+            // echo '<pre>';
+            // print_r($builder->getCompiledSelect());
+            // die;
             $query = $builder->get();
 
             return $query;
@@ -1190,13 +1196,16 @@ not_started_users as
     public function getMonthWiseCompletionCount()
     {
         try {
-            $builder = $this->db->table('user_course_enrolment');
+            $builder = $this->db->table('enrolment');
             $builder->select('distinct to_char(date_trunc(\'month\',to_date(completed_on,\'DD/MM/YYYY\')),\'YYYY/MM\') as completed_month, 
             count(*) ');
             $builder->where('completion_status', 'Completed');
             // $builder->where('completed_on != \'\'');
             $builder->groupBy('completed_month');
             $builder->orderBy('completed_month');
+            // echo '<pre>';
+            // print_r($builder->getCompiledSelect());
+            // die;
             $query = $builder->get();
 
             return $query;
@@ -1236,6 +1245,9 @@ not_started_users as
             // $builder->where('enrolled_date != \'\'');
             $builder->groupBy('enrolled_month');
             $builder->orderBy('enrolled_month');
+            // echo '<pre>';
+            // print_r($builder->getCompiledSelect());
+            // die;
             $query = $builder->get();
 
             return $query;
@@ -1249,13 +1261,16 @@ not_started_users as
     public function getMonthWiseTotalCompletionCount()
     {
         try {
-            $builder = $this->db->table('user_course_enrolment');
+            $builder = $this->db->table('enrolment');
             $builder->select('distinct to_char(date_trunc(\'month\',to_date(completed_on,\'DD/MM/YYYY\')),\'YYYY/MM\') as completed_month, 
             sum(count(*) ) over (order by to_char(date_trunc(\'month\',to_date(completed_on,\'DD/MM/YYYY\')),\'YYYY/MM\'))');
             $builder->where('completion_status', 'Completed');
             // $builder->where('completed_on != \'\'');
             $builder->groupBy('completed_month');
             $builder->orderBy('completed_month');
+            // echo '<pre>';
+            // print_r($builder->getCompiledSelect());
+            // die;
             $query = $builder->get();
 
             return $query;
@@ -1276,6 +1291,9 @@ not_started_users as
             $builder->where('completion_status', 'Completed');
             $builder->groupBy('month');
             $builder->orderBy('month');
+            // echo '<pre>';
+            // print_r($builder->getCompiledSelect());
+            // die;
             $query = $builder->get();
 
             return $query;
@@ -1314,6 +1332,7 @@ not_started_users as
             $builder->select('distinct to_char(date_trunc(\'month\',to_date(completed_on,\'DD/MM/YYYY\')),\'MM\') as completed_month');
             $builder->where('completed_on != \'\'');
             $builder->orderBy('completed_month');
+            
             $query = $builder->get();
 
             return $query;

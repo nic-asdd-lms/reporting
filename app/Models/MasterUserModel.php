@@ -48,8 +48,9 @@ class MasterUserModel extends Model
     public function getUserCount()
     {
         try {
-            $builder = $this->db->table('master_user');
-            $builder->select('count(*)');
+            $builder = $this->db->table('summary');
+            $builder->select('count');
+            $builder->where('kpi','Users Onboarded');
             $query = $builder->get();
 
             // echo $org_id,json_encode($query);
@@ -153,6 +154,36 @@ class MasterUserModel extends Model
         }
     }
 
+
+    public function getEnrolmentPercentageByOrg($limit, $offset, $search, $orderBy, $orderDir)
+    {
+        try {
+            $table = new \CodeIgniter\View\Table();
+
+            $builder = $this->db->table('master_organization');
+            $builder->join('enrolment','enrolment.root_org_id = master_organization.root_org_id');
+            $builder->select('enrolment.org_name, user_count, count(distinct enrolment.email) as enrol_count, (count(distinct enrolment.email)::float/user_count::float*100) as enroll_pc ');
+            if ($search != '') {
+
+                $builder->like('org_name', strtolower($search));
+                $builder->orLike('org_name', strtoupper($search));
+                $builder->orLike('org_name', ucfirst($search));
+            }
+
+            $builder->where('status', 'Active');
+            $builder->groupBy('enrolment.root_org_id, enrolment.org_name, user_count');
+            $builder->orderBy((int) $orderBy + 1, $orderDir);
+
+            if ($limit != -1)
+                $builder->limit($limit, $offset);
+            $query = $builder->get();
+            return $query;
+
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
     public function getOrgCount()
     {
         try {
@@ -204,7 +235,8 @@ class MasterUserModel extends Model
             if ($limit != -1) {
                 $builder->limit($limit, $offset);
             }
-
+            // print_r($builder->getCompiledSelect());
+            // die;
             $query = $builder->get();
 
             return $query;
@@ -242,10 +274,14 @@ class MasterUserModel extends Model
     public function getMonthWiseUserOnboardingChart()
     {
         try {
-            $builder = $this->db->table('master_user');
+            $builder = $this->db->table('user_list');
             $builder->select('to_char(date_trunc(\'MONTH\',to_date(created_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as creation_month, count(*)');
             $builder->groupBy('creation_month');
             $builder->orderBy('creation_month');
+
+            // echo '<pre>';
+            // print_r($builder->getCompiledSelect());
+            // die;
             $query = $builder->get();
 
             return $query;
@@ -259,11 +295,16 @@ class MasterUserModel extends Model
     public function getMonthWiseTotalUserChart()
     {
         try {
-            $builder = $this->db->table('master_user');
+            $builder = $this->db->table('user_list');
             $builder->select('distinct to_char(date_trunc(\'month\',to_date(created_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as creation_month, 
             sum(count(*) ) over (order by to_char(date_trunc(\'month\',to_date(created_date,\'DD/MM/YYYY\')),\'YYYY/MM\'))');
             $builder->groupBy('creation_month');
             $builder->orderBy('creation_month');
+
+            // echo '<pre>';
+            // print_r($builder->getCompiledSelect());
+            // die;
+
             $query = $builder->get();
 
             return $query;

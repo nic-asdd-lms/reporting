@@ -132,7 +132,7 @@ class Home extends BaseController
                         $orgModel = new MasterOrganizationModel();
                         $ministryModel = new MasterStructureModel();
                         
-                        if ($reportType == 'ministryUserEnrolment' || $reportType == 'orgHierarchy')
+                        if ($reportType == 'ministryUserEnrolment' || $reportType == 'orgHierarchy'|| $reportType == 'ministryUserList')
                             $orgdata = $ministryModel->getMinistry();
                         else
                             $orgdata = $orgModel->getOrganizations();
