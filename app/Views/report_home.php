@@ -175,6 +175,22 @@
                         return true;
                     }
                 }
+                else if (courseReportType == 'cbpProviderWiseEnrolmentSummary')                //  Report type 5th option validation 
+                {
+                    var provider = $('#course').val();
+                    if (provider == '') {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Please Select Course Provider',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                        return false;
+                    }
+                    else {
+                        return true;
+                    }
+                }
                 else if (courseReportType == 'courseMinistrySummary')                //  Report type 1st option validation 
                 {
 
@@ -432,6 +448,11 @@
                             for (var count = 0; count < data.length; count++) {
                                 html += '<option class="datalist-options" data-value="' + data[count].curated_id + '">' + data[count].curated_name + '</option>';
                             }
+                        } else if (reportType == 'cbpProviderWiseEnrolmentSummary' ) {
+                            for (var count = 0; count < data.length; count++) {
+                                console.log(data[count].root_org_id );
+                             html += '<option class="datalist-options" data-value="' + data[count].root_org_id + '">' + data[count].org_name + '</option>';
+                            }
                         }
 
                         $('#course_search_result').html(html);
@@ -442,6 +463,8 @@
             });
         });
 
+        
+
         $(document).ready(function () {
 
 
@@ -450,7 +473,7 @@
                 var val = document.getElementById('coursename').value;
                 var course = document.getElementById('course');
                 for (var i = 0; i < options.length; i++) {
-
+                    console.log(val);
                     if (options[i].value === val) {
                         course.value = options[i].getAttribute('data-value');
                         break;
@@ -543,7 +566,7 @@
                         html = '';
 
                         for (var count = 0; count < data.length; count++) {
-                            html += '<option class="datalist-options" data-value="' + data[count].user_id + '">' + data[count].email + '</option>';
+                            html += '<option class="datalist-options" data-value="' + data[count].name + '">' + data[count].email + '</option>';
                         }
 
                         $('#user_search_result').html(html);
@@ -729,6 +752,7 @@
                             <option value="collectionEnrolmentReport">Curated Collection-wise enrolment report</option>
                             <option value="collectionEnrolmentCount">Curated Collection course-wise summary</option>
                             <option value="cbpProviderWiseCourseCount">CBP Provider-wise course count</option>
+                            <option value="cbpProviderWiseEnrolmentSummary">CBP Provider-wise enrolment summary</option>
                             <?php
                             $session = \Config\Services::session();
 
@@ -738,7 +762,7 @@
                                 echo '<option value="underPublishCourses">Courses under publish</option>';
                                 echo '<option value="underReviewCourses">Courses under review </option>';
                                 echo '<option value="draftCourses">Draft courses</option>';
-
+                               
 
                             }
 
@@ -770,9 +794,8 @@
                                         </datalist>
                                         <input type="hidden" id="course" name="course" />
 
-
                                     </div>
-
+                                    
                                 </td>
                             </tr>
 
@@ -831,7 +854,7 @@
                                 <td>
                                     <div class="auto-widget">
                                         <input type="text" list="user_search_result" class="form-control" id="email"
-                                            name="email" placeholder="Search email" autocomplete="off" />
+                                            name="email" placeholder="Search email/phone" autocomplete="off" />
                                         <datalist id="user_search_result">
                                         </datalist>
                                         <input type="hidden" id="userid" name="userid" />

@@ -109,7 +109,7 @@ class MasterCourseModel extends Model
             $builder->select('course_name');
             $builder->where('status', 'Live');
             if ($search != '')
-                $builder->where("(course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%' )", NULL, FALSE);
+                $builder->where("(course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtoupper($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%' )", NULL, FALSE);
 
             $builder->orderBy((int) $orderBy + 1, $orderDir);
 
@@ -133,7 +133,7 @@ class MasterCourseModel extends Model
             $builder->select(' course_name,org_name, durationhms, published_date, num_of_people_rated, avg_rating');
             $builder->where('status', 'Live');
             if ($search != '')
-                $builder->where("(course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%' 
+                $builder->where("(course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtoupper($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%' 
                             OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
 
             $builder->orderBy((int) $orderBy + 1, $orderDir);
@@ -158,7 +158,7 @@ class MasterCourseModel extends Model
             $builder->select('  course_name,org_name');
             $builder->where('status', 'Reviewed');
             if ($search != '')
-                $builder->where("(course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%' 
+                $builder->where("(course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtoupper($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%' 
                             OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
 
             $builder->orderBy((int) $orderBy + 1, $orderDir);
@@ -182,7 +182,7 @@ class MasterCourseModel extends Model
             $builder->select('  course_name,org_name');
             $builder->where('status', 'InReview');
             if ($search != '')
-                $builder->where("(course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%' 
+                $builder->where("(course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtoupper($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%' 
                             OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
 
             $builder->orderBy((int) $orderBy + 1, $orderDir);
@@ -206,7 +206,7 @@ class MasterCourseModel extends Model
             $builder->select('course_name,org_name');
             $builder->where('status', 'Draft');
             if ($search != '')
-                $builder->where("(course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%' 
+                $builder->where("(course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtoupper($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%' 
                             OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
 
             $builder->orderBy((int) $orderBy + 1, $orderDir);
@@ -229,7 +229,7 @@ class MasterCourseModel extends Model
     {
         try {
             if ($search != '') {
-                $likeQuery = " AND (publishedmmyy LIKE '%" . strtolower($search) . "%' OR publishedmmyy LIKE '%" . strtoupper($search) . "%' OR publishedmmyy LIKE '%" . ucfirst($search) . "%' ) ";
+                $likeQuery =  ' AND concat(split_part(publishedmmyy::TEXT,\'/\', 2),\'/\', split_part(publishedmmyy::TEXT,\'/\', 1) ) LIKE \'%' . $search . '%\' ';
 
             } else {
                 $likeQuery = '';
@@ -262,22 +262,41 @@ class MasterCourseModel extends Model
             $builder->where('status', 'Live');
             $builder->groupBy('org_name');
             if ($search != '') {
+                $builder->where(" (org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
 
-                $builder->like('org_name', strtolower($search));
-                $builder->orLike('org_name', strtoupper($search));
-                $builder->orLike('org_name', ucfirst($search));
             }
 
             $builder->orderBy((int) $orderBy + 1, $orderDir);
             if ($limit != -1)
                 $builder->limit($limit, $offset);
             $query = $builder->get();
-            // print_r($builder);
             return $query;
 
         } catch (\Exception $e) {
             throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
+    }
+
+    public function getEnrolmentSummaryByCBPProvider($org, $limit, $offset, $search, $orderBy, $orderDir)
+    {
+        
+        $builder = $this->db->table('course_enrolment_summary');
+        $builder->select('course_name, status, enrolled_count, not_started_count, in_progress_count, completed_count');
+        $builder->where('root_org_id', $org);
+        $builder->where('(status = \'Live\' OR status=\'Retired\')');
+        
+        if ($search != '')
+            $builder->where("(course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtoupper($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%' 
+                            OR status LIKE '%" . strtolower($search) . "%' OR status LIKE '%" . strtoupper($search) . "%' OR status LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
+
+        if ($limit != -1)
+            $builder->limit($limit, $offset);
+        $builder->orderBy((int) $orderBy + 1, $orderDir);
+
+        $query = $builder->get();
+
+
+        return $query;
     }
 
     public function courseSearch($search_key)
@@ -299,6 +318,27 @@ class MasterCourseModel extends Model
 
     }
 
+    public function providerSearch($search_key)
+    {
+        try {
+
+            $query = $this->db->query('SELECT DISTINCT ON(root_org_id) root_org_id, org_name
+            FROM master_course 
+            WHERE (SIMILARITY(org_name,\'' . $search_key . '\') > 0.1) 
+            ORDER BY root_org_id, SIMILARITY(org_name, \''. $search_key .'\')  desc' );
+            
+            
+            // $result = $this->db->query('SELECT org_name FROM master_organization WHERE SIMILARITY(org_name,\''.$search_key.'\') > 0.4 ;');
+            // echo $search_key,json_encode($query);
+            return $query->getResult();
+            
+            // return $query->getResult();
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+
+    }
+
     public function getTopCbpLiveCourses($topCount, $limit, $offset, $search, $orderBy, $orderDir)
     {
         try {
@@ -307,12 +347,9 @@ class MasterCourseModel extends Model
             $builder->select('org_name, count(distinct course_id) as course_count');
             $builder->where('status', 'Live');
             $builder->groupBy('org_name');
-            if ($search != '') {
-
-                $builder->like('org_name', strtolower($search));
-                $builder->orLike('org_name', strtoupper($search));
-                $builder->orLike('org_name', ucfirst($search));
-            }
+            // if ($search != '') {
+            //     $builder->where(" (org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
+            // }
 
             $builder->orderBy('course_count', 'desc');
             if ($limit != -1)
@@ -337,12 +374,11 @@ class MasterCourseModel extends Model
             $builder->select('org_name, count(distinct course_id) as course_count');
             $builder->where('status', 'Reviewed');
             $builder->groupBy('org_name');
-            if ($search != '') {
+            // if ($search != '') {
+            //     $builder->where(" (org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
 
-                $builder->like('org_name', strtolower($search));
-                $builder->orLike('org_name', strtoupper($search));
-                $builder->orLike('org_name', ucfirst($search));
-            }
+               
+            // }
 
             $builder->orderBy('course_count', 'desc');
             if ($limit != -1)
@@ -367,12 +403,11 @@ class MasterCourseModel extends Model
             $builder->select('org_name, count(distinct course_id) as course_count');
             $builder->where('status', 'InReview');
             $builder->groupBy('org_name');
-            if ($search != '') {
+            // if ($search != '') {
+            //     $builder->where(" (org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
 
-                $builder->like('org_name', strtolower($search));
-                $builder->orLike('org_name', strtoupper($search));
-                $builder->orLike('org_name', ucfirst($search));
-            }
+                
+            // }
 
             $builder->orderBy('course_count', 'desc');
             if ($limit != -1)
@@ -397,12 +432,10 @@ class MasterCourseModel extends Model
             $builder->select('org_name, count(distinct course_id) as course_count');
             $builder->where('status', 'Draft');
             $builder->groupBy('org_name');
-            if ($search != '') {
+            // if ($search != '') {
+            //     $builder->where(" (org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
 
-                $builder->like('org_name', strtolower($search));
-                $builder->orLike('org_name', strtoupper($search));
-                $builder->orLike('org_name', ucfirst($search));
-            }
+            // }
 
             $builder->orderBy('course_count', 'desc');
             if ($limit != -1)
@@ -424,12 +457,10 @@ class MasterCourseModel extends Model
         $builder = $this->db->table('master_course');
         $builder->select(' course_name, avg_rating, total_rating');
 
-        if ($search != '') {
+        // if ($search != '') {
+        //     $builder->where("(course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtoupper($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%' )", NULL, FALSE);
 
-            $builder->like('master_course.course_name', strtolower($search));
-            $builder->orLike('master_course.course_name', strtoupper($search));
-            $builder->orLike('master_course.course_name', ucfirst($search));
-        }
+        // }
 
         $builder->orderBy('avg_rating, total_rating', 'desc');
         if ($limit != -1)
@@ -484,6 +515,7 @@ class MasterCourseModel extends Model
             $builder = $this->db->table('master_course');
             $builder->select('to_char(date_trunc(\'MONTH\',to_date(published_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as publish_month, count(*)');
             $builder->where('status', 'Live');
+            // $builder->where('to_date(published_date,\'DD/MM/YYYY\') > current_date - INTERVAL \'1 year\'');
             $builder->groupBy('publish_month');
             $builder->orderBy('publish_month');
             $query = $builder->get();
@@ -503,6 +535,26 @@ class MasterCourseModel extends Model
             $builder->select('distinct to_char(date_trunc(\'month\',to_date(published_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as publish_month, 
             sum(count(*) ) over (order by to_char(date_trunc(\'month\',to_date(published_date,\'DD/MM/YYYY\')),\'YYYY/MM\'))');
             $builder->where('status', 'Live');
+            // $builder->where('to_date(published_date,\'DD/MM/YYYY\') > current_date - INTERVAL \'1 year\'');
+            $builder->groupBy('publish_month');
+            $builder->orderBy('publish_month');
+            $query = $builder->get();
+
+            return $query;
+
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+
+    }
+
+    public function getPublishMonths()
+    {
+        try {
+            $builder = $this->db->table('master_course');
+            $builder->select('to_char(date_trunc(\'MONTH\',to_date(published_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as publish_month');
+            $builder->where('status', 'Live');
+            $builder->where('to_date(published_date,\'DD/MM/YYYY\') > current_date - INTERVAL \'1 year\'');
             $builder->groupBy('publish_month');
             $builder->orderBy('publish_month');
             $query = $builder->get();

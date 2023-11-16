@@ -50,8 +50,8 @@ class CourseCompetencyModel extends Model
             if($competencytype != 'All')
                 $builder->where('competency_type',$competencytype);
                 
-            if ($search != '')
-                $builder->where("(competency_name LIKE '%" . strtolower($search) . "%' OR competency_name LIKE '%" . strtoupper($search) . "%' OR competency_name LIKE '%" . ucfirst($search) . "%' )", NULL, FALSE);
+            // if ($search != '')
+            //     $builder->where("(competency_name LIKE '%" . strtolower($search) . "%' OR competency_name LIKE '%" . strtoupper($search) . "%' OR competency_name LIKE '%" . ucfirst($search) . "%' )", NULL, FALSE);
 
 
             $builder->groupBy('competency_name');
@@ -78,8 +78,8 @@ class CourseCompetencyModel extends Model
             $builder->join('master_course', 'master_course.course_id = course_competency_collection.course_id');
             $builder->select('course_competency_collection.course_name ,count(distinct competency_name)');
             $builder->where('status', 'Live');
-            if ($search != '')
-                $builder->where("(course_competency_collection.course_name LIKE '%" . strtolower($search) . "%' OR course_competency_collection.course_name LIKE '%" . strtoupper($search) . "%' OR course_competency_collection.course_name LIKE '%" . ucfirst($search) . "%' )", NULL, FALSE);
+            // if ($search != '')
+            //     $builder->where("(course_competency_collection.course_name LIKE '%" . strtolower($search) . "%' OR course_competency_collection.course_name LIKE '%" . strtoupper($search) . "%' OR course_competency_collection.course_name LIKE '%" . ucfirst($search) . "%' )", NULL, FALSE);
 
 
             $builder->groupBy('course_competency_collection.course_name');

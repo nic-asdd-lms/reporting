@@ -133,12 +133,12 @@ class UserEnrolmentProgram extends Model
             $builder->groupBy('master_organization.org_name');
             $builder->orderBy('completed_count', 'desc');
 
-            if ($search != '') {
+            // if ($search != '') {
 
-                $builder->like('master_organization.org_name', strtolower($search));
-                $builder->orLike('master_organization.org_name', strtoupper($search));
-                $builder->orLike('master_organization.org_name', ucfirst($search));
-            }
+            //     $builder->like('master_organization.org_name', strtolower($search));
+            //     $builder->orLike('master_organization.org_name', strtoupper($search));
+            //     $builder->orLike('master_organization.org_name', ucfirst($search));
+            // }
 
             $builder->groupBy('master_organization.org_name');
             $builder->orderBy('completed_count', 'desc');
@@ -239,7 +239,7 @@ class UserEnrolmentProgram extends Model
         $builder->orderBy('status', 'asc');
 
         // echo '<pre>';
-        // print_r($builder);
+        // print_r($builder->getCompiledSelect());
         // die;
 
         return $builder->get();

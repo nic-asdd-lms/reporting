@@ -399,7 +399,7 @@ class UserEnrolmentCourse extends Model
             $builder->where('completed_on != \'\'');
 
             if ($search != '')
-                $builder->where("(completed_on LIKE '%" . strtolower($search) . "%' OR completed_on LIKE '%" . strtoupper($search) . "%' OR completed_on LIKE '%" . ucfirst($search) . "%' )", NULL, FALSE);
+                $builder->where('(to_char(date_trunc(\'month\',to_date(completed_on,\'DD/MM/YYYY\')),\'YYYY/MM\') LIKE \'%' . $search . '%\'  )', NULL, FALSE);
             if ($limit != -1)
                 $builder->limit($limit, $offset);
 
@@ -420,12 +420,12 @@ class UserEnrolmentCourse extends Model
         $builder = $this->db->table('enrolment_summary');
         $builder->select('name, email, org_name, enrolled_count');
 
-        if ($search != '') {
-            $builder->where("(name LIKE '%" . strtolower($search) . "%' OR name LIKE '%" . strtoupper($search) . "%' OR name LIKE '%" . ucfirst($search) . "%' 
-                            OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
-                            OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%') ", NULL, FALSE);
+        // if ($search != '') {
+        //     $builder->where("(name LIKE '%" . strtolower($search) . "%' OR name LIKE '%" . strtoupper($search) . "%' OR name LIKE '%" . ucfirst($search) . "%' 
+        //                     OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
+        //                     OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%') ", NULL, FALSE);
 
-        }
+        // }
         $builder->orderBy('enrolled_count', 'desc');
 
         if ($limit != -1) {
@@ -444,12 +444,12 @@ class UserEnrolmentCourse extends Model
         $builder = $this->db->table('enrolment_summary');
         $builder->select('name, email, org_name, completed_count');
 
-        if ($search != '') {
-            $builder->where("(name LIKE '%" . strtolower($search) . "%' OR name LIKE '%" . strtoupper($search) . "%' OR name LIKE '%" . ucfirst($search) . "%' 
-                            OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
-                            OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%') ", NULL, FALSE);
+        // if ($search != '') {
+        //     $builder->where("(name LIKE '%" . strtolower($search) . "%' OR name LIKE '%" . strtoupper($search) . "%' OR name LIKE '%" . ucfirst($search) . "%' 
+        //                     OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
+        //                     OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%') ", NULL, FALSE);
 
-        }
+        // }
         $builder->orderBy('completed_count', 'desc');
 
         if ($limit != -1) {
@@ -468,12 +468,12 @@ class UserEnrolmentCourse extends Model
         $builder = $this->db->table('enrolment_summary');
         $builder->select('name, email, org_name, not_started_count');
 
-        if ($search != '') {
-            $builder->where("(name LIKE '%" . strtolower($search) . "%' OR name LIKE '%" . strtoupper($search) . "%' OR name LIKE '%" . ucfirst($search) . "%' 
-                            OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
-                            OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%') ", NULL, FALSE);
+        // if ($search != '') {
+        //     $builder->where("(name LIKE '%" . strtolower($search) . "%' OR name LIKE '%" . strtoupper($search) . "%' OR name LIKE '%" . ucfirst($search) . "%' 
+        //                     OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
+        //                     OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%') ", NULL, FALSE);
 
-        }
+        // }
         $builder->orderBy('not_started_count', 'desc');
 
         if ($limit != -1) {
@@ -492,12 +492,12 @@ class UserEnrolmentCourse extends Model
         $builder = $this->db->table('enrolment_summary');
         $builder->select('name, email, org_name, in_progress_count');
 
-        if ($search != '') {
-            $builder->where("(name LIKE '%" . strtolower($search) . "%' OR name LIKE '%" . strtoupper($search) . "%' OR name LIKE '%" . ucfirst($search) . "%' 
-                            OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
-                            OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%') ", NULL, FALSE);
+        // if ($search != '') {
+        //     $builder->where("(name LIKE '%" . strtolower($search) . "%' OR name LIKE '%" . strtoupper($search) . "%' OR name LIKE '%" . ucfirst($search) . "%' 
+        //                     OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
+        //                     OR org_name LIKE '%" . strtolower($search) . "%' OR org_name LIKE '%" . strtoupper($search) . "%' OR org_name LIKE '%" . ucfirst($search) . "%') ", NULL, FALSE);
 
-        }
+        // }
         $builder->orderBy('in_progress_count', 'desc');
 
         if ($limit != -1) {
@@ -518,12 +518,12 @@ class UserEnrolmentCourse extends Model
             $builder = $this->db->table('enrolment_summary');
             $builder->select('org_name, sum(enrolled_count) as enrol_count');
             // $builder->where(' org_name IS NOT NULL');
-            if ($search != '') {
+            // if ($search != '') {
 
-                $builder->like('org_name', strtolower($search));
-                $builder->orLike('org_name', strtoupper($search));
-                $builder->orLike('org_name', ucfirst($search));
-            }
+            //     $builder->like('org_name', strtolower($search));
+            //     $builder->orLike('org_name', strtoupper($search));
+            //     $builder->orLike('org_name', ucfirst($search));
+            // }
 
             $builder->groupBy('org_name');
             $builder->orderBy('enrol_count', 'desc');
@@ -545,12 +545,12 @@ class UserEnrolmentCourse extends Model
             $builder = $this->db->table('enrolment_summary');
             $builder->select('org_name, sum(completed_count) as completions');
             // $builder->where(' org_name IS NOT NULL');
-            if ($search != '') {
+            // if ($search != '') {
 
-                $builder->like('org_name', strtolower($search));
-                $builder->orLike('org_name', strtoupper($search));
-                $builder->orLike('org_name', ucfirst($search));
-            }
+            //     $builder->like('org_name', strtolower($search));
+            //     $builder->orLike('org_name', strtoupper($search));
+            //     $builder->orLike('org_name', ucfirst($search));
+            // }
 
             $builder->groupBy('org_name');
             $builder->orderBy('completions', 'desc');
@@ -572,12 +572,12 @@ class UserEnrolmentCourse extends Model
         $builder = $this->db->table('course_enrolment_summary');
         $builder->select('course_name, org_name, sum(enrolled_count) as enroll_count');
         // $builder->where(' org_name IS NOT NULL');
-        if ($search != '') {
+        // if ($search != '') {
 
-            $builder->like('course_name', strtolower($search));
-            $builder->orLike('course_name', strtoupper($search));
-            $builder->orLike('course_name', ucfirst($search));
-        }
+        //     $builder->like('course_name', strtolower($search));
+        //     $builder->orLike('course_name', strtoupper($search));
+        //     $builder->orLike('course_name', ucfirst($search));
+        // }
 
         $builder->groupBy('course_name, org_name');
         $builder->orderBy('enroll_count', 'desc');
@@ -595,12 +595,12 @@ class UserEnrolmentCourse extends Model
         $builder = $this->db->table('course_enrolment_summary');
         $builder->select('course_name, org_name, sum(completed_count) as completions');
         // $builder->where(' org_name IS NOT NULL');
-        if ($search != '') {
+        // if ($search != '') {
 
-            $builder->like('course_name', strtolower($search));
-            $builder->orLike('course_name', strtoupper($search));
-            $builder->orLike('course_name', ucfirst($search));
-        }
+        //     $builder->like('course_name', strtolower($search));
+        //     $builder->orLike('course_name', strtoupper($search));
+        //     $builder->orLike('course_name', ucfirst($search));
+        // }
 
         $builder->groupBy('course_name, org_name');
         $builder->orderBy('completions', 'desc');
@@ -624,12 +624,12 @@ class UserEnrolmentCourse extends Model
             $builder->groupBy('org_name');
             $builder->orderBy('completed_count', 'desc');
 
-            if ($search != '') {
+            // if ($search != '') {
 
-                $builder->like('org_name', strtolower($search));
-                $builder->orLike('org_name', strtoupper($search));
-                $builder->orLike('org_name', ucfirst($search));
-            }
+            //     $builder->like('org_name', strtolower($search));
+            //     $builder->orLike('org_name', strtoupper($search));
+            //     $builder->orLike('org_name', ucfirst($search));
+            // }
 
             $builder->groupBy('org_name');
             $builder->orderBy('completed_count', 'desc');
@@ -688,12 +688,12 @@ class UserEnrolmentCourse extends Model
             $builder->orderBy('completion_count', 'desc');
 
 
-            if ($search != '') {
+            // if ($search != '') {
 
-                $builder->like('master_organization.org_name', strtolower($search));
-                $builder->orLike('master_organization.org_name', strtoupper($search));
-                $builder->orLike('master_organization.org_name', ucfirst($search));
-            }
+            //     $builder->like('master_organization.org_name', strtolower($search));
+            //     $builder->orLike('master_organization.org_name', strtoupper($search));
+            //     $builder->orLike('master_organization.org_name', ucfirst($search));
+            // }
 
             if ($limit != -1)
                 $builder->limit(min($topCount - $offset, $limit), $offset);
@@ -741,7 +741,7 @@ class UserEnrolmentCourse extends Model
 
         $builder = $this->db->table('enrolment');
         $builder->select('course_name, course_provider,  completion_status, completion_percentage, completed_on');
-        $builder->where('email', $email);
+        $builder->where('(email = \''. $email.'\' OR phone = \''. $email.'\')' );
         $builder->distinct();
         if ($search != '')
             $builder->where(" (course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtoupper($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%'
@@ -876,7 +876,8 @@ class UserEnrolmentCourse extends Model
         if ($search != '') {
             $likeQuery = " AND (course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtoupper($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%') ";
 
-        } else {
+        } else 
+        {
             $likeQuery = '';
         }
         if ($limit != -1) {
@@ -1102,7 +1103,7 @@ not_started_users as
         $builder->join('master_curated_collection', 'course_curated.curated_id = master_curated_collection.curated_id ');
         $builder->where('master_curated_collection.curated_id', 'do_11367399557473075211');
         
-        // $builder->distinct();
+        $builder->distinct();
 
         if ($search != '')
             $builder->where("(name LIKE '%" . strtolower($search) . "%' OR name LIKE '%" . strtoupper($search) . "%' OR name LIKE '%" . ucfirst($search) . "%' 
@@ -1174,10 +1175,32 @@ not_started_users as
     public function getMonthWiseEnrolmentCount()
     {
         try {
-            $builder = $this->db->table('user_course_enrolment');
+            $builder = $this->db->table('enrolment');
             $builder->select('distinct to_char(date_trunc(\'month\',to_date(enrolled_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as enrolled_month, 
             count(*) ');
-            // $builder->where('enrolled_date != \'\'');
+            // $builder->where('to_date(enrolled_date,\'DD/MM/YYYY\') > current_date - INTERVAL \'1 year\'');
+            $builder->groupBy('enrolled_month');
+            $builder->orderBy('enrolled_month');
+            // echo '<pre>';
+            // print_r($builder->getCompiledSelect());
+            // die;
+            $query = $builder->get();
+
+            return $query;
+
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+
+    }
+
+    
+    public function getEnrolmentMonths()
+    {
+        try {
+            $builder = $this->db->table('enrolment');
+            $builder->select('distinct to_char(date_trunc(\'month\',to_date(enrolled_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as enrolled_month');
+            $builder->where('to_date(enrolled_date,\'DD/MM/YYYY\') > current_date - INTERVAL \'1 year\'');
             $builder->groupBy('enrolled_month');
             $builder->orderBy('enrolled_month');
             // echo '<pre>';
@@ -1200,7 +1223,29 @@ not_started_users as
             $builder->select('distinct to_char(date_trunc(\'month\',to_date(completed_on,\'DD/MM/YYYY\')),\'YYYY/MM\') as completed_month, 
             count(*) ');
             $builder->where('completion_status', 'Completed');
-            // $builder->where('completed_on != \'\'');
+            // $builder->where('to_date(completed_on,\'DD/MM/YYYY\') > current_date - INTERVAL \'1 year\'');
+            $builder->groupBy('completed_month');
+            $builder->orderBy('completed_month');
+            // echo '<pre>';
+            // print_r($builder->getCompiledSelect());
+            // die;
+            $query = $builder->get();
+
+            return $query;
+
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+
+    }
+
+    public function getCompletionMonths()
+    {
+        try {
+            $builder = $this->db->table('enrolment');
+            $builder->select('distinct to_char(date_trunc(\'month\',to_date(completed_on,\'DD/MM/YYYY\')),\'YYYY/MM\') as completed_month ');
+            $builder->where('completion_status', 'Completed');
+            $builder->where('to_date(completed_on,\'DD/MM/YYYY\') > current_date - INTERVAL \'1 year\'');
             $builder->groupBy('completed_month');
             $builder->orderBy('completed_month');
             // echo '<pre>';
@@ -1220,10 +1265,10 @@ not_started_users as
     public function getMonthWiseTotalEnrolmentCount()
     {
         try {
-            $builder = $this->db->table('user_course_enrolment');
+            $builder = $this->db->table('enrolment');
             $builder->select('distinct to_char(date_trunc(\'month\',to_date(enrolled_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as enrolled_month, 
             sum(count(*) ) over (order by to_char(date_trunc(\'month\',to_date(enrolled_date,\'DD/MM/YYYY\')),\'YYYY/MM\'))');
-            // $builder->where('enrolled_date != \'\'');
+            // $builder->where('to_date(enrolled_date,\'DD/MM/YYYY\') > current_date - INTERVAL \'1 year\'');
             $builder->groupBy('enrolled_month');
             $builder->orderBy('enrolled_month');
             $query = $builder->get();
@@ -1239,10 +1284,10 @@ not_started_users as
     public function getMonthWiseTotalUniqueEnrolmentCount()
     {
         try {
-            $builder = $this->db->table('user_course_enrolment');
+            $builder = $this->db->table('enrolment');
             $builder->select('distinct to_char(date_trunc(\'month\',to_date(enrolled_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as enrolled_month, 
-            sum(count(distinct user_id) ) over (order by to_char(date_trunc(\'month\',to_date(enrolled_date,\'DD/MM/YYYY\')),\'YYYY/MM\'))');
-            // $builder->where('enrolled_date != \'\'');
+            sum(count(distinct email) ) over (order by to_char(date_trunc(\'month\',to_date(enrolled_date,\'DD/MM/YYYY\')),\'YYYY/MM\'))');
+            // $builder->where('to_date(enrolled_date,\'DD/MM/YYYY\') > current_date - INTERVAL \'1 year\'');
             $builder->groupBy('enrolled_month');
             $builder->orderBy('enrolled_month');
             // echo '<pre>';
@@ -1265,7 +1310,7 @@ not_started_users as
             $builder->select('distinct to_char(date_trunc(\'month\',to_date(completed_on,\'DD/MM/YYYY\')),\'YYYY/MM\') as completed_month, 
             sum(count(*) ) over (order by to_char(date_trunc(\'month\',to_date(completed_on,\'DD/MM/YYYY\')),\'YYYY/MM\'))');
             $builder->where('completion_status', 'Completed');
-            // $builder->where('completed_on != \'\'');
+            // $builder->where('to_date(completed_on,\'DD/MM/YYYY\') > current_date - INTERVAL \'1 year\'');
             $builder->groupBy('completed_month');
             $builder->orderBy('completed_month');
             // echo '<pre>';
@@ -1287,8 +1332,9 @@ not_started_users as
             $builder = $this->db->table('master_course');
             $builder->join('user_course_enrolment', 'user_course_enrolment.course_id = master_course.course_id');
             $builder->select('to_char(date_trunc(\'MONTH\',to_date(completed_on,\'DD/MM/YYYY\')),\'YYYY/MM\') as month, sum(durationh)');
-            $builder->where('status', 'Live');
+            $builder->where('(status = \'Live\' OR status = \'Retired\')');
             $builder->where('completion_status', 'Completed');
+            // $builder->where('to_date(completed_on,\'DD/MM/YYYY\') > current_date - INTERVAL \'1 year\'');
             $builder->groupBy('month');
             $builder->orderBy('month');
             // echo '<pre>';
@@ -1312,8 +1358,9 @@ not_started_users as
                 SELECT to_char(date_trunc(\'MONTH\',to_date(completed_on,\'DD/MM/YYYY\')),\'YYYY/MM\') as month, sum(durationh) as learninghours
                 FROM public.user_course_enrolment
                 JOIN master_course on user_course_enrolment.course_id = master_course.course_id
-                WHERE status=\'Live\'
+                WHERE (status=\'Live\' OR status = \'Retired\')
                 AND completion_status=\'Completed\'
+                -- AND to_date(completed_on,\'DD/MM/YYYY\') > current_date - INTERVAL \'1 year\'
                 GROUP BY month) a
                 ORDER BY month;');
 
@@ -1331,6 +1378,7 @@ not_started_users as
             $builder = $this->db->table('user_course_enrolment');
             $builder->select('distinct to_char(date_trunc(\'month\',to_date(completed_on,\'DD/MM/YYYY\')),\'MM\') as completed_month');
             $builder->where('completed_on != \'\'');
+            // $builder->where('to_date(completed_on,\'DD/MM/YYYY\') > current_date - INTERVAL \'1 year\'');
             $builder->orderBy('completed_month');
             
             $query = $builder->get();
@@ -1349,6 +1397,7 @@ not_started_users as
             $builder = $this->db->table('user_course_enrolment');
             $builder->select('distinct to_char(date_trunc(\'month\',to_date(completed_on,\'DD/MM/YYYY\')),\'YYYY\') as completed_year');
             $builder->where('completed_on != \'\'');
+            // $builder->where('to_date(completed_on,\'DD/MM/YYYY\') > current_date - INTERVAL \'1 year\'');
             $builder->orderBy('completed_year');
             $query = $builder->get();
 

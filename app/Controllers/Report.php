@@ -79,6 +79,7 @@ class Report extends BaseController
                 $data['error'] = '';
                 $session->setTempdata('error', '');
                 $course = $session->getTempdata('course');
+                $provider = $session->getTempdata('provider');
                 $topCount = $session->getTempdata('topCount');
                 $month = $session->getTempdata('monthYear');
                 $competencyType = $session->getTempdata('competencyType');
@@ -350,6 +351,14 @@ class Report extends BaseController
                     else if ($limit == 1)
                         $fullResult = $courseModel->getCourseCountByCBPProvider(1, 0, '', $orderBy, $orderDir);
                     $resultFiltered = $courseModel->getCourseCountByCBPProvider(-1, 0, $search, $orderBy, $orderDir);
+
+                } else if ($reportType == 'cbpProviderWiseEnrolmentSummary') {
+                    $result = $courseModel->getEnrolmentSummaryByCBPProvider($provider,$limit, $offset, $search, $orderBy, $orderDir);
+                    if ($draw == 1 && $limit != 1)
+                        $fullResult = $courseModel->getEnrolmentSummaryByCBPProvider($provider,-1, 0, '', $orderBy, $orderDir);
+                    else if ($limit == 1)
+                        $fullResult = $courseModel->getEnrolmentSummaryByCBPProvider($provider,1, 0, '', $orderBy, $orderDir);
+                    $resultFiltered = $courseModel->getEnrolmentSummaryByCBPProvider($provider,-1, 0, $search, $orderBy, $orderDir);
 
                 } else if ($reportType == 'courseMinistrySummary') {
                     $result = $enrolment->getCourseMinistrySummary($course, $limit, $offset, $search, $orderBy, $orderDir);
@@ -1030,6 +1039,7 @@ class Report extends BaseController
 
                 $session->setTempdata('reportType', $request->getPost('courseReportType'), 600);
                 $session->setTempdata('course', $request->getPost('course'), 300);
+                $session->setTempdata('provider', $request->getPost('course'), 300);
 
                 $role = $session->get('role');
                 $courseReportType = $request->getPost('courseReportType');
@@ -1110,6 +1120,11 @@ class Report extends BaseController
                     $session->setTempdata('fileName', 'CBPProviderSummary', 300);
                     $reportTitle = 'CBP Provider-wise course count';
 
+                } else if ($courseReportType == 'cbpProviderWiseEnrolmentSummary') {
+                    $header = ['Course Name','Status', 'Enrolled','Not Started', 'In-Progress','Completed'];
+                    $session->setTempdata('fileName', 'CBPProviderEnrolmentSummary', 300);
+                    $reportTitle = 'CBP Provider-wise enrolment summary';
+
                 } else if ($courseReportType == 'courseMinistrySummary') {
                     $header = ['Ministry/State Name', 'Enrolled', 'Not Started', 'In Progress', 'Completed'];
                     $session->setTempdata('fileName', $course . '_MinistrySummary', 300);
@@ -1160,7 +1175,8 @@ class Report extends BaseController
                 $role = $session->get('role');
                 $reportType = $request->getPost('userReportType');
                 $email = $request->getPost('email');
-
+                $name = $request->getPost('userid');
+                
                 $lastUpdate = new DataUpdateModel();
                 $enrolment = new UserEnrolmentCourse();
 
@@ -1175,12 +1191,13 @@ class Report extends BaseController
                 } else if ($reportType == 'userProfile') {
                     $header = ['Name', 'Email', 'Organisation', 'Designation', 'Created Date', 'Roles', 'Profile Update Status'];
                     $session->setTempdata('fileName', 'UserProfile_' . $email, 300);
-                    $reportTitle = 'User Profile of - "' . $email . '"';
+                    $reportTitle = 'User Profile - "' . $name . '"';
 
                 } else if ($reportType == 'userEnrolment') {
                     $header = ['Course Name', 'Course Provider', 'Completion Status', 'Completion Percentage', 'Completed On'];
                     $session->setTempdata('fileName', 'UserEnrolment_' . $email, 300);
-                    $reportTitle = 'Enrolment report of - "' . $email . '"';
+                    $reportTitle = 'Enrolment report of - "' . $name . '"';
+
                 } else if ($reportType == 'userEnrolmentFull') {
                     $header = ['Name', 'Email ID', 'Organisation', 'Designation', 'Course', 'Status', 'Completion Percentage', 'Completed On'];
                     $session->setTempdata('fileName', 'UserEnrolmentFullReport', 300);

@@ -67,6 +67,10 @@ function enable_disable_course(value) {
         course.style.display = "block";
         coursename.placeholder = "Search Curated Collection";
         coursename.value = "";
+    } else if (value.value == "cbpProviderWiseEnrolmentSummary" ) {
+        course.style.display = "block";
+        coursename.placeholder = "Search Course Provider";
+        coursename.value = "";
     } else {
         course.style.display = "none";
         coursename.value = "";

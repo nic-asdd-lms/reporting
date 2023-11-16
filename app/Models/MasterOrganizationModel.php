@@ -99,7 +99,7 @@ class MasterOrganizationModel extends Model
     {
         try {
             if ($search != '') {
-                $likeQuery = " AND (creation_datemmyy LIKE '%" . strtolower($search) . "%' OR creation_datemmyy LIKE '%" . strtoupper($search) . "%' OR creation_datemmyy LIKE '%" . ucfirst($search) . "%' ) ";
+                $likeQuery = ' AND concat(split_part(creation_datemmyy::TEXT,\'/\', 2),\'/\' ,split_part(creation_datemmyy::TEXT,\'/\', 1)) LIKE \'%' . $search . '%\'';
 
             } else {
                 $likeQuery = '';

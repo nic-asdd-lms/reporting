@@ -670,7 +670,7 @@
         title: {
           display: true,
           position: "top",
-          text: "Month-wise Courses Published",
+          text: "Month-wise Courses Published in last 1 year",
           fontSize: 16,
           fontColor: "#111"
         },
@@ -711,24 +711,24 @@
           {
             label: "Users Onboarded in the month",
             data: cData.onboardingCount,
-            borderColor: "#36a2eb",
-            pointBackgroundColor: "#36a2eb",
-            pointBorderColor: "#36a2eb",
-            pointHoverBackgroundColor: "#36a2eb",
-            pointHoverBorderColor: "#36a2eb",
+            borderColor: "#75beca",
+            pointBackgroundColor: "#75beca",
+            pointBorderColor: "#75beca",
+            pointHoverBackgroundColor: "#75beca",
+            pointHoverBorderColor: "#75beca",
             pointStyle: 'crossRot',
-            backgroundColor: '#36a2eb0f'
+            backgroundColor: '#75beca33'
           },
           {
             label: "Total Users",
             data: cData.totalUserCount,
-            borderColor: "#ff6384",
-            pointBackgroundColor: "#ff6384",
-            pointBorderColor: "#ff6384",
-            pointHoverBackgroundColor: "#ff6384",
+            borderColor: "#db90b2",
+            pointBackgroundColor: "#db90b2",
+            pointBorderColor: "#db90b2",
+            pointHoverBackgroundColor: "#db90b2",
             pointHoverBorderColor: "#ff6384",
             pointStyle: 'crossRot',
-            backgroundColor: '#ff63840f'
+            backgroundColor: '#db90b20f'
           }
         ]
       };
@@ -738,7 +738,7 @@
         title: {
           display: true,
           position: "top",
-          text: "Month-wise User Count",
+          text: "Month-wise User Count for last 1 year",
           fontSize: 16,
           fontColor: "#111"
         },
@@ -795,7 +795,7 @@
         title: {
           display: true,
           position: "top",
-          text: "Users Onboarded vs Users Enrolled",
+          text: "Users Onboarded vs Users Enrolled in last 1 year",
           fontSize: 16,
           fontColor: "#111"
         },
@@ -865,7 +865,7 @@
         title: {
           display: true,
           position: "top",
-          text: "Month-wise Enrolment Count",
+          text: "Month-wise Enrolment Count for last 1 year",
           fontSize: 16,
           fontColor: "#111"
         },
@@ -934,7 +934,7 @@
         title: {
           display: true,
           position: "top",
-          text: "Month-wise Completion Count",
+          text: "Month-wise Completion Count for last 1 year",
           fontSize: 16,
           fontColor: "#111"
         },
@@ -996,7 +996,7 @@
         title: {
           display: true,
           position: "top",
-          text: "Enrolment vs. Completion",
+          text: "Enrolment vs. Completion for last 1 year",
           fontSize: 16,
           fontColor: "#111"
         },
@@ -1071,7 +1071,7 @@
         title: {
           display: true,
           position: "top",
-          text: "Month-wise Learning Hours",
+          text: "Month-wise Learning Hours for last 1 year",
           fontSize: 16,
           fontColor: "#111"
         },
@@ -1113,24 +1113,24 @@
           {
             label: "Organisations Onboarded in the month",
             data: cData.orgOnboardingCount,
-            borderColor: "#36a2eb",
-            pointBackgroundColor: "#36a2eb",
-            pointBorderColor: "#36a2eb",
-            pointHoverBackgroundColor: "#36a2eb",
-            pointHoverBorderColor: "#36a2eb",
+            borderColor: "#fd98ad",
+            pointBackgroundColor: "#fd98ad",
+            pointBorderColor: "#fd98ad",
+            pointHoverBackgroundColor: "#fd98ad",
+            pointHoverBorderColor: "#fd98ad",
             pointStyle: 'crossRot',
-            backgroundColor: '#36a2eb0f'
+            backgroundColor: '#fd98ad21'
           },
           {
             label: "Total Organisations",
             data: cData.totalOrgCount,
-            borderColor: "#ff6384",
-            pointBackgroundColor: "#ff6384",
-            pointBorderColor: "#ff6384",
-            pointHoverBackgroundColor: "#ff6384",
-            pointHoverBorderColor: "#ff6384",
+            borderColor: "#85bbdf",
+            pointBackgroundColor: "#85bbdf",
+            pointBorderColor: "#85bbdf",
+            pointHoverBackgroundColor: "#85bbdf",
+            pointHoverBorderColor: "#85bbdf",
             pointStyle: 'crossRot',
-            backgroundColor: '#ff63840f'
+            backgroundColor: '#85bbdf1c'
           }
         ]
       };
@@ -1140,7 +1140,7 @@
         title: {
           display: true,
           position: "top",
-          text: "Month-wise Organisation Count",
+          text: "Month-wise Organisation Count for last 1 year",
           fontSize: 16,
           fontColor: "#111"
         },

@@ -162,12 +162,10 @@ class MasterUserModel extends Model
 
             $builder = $this->db->table('master_organization');
             $builder->join('enrolment','enrolment.root_org_id = master_organization.root_org_id');
-            $builder->select('enrolment.org_name, user_count, count(distinct enrolment.email) as enrol_count, (count(distinct enrolment.email)::float/user_count::float*100) as enroll_pc ');
+            $builder->select('enrolment.org_name, user_count, count(distinct enrolment.email) as enrol_count, round(cast((count(distinct enrolment.email)::float/user_count::float*100) as numeric),0) as enroll_pc ');
             if ($search != '') {
+                $builder->where(" (enrolment.org_name LIKE '%" . strtolower($search) . "%' OR enrolment.org_name LIKE '%" . strtoupper($search) . "%' OR enrolment.org_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
 
-                $builder->like('org_name', strtolower($search));
-                $builder->orLike('org_name', strtoupper($search));
-                $builder->orLike('org_name', ucfirst($search));
             }
 
             $builder->where('status', 'Active');
@@ -176,6 +174,7 @@ class MasterUserModel extends Model
 
             if ($limit != -1)
                 $builder->limit($limit, $offset);
+
             $query = $builder->get();
             return $query;
 
@@ -252,7 +251,7 @@ class MasterUserModel extends Model
     {
         try {
             if ($search != '') {
-                $likeQuery = " WHERE (created_date LIKE '%" . strtolower($search) . "%' OR created_date LIKE '%" . strtoupper($search) . "%' OR created_date LIKE '%" . ucfirst($search) . "%' ) ";
+                $likeQuery = ' WHERE (TO_DATE(created_date,\'DD-MM-YYYY\')::text LIKE \'%' . $search . '%\' ) ';
 
             } else {
                 $likeQuery = '';
@@ -276,6 +275,29 @@ class MasterUserModel extends Model
         try {
             $builder = $this->db->table('user_list');
             $builder->select('to_char(date_trunc(\'MONTH\',to_date(created_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as creation_month, count(*)');
+            // $builder->where('to_date(created_date,\'DD/MM/YYYY\') > current_date - INTERVAL \'1 year\'');
+            $builder->groupBy('creation_month');
+            $builder->orderBy('creation_month');
+
+            // echo '<pre>';
+            // print_r($builder->getCompiledSelect());
+            // die;
+            $query = $builder->get();
+
+            return $query;
+
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+
+    }
+
+    public function getOnboardingMonth()
+    {
+        try {
+            $builder = $this->db->table('user_list');
+            $builder->select('to_char(date_trunc(\'MONTH\',to_date(created_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as creation_month');
+            $builder->where('to_date(created_date,\'DD/MM/YYYY\') > current_date - INTERVAL \'1 year\'');
             $builder->groupBy('creation_month');
             $builder->orderBy('creation_month');
 
@@ -298,6 +320,7 @@ class MasterUserModel extends Model
             $builder = $this->db->table('user_list');
             $builder->select('distinct to_char(date_trunc(\'month\',to_date(created_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as creation_month, 
             sum(count(*) ) over (order by to_char(date_trunc(\'month\',to_date(created_date,\'DD/MM/YYYY\')),\'YYYY/MM\'))');
+            // $builder->where('to_date(created_date,\'DD/MM/YYYY\') > current_date - INTERVAL \'1 year\'');
             $builder->groupBy('creation_month');
             $builder->orderBy('creation_month');
 
@@ -322,7 +345,7 @@ class MasterUserModel extends Model
     {
         try {
             if ($search != '') {
-                $likeQuery = " WHERE (created_datemmyy LIKE '%" . strtolower($search) . "%' OR created_datemmyy LIKE '%" . strtoupper($search) . "%' OR created_datemmyy LIKE '%" . ucfirst($search) . "%' ) ";
+                $likeQuery = ' WHERE (concat(split_part(created_datemmyy::TEXT,\'/\', 2),\'/\' ,split_part(created_datemmyy::TEXT,\'/\', 1)) LIKE \'%' . $search . '%\'  ) ';
 
             } else {
                 $likeQuery = '';
@@ -830,12 +853,12 @@ class MasterUserModel extends Model
             $builder = $this->db->table('master_organization');
             $builder->select(' org_name, user_count');
             // $builder->where(' org_name IS NOT NULL');
-            if ($search != '') {
+            // if ($search != '') {
 
-                $builder->like('org_name', strtolower($search));
-                $builder->orLike('org_name', strtoupper($search));
-                $builder->orLike('org_name', ucfirst($search));
-            }
+            //     $builder->like('org_name', strtolower($search));
+            //     $builder->orLike('org_name', strtoupper($search));
+            //     $builder->orLike('org_name', ucfirst($search));
+            // }
 
             $builder->orderBy('user_count', 'desc');
             if ($limit != -1)
@@ -861,12 +884,12 @@ class MasterUserModel extends Model
             $builder->select('master_organization.org_name, count(distinct user_id) AS admin_count');
             $builder->like('roles', 'MDO_ADMIN');
             // $builder->where(' org_name IS NOT NULL');
-            if ($search != '') {
+            // if ($search != '') {
 
-                $builder->like('master_organization.org_name', strtolower($search));
-                $builder->orLike('master_organization.org_name', strtoupper($search));
-                $builder->orLike('master_organization.org_name', ucfirst($search));
-            }
+            //     $builder->like('master_organization.org_name', strtolower($search));
+            //     $builder->orLike('master_organization.org_name', strtoupper($search));
+            //     $builder->orLike('master_organization.org_name', ucfirst($search));
+            // }
 
             $builder->groupBy('master_organization.org_name');
             $builder->orderBy('admin_count', 'desc');
@@ -887,12 +910,21 @@ class MasterUserModel extends Model
     public function userSearch($search_key, $org)
     {
         try {
-            $builder = $this->db->table('master_user');
-            $builder->select('user_id,  email');
-            $builder->like('email', $search_key);
+            $builderEmail = $this->db->table('master_user');
+            $builderEmail->select('user_id,  email, concat(first_name,\' \',last_name) as name');
+            $builderEmail->like('email', $search_key);
             if ($org != '')
-                $builder->where('root_org_id', $org);
-            $query = $builder->get();
+                $builderEmail->where('root_org_id', $org);
+
+            $builderPhone = $this->db->table('master_user');
+            $builderPhone->select('user_id,  phone, concat(first_name,\' \',last_name) as name');
+            $builderPhone->like('phone', $search_key);
+            if ($org != '')
+                $builderPhone->where('root_org_id', $org);
+            
+            $builderEmail->union($builderPhone);
+
+            $query = $builderEmail->get();
 
             // $result = $this->db->query('SELECT org_name FROM master_organization WHERE SIMILARITY(org_name,\''.$search_key.'\') > 0.4 ;');
             // echo $search_key,json_encode($query);
@@ -910,6 +942,7 @@ class MasterUserModel extends Model
             $builder = $this->db->table('user_list');
             $builder->select('name, email, org_name, designation, created_date, roles, profile_update_status');
             $builder->where('email', $email);
+            $builder->orWhere('phone', $email);
 
             if ($orgName != '')
                 $builder->where('org_name', $orgName);

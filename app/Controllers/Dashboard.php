@@ -240,6 +240,8 @@ class Dashboard extends BaseController
                 $courseChartData = $courseModel->dashboardChart(false);
                 $monthWiseCoursePublished = $courseModel->getMonthWiseCoursePublished();
                 $monthWiseTotalCoursePublished = $courseModel->getMonthWiseTotalCoursePublished();
+                $publishMonths = $courseModel->getPublishMonths();
+
 
 
                 $monthTableData = $enrolment->dashboardTable('', '', true);
@@ -247,11 +249,15 @@ class Dashboard extends BaseController
 
                 $monthWiseUserOnboarding = $userModel->getMonthWiseUserOnboardingChart();
                 $monthWiseTotalUsers = $userModel->getMonthWiseTotalUserChart();
+                $onboardingMonths = $userModel->getOnboardingMonth();
                 $userRoleChartData = $userModel->roleDashboardChart();
 
 
                 $monthWiseEnrolment = $enrolmentCourse->getMonthWiseEnrolmentCount();
+                $enrolmentMonths = $enrolmentCourse->getEnrolmentMonths();
+
                 $monthWiseCompletion = $enrolmentCourse->getMonthWiseCompletionCount();
+                $completionMonths = $enrolmentCourse->getCompletionMonths();
 
                 $monthWiseTotalEnrolment = $enrolmentCourse->getMonthWiseTotalEnrolmentCount();
                 $monthWiseTotalCompletion = $enrolmentCourse->getMonthWiseTotalCompletionCount();
@@ -334,14 +340,40 @@ class Dashboard extends BaseController
                     $coursetable->addRow($keyCell, $valueCell);
                 }
 
-                foreach ($monthWiseCoursePublished->getResult() as $row) {
-                    $data['coursePublishMonth'][] = $row->publish_month;
-                    $data['coursePublishCount'][] = (int) ($row->count);
+                // foreach ($monthWiseCoursePublished->getResult() as $row) {
+                //     $data['coursePublishMonth'][] = $row->publish_month;
+                //     $data['coursePublishCount'][] = (int) ($row->count);
+                // }
+                
+                $publish_month = [];
+                foreach ($publishMonths->getResult() as $row) {
+                    array_push($publish_month, $row->publish_month);
+                    
                 }
-                foreach ($monthWiseTotalCoursePublished->getResult() as $row) {
-                    $data['totalCoursePublishMonth'][] = $row->publish_month;
-                    $data['totalCoursePublishCount'][] = (int) ($row->sum);
+                $publishedArray = $monthWiseCoursePublished->getResultArray();
+                for ($i = 0; $i < sizeof($publish_month); $i++) {
+                    $data['coursePublishMonth'][] = $publish_month[$i];
+                    if (array_search($publish_month[$i], array_column($publishedArray, 'publish_month'))  >= 0) {
+                        $data['coursePublishCount'][] = (int) $publishedArray[array_search($publish_month[$i], array_column($publishedArray, 'publish_month'))]['count'];
+                    } else {
+                        $data['coursePublishCount'][] = 0;
+                    }
                 }
+
+                $totalPublishArray = $monthWiseTotalCoursePublished->getResultArray();
+                for ($i = 0; $i < sizeof($publish_month); $i++) {
+                    $data['totalCoursePublishMonth'][] = $publish_month[$i];
+                    if (array_search($publish_month[$i], array_column($totalPublishArray, 'publish_month'))  >= 0) {
+                        $data['totalCoursePublishCount'][] = (int) $totalPublishArray[array_search($publish_month[$i], array_column($totalPublishArray, 'publish_month'))]['sum'];
+                    } else {
+                        $data['totalCoursePublishCount'][] = (int) ($i == 0 ? 0 : $totalPublishArray[array_search($publish_month[$i - 1], array_column($totalPublishArray, 'publish_month'))]['sum']);
+                    }
+                }
+
+                // foreach ($monthWiseTotalCoursePublished->getResult() as $row) {
+                //     $data['totalCoursePublishMonth'][] = $row->publish_month;
+                //     $data['totalCoursePublishCount'][] = (int) ($row->sum);
+                // }
 
                 foreach ($monthChartData->getResult() as $row) {
                     $data['monthlabel'][] = $row->status;
@@ -350,21 +382,21 @@ class Dashboard extends BaseController
 
 
                 $enrol_month = [];
-                foreach ($monthWiseEnrolment->getResult() as $row) {
+                foreach ($enrolmentMonths->getResult() as $row) {
                     array_push($enrol_month, $row->enrolled_month);
                     // $data['monthWiseEnrolmentMonth'][] = $row->enrolled_month;
                     // $data['monthWiseEnrolmentCount'][] = (int) ($row->count);
                 }
 
                 $completion_month = [];
-                foreach ($monthWiseCompletion->getResult() as $row) {
+                foreach ($completionMonths->getResult() as $row) {
                     array_push($completion_month, $row->completed_month);
                     // $data['monthWiseCompletionMonth'][] = $row->completed_month;
                     // $data['monthWiseCompletionCount'][] = (int) ($row->count);
                 }
 
                 $onboarding_month = [];
-                foreach ($monthWiseUserOnboarding->getResult() as $row) {
+                foreach ($onboardingMonths->getResult() as $row) {
                     array_push($onboarding_month, $row->creation_month);
                     // $data['monthWiseCompletionMonth'][] = $row->completed_month;
                     // $data['monthWiseCompletionCount'][] = (int) ($row->count);
@@ -386,7 +418,7 @@ class Dashboard extends BaseController
                 $enrollArray = $monthWiseEnrolment->getResultArray();
                 for ($i = 0; $i < sizeof($months); $i++) {
                     $data['monthWiseEnrolmentMonth'][] = $months[$i];
-                    if (array_search($months[$i], array_column($enrollArray, 'enrolled_month')) != null) {
+                    if (array_search($months[$i], array_column($enrollArray, 'enrolled_month'))  >= 0) {
                         $data['monthWiseEnrolmentCount'][] = (int) $enrollArray[array_search($months[$i], array_column($enrollArray, 'enrolled_month'))]['count'];
                     } else {
                         $data['monthWiseEnrolmentCount'][] = 0;
@@ -397,7 +429,7 @@ class Dashboard extends BaseController
                 for ($i = 0; $i < sizeof($months); $i++) {
 
                     $data['monthWiseCompletionMonth'][] = $months[$i];
-                    if (array_search($months[$i], array_column($completeArray, 'completed_month')) != null) {
+                    if (array_search($months[$i], array_column($completeArray, 'completed_month')) >= 0) {
                         $data['monthWiseCompletionCount'][] = (int) $completeArray[array_search($months[$i], array_column($completeArray, 'completed_month'))]['count'];
                     } else {
                         $data['monthWiseCompletionCount'][] = 0;
@@ -407,7 +439,7 @@ class Dashboard extends BaseController
                 $totalEnrollArray = $monthWiseTotalEnrolment->getResultArray();
                 for ($i = 0; $i < sizeof($months); $i++) {
                     $data['totalEnrolmentMonth'][] = $months[$i];
-                    if (array_search($months[$i], array_column($totalEnrollArray, 'enrolled_month')) != null) {
+                    if (array_search($months[$i], array_column($totalEnrollArray, 'enrolled_month'))  >= 0) {
                         $data['totalEnrolmentCount'][] = (int) $totalEnrollArray[array_search($months[$i], array_column($totalEnrollArray, 'enrolled_month'))]['sum'];
                     } else {
                         $data['totalEnrolmentCount'][] = (int) ($i == 0 ? 0 : $totalEnrollArray[array_search($months[$i - 1], array_column($totalEnrollArray, 'enrolled_month'))]['sum']);
@@ -417,7 +449,7 @@ class Dashboard extends BaseController
                 $totalCompleteArray = $monthWiseTotalCompletion->getResultArray();
                 for ($i = 0; $i < sizeof($months); $i++) {
                     $data['totalCompletionMonth'][] = $months[$i];
-                    if (array_search($months[$i], array_column($totalCompleteArray, 'completed_month')) != null) {
+                    if (array_search($months[$i], array_column($totalCompleteArray, 'completed_month'))  >= 0) {
                         $data['totalCompletionCount'][] = (int) $totalCompleteArray[array_search($months[$i], array_column($totalCompleteArray, 'completed_month'))]['sum'];
                     } else {
                         $data['totalCompletionCount'][] = (int) ($i == 0 ? 0 : $totalCompleteArray[array_search($months[$i - 1], array_column($totalCompleteArray, 'completed_month'))]['sum']);
@@ -436,17 +468,17 @@ class Dashboard extends BaseController
                 $onboardingArray = $monthWiseUserOnboarding->getResultArray();
                 for ($i = 0; $i < sizeof($months); $i++) {
                     $data['onboardingMonth'][] = $months[$i];
-                    if (array_search($months[$i], array_column($onboardingArray, 'creation_month')) != null) {
+                    if (array_search($months[$i], array_column($onboardingArray, 'creation_month')) >= 0) {
                         $data['onboardingCount'][] = (int) $onboardingArray[array_search($months[$i], array_column($onboardingArray, 'creation_month'))]['count'];
                     } else {
-                        $data['onboardingCount'][] = (int) ($i == 0 ? 0 : $onboardingArray[array_search($months[$i - 1], array_column($onboardingArray, 'creation_month'))]['count']);
+                        
+                        $data['onboardingCount'][] = 0;
                     }
                 }
-
                 $totalOnboardingArray = $monthWiseTotalUsers->getResultArray();
                 for ($i = 0; $i < sizeof($months); $i++) {
                     $data['totalUserMonth'][] = $months[$i];
-                    if (array_search($months[$i], array_column($totalOnboardingArray, 'creation_month')) != null) {
+                    if (array_search($months[$i], array_column($totalOnboardingArray, 'creation_month'))  >= 0) {
                         $data['totalUserCount'][] = (int) $totalOnboardingArray[array_search($months[$i], array_column($totalOnboardingArray, 'creation_month'))]['sum'];
                     } else {
                         $data['totalUserCount'][] = (int) ($i == 0 ? 0 : $totalOnboardingArray[array_search($months[$i - 1], array_column($totalOnboardingArray, 'creation_month'))]['sum']);
@@ -463,6 +495,28 @@ class Dashboard extends BaseController
                     }
                 }
 
+                $learningHoursArray = $monthWiseLearningHours->getResultArray();
+                for ($i = 0; $i < sizeof($months); $i++) {
+                    $data['learningHoursMonth'][] = $months[$i];
+                    if (array_search($months[$i], array_column($learningHoursArray, 'month')) >= 0) {
+                        $data['monthWiseLearningHours'][] = (int) $learningHoursArray[array_search($months[$i], array_column($learningHoursArray, 'month'))]['sum'];
+                    } else {
+                        $data['monthWiseLearningHours'][] = 0;
+                    }
+                    // $data['monthWiseLearningHours'][] = (int) ($row->sum);
+                }
+
+                $totalLearningHoursArray = $monthWiseTotalLearningHours->getResultArray();
+                for ($i = 0; $i < sizeof($months); $i++) {
+                    $data['totalLearningHoursMonth'][] = $months[$i];
+                    
+                    if (array_search($months[$i], array_column($totalLearningHoursArray, 'month')) >= 0) {
+                        $data['totalearningHours'][] = (int) $totalLearningHoursArray[array_search($months[$i], array_column($totalLearningHoursArray, 'month'))]['sum'];
+                    } else {
+                        $data['totalearningHours'][] = (int) ($i == 0 ? 0 : $totalLearningHoursArray[array_search($months[$i - 1], array_column($totalLearningHoursArray, 'month'))]['sum']);
+                    }
+                    // $data['totalearningHours'][] = (int) ($row->sum);
+                }
                 // foreach ($monthWiseTotalEnrolment->getResult() as $row) {
                 //     $data['totalEnrolmentMonth'][] = $row->enrolled_month;
                 //     $data['totalEnrolmentCount'][] = (int) ($row->sum);
@@ -476,15 +530,7 @@ class Dashboard extends BaseController
                     $data['roleName'][] = $row->role;
                     $data['roleCount'][] = (int) ($row->count);
                 }
-                foreach ($monthWiseLearningHours->getResult() as $row) {
-                    $data['learningHoursMonth'][] = $row->month;
-                    $data['monthWiseLearningHours'][] = (int) ($row->sum);
-                }
-
-                foreach ($monthWiseTotalLearningHours->getResult() as $row) {
-                    $data['totalLearningHoursMonth'][] = $row->month;
-                    $data['totalearningHours'][] = (int) ($row->sum);
-                }
+                
 
 
                 //  ORG OVERVIEW
@@ -501,7 +547,7 @@ class Dashboard extends BaseController
                 $orgOnboardingArray = $monthWiseOrgOnboarding->getResultArray();
                 for ($i = 0; $i < sizeof($months); $i++) {
                     $data['orgOnboardingMonth'][] = $months[$i];
-                    if (array_search($months[$i], array_column($orgOnboardingArray, 'creation_month')) != null) {
+                    if (array_search($months[$i], array_column($orgOnboardingArray, 'creation_month'))  >= 0) {
                         $data['orgOnboardingCount'][] = (int) $orgOnboardingArray[array_search($months[$i], array_column($orgOnboardingArray, 'creation_month'))]['count'];
                     } else {
                         $data['orgOnboardingCount'][] = (int) ($i == 0 ? 0 : $orgOnboardingArray[array_search($months[$i - 1], array_column($orgOnboardingArray, 'creation_month'))]['count']);
@@ -511,7 +557,7 @@ class Dashboard extends BaseController
                 $totalOrgOnboardingArray = $monthWiseTotalOrg->getResultArray();
                 for ($i = 0; $i < sizeof($months); $i++) {
                     $data['totalOrgMonth'][] = $months[$i];
-                    if (array_search($months[$i], array_column($totalOrgOnboardingArray, 'creation_month')) != null) {
+                    if (array_search($months[$i], array_column($totalOrgOnboardingArray, 'creation_month'))  >= 0) {
                         $data['totalOrgCount'][] = (int) $totalOrgOnboardingArray[array_search($months[$i], array_column($totalOrgOnboardingArray, 'creation_month'))]['sum'];
                     } else {
                         $data['totalOrgCount'][] = (int) ($i == 0 ? 0 : $totalOrgOnboardingArray[array_search($months[$i - 1], array_column($totalOrgOnboardingArray, 'creation_month'))]['sum']);

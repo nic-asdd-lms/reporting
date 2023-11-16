@@ -28,21 +28,21 @@ class Home extends BaseController
         try {
             helper('session');
             $session = \Config\Services::session();
-                
+
             if (session_exists() && $session->get('role') != 'DOPT_ADMIN') {
 
                 helper(['form', 'url']);
-                
+
                 $data['error'] = '';
                 $data['months'] = $this->getMonth();
                 $data['years'] = $this->getYear();
                 return view('header_view')
                     . view('report_home', $data)
                     . view('footer_view');
-            } else if($session->get('role') == 'DOPT_ADMIN') {
+            } else if ($session->get('role') == 'DOPT_ADMIN') {
                 return $this->response->redirect(base_url('/dashboard?ati=&program='));
-						
-            }else {
+
+            } else {
                 return $this->response->redirect(base_url('/'));
             }
 
@@ -85,7 +85,7 @@ class Home extends BaseController
 
                 if ($this->request->getVar('action')) {
                     $session = \Config\Services::session();
-                
+
                     $action = $this->request->getVar('action');
 
                     if ($action == 'get_ministry') {
@@ -131,27 +131,29 @@ class Home extends BaseController
                         $reportType = $this->request->getVar('reportType');
                         $orgModel = new MasterOrganizationModel();
                         $ministryModel = new MasterStructureModel();
-                        
-                        if ($reportType == 'ministryUserEnrolment' || $reportType == 'orgHierarchy'|| $reportType == 'ministryUserList')
+
+                        if ($reportType == 'ministryUserEnrolment' || $reportType == 'orgHierarchy' || $reportType == 'ministryUserList')
                             $orgdata = $ministryModel->getMinistry();
                         else
                             $orgdata = $orgModel->getOrganizations();
 
                         echo json_encode($orgdata);
                     } else if ($action == 'course_search') {
-                        $search_key =  $this->request->getVar('search_key')  ;
+                        $search_key = $this->request->getVar('search_key');
                         $courseModel = new MasterCourseModel();
                         $programModel = new MasterProgramModel();
                         $collectionModel = new MasterCollectionModel();
-                        $reportType = $this->request->getVar('reportType')  ;
+                        $reportType = $this->request->getVar('reportType');
 
-                        if ($reportType == 'courseEnrolmentReport' || $reportType == 'courseMinistrySummary' || $reportType == 'topOrgCourseWise' )
+                        if ($reportType == 'courseEnrolmentReport' || $reportType == 'courseMinistrySummary' || $reportType == 'topOrgCourseWise')
                             $courseData = $courseModel->courseSearch($search_key);
-                        else if ($reportType == 'programEnrolmentReport'|| $reportType == 'topOrgProgramWise')
+                        else if ($reportType == 'programEnrolmentReport' || $reportType == 'topOrgProgramWise')
                             $courseData = $programModel->programSearch($search_key);
-                        else if ($reportType == 'collectionEnrolmentReport' || $reportType == 'collectionEnrolmentCount'|| $reportType == 'topOrgCollectionWise')
+                        else if ($reportType == 'collectionEnrolmentReport' || $reportType == 'collectionEnrolmentCount' || $reportType == 'topOrgCollectionWise')
                             $courseData = $collectionModel->collectionSearch($search_key);
-
+                        else if ($reportType == 'cbpProviderWiseEnrolmentSummary')
+                            $courseData = $courseModel->providerSearch($search_key);
+                       
                         echo json_encode($courseData);
                     } else if ($action == 'get_hierarchy') {
                         $orgModel = new MasterStructureModel();
@@ -159,18 +161,18 @@ class Home extends BaseController
 
                         echo json_encode($orgdata);
                     } else if ($action == 'user_search') {
-                        $search_key =  $this->request->getVar('search_key')  ;
-                        if($session->get('role') == 'MDO_ADMIN')
+                        $search_key = $this->request->getVar('search_key');
+                        if ($session->get('role') == 'MDO_ADMIN')
                             $org = $session->get('organisation');
-                        else   
+                        else
                             $org = '';
-                        
+
                         $userModel = new MasterUserModel();
                         $userData = $userModel->userSearch($search_key, $org);
-                        
+
                         echo json_encode($userData);
-                        
-                    } 
+
+                    }
                 }
             } else {
                 return $this->response->redirect(base_url('/'));
@@ -376,7 +378,7 @@ class Home extends BaseController
         }
     }
 
-    public function getMonth() 
+    public function getMonth()
     {
         try {
             helper('session');
@@ -393,7 +395,7 @@ class Home extends BaseController
             throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
     }
-    public function getYear() 
+    public function getYear()
     {
         try {
             helper('session');
