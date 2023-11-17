@@ -225,7 +225,7 @@ class UserEnrolmentCourse extends Model
 
         // $builder->orderBy((int) $orderBy + 1, $orderDir);
         // $query = $builder->get();
-        
+
         return $query;
 
     }
@@ -334,7 +334,7 @@ class UserEnrolmentCourse extends Model
 
             return $query;
 
-            
+
         } catch (\Exception $e) {
             throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
@@ -405,7 +405,7 @@ class UserEnrolmentCourse extends Model
 
             $builder->groupBy('completed_month');
             $builder->orderBy((int) $orderBy + 1, $orderDir);
-            
+
             $query = $builder->get();
 
             return $query;
@@ -741,7 +741,7 @@ class UserEnrolmentCourse extends Model
 
         $builder = $this->db->table('enrolment');
         $builder->select('course_name, course_provider,  completion_status, completion_percentage, completed_on');
-        $builder->where('(email = \''. $email.'\' OR phone = \''. $email.'\')' );
+        $builder->where('(email = \'' . $email . '\' OR phone = \'' . $email . '\')');
         $builder->distinct();
         if ($search != '')
             $builder->where(" (course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtoupper($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%'
@@ -755,7 +755,7 @@ class UserEnrolmentCourse extends Model
         if ($limit != -1)
             $builder->limit($limit, $offset);
 
-            
+
         $query = $builder->get();
 
         return $query;
@@ -876,8 +876,7 @@ class UserEnrolmentCourse extends Model
         if ($search != '') {
             $likeQuery = " AND (course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtoupper($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%') ";
 
-        } else 
-        {
+        } else {
             $likeQuery = '';
         }
         if ($limit != -1) {
@@ -896,7 +895,7 @@ class UserEnrolmentCourse extends Model
             AND master_curated_collection.curated_id = course_curated.curated_id
             AND master_user.user_id = user_course_enrolment.user_id
             AND master_user.email LIKE \'%.kb@karmayogi.in\'
-            AND master_course.course_id = user_course_enrolment.course_id ' . $likeQuery. '
+            AND master_course.course_id = user_course_enrolment.course_id ' . $likeQuery . '
             GROUP BY  course_name
             ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
 
@@ -1102,7 +1101,7 @@ not_started_users as
         $builder->join('course_curated', 'course_curated.course_id = rozgar_mela_enrolment.course_id ');
         $builder->join('master_curated_collection', 'course_curated.curated_id = master_curated_collection.curated_id ');
         $builder->where('master_curated_collection.curated_id', 'do_11367399557473075211');
-        
+
         $builder->distinct();
 
         if ($search != '')
@@ -1194,7 +1193,7 @@ not_started_users as
 
     }
 
-    
+
     public function getEnrolmentMonths()
     {
         try {
@@ -1284,18 +1283,38 @@ not_started_users as
     public function getMonthWiseTotalUniqueEnrolmentCount()
     {
         try {
-            $builder = $this->db->table('enrolment');
-            $builder->select('distinct to_char(date_trunc(\'month\',to_date(enrolled_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as enrolled_month, 
-            sum(count(distinct email) ) over (order by to_char(date_trunc(\'month\',to_date(enrolled_date,\'DD/MM/YYYY\')),\'YYYY/MM\'))');
-            // $builder->where('to_date(enrolled_date,\'DD/MM/YYYY\') > current_date - INTERVAL \'1 year\'');
-            $builder->groupBy('enrolled_month');
-            $builder->orderBy('enrolled_month');
-            // echo '<pre>';
-            // print_r($builder->getCompiledSelect());
-            // die;
-            $query = $builder->get();
+
+            $query = $this->db->query('SELECT enrolled_month,
+            SUM(SUM(flag)) OVER (ORDER BY enrolled_month ROWS UNBOUNDED PRECEDING)
+            FROM (
+                SELECT
+                    user_id,
+                    to_char(date_trunc(\'month\',to_date(enrolled_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as enrolled_month,
+                    CASE
+                        WHEN enrolled_date=MIN(enrolled_date) 
+                            OVER (PARTITION BY user_id)
+                        THEN 1
+                        ELSE 0
+                    END AS flag
+                FROM user_course_enrolment
+                GROUP BY enrolled_date, user_id
+                ) AS dt
+            GROUP BY enrolled_month
+            ORDER BY enrolled_month ;');
 
             return $query;
+            // $builder = $this->db->table('enrolment');
+            // $builder->select('distinct to_char(date_trunc(\'month\',to_date(enrolled_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as enrolled_month, 
+            // sum(count(distinct email) ) over (order by to_char(date_trunc(\'month\',to_date(enrolled_date,\'DD/MM/YYYY\')),\'YYYY/MM\'))');
+            // // $builder->where('to_date(enrolled_date,\'DD/MM/YYYY\') > current_date - INTERVAL \'1 year\'');
+            // $builder->groupBy('enrolled_month');
+            // $builder->orderBy('enrolled_month');
+            // // echo '<pre>';
+            // // print_r($builder->getCompiledSelect());
+            // // die;
+            // $query = $builder->get();
+
+            // return $query;
 
         } catch (\Exception $e) {
             throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
@@ -1380,7 +1399,7 @@ not_started_users as
             $builder->where('completed_on != \'\'');
             // $builder->where('to_date(completed_on,\'DD/MM/YYYY\') > current_date - INTERVAL \'1 year\'');
             $builder->orderBy('completed_month');
-            
+
             $query = $builder->get();
 
             return $query;
