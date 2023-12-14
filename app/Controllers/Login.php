@@ -134,13 +134,17 @@ class Login extends BaseController
 					$session = \Config\Services::session();
 					$session->set($session_data);
 					$_SESSION['logged_in'] = true;
+					// if($session->get('username') == 'chandni.babu@nic.in'){
+					// 	return $this->response->redirect(base_url('/fileupload'));
+					// }
+					// else
 					if ($session->get('role') == 'SPV_ADMIN') {
 						$data['role'] = 'SPV_ADMIN';
 						$data['logged_in'] = true;
 
 						//  $red = $config->item('base_url_other');
 						//  redirect($red, 'refresh');
-					} if ($session->get('role') == 'IGOT_TEAM_MEMBER') {
+					} elseif ($session->get('role') == 'IGOT_TEAM_MEMBER') {
 						$data['role'] = 'IGOT_TEAM_MEMBER';
 						$data['logged_in'] = true;
 

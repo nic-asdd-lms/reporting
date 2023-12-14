@@ -274,7 +274,8 @@ class MasterUserModel extends Model
     {
         try {
             $builder = $this->db->table('user_list');
-            $builder->select('to_char(date_trunc(\'MONTH\',to_date(created_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as creation_month, count(*)');
+            $builder->select('to_char(date_trunc(\'MONTH\',to_date(created_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as creation_month, count(*),
+            sum(count(*) ) over (order by to_char(date_trunc(\'MONTH\',to_date(created_date,\'DD/MM/YYYY\')),\'YYYY/MM\'))');
             // $builder->where('to_date(created_date,\'DD/MM/YYYY\') > current_date - INTERVAL \'1 year\'');
             $builder->groupBy('creation_month');
             $builder->orderBy('creation_month');

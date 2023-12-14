@@ -581,253 +581,6 @@
         options: learneroptions
       });
 
-      //  COURSE OVERVIEW
-
-      var coursectx = $("#course-pie-chart");
-      var coursedata = {
-        labels: cData.courselabel,
-        datasets: [
-          {
-            label: "Course Count",
-            data: cData.coursedata,
-            backgroundColor: [
-              "#68bf7c",
-              "#f4a05a",
-              "#ad99bd",
-              "#db5252",
-              "#337ab7",
-              "#d7cd7a",
-              "#bf72a7"
-            ],
-            borderColor: [
-              "#68bf7c",
-              "#f4a05a",
-              "#ad99bd",
-              "#db5252",
-              "#337ab7",
-              "#d7cd7a",
-              "#bf72a7"
-            ],
-            borderWidth: [1, 1, 1, 1, 1, 1, 1, 1, 1]
-          }
-        ]
-      };
-      var courseoptions = {
-        responsive: true,
-        title: {
-          display: true,
-          position: "top",
-          text: "Course Overview",
-          fontSize: 16,
-          fontColor: "#111"
-        },
-        legend: {
-          display: true,
-          position: "left",
-          labels: {
-            fontColor: "#333",
-            fontSize: 16
-          }
-        }
-      };
-      var coursechart = new Chart(coursectx, {
-        type: "doughnut",
-        data: coursedata,
-        options: courseoptions
-      });
-
-      var coursePublishctx = $("#coursePublished-line-chart");
-      var coursePublishdata = {
-        labels: cData.coursePublishMonth,
-        datasets: [
-          {
-            label: "Courses Published",
-            data: cData.coursePublishCount,
-            borderColor: "#fe96a9",
-            pointBackgroundColor: "#fe96a9",
-            pointBorderColor: "#fe96a9",
-            pointHoverBackgroundColor: "#fe96a9",
-            pointHoverBorderColor: "#fe96a9",
-            pointStyle: 'crossRot',
-            backgroundColor: '#fe96a929'
-          },
-          {
-            label: "Total Courses",
-            data: cData.totalCoursePublishCount,
-            borderColor: "#aad6c8",
-            pointBackgroundColor: "#aad6c8",
-            pointBorderColor: "#aad6c8",
-            pointHoverBackgroundColor: "#aad6c8",
-            pointHoverBorderColor: "#aad6c8",
-            pointStyle: 'crossRot',
-            backgroundColor: '#aad6c83d'
-          }
-        ]
-      };
-
-      var coursePublishoptions = {
-        responsive: true,
-        title: {
-          display: true,
-          position: "top",
-          text: "Month-wise Courses Published in last 1 year",
-          fontSize: 16,
-          fontColor: "#111"
-        },
-
-        legend: {
-          display: true,
-          position: "bottom",
-          labels: {
-            fontColor: "#333",
-            fontSize: 16
-          }
-        },
-        scales: {
-          xAxes: [{
-            gridLines: {
-              display: false
-            }
-          }],
-          yAxes: [{
-            gridLines: {
-              display: false
-            }
-          }]
-        }
-      };
-
-      var coursePublishchart = new Chart(coursePublishctx, {
-        type: "line",
-        data: coursePublishdata,
-        options: coursePublishoptions
-      });
-      //  USER OVERVIEW
-
-      var userctx = $("#user-line-chart");
-      var userdata = {
-        labels: cData.onboardingMonth,
-        datasets: [
-          {
-            label: "Users Onboarded in the month",
-            data: cData.onboardingCount,
-            borderColor: "#75beca",
-            pointBackgroundColor: "#75beca",
-            pointBorderColor: "#75beca",
-            pointHoverBackgroundColor: "#75beca",
-            pointHoverBorderColor: "#75beca",
-            pointStyle: 'crossRot',
-            backgroundColor: '#75beca33'
-          },
-          {
-            label: "Total Users",
-            data: cData.totalUserCount,
-            borderColor: "#db90b2",
-            pointBackgroundColor: "#db90b2",
-            pointBorderColor: "#db90b2",
-            pointHoverBackgroundColor: "#db90b2",
-            pointHoverBorderColor: "#ff6384",
-            pointStyle: 'crossRot',
-            backgroundColor: '#db90b20f'
-          }
-        ]
-      };
-
-      var useroptions = {
-        responsive: true,
-        title: {
-          display: true,
-          position: "top",
-          text: "Month-wise User Count for last 1 year",
-          fontSize: 16,
-          fontColor: "#111"
-        },
-
-        legend: {
-          display: true,
-          position: "bottom",
-          labels: {
-            fontColor: "#333",
-            fontSize: 16
-          }
-        },
-        scales: {
-          xAxes: [{
-            gridLines: {
-              display: false
-            }
-          }],
-          yAxes: [{
-            gridLines: {
-              display: false
-            }
-          }]
-        }
-      };
-
-      var userchart = new Chart(userctx, {
-        type: "line",
-        data: userdata,
-        options: useroptions
-      });
-
-      // ONBOARDED-ENROLMENT RATIO
-
-      var enrolmentratioctx = $("#onboarding-enrolment-bar");
-      var enrolmentratiodata = {
-        labels: cData.onboardingMonth,
-        datasets: [
-          {
-            label: "Unique users enrolled",
-            data: cData.totalUniqeEnrolmentCount,
-            backgroundColor: '#ffc87d'
-          },
-          {
-            label: "User count",
-            data: cData.totalUserCount,
-            backgroundColor: '#829ccf'
-          }
-        ]
-      };
-
-      var enrolmentratiooptions = {
-        responsive: true,
-        title: {
-          display: true,
-          position: "top",
-          text: "Users Onboarded vs Users Enrolled in last 1 year",
-          fontSize: 16,
-          fontColor: "#111"
-        },
-
-        legend: {
-          display: true,
-          position: "bottom",
-          labels: {
-            fontColor: "#333",
-            fontSize: 16
-          }
-        },
-        scales: {
-          xAxes: [{
-            gridLines: {
-              display: false
-            },
-            stacked: true
-          }],
-          yAxes: [{
-            gridLines: {
-              display: false
-            }
-          }]
-        }
-      };
-
-      var enrolmentratiochart = new Chart(enrolmentratioctx, {
-        type: "bar",
-        data: enrolmentratiodata,
-        options: enrolmentratiooptions
-      });
 
       //  ENROLMENT OVERVIEW
 
@@ -1104,6 +857,256 @@
         options: learninghoursoptions
       });
 
+
+      //  COURSE OVERVIEW
+
+      var coursectx = $("#course-pie-chart");
+      var coursedata = {
+        labels: cData.courselabel,
+        datasets: [
+          {
+            label: "Course Count",
+            data: cData.coursedata,
+            backgroundColor: [
+              "#68bf7c",
+              "#f4a05a",
+              "#ad99bd",
+              "#db5252",
+              "#337ab7",
+              "#d7cd7a",
+              "#bf72a7"
+            ],
+            borderColor: [
+              "#68bf7c",
+              "#f4a05a",
+              "#ad99bd",
+              "#db5252",
+              "#337ab7",
+              "#d7cd7a",
+              "#bf72a7"
+            ],
+            borderWidth: [1, 1, 1, 1, 1, 1, 1, 1, 1]
+          }
+        ]
+      };
+      var courseoptions = {
+        responsive: true,
+        title: {
+          display: true,
+          position: "top",
+          text: "Course Overview",
+          fontSize: 16,
+          fontColor: "#111"
+        },
+        legend: {
+          display: true,
+          position: "left",
+          labels: {
+            fontColor: "#333",
+            fontSize: 16
+          }
+        }
+      };
+      var coursechart = new Chart(coursectx, {
+        type: "doughnut",
+        data: coursedata,
+        options: courseoptions
+      });
+
+      var coursePublishctx = $("#coursePublished-line-chart");
+      var coursePublishdata = {
+        labels: cData.coursePublishMonth,
+        datasets: [
+          {
+            label: "Courses Published",
+            data: cData.coursePublishCount,
+            borderColor: "#fe96a9",
+            pointBackgroundColor: "#fe96a9",
+            pointBorderColor: "#fe96a9",
+            pointHoverBackgroundColor: "#fe96a9",
+            pointHoverBorderColor: "#fe96a9",
+            pointStyle: 'crossRot',
+            backgroundColor: '#fe96a929'
+          },
+          {
+            label: "Total Courses",
+            data: cData.totalCoursePublishCount,
+            borderColor: "#aad6c8",
+            pointBackgroundColor: "#aad6c8",
+            pointBorderColor: "#aad6c8",
+            pointHoverBackgroundColor: "#aad6c8",
+            pointHoverBorderColor: "#aad6c8",
+            pointStyle: 'crossRot',
+            backgroundColor: '#aad6c83d'
+          }
+        ]
+      };
+
+      var coursePublishoptions = {
+        responsive: true,
+        title: {
+          display: true,
+          position: "top",
+          text: "Month-wise Courses Published in last 1 year",
+          fontSize: 16,
+          fontColor: "#111"
+        },
+
+        legend: {
+          display: true,
+          position: "bottom",
+          labels: {
+            fontColor: "#333",
+            fontSize: 16
+          }
+        },
+        scales: {
+          xAxes: [{
+            gridLines: {
+              display: false
+            }
+          }],
+          yAxes: [{
+            gridLines: {
+              display: false
+            }
+          }]
+        }
+      };
+
+      var coursePublishchart = new Chart(coursePublishctx, {
+        type: "line",
+        data: coursePublishdata,
+        options: coursePublishoptions
+      });
+      //  USER OVERVIEW
+
+      var userctx = $("#user-line-chart");
+      var userdata = {
+        labels: cData.onboardingMonth,
+        datasets: [
+          {
+            label: "Users Onboarded in the month",
+            data: cData.onboardingCount,
+            borderColor: "#75beca",
+            pointBackgroundColor: "#75beca",
+            pointBorderColor: "#75beca",
+            pointHoverBackgroundColor: "#75beca",
+            pointHoverBorderColor: "#75beca",
+            pointStyle: 'crossRot',
+            backgroundColor: '#75beca33'
+          },
+          {
+            label: "Total Users",
+            data: cData.totalUserCount,
+            borderColor: "#db90b2",
+            pointBackgroundColor: "#db90b2",
+            pointBorderColor: "#db90b2",
+            pointHoverBackgroundColor: "#db90b2",
+            pointHoverBorderColor: "#ff6384",
+            pointStyle: 'crossRot',
+            backgroundColor: '#db90b20f'
+          }
+        ]
+      };
+
+      var useroptions = {
+        responsive: true,
+        title: {
+          display: true,
+          position: "top",
+          text: "Month-wise User Count for last 1 year",
+          fontSize: 16,
+          fontColor: "#111"
+        },
+
+        legend: {
+          display: true,
+          position: "bottom",
+          labels: {
+            fontColor: "#333",
+            fontSize: 16
+          }
+        },
+        scales: {
+          xAxes: [{
+            gridLines: {
+              display: false
+            }
+          }],
+          yAxes: [{
+            gridLines: {
+              display: false
+            }
+          }]
+        }
+      };
+
+      var userchart = new Chart(userctx, {
+        type: "line",
+        data: userdata,
+        options: useroptions
+      });
+
+      // ONBOARDED-ENROLMENT RATIO
+
+      var enrolmentratioctx = $("#onboarding-enrolment-bar");
+      var enrolmentratiodata = {
+        labels: cData.onboardingMonth,
+        datasets: [
+          {
+            label: "Unique users enrolled",
+            data: cData.totalUniqeEnrolmentCount,
+            backgroundColor: '#ffc87d'
+          },
+          {
+            label: "User count",
+            data: cData.totalUserCount,
+            backgroundColor: '#829ccf'
+          }
+        ]
+      };
+
+      var enrolmentratiooptions = {
+        responsive: true,
+        title: {
+          display: true,
+          position: "top",
+          text: "Users Onboarded vs Users Enrolled in last 1 year",
+          fontSize: 16,
+          fontColor: "#111"
+        },
+
+        legend: {
+          display: true,
+          position: "bottom",
+          labels: {
+            fontColor: "#333",
+            fontSize: 16
+          }
+        },
+        scales: {
+          xAxes: [{
+            gridLines: {
+              display: false
+            },
+            stacked: true
+          }],
+          yAxes: [{
+            gridLines: {
+              display: false
+            }
+          }]
+        }
+      };
+
+      var enrolmentratiochart = new Chart(enrolmentratioctx, {
+        type: "bar",
+        data: enrolmentratiodata,
+        options: enrolmentratiooptions
+      });
+
+      
       //  ORG OVERVIEW
 
       var orgctx = $("#org-line-chart");

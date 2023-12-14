@@ -104,7 +104,7 @@ class UserEnrolmentCourse extends Model
         $builder->select('course_name, org_name, published_date, durationhms,enrolled_count, not_started_count, in_progress_count, completed_count, avg_rating');
         if ($search != '')
             $builder->where("(course_name LIKE '%" . strtolower($search) . "%' OR course_name LIKE '%" . strtoupper($search) . "%' OR course_name LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
-
+        $builder->where('status','Live');
         $builder->orderBy((int) $orderBy + 1, $orderDir);
         if ($limit != -1)
             $builder->limit($limit, $offset);
@@ -1176,7 +1176,7 @@ not_started_users as
         try {
             $builder = $this->db->table('enrolment');
             $builder->select('distinct to_char(date_trunc(\'month\',to_date(enrolled_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as enrolled_month, 
-            count(*) ');
+            count(*) , sum(count(*) ) over (order by to_char(date_trunc(\'month\',to_date(enrolled_date,\'DD/MM/YYYY\')),\'YYYY/MM\'))');
             // $builder->where('to_date(enrolled_date,\'DD/MM/YYYY\') > current_date - INTERVAL \'1 year\'');
             $builder->groupBy('enrolled_month');
             $builder->orderBy('enrolled_month');
@@ -1220,7 +1220,7 @@ not_started_users as
         try {
             $builder = $this->db->table('enrolment');
             $builder->select('distinct to_char(date_trunc(\'month\',to_date(completed_on,\'DD/MM/YYYY\')),\'YYYY/MM\') as completed_month, 
-            count(*) ');
+            count(*), sum(count(*) ) over (order by to_char(date_trunc(\'month\',to_date(completed_on,\'DD/MM/YYYY\')),\'YYYY/MM\')) ');
             $builder->where('completion_status', 'Completed');
             // $builder->where('to_date(completed_on,\'DD/MM/YYYY\') > current_date - INTERVAL \'1 year\'');
             $builder->groupBy('completed_month');
@@ -1291,8 +1291,7 @@ not_started_users as
                     user_id,
                     to_char(date_trunc(\'month\',to_date(enrolled_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as enrolled_month,
                     CASE
-                        WHEN enrolled_date=MIN(enrolled_date) 
-                            OVER (PARTITION BY user_id)
+                        WHEN enrolled_date=MIN(enrolled_date) OVER (PARTITION BY user_id)
                         THEN 1
                         ELSE 0
                     END AS flag

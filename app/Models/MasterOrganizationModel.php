@@ -150,7 +150,8 @@ class MasterOrganizationModel extends Model
     {
         try {
             $builder = $this->db->table('master_organization');
-            $builder->select('to_char(date_trunc(\'MONTH\',to_date(creation_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as creation_month, count(*)');
+            $builder->select('to_char(date_trunc(\'MONTH\',to_date(creation_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as creation_month, count(*),
+            sum(count(*) ) over (order by to_char(date_trunc(\'MONTH\',to_date(creation_date,\'DD/MM/YYYY\')),\'YYYY/MM\'))');
             $builder->groupBy('creation_month');
             $builder->orderBy('creation_month');
             $query = $builder->get();

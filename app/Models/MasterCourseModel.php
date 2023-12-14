@@ -499,7 +499,7 @@ class MasterCourseModel extends Model
         }
 
         $builder->groupBy('status');
-        $builder->orderBy('count', 'desc');
+        $builder->orderBy('(array_position(ARRAY[\'Live\',\'Review\',\'Draft\',\'Failed\',\'Processing\',\'Retired\']::varchar[],status))');
 
         // echo '<pre>';
         // print_r($builder);
@@ -513,7 +513,8 @@ class MasterCourseModel extends Model
     {
         try {
             $builder = $this->db->table('master_course');
-            $builder->select('to_char(date_trunc(\'MONTH\',to_date(published_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as publish_month, count(*)');
+            $builder->select('to_char(date_trunc(\'MONTH\',to_date(published_date,\'DD/MM/YYYY\')),\'YYYY/MM\') as publish_month, count(*),
+            sum(count(*) ) over (order by to_char(date_trunc(\'MONTH\',to_date(published_date,\'DD/MM/YYYY\')),\'YYYY/MM\'))');
             $builder->where('status', 'Live');
             // $builder->where('to_date(published_date,\'DD/MM/YYYY\') > current_date - INTERVAL \'1 year\'');
             $builder->groupBy('publish_month');
@@ -566,6 +567,22 @@ class MasterCourseModel extends Model
         }
 
     }
+
+    public function getKpis()
+    {
+        try {
+            $builder = $this->db->table('summary');
+            $builder->select('*');
+            $query = $builder->get();
+
+            // echo $org_id,json_encode($query);
+            return $query;
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+
 }
 
 ?>
