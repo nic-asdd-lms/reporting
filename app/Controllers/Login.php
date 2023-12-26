@@ -181,10 +181,9 @@ class Login extends BaseController
 
 						$data['role'] = 'DOPT_ADMIN';
 						$data['logged_in'] = true;
-						return $this->response->redirect(base_url('/dashboard/dopt?ati=&program='));
-						// return $this->response->redirect('/home');
-						// $red = $this->config->item('base_url_other').'/Admin/email_data';
-						// redirect($red, 'refresh');
+						return $this->response->redirect(base_url('/dashboard/commit?program='));
+						// return $this->response->redirect(base_url('/dashboard/dopt?ati=&program='));
+						
 					} elseif ($session->get('role') == 'ATI_ADMIN') {
 
 						$data['role'] = 'ATI_ADMIN';

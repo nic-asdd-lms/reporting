@@ -210,6 +210,27 @@ class UserEnrolmentProgram extends Model
 
     }
 
+    public function commitDashboardChart($program, $isMonthWise)
+    {
+        $builder = $this->db->table('commit_programs_enrolment');
+        // $builder->join('master_program', 'master_program.program_id = user_program_enrolment.program_id');
+
+        $builder->select('status,count(*) as users');
+        $builder->where('courseid is not null');
+        
+        if ($program != '')
+            $builder->where('commit_programs_enrolment.courseid', $program);
+
+        if ($isMonthWise == true)
+            $builder->where('to_char(to_date(enrolled_on,\'DD-MON-YYYY\'), \'MONTH YYYY\')  = to_char(current_date, \'MONTH YYYY\')');
+           
+        $builder->groupBy('status');
+        $builder->orderBy('status', 'asc');
+
+        return $builder->get();
+
+    }
+
     public function dashboardTable($ati, $program, $isMonthWise)
     {
         $builder = $this->db->table('user_program_enrolment');
@@ -246,6 +267,39 @@ class UserEnrolmentProgram extends Model
 
     }
 
+    public function commitDashboardTable( $program, $isMonthWise)
+    {
+        $builder = $this->db->table('commit_programs_enrolment');
+        // $builder->join('master_program', 'master_program.program_id = user_program_enrolment.program_id');
+
+        // $enrolled = $this->db->table('user_program_enrolment');
+        // $enrolled->join('master_program','master_program.program_id = user_program_enrolment.program_id');
+
+        $builder->select('status,count(*) as users');
+        $builder->where('courseid is not null');
+            // $enrolled->select('\'Enrolled\',count(*)  as users');
+            $builder->groupBy('status');
+            $builder->orderBy('status', 'asc');
+    
+        if ($program != '') {
+            $builder->where('commit_programs_enrolment.courseid', $program);
+            // $enrolled->where('user_program_enrolment.program_id', $program);
+        }
+        if ($isMonthWise == true) {
+            $builder->where('to_char(to_date(enrolled_on,\'DD-MON-YYYY\'), \'MONTH YYYY\')  = to_char(current_date, \'MONTH YYYY\')');
+            // $enrolled->where('to_char(to_date(enrolled_date,\'DD/MM/YYYY\'), \'MONTH YYYY\')  = to_char(current_date, \'MONTH YYYY\')');
+        }
+
+        // $builder->union($enrolled);
+        
+        // echo '<pre>';
+        // print_r($builder->getCompiledSelect());
+        // die;
+
+        return $builder->get();
+
+    }
+
     public function learnerDashboardTableFooter($ati, $program, $isMonthWise)
     {
         $enrolled = $this->db->table('user_program_enrolment');
@@ -260,6 +314,24 @@ class UserEnrolmentProgram extends Model
         }
         if ($isMonthWise == true) {
             $enrolled->where('to_char(to_date(enrolled_date,\'DD/MM/YYYY\'), \'MONTH YYYY\')  = to_char(current_date, \'MONTH YYYY\')');
+        }
+
+        return $enrolled->get();
+
+    }
+
+    public function commitlearnerDashboardTableFooter($program, $isMonthWise)
+    {
+        $enrolled = $this->db->table('commit_programs_enrolment');
+        // $enrolled->join('master_program', 'master_program.program_id = user_program_enrolment.program_id');
+
+        $enrolled->select('\'Total Enrolments\',count(*)  as users');
+        $enrolled->where('courseid is not null');
+        if ($program != '') {
+            $enrolled->where('commit_programs_enrolment.courseid', $program);
+        }
+        if ($isMonthWise == true) {
+            $enrolled->where('to_char(to_date(enrolled_on,\'DD-MON-YYYY\'), \'MONTH YYYY\')  = to_char(current_date, \'MONTH YYYY\')');
         }
 
         return $enrolled->get();
@@ -363,6 +435,68 @@ class UserEnrolmentProgram extends Model
             throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
         //return $query->getResult();
+    }
+
+
+    public function getCommitProgramWiseReport($program,  $limit, $offset, $search, $orderBy, $orderDir)
+    {
+        try {
+            $table = new \CodeIgniter\View\Table();
+
+            $builder = $this->db->table('commit_programs_enrolment');
+            $builder->select('full_name, email, organization, designation, enrolled_on, status,  rawcompletionpercentage, completed_on');
+            $builder->where('courseid', $program);
+            if ($search != '')
+                $builder->where(" (full_name LIKE '%" . strtolower($search) . "%' OR full_name LIKE '%" . strtoupper($search) . "%' OR full_name LIKE '%" . ucfirst($search) . "%'
+                            OR email LIKE '%" . strtolower($search) . "%' OR email LIKE '%" . strtoupper($search) . "%' OR email LIKE '%" . ucfirst($search) . "%'
+                            OR designation LIKE '%" . strtolower($search) . "%' OR designation LIKE '%" . strtoupper($search) . "%' OR designation LIKE '%" . ucfirst($search) . "%'
+                            OR batch_id LIKE '%" . strtolower($search) . "%' OR batch_id LIKE '%" . strtoupper($search) . "%' OR batch_id LIKE '%" . ucfirst($search) . "%'
+                            OR organization LIKE '%" . strtolower($search) . "%' OR organization LIKE '%" . strtoupper($search) . "%' OR organization LIKE '%" . ucfirst($search) . "%')", NULL, FALSE);
+            
+            $builder->orderBy((int) $orderBy + 1, $orderDir);
+            if ($limit != -1)
+                $builder->limit($limit, $offset);
+
+            // echo '<pre>';
+            // print_r($builder->getCompiledSelect());
+            // die;
+            $query = $builder->get();
+
+
+            return $query;
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+        //return $query->getResult();
+    }
+
+    public function getCommitProgramWiseCount($limit, $offset, $search, $orderBy, $orderDir)
+    {
+        //try{
+
+
+        if ($search != '') {
+            $likeQuery = " AND  (cbp_name LIKE '%" . strtolower($search) . "%' OR cbp_name LIKE '%" . strtoupper($search) . "%' OR cbp_name LIKE '%" . ucfirst($search) . "%' )";
+
+        } else {
+            $likeQuery = '';
+        }
+        if ($limit != -1) {
+            $limitQuery = ' limit ' . $limit . ' offset ' . $offset;
+        } else
+            $limitQuery = ''; 
+            
+            {
+            $query = $this->db->query('SELECT commit_programs_enrolment.courseid, cbp_name,  COUNT(*) AS enrolled_count
+      ,SUM(CASE WHEN commit_programs_enrolment.status =\'not-started\' THEN 1 ELSE 0 END) AS not_staretd,
+            SUM(CASE WHEN commit_programs_enrolment.status =\'in-progress\' THEN 1 ELSE 0 END) AS in_progress,
+            SUM(CASE WHEN commit_programs_enrolment.status =\'completed\' THEN 1 ELSE 0 END) AS completed_count
+  FROM commit_programs_enrolment
+  WHERE courseid IS NOT NULL
+  GROUP BY commit_programs_enrolment.courseid,cbp_name
+  ORDER BY ' . (int) $orderBy + 1 . ' ' . $orderDir . $limitQuery);
+        }
+        return $query;
     }
 
 

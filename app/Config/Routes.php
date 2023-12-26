@@ -58,8 +58,11 @@ $routes->get('/getReport/(:alpha)', 'Report::getReport/$1');
 $routes->get('/checkOrgOnboarded', 'Home::checkOrgOnboarded');
 $routes->post('/getTopPerformers', 'Report::getTopPerformers');
 $routes->get('/dashboard/dopt', 'Dashboard::getDashboard');
+$routes->get('/dashboard/commit', 'Dashboard::getCommitDashboard');
 $routes->get('/dashboard/spv', 'Dashboard::getSPVDashboard');
-
+// $routes->get('/fileupload', 'FileUpload::index');
+// $routes->post('/FileUpload/do_upload', 'FileUpload::doUpload');
+// $routes->get('/redirect', 'FileUpload::getCoursePage');
 
 //$routes->get('/assets/images/karmayogiLogo.svg' , 'assets\images\karmayogiLogo.svg');
 // $routes->resource('/reporting/assets/images',['controller' => 'App\Assets\Images']);

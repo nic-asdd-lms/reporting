@@ -171,6 +171,150 @@ class Dashboard extends BaseController
 
     }
 
+    public function getCommitDashboard()
+    {
+        try {
+            helper('session');
+            $session = \Config\Services::session();
+
+            if (session_exists() && $session->get('role') == 'DOPT_ADMIN') {
+
+                $request = $this->request->getVar();
+                // $ati = $request['ati'] != null ? $request['ati'] : '';
+                $program = $request['program'] ? $request['program'] : '';
+
+                $table = new \CodeIgniter\View\Table();
+                $table->setTemplate($GLOBALS['overviewTableTemplate']);
+
+                $learnertable = new \CodeIgniter\View\Table();
+                $learnertable->setTemplate($GLOBALS['learnerOverviewTableTemplate']);
+
+                $monthtable = new \CodeIgniter\View\Table();
+                $monthtable->setTemplate($GLOBALS['monthOverviewTableTemplate']);
+
+                $enrolment = new UserEnrolmentProgram();
+                $orgModel = new MasterOrganizationModel();
+                $programModel = new MasterProgramModel();
+                $lastUpdate = new DataUpdateModel();
+
+
+                $learnerTableData = $enrolment->commitDashboardTable( $program, false);
+                $learnerChartData = $enrolment->commitDashboardChart( $program, false);
+
+                $monthTableData = $enrolment->commitDashboardTable( $program, true);
+                $monthChartData = $enrolment->commitDashboardChart( $program, true);
+
+                $data = [];
+
+                $learnerheader = ['Status', ['data' => 'Count', 'class' => 'dashboard-table-header-count']];
+                $learnertable->setHeading($learnerheader);
+
+                $monthheader = ['Status', ['data' => 'Count', 'class' => 'dashboard-table-header-count']];
+                $monthtable->setHeading($monthheader);
+
+                $learnersarr = $learnerTableData->getResultArray();
+                usort($learnersarr, fn($a, $b) => $b['users'] <=> $a['users']);
+                foreach ($learnersarr as $row) {
+                    $keyCell = ['data' => ucfirst($row['status']), 'class' => 'dashboard-column'];
+                    $valueCell = ['data' => $row['users'], 'class' => 'dashboard-value-column numformat'];
+                    $learnertable->addRow($keyCell, $valueCell);
+                }
+                $keyCell = ['data' => 'Total Enrolments', 'class' => 'dashboard-footer'];
+                $valueCell = ['data' => $enrolment->commitlearnerDashboardTableFooter( $program, false)->getResultArray()[0]['users'], 'class' => 'dashboard-footer dashboard-value-column numformat'];
+                $learnertable->addRow($keyCell, $valueCell);
+
+                foreach ($learnerChartData->getResult() as $row) {
+                    $data['label'][] = $row->status;
+                    $data['data'][] = $row->users;
+
+                }
+
+                $montharr = $monthTableData->getResultArray();
+                usort($montharr, fn($a, $b) => $b['users'] <=> $a['users']);
+                foreach ($montharr as $row) {
+                    $keyCell = ['data' => $row['status'], 'class' => 'dashboard-column'];
+                    $valueCell = ['data' => $row['users'], 'class' => 'dashboard-value-column numformat'];
+                    $monthtable->addRow($keyCell, $valueCell);
+                }
+                $keyCell = ['data' => 'Total Enrolments', 'class' => 'dashboard-footer'];
+                $valueCell = ['data' => $enrolment->commitlearnerDashboardTableFooter($program, true)->getResultArray()[0]['users'], 'class' => 'dashboard-footer dashboard-value-column numformat'];
+                $monthtable->addRow($keyCell, $valueCell);
+
+                foreach ($monthChartData->getResult() as $row) {
+                    $data['monthlabel'][] = $row->status;
+                    $data['monthdata'][] = $row->users;
+
+                }
+                $data['chart_data'] = json_encode($data);
+                $tabledata = [];
+
+                // if ($ati == '') {
+                //     $header = ['Institute ID', 'Institute', 'Enrolled', 'Not Started', 'In Progress', 'Completed'];
+                //     $table->setHeading($header);
+                //     $instituteData = $enrolment->getInstituteWiseCount('', -1, 0, '', 1, 'asc')->getResultArray();
+
+                //     for ($i = 0; $i < sizeof($instituteData); $i++) {
+                //         $instituteData[$i]['org_name'] = '<a href="' . base_url('/dashboard/dopt?ati=' . $instituteData[$i]['root_org_id'] . '&program=') . '">' . $instituteData[$i]['org_name'] . '</a>';
+                //     }
+                //     $data['overview'] = $table->generate($instituteData);
+                //     $data['reportTitle'] = 'Enrolment Summary';
+                //     $data['back'] = false;
+                //     $data['title'] = 'Institute Overview';
+
+                // } else 
+                if ($program == '') {
+                    $header = ['Course ID', 'Course', 'Enrolled', 'Not Started', 'In Progress', 'Completed'];
+                    $table->setHeading($header);
+                    $programData = $enrolment->getCommitProgramWiseCount( -1, 0, '', 1, 'asc')->getResultArray();
+
+                    for ($i = 0; $i < sizeof($programData); $i++) {
+                        $programData[$i]['cbp_name'] = '<a href="' . base_url('/dashboard/commit?program=' . $programData[$i]['courseid']) . '">' . $programData[$i]['cbp_name'] . '</a>';
+                    }
+                    $data['overview'] = $table->generate($programData);
+                    $data['reportTitle'] = 'Enrolment Summary of COMMIT Courses';
+                    $data['backUrl'] = 'dashboard/commit?program=';
+                    $data['back'] = false;
+                    $data['title'] = 'Program Overview';
+
+                } else {
+                    $header = ['Name', 'Email', 'Organisation', 'Designation', 'Enrolled On',  'Status', 'Completion Percentage','Completed On'];
+                    $table->setHeading($header);
+                    $userData = $enrolment->getCommitProgramWiseReport($program, -1, 0, '', 1, 'asc')->getResultArray();
+                    $programName = $programModel->getCommitProgramName($program);
+                    $data['overview'] = $table->generate($userData);
+                    $data['reportTitle'] = 'Enrolment Summary of "' . $programName . '" ';
+                    $data['backUrl'] = 'dashboard/commit?program=';
+                    $data['back'] = true;
+                    $data['title'] = 'Enrolled Users';
+
+                }
+                $data['lastUpdated'] = '[Data as on ' . $lastUpdate->getReportLastUpdatedTime() . ']';
+
+
+                $data['learner_overview'] = $learnertable->generate();
+                $data['month_overview'] = $monthtable->generate();
+
+                return view('header_view')
+                    . view('dashboard_commit', $data)
+                    . view('footer_view');
+
+            } else if ($session->get('role') != 'DOPT_ADMIN') {
+
+                helper(['form', 'url']);
+
+                $data['error'] = '';
+                return view('header_view')
+                    . view('report_home', $data)
+                    . view('footer_view');
+            } else {
+                return $this->response->redirect(base_url('/'));
+            }
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+            // return view('header_view') . view('error_general').view('footer_view');
+        }
+
+    }
     public function getSPVDashboard()
     {
         try {
