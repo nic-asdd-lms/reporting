@@ -34,6 +34,17 @@ try{
        
     }
 
+    public function getCommitProgramName($program_id) {
+        try {
+            $result = $this->db->query('select cbp_name from commit_programs_enrolment where courseid = \''.$program_id.'\'')->getRow()->cbp_name;
+            return $result;
+        }
+        catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        } 
+       
+    }
+
     public function programSearch($search_key) {
         try {
             $builder = $this->db->table('master_program');
